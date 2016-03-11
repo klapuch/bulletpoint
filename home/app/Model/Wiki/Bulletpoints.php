@@ -11,7 +11,10 @@ abstract class Bulletpoints {
 		$this->database = $database;
 	}
 
-	final protected function iterateBy(string $where, array $parameters): \Iterator {
+	final protected function iterateBy(
+		string $where,
+		array $parameters
+	): \Iterator {
 		$rows = $this->database->fetchAll(
 			"SELECT users.ID, users.role, users.username,
 			information_sources.ID AS source_id,
