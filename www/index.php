@@ -162,7 +162,7 @@ try {
 		),
 		$ini
 	))->load();
-} catch(\Exception $ex) {
+} catch(\Throwable $ex) {
 	$code = $ex->getCode() ? $ex->getCode() : 404;
 	header('Location: ' . $url->basename() . 'chyba/' . $code);
 	exit;
