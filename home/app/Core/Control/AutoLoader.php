@@ -12,7 +12,7 @@ final class AutoLoader {
 		if($this->isSuitableNamespace($class))
 			return require $this->foundClass($class); // return statement because of avoiding to else condition
 		throw new \UnexpectedValueException(
-				sprintf(
+			sprintf(
 				'Namespace in %s class does not have suitable name',
 				$class
 			)
