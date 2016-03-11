@@ -12,3 +12,4 @@ tmp
 .config.ini
 www/images/profile_images/*.png
 www/images/profile_images/default/*.png
+!www/images/profile_images/default/profile.png
