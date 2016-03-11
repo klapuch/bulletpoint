@@ -31,14 +31,14 @@ final class RestrictedRole implements Role {
 	}
 
 	private function checkRestriction() {
-		if(!$this->hasSufficientRank()) {
+		if(!$this->hasSufficientRank($this->myself)) {
 			throw new Exception\AccessDeniedException(
 				'Nedostatečná role pro změnu'
 			);
 		}
 	}
 
-	private function hasSufficientRank(): bool {
-		return $this->myself->role()->rank() > $this->rank();
+	private function hasSufficientRank(Identity $identity): bool {
+		return $identity->role()->rank() > $this->rank();
 	}
 }
