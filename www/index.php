@@ -9,11 +9,9 @@ use Bulletpoint\Core\{
 	Reflection,
 	Text,
 	UI,
-	Storage,
-	Access
+	Storage
 };
 use Bulletpoint\Page;
-use Bulletpoint\Exception;
 
 // require __DIR__ . '/.maintance.php';
 header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
