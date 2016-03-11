@@ -26,6 +26,6 @@ final class Response {
 			$this->redirectUrl($_SERVER['HTTP_REFERER'], $code);
 		elseif(strlen($fallback))
 			$this->redirect($fallback, $code);
-		$this->redirect(null, $code);
+		$this->redirect('', $code);
 	}
 }
