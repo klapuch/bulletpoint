@@ -4,7 +4,7 @@ namespace Bulletpoint\Model\User;
 use Bulletpoint\Core\{Storage, Filesystem};
 use Bulletpoint\Model\{Access};
 
-final class ProfilePhoto implements Photo {
+final class ProfilePhoto {
 	private $myself;
 	private $storage;
 
