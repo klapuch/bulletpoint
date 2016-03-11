@@ -4,7 +4,7 @@ namespace Bulletpoint\Model\Wiki;
 use Bulletpoint\Model\Access;
 
 interface Documents {
-	public function iterate(Access\Identity $identity): \Iterator;
+	public function iterate(): \Iterator;
 	public function add(
 		string $title,
 		string $description,

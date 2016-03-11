@@ -5,7 +5,7 @@ use Bulletpoint\Core\Storage;
 use Bulletpoint\Model\Access;
 use Bulletpoint\Exception;
 
-final class MySqlDocuments implements Documents {
+final class OwnedMySqlDocuments implements Documents {
 	private $myself;
 	private $database;
 
@@ -17,7 +17,7 @@ final class MySqlDocuments implements Documents {
 		$this->database = $database;
 	}
 
-	public function iterate(Access\Identity $identity): \Iterator {
+	public function iterate(): \Iterator {
 		$rows = $this->database->fetchAll(
 			'SELECT users.ID AS user_id,
 			users.role,
@@ -37,7 +37,7 @@ final class MySqlDocuments implements Documents {
 			ON documents.information_source_id = information_sources.ID
 			WHERE user_id = ?
 			ORDER BY documents.created_at DESC',
-			[$identity->id()]
+			[$this->myself->id()]
 		);
 		foreach($rows as $row) {
 			yield new ConstantDocument(

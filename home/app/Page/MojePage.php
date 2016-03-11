@@ -8,11 +8,11 @@ use Bulletpoint\Exception;
 final class MojePage extends BasePage {
 	public function renderDokumenty() {
 		$this->template->title = 'Dokumenty';
-		$this->template->documents = (new Wiki\MySqlDocuments(
+		$this->template->documents = (new Wiki\OwnedMySqlDocuments(
 			$this->identity,
 			$this->storage(),
 			new Wiki\MySqlInformationSources($this->storage())
-		))->iterate($this->identity);
+		))->iterate();
 	}
 
 	public function renderBulletpointy() {

@@ -15,11 +15,11 @@ use Bulletpoint\Model\Access;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class MySqlDocuments extends TestCase\Database {
+final class OwnedMySqlDocuments extends TestCase\Database {
 	public function testIteratingByIdentity() {
 		$connection = $this->preparedDatabaseForIterating();
-		$rows = (new Wiki\MySqlDocuments(new Fake\Identity(4), $connection))
-		->iterate(new Fake\Identity(2));
+		$rows = (new Wiki\OwnedMySqlDocuments(new Fake\Identity(2), $connection))
+		->iterate();
 		Assert::equal(
 			new Wiki\ConstantDocument(
 				'firstTitle',
@@ -50,7 +50,7 @@ final class MySqlDocuments extends TestCase\Database {
 	public function testAdding() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE documents');
-		(new Wiki\MySqlDocuments(new Fake\Identity(4), $connection))
+		(new Wiki\OwnedMySqlDocuments(new Fake\Identity(4), $connection))
 		->add(
 			'new title...',
 			'new description...',
@@ -83,7 +83,7 @@ final class MySqlDocuments extends TestCase\Database {
 			VALUES
 			(1, 2, "1999-01-01 01:01:01", "first", 1, "firstTitle")'
 		);
-		(new Wiki\MySqlDocuments(
+		(new Wiki\OwnedMySqlDocuments(
 			new Fake\Identity(4),
 			$this->connection()
 		))->add(
@@ -122,4 +122,4 @@ final class MySqlDocuments extends TestCase\Database {
 }
 
 
-(new MySqlDocuments())->run();
+(new OwnedMySqlDocuments())->run();
