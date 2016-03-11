@@ -15,11 +15,14 @@ use Bulletpoint\Model\Access;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class MySqlBulletpoints extends TestCase\Database {
-	public function testIteratingByDocument() {
+final class CategorizedMySqlBulletpoints extends TestCase\Database {
+	public function testIterating() {
 		$connection = $this->preparedDatabase();
-		$rows = (new Wiki\MySqlBulletpoints(new Fake\Identity(4), $connection))
-		->byDocument(new Fake\Document(1));
+		$rows = (new Wiki\CategorizedMySqlBulletpoints(
+			new Fake\Identity(4),
+			$connection,
+			new Fake\Document(1)
+		))->iterate();
 		Assert::equal(
 			new Wiki\ConstantBulletpoint(
 				new Access\ConstantIdentity(
@@ -69,43 +72,13 @@ final class MySqlBulletpoints extends TestCase\Database {
 		Assert::false($rows->valid());
 	}
 
-	public function testIteratingByIdentity() {
-		$connection = $this->preparedDatabase();
-		$rows = (new Wiki\MySqlBulletpoints(
-			new Fake\Identity(4),
-			$connection
-		))->byIdentity(new Fake\Identity(2));
-		Assert::equal(
-			new Wiki\ConstantBulletpoint(
-				new Access\ConstantIdentity(
-					2,
-					new Access\ConstantRole(
-						'admin',
-						new Access\MySqlRole(2, $connection)
-					),
-					'facedown'
-				),
-				'second',
-				new \Datetime('1999-01-01 01:01:01'),
-				new Wiki\ConstantInformationSource(
-					'book',
-					1998,
-					'čapek',
-					new Wiki\MySqlInformationSource(2, $connection)
-				),
-				new Wiki\MySqlBulletpoint(2, $connection)
-			),
-			$rows->current()
-		);
-		$rows->next();
-		Assert::false($rows->valid());
-	}
-
 	public function testAdding() {
 		$this->connection()->query('TRUNCATE bulletpoints');
-		(new Wiki\MySqlBulletpoints(new Fake\Identity(4), $this->connection()))
-		->add(
-			new Fake\Document(1),
+		(new Wiki\CategorizedMySqlBulletpoints(
+			new Fake\Identity(4),
+			$this->connection(),
+			new Fake\Document(1)
+		))->add(
 			'new content',
 			new Fake\InformationSource(1, 'wikipeide', 2005, 'facedown')
 		);
@@ -135,9 +108,11 @@ final class MySqlBulletpoints extends TestCase\Database {
 			VALUES
 			(1, "first", 1, 1, 1, "2000-01-01 01:01:01")'
 		);
-		(new Wiki\MySqlBulletpoints(new Fake\Identity(4), $this->connection()))
-		->add(
-			new Fake\Document(1),
+		(new Wiki\CategorizedMySqlBulletpoints(
+			new Fake\Identity(4),
+			$this->connection(),
+			new Fake\Document(1)
+		))->add(
 			'first',
 			new Fake\InformationSource(1, 'wikipeide', 2005, 'facedown')
 		);
@@ -171,4 +146,4 @@ final class MySqlBulletpoints extends TestCase\Database {
 }
 
 
-(new MySqlBulletpoints())->run();
+(new CategorizedMySqlBulletpoints())->run();

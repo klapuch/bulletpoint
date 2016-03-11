@@ -17,9 +17,16 @@ final class MojePage extends BasePage {
 
 	public function renderBulletpointy() {
 		$this->template->title = 'Bulletpointy';
-		$this->template->bulletpoints = (new Wiki\MySqlBulletpoints(
+		$this->template->bulletpoints = (new Wiki\OwnedMySqlBulletpoints(
 			$this->identity,
-			$this->storage()
-		))->byIdentity($this->identity);
+			$this->storage(),
+			new class($this->storage()) extends Wiki\Bulletpoints {
+				public function add(
+					string $content,
+					Wiki\InformationSource $source
+				) {	}
+				public function iterate(): \Iterator {	}
+			}
+		))->iterate();
 	}
 }
