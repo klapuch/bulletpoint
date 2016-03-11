@@ -41,7 +41,7 @@ final class MySqlBans implements Bans {
 					),
 					$row['username']
 				),
-				(string)$row['reason'],
+				$row['reason'],
 				new \Datetime($row['expiration']),
 				new MySqlBan($row['ID'], $this->database)
 			);
