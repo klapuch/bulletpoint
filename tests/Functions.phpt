@@ -14,6 +14,7 @@ require __DIR__ . '/../home/functions.php';
 
 final class Functions extends \Tester\TestCase {
 	protected function arrays() {
+		// [tested, expected]
 		return [
 			[[], true],
 			[[[[[[[]]]]]], true],
