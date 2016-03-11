@@ -6,6 +6,7 @@ use Bulletpoint\Model\Access;
 final class ConstantDocumentProposal implements DocumentProposal {
 	private $author;
 	private $date;
+	private $source;
 	private $title;
 	private $description;
 	private $origin;
@@ -20,6 +21,7 @@ final class ConstantDocumentProposal implements DocumentProposal {
 	) {
 		$this->author = $author;
 		$this->date = $date;
+		$this->source = $source;
 		$this->title = $title;
 		$this->description = $description;
 		$this->origin = $origin;
