@@ -1,6 +1,7 @@
 !.htaccess
 composer.lock
 home/vendor/*
+home/app/logs/error.txt
 *.expected
 *.actual
 tests/*/*/*/temp
