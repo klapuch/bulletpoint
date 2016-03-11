@@ -1,0 +1,14 @@
+!.htaccess
+composer.lock
+home/vendor/*
+*.expected
+*.actual
+tests/*/*/*/temp
+tests/coverage/*Coverage.html
+tests/temp/lock-*
+tmp
+.idea
+.phpintel
+.config.ini
+www/images/profile_images/*.png
+www/images/profile_images/default/*.png

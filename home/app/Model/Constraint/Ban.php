@@ -1,0 +1,13 @@
+<?php
+namespace Bulletpoint\Model\Constraint;
+
+use Bulletpoint\Model\Access;
+
+interface Ban {
+	public function sinner(): Access\Identity;
+	public function id(): int;
+	public function reason(): string;
+	public function expired(): bool;
+	public function expiration(): \Datetime;
+	public function cancel();
+}

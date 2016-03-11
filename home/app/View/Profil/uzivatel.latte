@@ -1,0 +1,77 @@
+<h1 class="text-center">{$title}</h1>
+<h6 class="text-center" title="role">{$role}</h6>
+<img src="{$photo}" class="img-responsive img-thumbnail center-block">
+<div class="row">
+	<div class="col-sm-4">
+		<h3 class="text-center">Počet dokumentů:</h3>
+		<h4 class="text-center">{$documents}</h4>
+	</div>
+	<div class="col-sm-4">
+		<h3 class="text-center">Počet bulletpointů:</h3>
+		<h4 class="text-center">{$bulletpoints}</h4>
+	</div>
+	<div class="col-sm-4">
+		<h3 class="text-center">Počet komentářů:</h3>
+		<h4 class="text-center">{$comments}</h4>
+	</div>
+</div>
+<hr>
+
+{if $owner->id() !== $this->identity->id()}
+	{if $this->hasAccess('bany/zablokovat')}
+		{if $ban->expired()}
+			<div class="row">
+				<div class="col-sm-2 col-sm-offset-5 text-center">
+					<h2>Blokace</h2>
+					<form method="POST" action="bany/zablokovat/{$owner->id()}" class="form-horizontal" role="form">
+						<input type="hidden" name="{$csrf->key()}" value="{$csrf->protection()}">
+						<div class="form-group">
+							<label>Důvod</label>
+							<select name="reason" class="form-control">
+								<option value="Nevhodné chování">Nevhodné chování</option>
+								<option value="Sprosté vyjadřování">Sprosté vyjadřování</option>
+							</select>
+						</div>		
+						<div class="form-group">
+							<label>Expirace</label>
+							<input id="datetimepicker" type="text" name="expiration" value="{isset($expiration) ? $expiration : null}" class="form-control">
+						</div>      
+						<div class="form-group">
+							<button name="banUser" type="submit" class="btn btn-danger">Zablokovat</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		{/if}
+	{/if}
+	{if $this->hasAccess('ban/zrusit')}
+	{if !$ban->expired()}
+		<div class="row">
+			<div class="col-sm-4 col-sm-offset-4 text-center">
+				<h2>Odblokování</h2>
+				<p>
+					Blokace do
+					<strong>
+						{$ban->expiration()->format('j.n.Y H:i')}
+					</strong>
+					z důvodu <strong>{$ban->reason()}</strong>
+				</p>
+				<a class="btn btn-success" href="ban/zrusit/{$ban->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit blokaci</a>
+			</div>
+		</div>
+		{/if}
+		<hr>
+	{/if}
+{/if}
+
+{if $this->hasAccess('profil/povysit') && $this->hasAccess('profil/degradovat')}
+	{if $this->identity->id() !== $owner->id() && $this->identity->role()->rank() > $owner->role()->rank()}
+		<div class="row">
+			<div class="col-sm-2 col-sm-offset-5 text-center">
+				<h2>Role</h2>
+				<a class="btn btn-success" title="Povýšit" href="profil/povysit/{$username}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">▲</a>
+				<a class="btn btn-danger" title="Degradovat" href="profil/degradovat/{$username}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">▼</a>
+			</div>
+		</div>
+	{/if}
+{/if}

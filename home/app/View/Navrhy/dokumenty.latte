@@ -1,0 +1,29 @@
+<div class="btn-group btn-group-justified">
+	<a href="navrhy/dokumenty" class="btn btn-default active">Dokumenty</a>
+	<a href="navrhy/bulletpointy" class="btn btn-default">Bulletpointy</a>
+</div>
+<h1>{$title}</h1>
+{if $proposals->valid()}
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th><p>#</p></th>
+				<th><p>Datum</p></th>
+				<th><p>Autor</p></th>
+				<th><p>Titulek</p></th>
+				<th><p>Zobrazení</p></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr n:foreach="$proposals as $proposal">
+				<td><p>{$iterator->getCounter()}</p></td>
+				<td><p>{$proposal->date()->format('j.n.Y H:i')}</p></td>
+				<td><p><a href="profil/uzivatel/{$proposal->author()->username()}">{$proposal->author()->username()}</a></p></td>
+				<td class="ellipsis"><p><a href="navrh/dokument-detail/{$proposal->id()}">{$proposal->title()}</a></p></td>
+				<td><a class="btn btn-primary" href="navrh/dokument-detail/{$proposal->id()}" role="button">Zobrazit</a></td>
+			</tr>
+		</tbody>
+	</table>
+{else}
+	<h2>Nebyly navrhnuty žádné dokumenty</h2>
+{/if}

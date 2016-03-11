@@ -1,0 +1,13 @@
+<h1>{$title}</h1>
+<div class="shorter">
+	<form method="POST" class="form-horizontal" role="form">
+		<input type="hidden" name="{$csrf->key()}" value="{$csrf->protection()}">
+		<div class="form-group">
+			<label>Ověřovací kód</label>
+			<input type="text" name="code" value="{isset($code) ? $code : null}" class="form-control" placeholder="Kód">
+		</div>
+		<div class="form-group">
+			<button name="codeVerification" type="submit" class="btn btn-success">Ověřit</button>
+		</div>
+	</form>
+</div>

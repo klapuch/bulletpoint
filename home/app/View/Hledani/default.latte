@@ -1,0 +1,13 @@
+<div class="row">
+	<h1>{$title}</h1>
+	<p>Nalezeno {$count} výsledků</p>
+	<hr>
+</div>
+{if $count}
+	<div n:foreach="$matches as $match" class="row">
+		<a href="dokument/zobrazit/{$match['slug']}"><h2>{$match[title]}</h2></a>
+		<p>{$match[description]}</p>
+		<a href="dokument/zobrazit/{$match['slug']}">Více...</a>
+		<hr>
+	</div>
+{/if}

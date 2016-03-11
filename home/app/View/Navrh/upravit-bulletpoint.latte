@@ -1,0 +1,14 @@
+<div class="row">
+	<h1>{$title} <strong>{$proposal->document()->title()}</strong></h1>
+</div>
+<form method="POST" class="form-horizontal" role="form">
+	<input type="hidden" name="{$csrf->key()}" value="{$csrf->protection()}">
+	<div class="form-group">
+		<label>Obsah</label>
+		<input type="text" name="content" value="{isset($content) ? $content : $proposal->content()}" class="form-control">
+		<p class="help-block">Prosím, upravujte pouze překlepy</p>
+	</div>
+	<div class="form-group">
+		<button name="editBulletpoint" type="submit" class="btn btn-success">Upravit</button>
+	</div>
+</form>

@@ -1,0 +1,27 @@
+<div class="btn-group btn-group-justified">
+	<a href="moje/dokumenty#" class="btn btn-default active">Dokumenty</a>
+	<a href="moje/bulletpointy" class="btn btn-default">Bulletpointy</a>
+</div>
+<h1>{$title}</h1>
+{if $documents->valid()}
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th><p>#</p></th>
+					<th><p>Vytvořeno</p></th>
+					<th><p>Titulek</p></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$documents as $document">
+					<td><p>{$iterator->getCounter()}</p></td>
+					<td><p>{$document->date()->format('j.n.Y H:i')}</p></td>
+					<td><p><a href="dokument/zobrazit/{$document->title()|webalize}">{$document->title()}</a></p></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+{else}
+	<h2>Zatím jsi nepřidal žádný dokument</h2>
+{/if}

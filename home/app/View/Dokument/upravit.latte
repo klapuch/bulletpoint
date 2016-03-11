@@ -1,0 +1,18 @@
+<div class="row">
+	<h1>{$title} <strong>{$document->title()}</strong></h1>
+</div>
+<form method="POST" class="form-horizontal" role="form">
+	<input type="hidden" name="{$csrf->key()}" value="{$csrf->protection()}">
+	<div class="form-group">
+		<label>Titulek</label>
+		<input type="text" name="documentTitle" value="{isset($documentTitle) ? $documentTitle : $document->title()}" class="form-control" placeholder="Titulek">
+		<p class="help-block">Změna titulku zapříčiní změnu odkazu</p>
+	</div>
+	<div class="form-group">
+		<label>Popis</label>
+		<textarea name="description" class="form-control" rows="30" placeholder="Popis">{isset($description) ? $description : $document->description()}</textarea>
+	</div>
+	<div class="form-group">
+		<button name="editDocument" type="submit" class="btn btn-success">Upravit</button>
+	</div>
+</form>

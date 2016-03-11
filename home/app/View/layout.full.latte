@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="cs-cz">
+<head>
+    <meta charset="UTF-8"/>
+    <base href="{$this->request->address()->basename()}">
+    <meta name="robots" content="index, follow">
+    <link href="images/favicon32.png" rel="icon" type="image/png" />
+    <title>{isset($this->title) ? $this->title : null}</title>
+    <meta name="description" content="{isset($this->description) ? $this->description|truncate:150 : null}">
+    <meta name="author" content="Facedown"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/opensans.min.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/style.min.css" type="text/css">
+    {if $this->hasAccess('bany/zablokovat')}
+        <link rel="stylesheet" href="css/datetimepicker.min.css" type="text/css">
+    {/if}
+</head>
+<body>
+    <div id="wrap">
+        <nav class="navbar navbar-default navbar-static-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="" title="bulletpoint"><strong>bulletpoint</strong></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            {if $this->hasAccess('administrace')}
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" title="Administrace" data-toggle="dropdown" role="button" aria-expanded="false">Administrace <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="navrhy">Návrhy</a></li>
+                    <li><a href="bany/prehled">Bany</a></li>
+                    <li><a href="stiznosti/">Stížnosti</a></li>
+                </ul>
+            </li>
+        {/if}
+        {if $this->identity->id()}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" title="Moje" data-toggle="dropdown" role="button" aria-expanded="false">Moje <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="moje/dokumenty">Dokumenty</a></li>
+                <li><a href="moje/bulletpointy">Bulletpointy</a></li>
+            </ul>
+        </li>
+    {/if}
+        {if $this->hasAccess('dokument/novy')}
+            <li title="Nový dokument"><a href="dokument/novy">Nový dokument</a></li>
+        {/if}
+    {if $this->identity->id()}
+        <li title="Účet"><a href="ucet/">Účet</a></li>
+        <li title="Odhlásit se"><a href="odhlasit/?{$this->csrf->key()}={$this->csrf->protection()}">Odhlásit se</a></li>
+    {else}
+        <li title="Přihlásit se"><a href="prihlasit">Přihlásit se</a></li>
+        <li title="Registrace"><a href="registrace">Registrace</a></li>
+    {/if}
+</ul>
+</div>
+</div>
+</nav>
+<div class="container">
+    <div class="row">
+        {if $messages = $this->flashMessage->read()}
+            {foreach $messages as $message}
+                <div class="alert alert-dismissible alert-{key($message)}">
+                    <button data-dismiss="alert" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {current($message)}
+                </div>
+            {/foreach}
+        {/if}
+    </div>
+    <?php $this->renderView() ?>
+</div>
+</div>
+<div id="footer">
+  <div class="container">
+      <p class="muted credit text-center">
+          Created with <span id="heart-color">❤</span> by Facedown
+      </p>
+  </div>
+</div>
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script async src="js/bootstrap.min.js" type="text/javascript"></script>
+{if $this->hasAccess('bany/zablokovat')}
+    <script async src="js/datetimepicker.min.js" type="text/javascript"></script>
+{/if}
+</body>
+</html>
