@@ -29,7 +29,8 @@ final class MySqlRole implements Role {
 	}
 
 	public function promote(): Role {
-		$highestRank = end($this->roles); reset($this->roles);
+		$highestRank = end($this->roles);
+		reset($this->roles);
 		if($this->rank() === $highestRank)
 			throw new \OverflowException('Vyšší role neexistuje');
 		$this->change(self::PROMOTE);
