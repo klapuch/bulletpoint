@@ -68,10 +68,11 @@ final class DokumentPage extends BasePage {
 		$this->template->photo = function(Conversation\Comment $comment) {
 			return $this->photo($comment);
 		};
-		$this->template->bulletpoints = (new Wiki\MySqlBulletpoints(
+		$this->template->bulletpoints = (new Wiki\CategorizedMySqlBulletpoints(
 			$this->identity,
-			$this->storage()
-		))->byDocument($this->template->document);
+			$this->storage(),
+			$this->template->document
+		))->iterate();
 		$this->template->rating = function(Wiki\Bulletpoint $bulletpoint) {
 			return $this->rating($bulletpoint);
 		};

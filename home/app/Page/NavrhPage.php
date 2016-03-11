@@ -45,10 +45,11 @@ final class NavrhPage extends AdminBasePage {
 		$document = $proposal->document();
 		$this->template->document = $document;
 		$this->template->title = $document->title();
-		$this->template->bulletpoints = (new Wiki\MySqlBulletpoints(
+		$this->template->bulletpoints = (new Wiki\CategorizedMySqlBulletpoints(
 			$this->identity,
-			$this->storage()
-		))->byDocument($document);
+			$this->storage(),
+			$document
+		))->iterate();
 		$this->template->photo = (new User\ProfilePhoto(
 			$proposal->author(),
 			new Filesystem\Folder(Paths::profileImage())
