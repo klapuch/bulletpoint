@@ -78,7 +78,7 @@ final class MySqlDocumentProposals implements DocumentProposals {
 		string $description,
 		InformationSource $source
 	) {
-		if($this->exists($title))
+		if($this->isDuplicate($title))
 			throw new Exception\DuplicateException('Dokument již existuje');
 		$this->database->query(
 			'INSERT INTO document_proposals
@@ -93,7 +93,7 @@ final class MySqlDocumentProposals implements DocumentProposals {
 		);
 	}
 
-	private function exists(string $title): bool {
+	private function isDuplicate(string $title): bool {
 		return (bool)$this->database->fetch(
 			'SELECT 1 FROM documents WHERE title = ?',
 			[$title]

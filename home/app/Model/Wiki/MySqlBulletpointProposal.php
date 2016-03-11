@@ -72,7 +72,7 @@ final class MySqlBulletpointProposal implements BulletpointProposal {
 	}
 
 	public function edit(string $content) {
-		if($this->exists($content))
+		if($this->isDuplicate($content))
 			throw new Exception\DuplicateException('Bulletpoint již existuje');
 		$this->database->query(
 			'UPDATE bulletpoint_proposals SET content = ? WHERE ID = ?',
@@ -81,7 +81,7 @@ final class MySqlBulletpointProposal implements BulletpointProposal {
 	}
 
 	public function accept(): Bulletpoint {
-		if($this->exists($this->content()))
+		if($this->isDuplicate($this->content()))
 			throw new Exception\DuplicateException('Bulletpoint již existuje');
 		$this->database->query(
 			'INSERT INTO bulletpoints
@@ -115,7 +115,7 @@ final class MySqlBulletpointProposal implements BulletpointProposal {
 		);
 	}
 
-	private function exists(string $content): bool {
+	private function isDuplicate(string $content): bool {
 		return (bool)$this->database->fetch(
 			'SELECT 1 FROM bulletpoints WHERE document_id = ? AND content = ?',
 			[$this->document()->id(), $content]

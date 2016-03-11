@@ -77,7 +77,7 @@ final class MySqlBulletpointProposals implements BulletpointProposals {
 		string $content,
 		InformationSource $source
 	) {
-		if($this->exists($document, $content))
+		if($this->isDuplicate($document, $content))
 			throw new Exception\DuplicateException('Bulletpoint již existuje');
 		$this->database->query(
 			'INSERT INTO bulletpoint_proposals
@@ -92,7 +92,7 @@ final class MySqlBulletpointProposals implements BulletpointProposals {
 		);
 	}
 
-	private function exists(Document $document, string $content) {
+	private function isDuplicate(Document $document, string $content) {
 		return (bool)$this->database->fetch(
 			'SELECT 1 FROM bulletpoints WHERE document_id = ? AND content = ?',
 			[$document->id(), $content]

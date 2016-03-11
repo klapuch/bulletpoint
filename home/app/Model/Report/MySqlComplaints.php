@@ -43,7 +43,7 @@ final class MySqlComplaints implements Complaints {
 	}
 
 	public function complain(Target $target, string $reason) {
-		if($this->exists($target))
+		if($this->alreadyComplained($target))
 			throw new \OverflowException('Tento komentář jsi již nahlásil');
 		$this->database->query(
 			'INSERT INTO comment_complaints (user_id, reason, comment_id)
@@ -52,7 +52,7 @@ final class MySqlComplaints implements Complaints {
 		);
 	}
 
-	private function exists(Target $target): bool {
+	private function alreadyComplained(Target $target): bool {
 		return (bool)$this->database->fetch(
 			'SELECT 1
 			FROM comment_complaints

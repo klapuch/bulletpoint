@@ -23,7 +23,7 @@ final class MySqlDocumentSlug implements Slug {
 	}
 
 	public function rename(string $newSlug): Slug {
-		if($this->exists($newSlug)) {
+		if($this->isDuplicate($newSlug)) {
 			throw new Exception\DuplicateException(
 				sprintf(
 					'Slug "%s" již existuje',
@@ -47,7 +47,7 @@ final class MySqlDocumentSlug implements Slug {
 		);
 	}
 
-	private function exists(string $newSlug): bool {
+	private function isDuplicate(string $newSlug): bool {
 		return (bool)$this->database->fetch(
 			'SELECT 1 FROM document_slugs WHERE slug = ? AND origin != ?',
 			[$newSlug, $this->origin()]

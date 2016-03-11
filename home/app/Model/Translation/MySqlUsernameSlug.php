@@ -21,7 +21,7 @@ final class MySqlUsernameSlug implements Slug {
 	}
 
 	public function rename(string $newUsername): Slug {
-		if($this->exists($newUsername)) {
+		if($this->isDuplicate($newUsername)) {
 			throw new Exception\DuplicateException(
 				sprintf(
 					'Přezdívka "%s" již existuje',
@@ -40,7 +40,7 @@ final class MySqlUsernameSlug implements Slug {
 		return $this->username;
 	}
 
-	private function exists(string $newSlug): bool {
+	private function isDuplicate(string $newSlug): bool {
 		return (bool)$this->database->fetch(
 			'SELECT 1 FROM users WHERE username = ? AND ID != ?',
 			[$newSlug, $this->origin()]

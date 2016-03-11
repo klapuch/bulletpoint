@@ -18,7 +18,7 @@ final class MySqlDocumentSlugs implements Slugs {
 
 	public function add(int $origin, string $slug) {
 		$webalizedSlug = $this->correction->replacement($slug);
-		if($this->exists($slug)) {
+		if($this->isDuplicate($slug)) {
 			throw new Exception\DuplicateException(
 				sprintf(
 					'Slug "%s" již existuje',
@@ -32,7 +32,7 @@ final class MySqlDocumentSlugs implements Slugs {
 		);
 	}
 
-	private function exists(string $slug): bool {
+	private function isDuplicate(string $slug): bool {
 		return (bool)$this->database->fetch(
 			'SELECT 1 FROM document_slugs WHERE slug = ?',
 			[$slug]

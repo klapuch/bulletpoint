@@ -71,7 +71,7 @@ final class MySqlDocuments implements Documents {
 		string $description,
 		InformationSource $source
 	) {
-		if($this->exists($title))
+		if($this->isDuplicate($title))
 			throw new Exception\DuplicateException('Titulek již existuje');
 		$this->database->query(
 			'INSERT INTO documents
@@ -86,7 +86,7 @@ final class MySqlDocuments implements Documents {
 		);
 	}
 
-	private function exists(string $title): bool {
+	private function isDuplicate(string $title): bool {
 		return (bool)$this->database->fetch(
 			'SELECT 1 FROM documents WHERE title = ?',
 			[$title]

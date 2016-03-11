@@ -70,7 +70,7 @@ final class MySqlDocumentProposal implements DocumentProposal {
 	}
 
 	public function edit(string $title, string $description) {
-		if($this->exists($title))
+		if($this->isDuplicate($title))
 			throw new Exception\DuplicateException('Titulek již existuje');
 		$this->database->query(
 			'UPDATE document_proposals
@@ -81,7 +81,7 @@ final class MySqlDocumentProposal implements DocumentProposal {
 	}
 
 	public function accept(): Document {
-		if($this->exists($this->title()))
+		if($this->isDuplicate($this->title()))
 			throw new Exception\DuplicateException('Titulek již existuje');
 		$this->database->query(
 			'INSERT INTO documents
@@ -115,7 +115,7 @@ final class MySqlDocumentProposal implements DocumentProposal {
 		);
 	}
 
-	private function exists(string $title): bool {
+	private function isDuplicate(string $title): bool {
 		return (bool)$this->database->fetch(
 			'SELECT 1 FROM documents WHERE title = ?',
 			[$title]
