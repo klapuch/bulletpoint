@@ -89,17 +89,17 @@ final class MySqlBans extends TestCase\Database {
 		);
 	}
 
-	/**
-	* @throws \LogicException Tento uživatel ban již má.
-	*/
 	public function testBaningAlreadyBannedUser() {
+        $connection = $this->preparedDatabase();
 		$bans = new Constraint\MySqlBans(
 			new Fake\Identity(1),
-			$this->preparedDatabase()
+			$connection
 		);
 		$sinner = new Fake\Identity(2);
-		$bans->give($sinner, new \Datetime('tomorrow'));
-		$bans->give($sinner, new \Datetime('+5 months'));
+		$bans->give($sinner, new \Datetime('tomorrow'), 'rude');
+        Assert::same(1, iterator_count($bans->iterate()));
+        $bans->give($sinner, new \Datetime('+5 months'), 'idiot');
+        Assert::same(2, iterator_count($bans->iterate()));
 	}
 
 	public function testBaningUserWithCanceledOne() {

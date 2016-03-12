@@ -55,9 +55,7 @@ final class MySqlBans implements Bans {
 	) {
 		if($sinner->id() === $this->myself->id())
 			throw new \LogicException('Ban nemůžeš udělit sám sobě.');
-		elseif($this->hasBan($sinner))
-			throw new \LogicException('Tento uživatel ban již má.');
-		elseif($this->expired($expiration))
+		elseif($this->isPast($expiration))
 			throw new \LogicException('Ban můžeš dát pouze na budoucí období.');
 		$this->database->query(
 			'INSERT INTO banned_users (user_id, reason, expiration, author_id)
@@ -87,16 +85,7 @@ final class MySqlBans implements Bans {
 		);
 	}
 
-	private function expired(\DateTime $expiration): bool {
-		return $expiration <= new \DateTime;
-	}
-
-	private function hasBan(Access\Identity $identity): bool {
-		return (bool)$this->database->fetch(
-			'SELECT 1
-			FROM banned_users
-			WHERE user_id = ? AND canceled = 0 AND expiration > NOW()',
-			[$identity->id()]
-		);
+	private function isPast(\DateTime $expiration): bool {
+		return $expiration < new \DateTime;
 	}
 }
