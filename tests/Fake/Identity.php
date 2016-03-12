@@ -9,7 +9,7 @@ final class Identity implements Access\Identity {
 	private $username;
 
 	public function __construct(
-		int $id,
+		int $id = null,
 		Access\Role $role = null,
 		string $username = null
 	) {

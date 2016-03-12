@@ -36,7 +36,7 @@ abstract class BasePage extends Page {
 		}
 		$this->flashMessage = new UI\FlashMessage($_SESSION);
 		$this->response = new Http\Response($this->request->address());
-		$this->checkBan($this->identity);
+		$this->checkPunishments($this->identity);
 		$this->csrf = $this->csrf();
 		$this->template->request = $this->request;
 		$this->template->response = $this->response;
@@ -84,23 +84,30 @@ abstract class BasePage extends Page {
 		))->hasAccess($address);
 	}
 
-	protected function checkBan(Access\Identity $identity) {
-		$ban = (new Constraint\MySqlSins(
+	protected function checkPunishments(Access\Identity $identity) {
+		$punishments = (new Constraint\OwnedMySqlPunishments(
 			$identity,
-			$this->storage()
-		))->byIdentity($identity);
-		if($ban->expired() === false) {
-			unset($this->session[Access\Identity::ID]);
-			unset($this->session[Access\Identity::ROLE]);
-			unset($this->session[Access\Identity::USERNAME]);
-			$this->flashMessage->flash(
-				sprintf(
-					'Tvůj účet je zablokován do %s z důvodu %s',
-					$ban->expiration()->format('j.n.Y H:i'),
-					$ban->reason()
-				), 'danger'
-			);
-			$this->response->redirect('prihlasit');
+			$this->storage(),
+			new Constraint\ActualMySqlPunishments(
+				$identity,
+				$this->storage()
+			)
+		))->iterate();
+		if($punishments->valid()) {
+			$punishment = $punishments->current();
+			if($punishment->expired() === false) {
+				unset($this->session[Access\Identity::ID]);
+				unset($this->session[Access\Identity::ROLE]);
+				unset($this->session[Access\Identity::USERNAME]);
+				$this->flashMessage->flash(
+					sprintf(
+						'Tvůj účet je zablokován do %s z důvodu %s',
+						$punishment->expiration()->format('j.n.Y H:i'),
+						$punishment->reason()
+					), 'danger'
+				);
+				$this->response->redirect('prihlasit');
+			}
 		}
 	}
 }

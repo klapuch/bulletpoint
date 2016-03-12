@@ -3,7 +3,7 @@ namespace Bulletpoint\Model\Constraint;
 
 use Bulletpoint\Model\Access;
 
-interface Sin {
+interface Punishment {
 	public function sinner(): Access\Identity;
 	public function id(): int;
 	public function reason(): string;

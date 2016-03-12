@@ -14,26 +14,27 @@ use Bulletpoint\Fake;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class MySqlSins extends TestCase\Database {
+final class ActualMySqlPunishments extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabase();
 		$connection->query('TRUNCATE users');
 		$connection->query(
-			'INSERT INTO banned_users (user_id, expiration, reason)
+			'INSERT INTO banned_users (user_id, expiration, reason, canceled)
 			VALUES
-			(2, "2100-01-01 12:01:01", "rude"),
-			(2, "1999-01-01 12:01:01", "rude")'
+			(2, "2100-01-01 12:01:01", "rude", 0),
+			(2, "2100-01-01 12:01:01", "rude", 1),
+			(2, "1999-01-01 12:01:01", "rude", 0)'
 		);
 		$connection->query(
 			'INSERT INTO users (ID, role, username)
 			VALUES (2, "user", "cucak")'
 		);
-		$rows = (new Constraint\MySqlSins(
+		$rows = (new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
 			$connection
 		))->iterate();
 		Assert::equal(
-			new Constraint\ConstantSin(
+			new Constraint\ConstantPunishment(
 				new Access\ConstantIdentity(
 					2,
 					new Access\ConstantRole(
@@ -44,7 +45,7 @@ final class MySqlSins extends TestCase\Database {
 				),
 				'rude',
 				new \Datetime('2100-01-01 12:01:01'),
-				new Constraint\MySqlSin(1, $connection)
+				new Constraint\MySqlPunishment(1, $connection)
 			),
 			$rows->current()
 		);
@@ -52,11 +53,11 @@ final class MySqlSins extends TestCase\Database {
 		Assert::false($rows->valid());
 	}
 
-	public function testBaning() {
-		(new Constraint\MySqlSins(
+	public function testPunishing() {
+		(new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
 			$this->preparedDatabase()
-		))->give(
+		))->punish(
 			new Fake\Identity(2),
 			new \Datetime('2100-01-01 12:00:00'),
 			'rude'
@@ -75,44 +76,30 @@ final class MySqlSins extends TestCase\Database {
 		);
 	}
 
-	/**
-	* @throws \LogicException Ban nemůžeš udělit sám sobě.
-	*/
-	public function testBaningMyself() {
-		(new Constraint\MySqlSins(
-			new Fake\Identity(1),
-			new Fake\Database
-		))->give(
-			new Fake\Identity(1),
-			new \Datetime('2100-01-01 12:00:00'),
-			'rude'
-		);
-	}
-
-	public function testBaningAlreadyBannedUser() {
+	public function testPunishingAlreadyPunishedUser() {
         $connection = $this->preparedDatabase();
-		$bans = new Constraint\MySqlSins(
+		$punishments = new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
 			$connection
 		);
 		$sinner = new Fake\Identity(2);
-		$bans->give($sinner, new \Datetime('tomorrow'), 'rude');
-        Assert::same(1, iterator_count($bans->iterate()));
-        $bans->give($sinner, new \Datetime('+5 months'), 'idiot');
-        Assert::same(2, iterator_count($bans->iterate()));
+		$punishments->punish($sinner, new \Datetime('tomorrow'), 'rude');
+        Assert::same(1, iterator_count($punishments->iterate()));
+        $punishments->punish($sinner, new \Datetime('+5 months'), 'idiot');
+        Assert::same(2, iterator_count($punishments->iterate()));
 	}
 
-	public function testBaningUserWithCanceledOne() {
+	public function testPunishingUserWithCanceledOne() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
 			'INSERT INTO banned_users
 			(user_id, canceled, expiration, reason, author_id)
 			VALUES (2, 1, "2200-01-01 01:01:01", "rude", 1)'
 		);
-		(new Constraint\MySqlSins(
+		(new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
 			$connection
-		))->give(new Fake\Identity(2), new \Datetime('2100-01-01 12:00:00'));
+		))->punish(new Fake\Identity(2), new \Datetime('2100-01-01 12:00:00'));
 		Assert::same(
 			[
 				'author_id' => 1,
@@ -128,29 +115,29 @@ final class MySqlSins extends TestCase\Database {
 	}
 
 	/**
-	* @throws \LogicException Ban můžeš dát pouze na budoucí období.
+	* @throws \LogicException Trest musí být udělen pouze na budoucí období
 	*/
-	public function testGivingBanWithPastDate() {
-		(new Constraint\MySqlSins(
+	public function testPunishingWithPastDate() {
+		(new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
 			$this->preparedDatabase()
-		))->give(
+		))->punish(
 			new Fake\Identity(2),
 			new \Datetime('yesterday')
 		);
 	}
 
-	public function testBaningUserWithExpiredOne() {
+	public function testPunishingUserWithExpiredOne() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
 			'INSERT INTO banned_users (user_id, expiration, reason)
 			VALUES (2, "NOW() - INTERVAL 2 DAY", "idiot")'
 		);
-		$ban = new Constraint\MySqlSins(
+		$punishments = new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
 			$connection
 		);
-		$ban->give(
+		$punishments->punish(
 			new Fake\Identity(2),
 			new \Datetime('2100-01-01 12:00:00'),
 			"rude"
@@ -170,46 +157,6 @@ final class MySqlSins extends TestCase\Database {
 		);
 	}
 
-	public function testBanForConreteUser() {
-		$connection = $this->preparedDatabase();
-		$connection->query(
-			'INSERT INTO banned_users (user_id, expiration, reason)
-			VALUES
-			(2, NOW() + INTERVAL 1 DAY, "rude"),
-			(2, NOW() + INTERVAL 2 DAY, "idiot")'
-		);
-		Assert::equal(
-			new Constraint\ConstantSin(
-			new Access\MySqlIdentity(2, $connection),
-			'idiot',
-			new \Datetime('+2 day'),
-			new Constraint\MySqlSin(2, $connection)
-		), (new Constraint\MySqlSins(
-				new Fake\Identity(1),
-				$connection
-			))->byIdentity(new Fake\Identity(2))
-		);
-	}
-
-	public function testBanFromPoliteUser() {
-		$connection = $this->preparedDatabase();
-		$connection->query(
-			'INSERT INTO banned_users (user_id, expiration, reason, canceled)
-			VALUES (2, "2222-01-01 12:01:01", "idiot", 1)'
-		);
-		$ban = (new Constraint\MySqlSins(new Fake\Identity(1), $connection))
-		->byIdentity(new Fake\Identity(2));
-		Assert::equal(
-			new Constraint\ConstantSin(
-				new Access\MySqlIdentity(0, $connection),
-				'',
-				new \Datetime(),
-				new Constraint\MySqlSin(0, $connection)
-			), $ban
-		);
-		Assert::true($ban->expired());
-	}
-
 	private function preparedDatabase() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE banned_users');
@@ -218,4 +165,4 @@ final class MySqlSins extends TestCase\Database {
 }
 
 
-(new MySqlSins())->run();
+(new ActualMySqlPunishments())->run();

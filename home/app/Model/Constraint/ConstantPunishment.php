@@ -4,7 +4,7 @@ namespace Bulletpoint\Model\Constraint;
 use Bulletpoint\Core\Storage;
 use Bulletpoint\Model\Access;
 
-final class ConstantSin implements Sin {
+final class ConstantPunishment implements Punishment {
 	private $sinner;
 	private $reason;
 	private $expiration;
@@ -14,7 +14,7 @@ final class ConstantSin implements Sin {
 		Access\Identity $sinner,
 		string $reason,
 		\DateTime $expiration,
-		Sin $origin
+		Punishment $origin
 	) {
 		$this->sinner = $sinner;
 		$this->reason = $reason;

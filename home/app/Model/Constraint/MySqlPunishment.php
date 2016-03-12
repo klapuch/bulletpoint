@@ -4,7 +4,7 @@ namespace Bulletpoint\Model\Constraint;
 use Bulletpoint\Core\Storage;
 use Bulletpoint\Model\Access;
 
-final class MySqlSin implements Sin {
+final class MySqlPunishment implements Punishment {
 	private $id;
 	private $database;
 
@@ -44,12 +44,19 @@ final class MySqlSin implements Sin {
 	}
 
 	public function expired(): bool {
-		return $this->expiration() <= new \DateTime;
+		return $this->expiration() <= new \DateTime || $this->forgiven();
 	}
 
 	public function forgive() {
 		$this->database->query(
 			'UPDATE banned_users SET canceled = 1 WHERE ID = ?',
+			[$this->id]
+		);
+	}
+
+	private function forgiven(): bool {
+		return (bool)$this->database->fetch(
+			'SELECT 1 FROM banned_users WHERE ID = ? AND canceled = 1',
 			[$this->id]
 		);
 	}

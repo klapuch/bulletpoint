@@ -44,10 +44,14 @@ final class ProfilPage extends BasePage {
 			new Filesystem\Folder(Paths::profileImage())
 		))->show()->asFile()->location();
 		$this->template->owner = $owner;
-		$this->template->ban = (new Constraint\MySqlSins(
-			$this->identity,
-			$this->storage()
-		))->byIdentity($owner);
+        $this->template->punishment = (new Constraint\OwnedMySqlPunishments(
+            $owner,
+            $this->storage(),
+            new Constraint\ActualMySqlPunishments(
+                $this->identity,
+                $this->storage()
+            )
+        ))->iterate()->current();
 		$czechRoles = [
 			'member' => 'Člen',
 			'administrator' => 'Administrátor',

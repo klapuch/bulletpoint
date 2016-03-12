@@ -14,44 +14,40 @@ use Bulletpoint\Fake;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class MySqlSin extends TestCase\Database {
-	public function testExpiredBan() {
+final class MySqlPunishment extends TestCase\Database {
+	public function testExpiredPunishment() {
 		Assert::true(
-			(new Constraint\MySqlSin(2, $this->preparedDatabase()))->expired()
+			(new Constraint\MySqlPunishment(2, $this->preparedDatabase()))->expired()
 		);
 	}
 
-	public function testOngoingBan() {
+	public function testForgivenOngoingPunishment() {
+		Assert::true(
+			(new Constraint\MySqlPunishment(1, $this->preparedDatabase()))->expired()
+		);
+	}
+
+	public function testOngoingPunishment() {
 		Assert::false(
-			(new Constraint\MySqlSin(1, $this->preparedDatabase()))->expired()
+			(new Constraint\MySqlPunishment(3, $this->preparedDatabase()))->expired()
 		);
 	}
 
 	public function testReason() {
 		Assert::same(
 			'rude',
-			(new Constraint\MySqlSin(1, $this->preparedDatabase()))->reason()
+			(new Constraint\MySqlPunishment(1, $this->preparedDatabase()))->reason()
 		);
 	}
 
 	public function testId() {
-		Assert::same(1, (new Constraint\MySqlSin(1, new Fake\Database))->id());
+		Assert::same(1, (new Constraint\MySqlPunishment(1, new Fake\Database))->id());
 	}
 
 	public function testExpiration() {
 		Assert::equal(
 			new \Datetime("2100-01-01 01:01:01"),
-			(new Constraint\MySqlSin(1, $this->preparedDatabase()))->expiration()
-		);
-	}
-
-	public function testIfBanIsExpired() {
-		$connection = $this->preparedDatabase();
-		Assert::false(
-			(new Constraint\MySqlSin(1, $connection))->expired()
-		);
-		Assert::true(
-			(new Constraint\MySqlSin(2, $connection))->expired()
+			(new Constraint\MySqlPunishment(1, $this->preparedDatabase()))->expiration()
 		);
 	}
 
@@ -61,13 +57,13 @@ final class MySqlSin extends TestCase\Database {
 		$connection->query('INSERT INTO users (ID, role) VALUES (2, "user")');
 		Assert::equal(
 			new Access\MySqlIdentity(2, $connection),
-			(new Constraint\MySqlSin(1, $connection))->sinner()
+			(new Constraint\MySqlPunishment(1, $connection))->sinner()
 		);
 	}
 
 	public function testForgiving() {
 		$connection = $this->preparedDatabase();
-		(new Constraint\MySqlSin(3, $connection))->forgive();
+		(new Constraint\MySqlPunishment(3, $connection))->forgive();
 		Assert::same(
 			1,
 			$connection->fetchColumn('SELECT canceled FROM banned_users WHERE ID = 3')
@@ -79,15 +75,15 @@ final class MySqlSin extends TestCase\Database {
 		$connection->query('TRUNCATE banned_users');
 		$connection->query(
 			'INSERT INTO banned_users
-			(ID, user_id, author_id, reason, expiration, canceled)
+			(user_id, author_id, reason, expiration, canceled)
 			VALUES
-			(1, 2, 1, "rude", "2100-01-01 01:01:01", 1),
-			(2, 3, 1, "rude", "2000-01-01 01:01:01", 0),
-			(3, 4, 1, "rude", NOW() + INTERVAL 1 DAY, 0)'
+			(2, 1, "rude", "2100-01-01 01:01:01", 1),
+			(3, 1, "rude", "2000-01-01 01:01:01", 0),
+			(4, 1, "rude", NOW() + INTERVAL 1 DAY, 0)'
 		);
 		return $connection;
 	}
 }
 
 
-(new MySqlSin())->run();
+(new MySqlPunishment())->run();

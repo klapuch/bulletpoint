@@ -1,5 +1,5 @@
 <h1>{$title}</h1>
-{if $bans->valid()}
+{if $punishments->valid()}
 	<table class="table table-hover">
 		<thead>
 			<tr>
@@ -11,12 +11,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr n:foreach="$bans as $ban">
+			<tr n:foreach="$punishments as $punishment">
 				<td><p>{$iterator->getCounter()}</p></td>
-				<td><a href="profil/uzivatel/{$ban->sinner()->username()}"><p>{$ban->sinner()->username()}</p></a></td>
-				<td><p>{$ban->expiration()->format('j.n.Y H:i')}</p></td>
-				<td><p>{$ban->reason()}</p></td>
-				<td><a class="btn btn-success" href="ban/zrusit/{$ban->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit blokaci</a></td>
+				<td><a href="profil/uzivatel/{$punishment->sinner()->username()}"><p>{$punishment->sinner()->username()}</p></a></td>
+				<td><p>{$punishment->expiration()->format('j.n.Y H:i')}</p></td>
+				<td><p>{$punishment->reason()}</p></td>
+				<td><a class="btn btn-success" href="punishment/zrusit/{$punishment->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit blokaci</a></td>
 			</tr>
 		</tbody>
 	</table>

@@ -29,7 +29,7 @@ final class PrihlasitPage extends BasePage {
 					$this->configuration->toSection('cryptography')->key
 				)
 			))->enter(new User\User($post->username, $post->password));
-			$this->checkBan($identity);
+			$this->checkPunishments($identity);
 			$this->session[Access\Identity::ID] = $identity->id();
 			$this->session[Access\Identity::ROLE] = (string)$identity->role();
 			$this->session[Access\Identity::USERNAME] = $identity->username();

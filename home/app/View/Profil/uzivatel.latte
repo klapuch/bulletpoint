@@ -19,7 +19,7 @@
 
 {if $owner->id() !== $this->identity->id()}
 	{if $this->hasAccess('bany/zablokovat')}
-		{if $ban->expired()}
+		{if $punishment !== null && $punishment->expired()}
 			<div class="row">
 				<div class="col-sm-2 col-sm-offset-5 text-center">
 					<h2>Blokace</h2>
@@ -44,21 +44,21 @@
 			</div>
 		{/if}
 	{/if}
-	{if $this->hasAccess('ban/zrusit')}
-	{if !$ban->expired()}
-		<div class="row">
-			<div class="col-sm-4 col-sm-offset-4 text-center">
-				<h2>Odblokování</h2>
-				<p>
-					Blokace do
-					<strong>
-						{$ban->expiration()->format('j.n.Y H:i')}
-					</strong>
-					z důvodu <strong>{$ban->reason()}</strong>
-				</p>
-				<a class="btn btn-success" href="ban/zrusit/{$ban->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit blokaci</a>
+	{if $this->hasAccess('ban/zrusit') && $punishment !== null}
+		{if !$punishment->expired()}
+			<div class="row">
+				<div class="col-sm-4 col-sm-offset-4 text-center">
+					<h2>Odblokování</h2>
+					<p>
+						Blokace do
+						<strong>
+							{$punishment->expiration()->format('j.n.Y H:i')}
+						</strong>
+						z důvodu <strong>{$punishment->reason()}</strong>
+					</p>
+					<a class="btn btn-success" href="ban/zrusit/{$punishment->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit blokaci</a>
+				</div>
 			</div>
-		</div>
 		{/if}
 		<hr>
 	{/if}
