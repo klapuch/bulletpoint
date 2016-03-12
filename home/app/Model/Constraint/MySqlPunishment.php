@@ -55,8 +55,8 @@ final class MySqlPunishment implements Punishment {
 	}
 
 	private function forgiven(): bool {
-		return (bool)$this->database->fetch(
-			'SELECT 1 FROM punishments WHERE ID = ? AND forgiven = 1',
+		return (bool)$this->database->fetchColumn(
+			'SELECT forgiven FROM punishments WHERE ID = ?',
 			[$this->id]
 		);
 	}
