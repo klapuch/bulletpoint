@@ -52,7 +52,7 @@ final class MySqlDocumentProposals implements DocumentProposals {
 					),
 					$row['username']
 				),
-				new \Datetime($row['proposed_at']),
+				new \DateTime($row['proposed_at']),
 				new ConstantInformationSource(
 					$row['place'],
 					$row['year'],

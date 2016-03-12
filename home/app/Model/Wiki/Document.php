@@ -9,6 +9,6 @@ interface Document {
 	public function description(): string;
 	public function source(): InformationSource;
 	public function id(): int;
-	public function date(): \Datetime;
+	public function date(): \DateTime;
 	public function edit(string $title, string $description);
 }

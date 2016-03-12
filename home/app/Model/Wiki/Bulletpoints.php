@@ -44,7 +44,7 @@ abstract class Bulletpoints {
 					$row['username']
 				),
 				$row['content'],
-				new \Datetime($row['created_at']),
+				new \DateTime($row['created_at']),
 				new ConstantInformationSource(
 					$row['place'],
 					$row['year'],

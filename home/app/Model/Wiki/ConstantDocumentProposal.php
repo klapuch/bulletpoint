@@ -13,7 +13,7 @@ final class ConstantDocumentProposal implements DocumentProposal {
 
 	public function __construct(
 		Access\Identity $author,
-		\Datetime $date,
+		\DateTime $date,
 		InformationSource $source,
 		string $title,
 		string $description,
@@ -35,7 +35,7 @@ final class ConstantDocumentProposal implements DocumentProposal {
 		return $this->author;
 	}
 
-	public function date(): \Datetime {
+	public function date(): \DateTime {
 		return $this->date;
 	}
 

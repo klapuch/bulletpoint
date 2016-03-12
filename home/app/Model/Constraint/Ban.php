@@ -8,6 +8,6 @@ interface Ban {
 	public function id(): int;
 	public function reason(): string;
 	public function expired(): bool;
-	public function expiration(): \Datetime;
+	public function expiration(): \DateTime;
 	public function cancel();
 }

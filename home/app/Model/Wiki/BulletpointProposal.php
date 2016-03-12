@@ -8,7 +8,7 @@ interface BulletpointProposal {
 	public function content(): string;
 	public function source(): InformationSource;
 	public function id(): int;
-	public function date(): \Datetime;
+	public function date(): \DateTime;
 	public function document(): Document;
 	public function edit(string $content);
 	public function accept(): Bulletpoint;

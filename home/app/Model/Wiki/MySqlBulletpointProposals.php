@@ -51,7 +51,7 @@ final class MySqlBulletpointProposals implements BulletpointProposals {
 					),
 					$row['username']
 				),
-				new \Datetime($row['proposed_at']),
+				new \DateTime($row['proposed_at']),
 				new ConstantInformationSource(
 					$row['place'],
 					$row['year'],

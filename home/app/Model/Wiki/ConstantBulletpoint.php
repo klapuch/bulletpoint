@@ -13,7 +13,7 @@ final class ConstantBulletpoint implements Bulletpoint {
 	public function __construct(
 		Access\Identity $author,
 		string $content,
-		\Datetime $date,
+		\DateTime $date,
 		InformationSource $source,
 		Bulletpoint $origin
 	) {
@@ -40,7 +40,7 @@ final class ConstantBulletpoint implements Bulletpoint {
 		return $this->origin->id();
 	}
 
-	public function date(): \Datetime {
+	public function date(): \DateTime {
 		return $this->date;
 	}
 

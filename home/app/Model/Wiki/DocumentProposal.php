@@ -6,7 +6,7 @@ use Bulletpoint\Model\Access;
 interface DocumentProposal {
 	public function id(): int;
 	public function author(): Access\Identity;
-	public function date(): \Datetime;
+	public function date(): \DateTime;
 	public function source(): InformationSource;
 	public function title(): string;
 	public function description(): string;

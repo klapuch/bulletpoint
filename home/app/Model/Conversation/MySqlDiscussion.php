@@ -50,7 +50,7 @@ final class MySqlDiscussion implements Discussion {
 					$row['username']
 				),
 				$row['content'],
-				new \Datetime($row['posted_at']),
+				new \DateTime($row['posted_at']),
 				$row['visible'],
 				new MySqlComment($row['ID'], $this->myself, $this->database)
 			);

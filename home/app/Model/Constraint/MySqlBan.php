@@ -34,8 +34,8 @@ final class MySqlBan implements Ban {
 		);
 	}
 
-	public function expiration(): \Datetime {
-		return new \Datetime(
+	public function expiration(): \DateTime {
+		return new \DateTime(
 				$this->database->fetchColumn(
 				'SELECT expiration FROM banned_users WHERE ID = ?',
 				[$this->id]
@@ -44,7 +44,7 @@ final class MySqlBan implements Ban {
 	}
 
 	public function expired(): bool {
-		return $this->expiration() <= new \Datetime;
+		return $this->expiration() <= new \DateTime;
 	}
 
 	public function cancel() {

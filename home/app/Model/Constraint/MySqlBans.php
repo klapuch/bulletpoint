@@ -42,7 +42,7 @@ final class MySqlBans implements Bans {
 					$row['username']
 				),
 				$row['reason'],
-				new \Datetime($row['expiration']),
+				new \DateTime($row['expiration']),
 				new MySqlBan($row['ID'], $this->database)
 			);
 		}
@@ -50,7 +50,7 @@ final class MySqlBans implements Bans {
 
 	public function give(
 		Access\Identity $sinner,
-		\Datetime $expiration,
+		\DateTime $expiration,
 		string $reason = null
 	) {
 		if($sinner->id() === $this->myself->id())
@@ -81,13 +81,13 @@ final class MySqlBans implements Bans {
 		return new ConstantBan(
 			new Access\MySqlIdentity((int)$ban['user_id'], $this->database),
 			(string)$ban['reason'],
-			new \Datetime($ban['expiration']),
+			new \DateTime($ban['expiration']),
 			new MySqlBan((int)$ban['ID'], $this->database)
 		);
 	}
 
-	private function expired(\Datetime $expiration): bool {
-		return $expiration <= new \Datetime;
+	private function expired(\DateTime $expiration): bool {
+		return $expiration <= new \DateTime;
 	}
 
 	private function hasBan(Access\Identity $identity): bool {

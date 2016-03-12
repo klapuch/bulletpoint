@@ -45,8 +45,8 @@ final class MySqlBulletpoint implements Bulletpoint {
 		return $this->id;
 	}
 
-	public function date(): \Datetime {
-		return new \Datetime(
+	public function date(): \DateTime {
+		return new \DateTime(
 			$this->database->fetchColumn(
 				'SELECT created_at FROM bulletpoints WHERE ID = ?',
 				[$this->id]

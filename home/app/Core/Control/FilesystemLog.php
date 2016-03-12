@@ -41,7 +41,7 @@ final class FilesystemLog implements Log {
 	}
 
 	private function datetime(): string {
-		return 'DATETIME: ' . current(new \Datetime);
+		return 'DATETIME: ' . current(new \DateTime);
 	}
 
 	private function error(array $errors): string {

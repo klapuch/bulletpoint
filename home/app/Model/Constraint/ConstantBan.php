@@ -13,7 +13,7 @@ final class ConstantBan implements Ban {
 	public function __construct(
 		Access\Identity $sinner,
 		string $reason,
-		\Datetime $expiration,
+		\DateTime $expiration,
 		Ban $origin
 	) {
 		$this->sinner = $sinner;
@@ -34,7 +34,7 @@ final class ConstantBan implements Ban {
 		return $this->reason;
 	}
 
-	public function expiration(): \Datetime {
+	public function expiration(): \DateTime {
 		return $this->expiration;
 	}
 

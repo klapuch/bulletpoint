@@ -37,8 +37,8 @@ final class MySqlComment implements Comment {
 		);
 	}
 
-	public function date(): \Datetime {
-		return new \Datetime(
+	public function date(): \DateTime {
+		return new \DateTime(
 			$this->database->fetchColumn(
 				'SELECT posted_at FROM comments WHERE ID = ?',
 				[$this->id]

@@ -7,7 +7,7 @@ interface Bans {
 	public function iterate(): \Iterator;
 	public function give(
 		Access\Identity $sinner,
-		\Datetime $expiration,
+		\DateTime $expiration,
 		string $reason = null
 	);
 	public function byIdentity(Access\Identity $identity): Ban;

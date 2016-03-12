@@ -13,7 +13,7 @@ final class ConstantBulletpointProposal implements BulletpointProposal {
 
 	public function __construct(
 		Access\Identity $author,
-		\Datetime $date,
+		\DateTime $date,
 		InformationSource $source,
 		string $content,
 		Document $document,
@@ -43,7 +43,7 @@ final class ConstantBulletpointProposal implements BulletpointProposal {
 		return $this->origin->id();
 	}
 
-	public function date(): \Datetime {
+	public function date(): \DateTime {
 		return $this->date;
 	}
 

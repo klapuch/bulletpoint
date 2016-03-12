@@ -28,7 +28,7 @@ final class BanyPage extends AdminBasePage {
 			(new Constraint\MySqlBans($this->identity, $this->storage()))
 			->give(
 				$sinner,
-				new \Datetime($post->expiration),
+				new \DateTime($post->expiration),
 				$post->reason
 			);
 			$this->flashMessage->flash('Uživatel je zablokován', 'success');
