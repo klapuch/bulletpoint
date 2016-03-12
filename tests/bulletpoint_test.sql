@@ -3,14 +3,14 @@
 SET NAMES utf8;
 SET time_zone = '+00:00';
 
-DROP TABLE IF EXISTS `banned_users`;
-CREATE TABLE `banned_users` (
+DROP TABLE IF EXISTS `punishments`;
+CREATE TABLE `punishments` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `reason` varchar(100) COLLATE utf8_czech_ci DEFAULT NULL,
+  `sinner_id` int(11) NOT NULL,
+  `reason` varchar(100) COLLATE utf8_czech_ci NOT NULL,
   `expiration` datetime NOT NULL,
   `author_id` int(11) NOT NULL,
-  `canceled` bit(1) NOT NULL DEFAULT b'0',
+  `forgiven` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 

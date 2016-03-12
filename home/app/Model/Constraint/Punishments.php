@@ -24,7 +24,7 @@ abstract class Punishments {
         string $reason
     ) {
         $this->database->query(
-            'INSERT INTO banned_users (user_id, reason, expiration, author_id)
+            'INSERT INTO punishments (sinner_id, reason, expiration, author_id)
 			VALUES (?, ?, ?, ?)',
             [
                 $sinner->id(),
@@ -40,26 +40,26 @@ abstract class Punishments {
         array $parameters = []
     ): \Iterator {
         $rows = $this->database->fetchAll(
-            "SELECT banned_users.ID,
+            "SELECT punishments.ID,
 			reason,
 			expiration,
-			user_id,
+			sinner_id,
 			users.role,
 			users.username
-			FROM banned_users
+			FROM punishments
 			INNER JOIN users
-			ON users.ID = banned_users.user_id
+			ON users.ID = punishments.sinner_id
 			WHERE $where
-			ORDER BY canceled ASC, expiration DESC",
+			ORDER BY forgiven ASC, expiration DESC",
             $parameters
         );
         foreach($rows as $row) {
             yield new ConstantPunishment(
                 new Access\ConstantIdentity(
-                    $row['user_id'],
+                    $row['sinner_id'],
                     new Access\ConstantRole(
                         $row['role'],
-                        new Access\MySqlRole($row['user_id'], $this->database)
+                        new Access\MySqlRole($row['sinner_id'], $this->database)
                     ),
                     $row['username']
                 ),

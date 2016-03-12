@@ -18,7 +18,7 @@ final class OwnedMySqlPunishments extends Punishments {
     }
 
     public function iterate(): \Iterator {
-        return $this->iterateBy('user_id = ?', [$this->myself->id()]);
+        return $this->iterateBy('sinner_id = ?', [$this->myself->id()]);
 	}
 
 	public function punish(

@@ -19,7 +19,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 		$connection = $this->preparedDatabase();
 		$connection->query('TRUNCATE users');
 		$connection->query(
-			'INSERT INTO banned_users (user_id, expiration, reason, canceled)
+			'INSERT INTO punishments (sinner_id, expiration, reason, forgiven)
 			VALUES
 			(2, "2100-01-01 12:01:01", "rude", 0),
 			(2, "2100-01-01 12:01:01", "rude", 1),
@@ -70,8 +70,8 @@ final class ActualMySqlPunishments extends TestCase\Database {
 			],
 			$this->connection()->fetch(
 				'SELECT author_id, expiration, reason
-				FROM banned_users
-				WHERE user_id = 2'
+				FROM punishments
+				WHERE sinner_id = 2'
 			)
 		);
 	}
@@ -89,11 +89,11 @@ final class ActualMySqlPunishments extends TestCase\Database {
         Assert::same(2, iterator_count($punishments->iterate()));
 	}
 
-	public function testPunishingUserWithCanceledOne() {
+	public function testPunishingUserWithForgivenOne() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO banned_users
-			(user_id, canceled, expiration, reason, author_id)
+			'INSERT INTO punishments
+			(sinner_id, forgiven, expiration, reason, author_id)
 			VALUES (2, 1, "2200-01-01 01:01:01", "rude", 1)'
 		);
 		(new Constraint\ActualMySqlPunishments(
@@ -112,8 +112,8 @@ final class ActualMySqlPunishments extends TestCase\Database {
 			],
 			$this->connection()->fetch(
 				'SELECT author_id, expiration, reason
-				FROM banned_users
-				WHERE user_id = 2 AND canceled = 0'
+				FROM punishments
+				WHERE sinner_id = 2 AND forgiven = 0'
 			)
 		);
 	}
@@ -135,7 +135,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 	public function testPunishingUserWithExpiredOne() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO banned_users (user_id, expiration, reason)
+			'INSERT INTO punishments (sinner_id, expiration, reason)
 			VALUES (2, "NOW() - INTERVAL 2 DAY", "idiot")'
 		);
 		$punishments = new Constraint\ActualMySqlPunishments(
@@ -155,8 +155,8 @@ final class ActualMySqlPunishments extends TestCase\Database {
 			],
 			$this->connection()->fetch(
 				'SELECT author_id, expiration, reason
-				FROM banned_users
-				WHERE user_id = 2
+				FROM punishments
+				WHERE sinner_id = 2
 				ORDER BY expiration DESC'
 			)
 		);
@@ -164,7 +164,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 
 	private function preparedDatabase() {
 		$connection = $this->connection();
-		$connection->query('TRUNCATE banned_users');
+		$connection->query('TRUNCATE punishments');
 		return $connection;
 	}
 }

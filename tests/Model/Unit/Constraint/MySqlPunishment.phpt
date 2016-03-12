@@ -66,16 +66,16 @@ final class MySqlPunishment extends TestCase\Database {
 		(new Constraint\MySqlPunishment(3, $connection))->forgive();
 		Assert::same(
 			1,
-			$connection->fetchColumn('SELECT canceled FROM banned_users WHERE ID = 3')
+			$connection->fetchColumn('SELECT forgiven FROM punishments WHERE ID = 3')
 		);
 	}
 
 	private function preparedDatabase() {
 		$connection = $this->connection();
-		$connection->query('TRUNCATE banned_users');
+		$connection->query('TRUNCATE punishments');
 		$connection->query(
-			'INSERT INTO banned_users
-			(user_id, author_id, reason, expiration, canceled)
+			'INSERT INTO punishments
+			(sinner_id, author_id, reason, expiration, forgiven)
 			VALUES
 			(2, 1, "rude", "2100-01-01 01:01:01", 1),
 			(3, 1, "rude", "2000-01-01 01:01:01", 0),

@@ -7,7 +7,7 @@ use Bulletpoint\Exception;
 
 final class ActualMySqlPunishments extends Punishments {
 	public function iterate(): \Iterator {
-        return $this->iterateBy('canceled = 0 AND NOW() < expiration');
+        return $this->iterateBy('forgiven = 0 AND NOW() < expiration');
 	}
 
 	public function punish(

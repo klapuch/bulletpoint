@@ -19,7 +19,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
         $connection = $this->preparedDatabase();
         $connection->query('TRUNCATE users');
         $connection->query(
-			'INSERT INTO banned_users (user_id, expiration, reason, canceled)
+			'INSERT INTO punishments (sinner_id, expiration, reason, forgiven)
 			VALUES
 			(2, "2100-01-01 12:01:01", "rude", 1),
 			(2, "2099-01-01 12:01:01", "rude", 0),
@@ -101,7 +101,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
 
 	private function preparedDatabase() {
 		$connection = $this->connection();
-		$connection->query('TRUNCATE banned_users');
+		$connection->query('TRUNCATE punishments');
 		return $connection;
 	}
 }

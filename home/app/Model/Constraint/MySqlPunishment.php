@@ -16,7 +16,7 @@ final class MySqlPunishment implements Punishment {
 	public function sinner(): Access\Identity {
 		return new Access\MySqlIdentity(
 			$this->database->fetchColumn(
-				'SELECT user_id FROM banned_users WHERE ID = ?',
+				'SELECT sinner_id FROM punishments WHERE ID = ?',
 				[$this->id]
 			),
 			$this->database
@@ -29,7 +29,7 @@ final class MySqlPunishment implements Punishment {
 
 	public function reason(): string {
 		return $this->database->fetchColumn(
-			'SELECT reason FROM banned_users WHERE ID = ?',
+			'SELECT reason FROM punishments WHERE ID = ?',
 			[$this->id]
 		);
 	}
@@ -37,7 +37,7 @@ final class MySqlPunishment implements Punishment {
 	public function expiration(): \DateTime {
 		return new \DateTime(
 				$this->database->fetchColumn(
-				'SELECT expiration FROM banned_users WHERE ID = ?',
+				'SELECT expiration FROM punishments WHERE ID = ?',
 				[$this->id]
 			)
 		);
@@ -49,14 +49,14 @@ final class MySqlPunishment implements Punishment {
 
 	public function forgive() {
 		$this->database->query(
-			'UPDATE banned_users SET canceled = 1 WHERE ID = ?',
+			'UPDATE punishments SET forgiven = 1 WHERE ID = ?',
 			[$this->id]
 		);
 	}
 
 	private function forgiven(): bool {
 		return (bool)$this->database->fetch(
-			'SELECT 1 FROM banned_users WHERE ID = ? AND canceled = 1',
+			'SELECT 1 FROM punishments WHERE ID = ? AND forgiven = 1',
 			[$this->id]
 		);
 	}
