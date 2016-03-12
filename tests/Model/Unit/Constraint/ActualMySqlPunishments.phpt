@@ -99,12 +99,16 @@ final class ActualMySqlPunishments extends TestCase\Database {
 		(new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
 			$connection
-		))->punish(new Fake\Identity(2), new \Datetime('2100-01-01 12:00:00'));
+		))->punish(
+			new Fake\Identity(2),
+			new \Datetime('2100-01-01 12:00:00'),
+			'rude'
+		);
 		Assert::same(
 			[
 				'author_id' => 1,
 				'expiration' => '2100-01-01 12:00:00',
-				'reason' => null,
+				'reason' => 'rude',
 			],
 			$this->connection()->fetch(
 				'SELECT author_id, expiration, reason
@@ -123,7 +127,8 @@ final class ActualMySqlPunishments extends TestCase\Database {
 			$this->preparedDatabase()
 		))->punish(
 			new Fake\Identity(2),
-			new \Datetime('yesterday')
+			new \Datetime('yesterday'),
+			'rude'
 		);
 	}
 
@@ -140,7 +145,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 		$punishments->punish(
 			new Fake\Identity(2),
 			new \Datetime('2100-01-01 12:00:00'),
-			"rude"
+			'rude'
 		);
 		Assert::same(
 			[

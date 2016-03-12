@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `banned_users`;
 CREATE TABLE `banned_users` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `reason` varchar(100) COLLATE utf8_czech_ci DEFAULT NULL,
+  `reason` varchar(100) COLLATE utf8_czech_ci NOT NULL,
   `expiration` datetime NOT NULL,
   `author_id` int(11) NOT NULL,
   `canceled` bit(1) NOT NULL DEFAULT b'0',

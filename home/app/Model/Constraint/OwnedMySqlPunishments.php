@@ -24,7 +24,7 @@ final class OwnedMySqlPunishments extends Punishments {
 	public function punish(
 		Access\Identity $sinner,
 		\DateTime $expiration,
-		string $reason = null
+		string $reason
 	) {
         if($sinner->id() === $this->myself->id())
             throw new \LogicException('Nemůžeš potrestat sám sebe');

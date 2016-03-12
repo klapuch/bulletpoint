@@ -21,7 +21,7 @@ abstract class Punishments {
     public function punish(
         Access\Identity $sinner,
         \DateTime $expiration,
-        string $reason = null
+        string $reason
     ) {
         $this->database->query(
             'INSERT INTO banned_users (user_id, reason, expiration, author_id)

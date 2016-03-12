@@ -13,7 +13,7 @@ final class ActualMySqlPunishments extends Punishments {
 	public function punish(
 		Access\Identity $sinner,
 		\DateTime $expiration,
-		string $reason = null
+		string $reason
 	) {
 		if($this->isPast($expiration)) {
             throw new \LogicException(
