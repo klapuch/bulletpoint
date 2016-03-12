@@ -74,6 +74,7 @@ final class MySqlBans implements Bans {
 			'SELECT ID, reason, expiration, user_id
 			FROM banned_users
 			WHERE user_id = ? AND canceled = 0 AND expiration > NOW()
+			ORDER BY expiration DESC
 			LIMIT 1',
 			[$identity->id()]
 		);

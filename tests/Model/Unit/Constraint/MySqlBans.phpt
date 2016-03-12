@@ -130,7 +130,7 @@ final class MySqlBans extends TestCase\Database {
 	/**
 	* @throws \LogicException Ban můžeš dát pouze na budoucí období.
 	*/
-	public function testGivingBanWithExpiredDate() {
+	public function testGivingBanWithPastDate() {
 		(new Constraint\MySqlBans(
 			new Fake\Identity(1),
 			$this->preparedDatabase()
@@ -174,14 +174,16 @@ final class MySqlBans extends TestCase\Database {
 		$connection = $this->preparedDatabase();
 		$connection->query(
 			'INSERT INTO banned_users (user_id, expiration, reason)
-			VALUES (2, "2222-01-01 12:01:01", "rude")'
+			VALUES
+			(2, NOW() + INTERVAL 1 DAY, "rude"),
+			(2, NOW() + INTERVAL 2 DAY, "idiot")'
 		);
 		Assert::equal(
 			new Constraint\ConstantBan(
 			new Access\MySqlIdentity(2, $connection),
-			'rude',
-			new \Datetime('2222-01-01 12:01:01'),
-			new Constraint\MySqlBan(1, $connection)
+			'idiot',
+			new \Datetime('+2 day'),
+			new Constraint\MySqlBan(2, $connection)
 		), (new Constraint\MySqlBans(
 				new Fake\Identity(1),
 				$connection
