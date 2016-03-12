@@ -7,7 +7,7 @@ use Bulletpoint\Exception;
 final class BanyPage extends AdminBasePage {
 	public function renderPrehled() {
 		$this->template->title = 'Přehled banů';
-		$this->template->bans = (new Constraint\MySqlBans(
+		$this->template->bans = (new Constraint\MySqlSins(
 			$this->identity,
 			$this->storage()
 		))->iterate();
@@ -25,7 +25,7 @@ final class BanyPage extends AdminBasePage {
 		);
 		try {
 			$this->csrf->defend();
-			(new Constraint\MySqlBans($this->identity, $this->storage()))
+			(new Constraint\MySqlSins($this->identity, $this->storage()))
 			->give(
 				$sinner,
 				new \DateTime($post->expiration),

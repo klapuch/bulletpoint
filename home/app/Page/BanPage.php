@@ -11,7 +11,7 @@ final class BanPage extends AdminBasePage {
 			$this->csrf->defend();
 			(new Constraint\BanExistenceRule($this->storage()))
 			->isSatisfied($id);
-			(new Constraint\MySqlBan($id, $this->storage()))->cancel();
+			(new Constraint\MySqlSin($id, $this->storage()))->forgive();
 			$this->flashMessage->flash('Uživatel je odblokován', 'success');
 			$this->response->redirectReferer('bany/prehled');
 		} catch(Exception\CsrfException $ex) {

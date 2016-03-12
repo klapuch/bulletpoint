@@ -14,7 +14,7 @@ use Bulletpoint\Fake;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class MySqlBans extends TestCase\Database {
+final class MySqlSins extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabase();
 		$connection->query('TRUNCATE users');
@@ -28,12 +28,12 @@ final class MySqlBans extends TestCase\Database {
 			'INSERT INTO users (ID, role, username)
 			VALUES (2, "user", "cucak")'
 		);
-		$rows = (new Constraint\MySqlBans(
+		$rows = (new Constraint\MySqlSins(
 			new Fake\Identity(1),
 			$connection
 		))->iterate();
 		Assert::equal(
-			new Constraint\ConstantBan(
+			new Constraint\ConstantSin(
 				new Access\ConstantIdentity(
 					2,
 					new Access\ConstantRole(
@@ -44,7 +44,7 @@ final class MySqlBans extends TestCase\Database {
 				),
 				'rude',
 				new \Datetime('2100-01-01 12:01:01'),
-				new Constraint\MySqlBan(1, $connection)
+				new Constraint\MySqlSin(1, $connection)
 			),
 			$rows->current()
 		);
@@ -53,7 +53,7 @@ final class MySqlBans extends TestCase\Database {
 	}
 
 	public function testBaning() {
-		(new Constraint\MySqlBans(
+		(new Constraint\MySqlSins(
 			new Fake\Identity(1),
 			$this->preparedDatabase()
 		))->give(
@@ -79,7 +79,7 @@ final class MySqlBans extends TestCase\Database {
 	* @throws \LogicException Ban nemůžeš udělit sám sobě.
 	*/
 	public function testBaningMyself() {
-		(new Constraint\MySqlBans(
+		(new Constraint\MySqlSins(
 			new Fake\Identity(1),
 			new Fake\Database
 		))->give(
@@ -91,7 +91,7 @@ final class MySqlBans extends TestCase\Database {
 
 	public function testBaningAlreadyBannedUser() {
         $connection = $this->preparedDatabase();
-		$bans = new Constraint\MySqlBans(
+		$bans = new Constraint\MySqlSins(
 			new Fake\Identity(1),
 			$connection
 		);
@@ -109,7 +109,7 @@ final class MySqlBans extends TestCase\Database {
 			(user_id, canceled, expiration, reason, author_id)
 			VALUES (2, 1, "2200-01-01 01:01:01", "rude", 1)'
 		);
-		(new Constraint\MySqlBans(
+		(new Constraint\MySqlSins(
 			new Fake\Identity(1),
 			$connection
 		))->give(new Fake\Identity(2), new \Datetime('2100-01-01 12:00:00'));
@@ -131,7 +131,7 @@ final class MySqlBans extends TestCase\Database {
 	* @throws \LogicException Ban můžeš dát pouze na budoucí období.
 	*/
 	public function testGivingBanWithPastDate() {
-		(new Constraint\MySqlBans(
+		(new Constraint\MySqlSins(
 			new Fake\Identity(1),
 			$this->preparedDatabase()
 		))->give(
@@ -146,7 +146,7 @@ final class MySqlBans extends TestCase\Database {
 			'INSERT INTO banned_users (user_id, expiration, reason)
 			VALUES (2, "NOW() - INTERVAL 2 DAY", "idiot")'
 		);
-		$ban = new Constraint\MySqlBans(
+		$ban = new Constraint\MySqlSins(
 			new Fake\Identity(1),
 			$connection
 		);
@@ -179,12 +179,12 @@ final class MySqlBans extends TestCase\Database {
 			(2, NOW() + INTERVAL 2 DAY, "idiot")'
 		);
 		Assert::equal(
-			new Constraint\ConstantBan(
+			new Constraint\ConstantSin(
 			new Access\MySqlIdentity(2, $connection),
 			'idiot',
 			new \Datetime('+2 day'),
-			new Constraint\MySqlBan(2, $connection)
-		), (new Constraint\MySqlBans(
+			new Constraint\MySqlSin(2, $connection)
+		), (new Constraint\MySqlSins(
 				new Fake\Identity(1),
 				$connection
 			))->byIdentity(new Fake\Identity(2))
@@ -197,14 +197,14 @@ final class MySqlBans extends TestCase\Database {
 			'INSERT INTO banned_users (user_id, expiration, reason, canceled)
 			VALUES (2, "2222-01-01 12:01:01", "idiot", 1)'
 		);
-		$ban = (new Constraint\MySqlBans(new Fake\Identity(1), $connection))
+		$ban = (new Constraint\MySqlSins(new Fake\Identity(1), $connection))
 		->byIdentity(new Fake\Identity(2));
 		Assert::equal(
-			new Constraint\ConstantBan(
+			new Constraint\ConstantSin(
 				new Access\MySqlIdentity(0, $connection),
 				'',
 				new \Datetime(),
-				new Constraint\MySqlBan(0, $connection)
+				new Constraint\MySqlSin(0, $connection)
 			), $ban
 		);
 		Assert::true($ban->expired());
@@ -218,4 +218,4 @@ final class MySqlBans extends TestCase\Database {
 }
 
 
-(new MySqlBans())->run();
+(new MySqlSins())->run();

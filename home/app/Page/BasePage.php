@@ -85,7 +85,7 @@ abstract class BasePage extends Page {
 	}
 
 	protected function checkBan(Access\Identity $identity) {
-		$ban = (new Constraint\MySqlBans(
+		$ban = (new Constraint\MySqlSins(
 			$identity,
 			$this->storage()
 		))->byIdentity($identity);

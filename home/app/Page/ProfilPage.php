@@ -44,7 +44,7 @@ final class ProfilPage extends BasePage {
 			new Filesystem\Folder(Paths::profileImage())
 		))->show()->asFile()->location();
 		$this->template->owner = $owner;
-		$this->template->ban = (new Constraint\MySqlBans(
+		$this->template->ban = (new Constraint\MySqlSins(
 			$this->identity,
 			$this->storage()
 		))->byIdentity($owner);

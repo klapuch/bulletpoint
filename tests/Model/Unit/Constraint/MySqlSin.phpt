@@ -14,44 +14,44 @@ use Bulletpoint\Fake;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class MySqlBan extends TestCase\Database {
+final class MySqlSin extends TestCase\Database {
 	public function testExpiredBan() {
 		Assert::true(
-			(new Constraint\MySqlBan(2, $this->preparedDatabase()))->expired()
+			(new Constraint\MySqlSin(2, $this->preparedDatabase()))->expired()
 		);
 	}
 
 	public function testOngoingBan() {
 		Assert::false(
-			(new Constraint\MySqlBan(1, $this->preparedDatabase()))->expired()
+			(new Constraint\MySqlSin(1, $this->preparedDatabase()))->expired()
 		);
 	}
 
 	public function testReason() {
 		Assert::same(
 			'rude',
-			(new Constraint\MySqlBan(1, $this->preparedDatabase()))->reason()
+			(new Constraint\MySqlSin(1, $this->preparedDatabase()))->reason()
 		);
 	}
 
 	public function testId() {
-		Assert::same(1, (new Constraint\MySqlBan(1, new Fake\Database))->id());
+		Assert::same(1, (new Constraint\MySqlSin(1, new Fake\Database))->id());
 	}
 
 	public function testExpiration() {
 		Assert::equal(
 			new \Datetime("2100-01-01 01:01:01"),
-			(new Constraint\MySqlBan(1, $this->preparedDatabase()))->expiration()
+			(new Constraint\MySqlSin(1, $this->preparedDatabase()))->expiration()
 		);
 	}
 
 	public function testIfBanIsExpired() {
 		$connection = $this->preparedDatabase();
 		Assert::false(
-			(new Constraint\MySqlBan(1, $connection))->expired()
+			(new Constraint\MySqlSin(1, $connection))->expired()
 		);
 		Assert::true(
-			(new Constraint\MySqlBan(2, $connection))->expired()
+			(new Constraint\MySqlSin(2, $connection))->expired()
 		);
 	}
 
@@ -61,13 +61,13 @@ final class MySqlBan extends TestCase\Database {
 		$connection->query('INSERT INTO users (ID, role) VALUES (2, "user")');
 		Assert::equal(
 			new Access\MySqlIdentity(2, $connection),
-			(new Constraint\MySqlBan(1, $connection))->sinner()
+			(new Constraint\MySqlSin(1, $connection))->sinner()
 		);
 	}
 
-	public function testCanceling() {
+	public function testForgiving() {
 		$connection = $this->preparedDatabase();
-		(new Constraint\MySqlBan(3, $connection))->cancel();
+		(new Constraint\MySqlSin(3, $connection))->forgive();
 		Assert::same(
 			1,
 			$connection->fetchColumn('SELECT canceled FROM banned_users WHERE ID = 3')
@@ -90,4 +90,4 @@ final class MySqlBan extends TestCase\Database {
 }
 
 
-(new MySqlBan())->run();
+(new MySqlSin())->run();
