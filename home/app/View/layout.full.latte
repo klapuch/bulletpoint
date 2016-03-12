@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/opensans.min.css" type="text/css">
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.min.css" type="text/css">
-    {if $this->hasAccess('bany/zablokovat')}
+    {if $this->hasAccess('tresty/zablokovat')}
         <link rel="stylesheet" href="css/datetimepicker.min.css" type="text/css">
     {/if}
 </head>
@@ -36,7 +36,7 @@
                   <a href="#" class="dropdown-toggle" title="Administrace" data-toggle="dropdown" role="button" aria-expanded="false">Administrace <span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="navrhy">Návrhy</a></li>
-                    <li><a href="bany/prehled">Bany</a></li>
+                    <li><a href="tresty/prehled">Tresty</a></li>
                     <li><a href="stiznosti/">Stížnosti</a></li>
                 </ul>
             </li>
@@ -87,7 +87,7 @@
 </div>
 <script src="js/jquery.min.js" type="text/javascript"></script>
 <script async src="js/bootstrap.min.js" type="text/javascript"></script>
-{if $this->hasAccess('bany/zablokovat')}
+{if $this->hasAccess('tresty/zablokovat')}
     <script async src="js/datetimepicker.min.js" type="text/javascript"></script>
 {/if}
 </body>

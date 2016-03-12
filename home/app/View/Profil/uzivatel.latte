@@ -18,12 +18,12 @@
 <hr>
 
 {if $owner->id() !== $this->identity->id()}
-	{if $this->hasAccess('bany/zablokovat')}
+	{if $this->hasAccess('tresty/zablokovat')}
 		{if $punishment !== null && $punishment->expired()}
 			<div class="row">
 				<div class="col-sm-2 col-sm-offset-5 text-center">
-					<h2>Blokace</h2>
-					<form method="POST" action="bany/zablokovat/{$owner->id()}" class="form-horizontal" role="form">
+					<h2>Trest</h2>
+					<form method="POST" action="tresty/zablokovat/{$owner->id()}" class="form-horizontal" role="form">
 						<input type="hidden" name="{$csrf->key()}" value="{$csrf->protection()}">
 						<div class="form-group">
 							<label>Důvod</label>
@@ -37,14 +37,14 @@
 							<input id="datetimepicker" type="text" name="expiration" value="{isset($expiration) ? $expiration : null}" class="form-control">
 						</div>      
 						<div class="form-group">
-							<button name="banUser" type="submit" class="btn btn-danger">Zablokovat</button>
+							<button name="punishUser" type="submit" class="btn btn-danger">Potrestat</button>
 						</div>
 					</form>
 				</div>
 			</div>
 		{/if}
 	{/if}
-	{if $this->hasAccess('ban/zrusit') && $punishment !== null}
+	{if $this->hasAccess('trest/zrusit') && $punishment !== null}
 		{if !$punishment->expired()}
 			<div class="row">
 				<div class="col-sm-4 col-sm-offset-4 text-center">
@@ -56,7 +56,7 @@
 						</strong>
 						z důvodu <strong>{$punishment->reason()}</strong>
 					</p>
-					<a class="btn btn-success" href="ban/zrusit/{$punishment->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit blokaci</a>
+					<a class="btn btn-success" href="trest/zrusit/{$punishment->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit trest</a>
 				</div>
 			</div>
 		{/if}

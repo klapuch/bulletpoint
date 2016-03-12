@@ -4,9 +4,9 @@ namespace Bulletpoint\Page;
 use Bulletpoint\Model\{Access, Constraint};
 use Bulletpoint\Exception;
 
-final class BanyPage extends AdminBasePage {
+final class TrestyPage extends AdminBasePage {
 	public function renderPrehled() {
-		$this->template->title = 'Přehled banů';
+		$this->template->title = 'Přehled trestů';
 		$this->template->punishments = (new Constraint\ActualMySqlPunishments(
 			$this->identity,
 			$this->storage()
@@ -18,7 +18,7 @@ final class BanyPage extends AdminBasePage {
 		$this->template->sinner = $sinner;
 	}
 
-	public function submitBanUserForm($post) {
+	public function submitPunishUserForm($post) {
 		$sinner = new Access\MySqlIdentity(
 			$this->template->sinner,
 			$this->storage()

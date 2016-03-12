@@ -16,10 +16,10 @@
 				<td><a href="profil/uzivatel/{$punishment->sinner()->username()}"><p>{$punishment->sinner()->username()}</p></a></td>
 				<td><p>{$punishment->expiration()->format('j.n.Y H:i')}</p></td>
 				<td><p>{$punishment->reason()}</p></td>
-				<td><a class="btn btn-success" href="punishment/zrusit/{$punishment->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit blokaci</a></td>
+				<td><a class="btn btn-success" href="trest/zrusit/{$punishment->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit trest</a></td>
 			</tr>
 		</tbody>
 	</table>
 	{else}
-		<h2>Žádný uživatel nemá ban</h2>
+		<h2>Nikdo není potrestán</h2>
 {/if}

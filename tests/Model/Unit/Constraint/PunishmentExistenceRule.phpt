@@ -13,18 +13,18 @@ use Bulletpoint\Model\Constraint;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class BanExistenceRule extends \Tester\TestCase {
+final class PunishmentExistenceRule extends \Tester\TestCase {
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Ban neexistuje
+	* @throws Bulletpoint\Exception\ExistenceException Trest neexistuje
 	*/
 	public function testUnknownEmail() {
-		(new Constraint\BanExistenceRule(
+		(new Constraint\PunishmentExistenceRule(
 			new Fake\Database($fetch = false)
 		))->isSatisfied(1);
 	}
 
 	public function testExistingEmail() {
-		(new Constraint\BanExistenceRule(
+		(new Constraint\PunishmentExistenceRule(
 			new Fake\Database($fetch = true)
 		))->isSatisfied(2);
 		Assert::true(true);
@@ -32,4 +32,4 @@ final class BanExistenceRule extends \Tester\TestCase {
 }
 
 
-(new BanExistenceRule())->run();
+(new PunishmentExistenceRule())->run();
