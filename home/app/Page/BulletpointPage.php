@@ -1,7 +1,6 @@
 <?php
 namespace Bulletpoint\Page;
 
-use Bulletpoint\Model\Paths;
 use Bulletpoint\Model\{Constraint, Wiki, Translation, Rating};
 use Bulletpoint\Core\{Security, Filesystem, Text};
 use Bulletpoint\Exception;

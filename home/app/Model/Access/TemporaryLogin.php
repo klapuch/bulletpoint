@@ -2,7 +2,7 @@
 namespace Bulletpoint\Model\Access;
 
 use Bulletpoint\Core\{Storage, Security};
-use Bulletpoint\Model\{User};
+use Bulletpoint\Model\User;
 use Bulletpoint\Exception;
 
 final class TemporaryLogin implements Login {

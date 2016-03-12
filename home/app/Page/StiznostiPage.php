@@ -1,7 +1,6 @@
 <?php
 namespace Bulletpoint\Page;
 
-use Bulletpoint\Model\Paths;
 use Bulletpoint\Model\{Conversation, Constraint, Report};
 use Bulletpoint\Core\{Security, Filesystem, Storage};
 use Bulletpoint\Exception;

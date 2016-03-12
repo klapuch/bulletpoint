@@ -2,7 +2,6 @@
 namespace Bulletpoint\Page;
 
 use Texy;
-use Bulletpoint\Model\Paths;
 use Bulletpoint\Model\{Access, Constraint, Wiki, Text};
 use Bulletpoint\Core;
 use Bulletpoint\Core\{Security, Filesystem, Storage};
