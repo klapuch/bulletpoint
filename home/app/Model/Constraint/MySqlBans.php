@@ -75,7 +75,8 @@ final class MySqlBans implements Bans {
 		$ban = $this->database->fetch(
 			'SELECT ID, reason, expiration, user_id
 			FROM banned_users
-			WHERE user_id = ? AND canceled = 0 AND NOW() < expiration LIMIT 1',
+			WHERE user_id = ? AND canceled = 0 AND expiration > NOW()
+			LIMIT 1',
 			[$identity->id()]
 		);
 		return new ConstantBan(
