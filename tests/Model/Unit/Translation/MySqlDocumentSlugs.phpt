@@ -21,7 +21,7 @@ final class MySqlDocumentSlugs extends TestCase\Database {
 			$connection,
 			new Fake\Correction('md5') // check that sl-ug is affected by Correction
 		))->add(1, 'sl-ug');
-		Assert::equal(new Translation\MySqlDocumentSlug(1, $connection), $slug);
+		Assert::equal(new Translation\MySqlDocumentSlug(md5('sl-ug'), $connection), $slug);
 		Assert::same(
 			['ID' => 1, 'origin' => 1, 'slug' => md5('sl-ug')],
 			$connection->fetch(

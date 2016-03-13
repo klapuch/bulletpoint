@@ -30,10 +30,7 @@ final class MySqlDocumentSlugs implements Slugs {
 			'INSERT INTO document_slugs (slug, origin) VALUES (?, ?)',
 			[$slug, $origin]
 		);
-		return new MySqlDocumentSlug(
-			$this->database->fetchColumn('SELECT LAST_INSERT_ID()'),
-			$this->database
-		);
+		return new MySqlDocumentSlug($slug, $this->database);
 	}
 
 	private function isDuplicate(string $slug): bool {
