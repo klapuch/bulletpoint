@@ -2,7 +2,7 @@
 namespace Bulletpoint\Page;
 
 use Bulletpoint\Model\{Constraint, Wiki, Translation, Rating};
-use Bulletpoint\Core\{Security, Filesystem, Text};
+use Bulletpoint\Core\{Security, Filesystem, Text, Storage};
 use Bulletpoint\Exception;
 
 final class BulletpointPage extends BasePage {
@@ -109,18 +109,40 @@ final class BulletpointPage extends BasePage {
 			(new Constraint\FillRule('Obsah musí být vyplněn'))
 			->isSatisfied($post->content);
 			(new Constraint\YearRule)->isSatisfied($post->year);
-			(new Wiki\MySqlBulletpointProposals(
-				$this->identity,
-				$this->storage()
-			))->propose(
-				new Wiki\MySqlDocument(
-					$this->template->id,
+			if($this->hasAccess('!STRAIGHT_ADD!')) {
+				(new Storage\Transaction($this->storage()))
+				->start(function() use($post) {
+					(new Wiki\CategorizedMySqlBulletpoints(
+						$this->identity,
+						$this->storage(),
+						new Wiki\MySqlDocument(
+							$this->template->id,
+							$this->storage()
+						)
+					))->add(
+						$post->content,
+						(new Wiki\MySqlInformationSources($this->storage()))
+						->create($post->place, $post->year, $post->author)
+					);
+				});
+				$this->flashMessage->flash('Bulletpoint byl přidán', 'success');
+				$this->response->redirect('dokument/zobrazit/' . $this->template->slug);
+			}
+			(new Storage\Transaction($this->storage()))
+			->start(function() use($post) {
+				(new Wiki\MySqlBulletpointProposals(
+					$this->identity,
 					$this->storage()
-				),
-				$post->content,
-				(new Wiki\MySqlInformationSources($this->storage()))
-				->create($post->place, $post->year, $post->author)
-			);
+				))->propose(
+					new Wiki\MySqlDocument(
+						$this->template->id,
+						$this->storage()
+					),
+					$post->content,
+					(new Wiki\MySqlInformationSources($this->storage()))
+					->create($post->place, $post->year, $post->author)
+				);
+			});
 			$this->flashMessage->flash('Bulletpoint byl zaslán ke kontrole', 'success');
 			$this->response->redirect('dokument/zobrazit/' . $this->template->slug);
 		} catch(Exception\FormatException $ex) {
