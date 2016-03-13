@@ -96,20 +96,43 @@ final class DokumentPage extends BasePage {
 			$this->csrf->defend();
 			(new Constraint\ChainRule(
 				new Constraint\FillRule('Titulek musí být vyplněn'),
-				new Constraint\TitleRule	
+				new Constraint\TitleRule
 			))->isSatisfied($post->documentTitle);
 			(new Constraint\FillRule('Popis musí být vyplněn'))
 			->isSatisfied($post->description);
 			(new Constraint\YearRule)->isSatisfied($post->year);
-			(new Wiki\MySqlDocumentProposals(
-				$this->identity,
-				$this->storage()
-			))->propose(
-				$post->documentTitle,
-				$post->description,
-				(new Wiki\MySqlInformationSources($this->storage()))
-				->create($post->place, $post->year, $post->author)
-			);
+            if($this->hasAccess('!STRAIGHT_ADD!')) {
+                $slug = (new Storage\Transaction($this->storage()))
+                ->start(function() use($post) {
+                    $document = (new Wiki\OwnedMySqlDocuments(
+                        $this->identity,
+                        $this->storage()
+                    ))->add(
+                        $post->documentTitle,
+                        $post->description,
+                        (new Wiki\MySqlInformationSources($this->storage()))
+                        ->create($post->place, $post->year, $post->author)
+                    );
+                    return (new Translation\MySqlDocumentSlugs(
+                        $this->storage(),
+                        new Core\Text\WebalizedCorrection
+                    ))->add($document->id(), $post->documentTitle);
+                });
+				$this->flashMessage->flash('Dokument byl přidán', 'success');
+				$this->response->redirect('dokument/zobrazit/' . (string)$slug);   
+            }
+            (new Storage\Transaction($this->storage()))
+            ->start(function() use ($post) {
+				(new Wiki\MySqlDocumentProposals(
+					$this->identity,
+					$this->storage()
+				))->propose(
+					$post->documentTitle,
+					$post->description,
+					(new Wiki\MySqlInformationSources($this->storage()))
+					->create($post->place, $post->year, $post->author)
+				);	
+            });
 			$this->flashMessage->flash('Dokument byl zaslán ke kontrole', 'success');
 			$this->response->redirect();
 		} catch(Exception\FormatException $ex) {
@@ -136,7 +159,7 @@ final class DokumentPage extends BasePage {
 		try {
 			$this->csrf->defend();
 			(new Constraint\ChainRule(
-				new Constraint\FillRule('Titulek musí být vyplněn'),	
+				new Constraint\FillRule('Titulek musí být vyplněn'),
 				new Constraint\TitleRule
 			))->isSatisfied($post->documentTitle);
 			$slug = (new Storage\Transaction($this->storage()))
