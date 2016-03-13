@@ -17,10 +17,13 @@ require __DIR__ . '/../../../bootstrap.php';
 final class MySqlDocumentSlugs extends TestCase\Database {
 	public function testAdding() {
 		$connection = $this->preparedDatabase();
-		(new Translation\MySqlDocumentSlugs($connection, new Fake\Correction))
-		->add(1, 'sl-ug');
+		$slug = (new Translation\MySqlDocumentSlugs(
+			$connection,
+			new Fake\Correction('md5') // check that sl-ug is affected by Correction
+		))->add(1, 'sl-ug');
+		Assert::equal(new Translation\MySqlDocumentSlug(1, $connection), $slug);
 		Assert::same(
-			['ID' => 1, 'origin' => 1, 'slug' => 'sl-ug'],
+			['ID' => 1, 'origin' => 1, 'slug' => md5('sl-ug')],
 			$connection->fetch(
 				'SELECT ID, origin, slug FROM document_slugs'
 			)
@@ -28,15 +31,17 @@ final class MySqlDocumentSlugs extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\DuplicateException Slug "sl-ug" již existuje
+	* @throws Bulletpoint\Exception\DuplicateException Slug "107a29d966d588b186ca5ca756da6f83" již existuje
 	*/
 	public function testAddingDuplication() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO document_slugs (origin, slug) VALUES (5, "sl-ug")'
+			'INSERT INTO document_slugs (origin, slug) VALUES (5, MD5("sl-ug"))'
 		);
-		(new Translation\MySqlDocumentSlugs($connection, new Fake\Correction))
-		->add(3, 'sl-ug');
+		(new Translation\MySqlDocumentSlugs(
+			$connection,
+			new Fake\Correction('md5') // check that sl-ug is corrected and then checked if exists
+		))->add(3, 'sl-ug');
 	}
 
 	private function preparedDatabase() {

@@ -16,19 +16,23 @@ final class MySqlDocumentSlugs implements Slugs {
 		$this->correction = $correction;
 	}
 
-	public function add(int $origin, string $slug) {
-		$webalizedSlug = $this->correction->replacement($slug);
+	public function add(int $origin, string $plain): Slug {
+		$slug = $this->correction->replacement($plain);
 		if($this->isDuplicate($slug)) {
 			throw new Exception\DuplicateException(
 				sprintf(
 					'Slug "%s" již existuje',
-					$webalizedSlug
+					$slug
 				)
 			);
 		}
 		$this->database->query(
 			'INSERT INTO document_slugs (slug, origin) VALUES (?, ?)',
-			[$webalizedSlug, $origin]
+			[$slug, $origin]
+		);
+		return new MySqlDocumentSlug(
+			$this->database->fetchColumn('SELECT LAST_INSERT_ID()'),
+			$this->database
 		);
 	}
 
