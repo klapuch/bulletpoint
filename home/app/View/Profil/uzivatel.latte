@@ -2,76 +2,94 @@
 <h6 class="text-center" title="role">{$role}</h6>
 <img src="{$photo}" class="img-responsive img-thumbnail center-block">
 <div class="row">
-	<div class="col-sm-4">
-		<h3 class="text-center">Počet dokumentů:</h3>
-		<h4 class="text-center">{$documents}</h4>
-	</div>
-	<div class="col-sm-4">
-		<h3 class="text-center">Počet bulletpointů:</h3>
-		<h4 class="text-center">{$bulletpoints}</h4>
-	</div>
-	<div class="col-sm-4">
-		<h3 class="text-center">Počet komentářů:</h3>
-		<h4 class="text-center">{$comments}</h4>
-	</div>
+    <div class="col-sm-4">
+        <h3 class="text-center">Počet dokumentů:</h3>
+        <h4 class="text-center">{$documents}</h4>
+    </div>
+    <div class="col-sm-4">
+        <h3 class="text-center">Počet bulletpointů:</h3>
+        <h4 class="text-center">{$bulletpoints}</h4>
+    </div>
+    <div class="col-sm-4">
+        <h3 class="text-center">Počet komentářů:</h3>
+        <h4 class="text-center">{$comments}</h4>
+    </div>
 </div>
 <hr>
 
 {if $owner->id() !== $this->identity->id()}
-	{if $this->hasAccess('tresty/zablokovat')}
-		{if $punishment !== null && $punishment->expired()}
-			<div class="row">
-				<div class="col-sm-2 col-sm-offset-5 text-center">
-					<h2>Trest</h2>
-					<form method="POST" action="tresty/zablokovat/{$owner->id()}" class="form-horizontal" role="form">
-						<input type="hidden" name="{$csrf->key()}" value="{$csrf->protection()}">
-						<div class="form-group">
-							<label>Důvod</label>
-							<select name="reason" class="form-control">
-								<option value="Nevhodné chování">Nevhodné chování</option>
-								<option value="Sprosté vyjadřování">Sprosté vyjadřování</option>
-							</select>
-						</div>		
-						<div class="form-group">
-							<label>Expirace</label>
-							<input id="datetimepicker" type="text" name="expiration" value="{isset($expiration) ? $expiration : null}" class="form-control">
-						</div>      
-						<div class="form-group">
-							<button name="punishUser" type="submit" class="btn btn-danger">Potrestat</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		{/if}
-	{/if}
-	{if $this->hasAccess('trest/zrusit') && $punishment !== null}
-		{if !$punishment->expired()}
-			<div class="row">
-				<div class="col-sm-4 col-sm-offset-4 text-center">
-					<h2>Odblokování</h2>
-					<p>
-						Blokace do
-						<strong>
-							{$punishment->expiration()->format('j.n.Y H:i')}
-						</strong>
-						z důvodu <strong>{$punishment->reason()}</strong>
-					</p>
-					<a class="btn btn-success" href="trest/zrusit/{$punishment->id()}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">Zrušit trest</a>
-				</div>
-			</div>
-		{/if}
-		<hr>
-	{/if}
+    {if $this->hasAccess('tresty/zablokovat')}
+        {if $punishment === null || $punishment->expired()}
+            <div class="row">
+                <div class="col-sm-2 col-sm-offset-5 text-center">
+                    <h2>Trest</h2>
+                    <form method="POST"
+                          action="tresty/zablokovat/{$owner->id()}"
+                          class="form-horizontal" role="form">
+                        <input type="hidden" name="{$csrf->key()}"
+                               value="{$csrf->protection()}">
+                        <div class="form-group">
+                            <label>Důvod</label>
+                            <select name="reason" class="form-control">
+                                <option value="Nevhodné chování">Nevhodné
+                                    chování
+                                </option>
+                                <option value="Sprosté vyjadřování">Sprosté
+                                    vyjadřování
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Expirace</label>
+                            <input id="datetimepicker" type="text"
+                                   name="expiration"
+                                   value="{isset($expiration) ? $expiration : null}"
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <button name="punishUser" type="submit"
+                                    class="btn btn-danger">Potrestat
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {/if}
+    {/if}
+    {if $this->hasAccess('trest/zrusit') && $punishment !== null}
+        {if !$punishment->expired()}
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-4 text-center">
+                    <h2>Odblokování</h2>
+                    <p>
+                        Blokace do
+                        <strong>
+                            {$punishment->expiration()->format('j.n.Y H:i')}
+                        </strong>
+                        z důvodu <strong>{$punishment->reason()}</strong>
+                    </p>
+                    <a class="btn btn-success"
+                       href="trest/zrusit/{$punishment->id()}/?{$this->csrf->key()}={$this->csrf->protection()}"
+                       role="button">Zrušit trest</a>
+                </div>
+            </div>
+        {/if}
+    {/if}
+    <hr>
 {/if}
 
 {if $this->hasAccess('profil/povysit') && $this->hasAccess('profil/degradovat')}
-	{if $this->identity->id() !== $owner->id() && $this->identity->role()->rank() > $owner->role()->rank()}
-		<div class="row">
-			<div class="col-sm-2 col-sm-offset-5 text-center">
-				<h2>Role</h2>
-				<a class="btn btn-success" title="Povýšit" href="profil/povysit/{$username}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">▲</a>
-				<a class="btn btn-danger" title="Degradovat" href="profil/degradovat/{$username}/?{$this->csrf->key()}={$this->csrf->protection()}" role="button">▼</a>
-			</div>
-		</div>
-	{/if}
+    {if $this->identity->id() !== $owner->id() && $this->identity->role()->rank() > $owner->role()->rank()}
+        <div class="row">
+            <div class="col-sm-2 col-sm-offset-5 text-center">
+                <h2>Role</h2>
+                <a class="btn btn-success" title="Povýšit"
+                   href="profil/povysit/{$username}/?{$this->csrf->key()}={$this->csrf->protection()}"
+                   role="button">▲</a>
+                <a class="btn btn-danger" title="Degradovat"
+                   href="profil/degradovat/{$username}/?{$this->csrf->key()}={$this->csrf->protection()}"
+                   role="button">▼</a>
+            </div>
+        </div>
+    {/if}
 {/if}
