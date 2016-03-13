@@ -50,7 +50,7 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 	public function testAdding() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE documents');
-		$last = (new Wiki\OwnedMySqlDocuments(
+		$document = (new Wiki\OwnedMySqlDocuments(
             new Fake\Identity(4),
             $connection
         ))->add(
@@ -58,7 +58,7 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 			'new description...',
 			new Fake\InformationSource(2, 'some_place', 2005, 'facedown')
 		);
-        Assert::equal(new Wiki\MySqlDocument(1, $connection), $last);
+        Assert::equal(new Wiki\MySqlDocument(1, $connection), $document);
 		Assert::same(
 			[
 				'user_id' => 4,
