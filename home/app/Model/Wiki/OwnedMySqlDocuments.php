@@ -70,7 +70,7 @@ final class OwnedMySqlDocuments implements Documents {
 		string $title,
 		string $description,
 		InformationSource $source
-	) {
+	): Document {
 		if($this->isDuplicate($title))
 			throw new Exception\DuplicateException('Titulek již existuje');
 		$this->database->query(
@@ -84,6 +84,10 @@ final class OwnedMySqlDocuments implements Documents {
 				$title,
 			]
 		);
+        return new MySqlDocument(
+            $this->database->fetchColumn('SELECT LAST_INSERT_ID()'),
+            $this->database
+        );
 	}
 
 	private function isDuplicate(string $title): bool {

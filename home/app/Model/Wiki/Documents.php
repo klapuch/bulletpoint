@@ -9,5 +9,5 @@ interface Documents {
 		string $title,
 		string $description,
 		InformationSource $source
-	);
+	): Document;
 }

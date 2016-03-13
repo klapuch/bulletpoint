@@ -16,7 +16,7 @@ use Bulletpoint\Model\Access;
 require __DIR__ . '/../../../bootstrap.php';
 
 final class OwnedMySqlDocuments extends TestCase\Database {
-	public function testIteratingByIdentity() {
+	public function testIterating() {
 		$connection = $this->preparedDatabaseForIterating();
 		$rows = (new Wiki\OwnedMySqlDocuments(new Fake\Identity(2), $connection))
 		->iterate();
@@ -50,12 +50,15 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 	public function testAdding() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE documents');
-		(new Wiki\OwnedMySqlDocuments(new Fake\Identity(4), $connection))
-		->add(
+		$last = (new Wiki\OwnedMySqlDocuments(
+            new Fake\Identity(4),
+            $connection
+        ))->add(
 			'new title...',
 			'new description...',
 			new Fake\InformationSource(2, 'some_place', 2005, 'facedown')
 		);
+        Assert::equal(new Wiki\MySqlDocument(1, $connection), $last);
 		Assert::same(
 			[
 				'user_id' => 4,
