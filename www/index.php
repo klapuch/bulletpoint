@@ -59,7 +59,7 @@ $url = new Http\CachedAddress(
 );
 
 try {
-	$page = (new Page\FrontPage(
+	(new Page\FrontPage(
 		new Http\Request($_GET, $_POST, $url),
 		new UI\LatteTemplate(
 			new Filesystem\SprintfPath(
