@@ -27,6 +27,7 @@ php_value expose_php 0
 php_value display_errors 0
 php_value error_reporting 0
 php_value zlib.output_compression 1
+php_value session.name SESSION
 
 <IfModule mod_expires.c>
    ExpiresActive on
