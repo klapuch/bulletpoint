@@ -25,7 +25,7 @@ final class TemporaryLogin implements Login {
 		);
 		if(!$this->exists($id))
 			throw new Exception\AccessDeniedException('Uživatel neexistuje');
-		elseif(!$this->isActivated($id))
+		elseif(!$this->activated($id))
 			throw new Exception\AccessDeniedException('Účet není aktivován');
 		elseif(!$this->cipher->decrypt($user->password(), $password))
 			throw new Exception\AccessDeniedException('Nesprávné heslo');
@@ -40,7 +40,7 @@ final class TemporaryLogin implements Login {
 		return (int)$id !== 0;
 	}
 
-	private function isActivated(int $id): bool {
+	private function activated(int $id): bool {
 		return (bool)$this->database->fetch(
 			'SELECT 1 FROM verification_codes WHERE user_id = ? AND used = 1',
 			[$id]

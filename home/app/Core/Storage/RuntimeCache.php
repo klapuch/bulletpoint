@@ -13,7 +13,7 @@ final class RuntimeCache implements Cache {
 			return $this->cache[$key];
 	}
 
-	private function isInCache(string $key) {
+	private function isInCache(string $key): bool {
 		return isset($this->cache[$key]);
 	}
 }

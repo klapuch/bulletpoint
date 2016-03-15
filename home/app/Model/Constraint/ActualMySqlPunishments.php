@@ -15,7 +15,7 @@ final class ActualMySqlPunishments extends Punishments {
 		\DateTime $expiration,
 		string $reason
 	) {
-		if($this->isPast($expiration)) {
+		if($this->past($expiration)) {
             throw new \LogicException(
                 'Trest musí být udělen pouze na budoucí období'
             );
@@ -23,7 +23,7 @@ final class ActualMySqlPunishments extends Punishments {
         parent::punish($sinner, $expiration, $reason);
 	}
 
-	private function isPast(\DateTime $expiration): bool {
+	private function past(\DateTime $expiration): bool {
 		return $expiration < new \DateTime;
 	}
 }
