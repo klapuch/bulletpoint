@@ -31,15 +31,14 @@ final class ForgottenPasswordMessage implements Message {
 				FROM message_templates
 				WHERE designation = "forgotten-password"'
 			),
-			...$this->database->fetch(
+			...$this->database->query(
 				'SELECT reminder, reminder
 				FROM forgotten_passwords
 				WHERE user_id = (SELECT ID FROM users WHERE email = ?)
 				ORDER BY reminded_at DESC
 				LIMIT 1',
-				[$this->recipient],
-				\PDO::FETCH_NUM
-			)
+				[$this->recipient]
+			)->fetch(\PDO::FETCH_NUM)
 		);
 	}
 }

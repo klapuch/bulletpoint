@@ -31,13 +31,12 @@ final class ActivationMessage implements Message {
 				FROM message_templates
 				WHERE designation = "activation"'
 			),
-			...$this->database->fetch(
+			...$this->database->query(
 				'SELECT code, code
 				FROM verification_codes
 				WHERE user_id = (SELECT ID FROM users WHERE email = ?)',
-				[$this->recipient],
-				\PDO::FETCH_NUM
-			)
+				[$this->recipient]
+			)->fetch(\PDO::FETCH_NUM)
 		);
 	}
 }

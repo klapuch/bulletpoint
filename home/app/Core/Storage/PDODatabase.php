@@ -6,6 +6,7 @@ final class PDODatabase implements Database {
 	const OPTIONS = [
 		\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
 		\PDO::ATTR_EMULATE_PREPARES => false,
+		\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
 	];
 
 	public function __construct(
@@ -30,20 +31,12 @@ final class PDODatabase implements Database {
 		}
 	}
 
-	public function fetch(
-		string $query,
-		array $parameters = [],
-		int $style = \PDO::FETCH_ASSOC
-	) {
-		return $this->query($query, $parameters)->fetch($style);
+	public function fetch(string $query, array $parameters = []) {
+		return $this->query($query, $parameters)->fetch();
 	}
 
-	public function fetchAll(
-		string $query,
-		array $parameters = [],
-		int $style = \PDO::FETCH_ASSOC
-	) {
-		return $this->query($query, $parameters)->fetchAll($style);
+	public function fetchAll(string $query, array $parameters = []) {
+		return $this->query($query, $parameters)->fetchAll();
 	}
 
 	public function fetchColumn(string $query, array $parameters = []) {

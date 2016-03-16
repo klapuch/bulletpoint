@@ -76,9 +76,6 @@ final class PDODatabase extends Tester\TestCase {
 				[5, 0, 10] // test \PDO::ATTR_EMULATE_PREPARES => false
 			)
 		);
-		$rows = $this->database->fetch('SELECT * FROM test', [], \PDO::FETCH_OBJ);
-		Assert::equal(5, $rows->ID);
-		Assert::equal('foo', $rows->name);
 	}
 
 	public function testFetchingAll() {
@@ -86,7 +83,7 @@ final class PDODatabase extends Tester\TestCase {
 			'INSERT INTO test (ID, name) VALUES (?, ?)',
 			[5, 'foo']
 		);
-		$rows = $this->database->fetchAll('SELECT * FROM test', [], \PDO::FETCH_ASSOC);
+		$rows = $this->database->fetchAll('SELECT * FROM test');
 		Assert::equal(5, $rows[0]['ID']);
 		Assert::equal('foo', $rows[0]['name']);
 	}

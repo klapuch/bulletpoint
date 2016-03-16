@@ -18,11 +18,10 @@ final class TemporaryLogin implements Login {
 	}
 
 	public function enter(User\User $user): Identity {
-		list($id, $password, $role) = $this->database->fetch(
+		list($id, $password, $role) = $this->database->query(
 			'SELECT ID, `password`, role FROM users WHERE username = ?',
-			[$user->username()],
-			\PDO::FETCH_NUM
-		);
+			[$user->username()]
+		)->fetch(\PDO::FETCH_NUM);
 		if(!$this->exists($id))
 			throw new Exception\AccessDeniedException('Uživatel neexistuje');
 		elseif(!$this->activated($id))

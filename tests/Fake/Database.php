@@ -24,11 +24,11 @@ final class Database implements Storage\Database {
 		$this->connection = $connection;
 	}
 
-	public function fetch(string $query, array $parameters = [], int $style = 0) {
+	public function fetch(string $query, array $parameters = []) {
 		return $this->fetch;
 	}
 	
-	public function fetchAll(string $query, array $parameters = [], int $style = 0) {
+	public function fetchAll(string $query, array $parameters = []) {
 		return $this->fetchAll;
 	}
 
