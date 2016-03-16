@@ -5,6 +5,7 @@ use Bulletpoint\Core\Storage;
 use Bulletpoint\Model\{Access, Wiki};
 
 final class MySqlBulletpointRating implements Rating {
+    const NEUTRAL = "0";
 	private $bulletpoint;
 	private $myself;
 	private $database;
@@ -20,22 +21,22 @@ final class MySqlBulletpointRating implements Rating {
 	}
 
 	public function increment() {
-		$this->change(self::PROS);
+		$this->rate(self::PROS);
 	}
 
 	public function decrement() {
-		$this->change(self::CONS);
+		$this->rate(self::CONS);
 	}
 
 	public function pros(): int {
-		return $this->value(self::PROS);
+		return $this->total(self::PROS);
 	}
 
 	public function cons(): int {
-		return $this->value(self::CONS);
+		return $this->total(self::CONS);
 	}
 
-	private function value(string $rating): int {
+	private function total(string $rating): int {
 		return $this->database->fetchColumn(
 			'SELECT COUNT(ID)
 			FROM bulletpoint_ratings
@@ -44,7 +45,7 @@ final class MySqlBulletpointRating implements Rating {
 		);
 	}
 
-	private function change(string $rating) {
+	private function rate(string $rating) {
 		if($this->isReset($rating))
 			$rating = self::NEUTRAL;
 		$this->database->query(

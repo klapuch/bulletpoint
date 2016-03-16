@@ -19,9 +19,12 @@ final class MySqlComplaints extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO comment_complaints (comment_id, settled, reason)
-			VALUES (1, 0, "Jiné"), (1, 0, "Jiné"), (1, 0, "Spam"),
-			(2, 0, "Vulgarita")'
+			'INSERT INTO comment_complaints (comment_id, settled, reason, complained_at)
+			VALUES
+			(1, 0, "Jiné", NOW()),
+			(1, 0, "Jiné", NOW()),
+			(1, 0, "Spam", NOW()),
+			(2, 0, "Vulgarita", NOW() - INTERVAL 1 DAY)'
 		);
 		$rows = (new Report\MySqlComplaints(
 			new Fake\Identity(1),
@@ -47,9 +50,7 @@ final class MySqlComplaints extends TestCase\Database {
 		))->settle(new Fake\Target(1));
 		Assert::same(
 			1,
-			$connection->fetchColumn(
-				'SELECT settled FROM comment_complaints'
-			)
+			$connection->fetchColumn('SELECT settled FROM comment_complaints')
 		);
 	}
 
@@ -73,7 +74,7 @@ final class MySqlComplaints extends TestCase\Database {
 	}
 
 	/**
-	* @throws OverflowException Tento komentář jsi již nahlásil
+	* @throws \OverflowException Tento komentář jsi již nahlásil
 	*/
 	public function testAlreadyCompalinedComment() {
 		$connection = $this->preparedDatabase();
