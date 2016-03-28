@@ -11,6 +11,9 @@ application:
 
 session:
 	expiration: 14 days
+	cookie_secure: 1
+	use_strict_mode: 1
+	cookie_httponly: 1
 
 forms:
     messages:
