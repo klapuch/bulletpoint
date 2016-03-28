@@ -20,6 +20,7 @@ final class MySqlCriticComplaints implements Complaints {
         $this->origin = $origin;
     }
 
+    // TODO: May cause sql roundtrip - allow target be nullable and iterate only by critic
     public function iterate(Target $target): \Iterator {
         $rows = $this->database->fetchAll(
             'SELECT comment_complaints.ID,
