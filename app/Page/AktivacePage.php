@@ -33,11 +33,12 @@ final class AktivacePage extends BasePage {
             $this->flashMessage('Jsi úspěšně přihlášen', 'success');
         } catch(Exception\FormatException $ex) {
             $this->flashMessage($ex->getMessage(), 'danger');
+            $this->redirect('Prihlasit:');
         } catch(Exception\ExistenceException $ex) {
             $this->flashMessage($ex->getMessage(), 'danger');
+            $this->redirect('Prihlasit:');
         } catch(Exception\DuplicateException $ex) {
             $this->flashMessage($ex->getMessage(), 'danger');
-        } finally {
             $this->redirect('Prihlasit:');
         }
     }
