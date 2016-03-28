@@ -15,7 +15,7 @@ require __DIR__ . '/../../../bootstrap.php';
 
 final class BulletpointProposalExistenceRule extends \Tester\TestCase {
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Návrh neexistuje
+	* @throws \Bulletpoint\Exception\ExistenceException Návrh neexistuje
 	*/
 	public function testUnknownEmail() {
 		(new Constraint\BulletpointProposalExistenceRule(

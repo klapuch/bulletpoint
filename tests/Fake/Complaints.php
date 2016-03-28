@@ -4,7 +4,7 @@ namespace Bulletpoint\Fake;
 use Bulletpoint\Model\Report;
 
 final class Complaints implements Report\Complaints {
-	public function iterate(): \Iterator {
+	public function iterate(Report\Target $target): \Iterator {
 
 	}
 
@@ -12,7 +12,7 @@ final class Complaints implements Report\Complaints {
 
 	}
 
-	public function complain(Report\Target $target, string $reason) {
-		echo $reason;
+	public function complain(Report\Target $target, string $reason): Report\Complaint {
+		return new Complaint($reason);
 	}
 }

@@ -45,7 +45,7 @@ final class MySqlBulletpointRating extends TestCase\Database {
 			$this->preparedDatabase()
 		);
 		Assert::same(2, $rating->pros());
-		$rating->increment();
+		$rating->increase();
 		Assert::same(3, $rating->pros());
 	}
 
@@ -56,7 +56,7 @@ final class MySqlBulletpointRating extends TestCase\Database {
 			$this->preparedDatabase()
 		);
 		Assert::same(1, $rating->cons());
-		$rating->decrement();
+		$rating->decrease();
 		Assert::same(2, $rating->cons());
 	}
 
@@ -68,7 +68,7 @@ final class MySqlBulletpointRating extends TestCase\Database {
 		);
 		Assert::same(2, $rating->pros());
 		Assert::same(1, $rating->cons());
-		$rating->decrement();
+		$rating->decrease();
 		Assert::same(1, $rating->pros());
 		Assert::same(2, $rating->cons());
 	}
@@ -81,7 +81,7 @@ final class MySqlBulletpointRating extends TestCase\Database {
 		);
 		Assert::same(2, $rating->pros());
 		Assert::same(1, $rating->cons());
-		$rating->increment();
+		$rating->increase();
 		Assert::same(1, $rating->pros());
 		Assert::same(1, $rating->cons());
 	}

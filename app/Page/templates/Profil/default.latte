@@ -1,0 +1,31 @@
+{block content}
+{define scripts}
+    <script async src="{$basePath}/js/datetimepicker.min.js"
+            type="text/javascript"></script>{/define}
+{define styles}
+    <link rel="stylesheet" href="{$basePath}/css/datetimepicker.min.css"
+          type="text/css">{/define}
+{define description}Veřený profil uživatele {$username}{/define}
+<div class="text-center">
+    <h1>{block title}{$username}{/block}</h1>
+    <h6 title="role">{$role}</h6>
+</div>
+{control profilePhoto:center}
+<div class="row text-center">
+    <div class="col-sm-4">
+        <h3>Počet dokumentů:</h3>
+        <h4>{$documents}</h4>
+    </div>
+    <div class="col-sm-4">
+        <h3>Počet bulletpointů:</h3>
+        <h4>{$bulletpoints}</h4>
+    </div>
+    <div class="col-sm-4">
+        <h3>Počet komentářů:</h3>
+        <h4>{$comments}</h4>
+    </div>
+</div>
+<hr>
+
+{control punishment}
+{control role}

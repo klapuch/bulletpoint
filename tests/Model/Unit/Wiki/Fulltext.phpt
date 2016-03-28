@@ -29,7 +29,7 @@ final class Fulltext extends TestCase\Database {
 		Assert::same('sl-ug', $matches[1][0]['slug']);
 	}
 
-	public function testNoMatches() {
+	public function testNoMatch() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
 			'INSERT INTO documents (title, description)
@@ -39,7 +39,7 @@ final class Fulltext extends TestCase\Database {
 		Assert::same(0, key($matches));
 	}
 
-	public function testSearchingForEmptyKeyword() {
+	public function testLookingForEmptyKeyword() {
 		$connection = $this->preparedDatabase();
 		$matches = (new Wiki\Fulltext($connection))->matches('');
 		Assert::same(0, key($matches));

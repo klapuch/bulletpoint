@@ -14,21 +14,21 @@ use Bulletpoint\Model\Constraint;
 require __DIR__ . '/../../../bootstrap.php';
 
 final class EmailExistenceRule extends \Tester\TestCase {
-	/**
-	* @throws Bulletpoint\Exception\ExistenceException Email foo@bar.cz neexistuje
-	*/
-	public function testUnknownEmail() {
-		(new Constraint\EmailExistenceRule(
-			new Fake\Database($fetch = false)
-		))->isSatisfied('foo@bar.cz');
-	}
+    /**
+     * @throws \Bulletpoint\Exception\ExistenceException Email neexistuje
+     */
+    public function testUnknownEmail() {
+        (new Constraint\EmailExistenceRule(
+            new Fake\Database($fetch = false)
+        ))->isSatisfied('foo@foo.cz');
+    }
 
-	public function testExistingEmail() {
-		(new Constraint\EmailExistenceRule(
-			new Fake\Database($fetch = true)
-		))->isSatisfied('facedown@facedown.cz');
-		Assert::true(true);
-	}
+    public function testExistingEmail() {
+        (new Constraint\EmailExistenceRule(
+            new Fake\Database($fetch = true)
+        ))->isSatisfied('facedown@facedown.cz');
+        Assert::true(true);
+    }
 }
 
 

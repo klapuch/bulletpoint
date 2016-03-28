@@ -22,7 +22,7 @@ final class MySqlComment extends TestCase\Database {
 			(new Conversation\MySqlComment(
 				1,
 				new Fake\Identity(1),
-				$this->preparedComments()
+				$this->preparedDatabase()
 			))->content()
 		);
 	}
@@ -33,24 +33,25 @@ final class MySqlComment extends TestCase\Database {
 			(new Conversation\MySqlComment(
 				1,
 				new Fake\Identity(1),
-				$this->preparedComments()
+				$this->preparedDatabase()
 			))->date()
 		);
 	}
 
 	public function testAuthor() {
+        $connection = $this->preparedDatabase();
 		Assert::equal(
-			new Access\MySqlIdentity(1, $this->connection()),
+			new Access\MySqlIdentity(1, $connection),
 			(new Conversation\MySqlComment(
 				1,
 				new Fake\Identity(10, new Fake\Role('user')),
-				$this->preparedDatabase()
+				$connection
 			))->author()
 		);
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\AccessDeniedException Tento komentář jsi nenapsal
+	* @throws \Bulletpoint\Exception\AccessDeniedException Tento komentář jsi nenapsal
 	*/
 	public function testEditingForeignComment() {
 		(new Conversation\MySqlComment(
@@ -61,7 +62,7 @@ final class MySqlComment extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\AccessDeniedException Tento komentář již nemůže být upravován
+	* @throws \Bulletpoint\Exception\AccessDeniedException Tento komentář již nemůže být upravován
 	*/
 	public function testEditingInvisibleComment() {
 		$connection = $this->connection();
@@ -74,27 +75,14 @@ final class MySqlComment extends TestCase\Database {
 	}
 
 	public function testErasingComment() {
-		$connection = $this->preparedComments();
+		$connection = $this->preparedDatabase();
 		(new Conversation\MySqlComment(1, new Fake\Identity(1), $connection))
 		->erase();
 		Assert::same(1, $connection->fetchColumn('SELECT COUNT(ID) FROM comments'));
 		Assert::same(0, $connection->fetchColumn('SELECT visible FROM comments'));
 	}
 
-	/**
-	* @throws LogicException Komentář je již smazán
-	*/
-	public function testErasingErasedComment() {
-		$connection = $this->connection();
-		$connection->query('TRUNCATE comments');
-		$connection->query(
-			'INSERT INTO comments (user_id, visible) VALUES (1, 0)'
-		);
-		(new Conversation\MySqlComment(1, new Fake\Identity(1), $connection))
-		->erase();
-	}
-
-	public function testEditingOwnComment() {
+	public function testEditingOwnedComment() {
 		$connection = $this->preparedDatabase();
 		(new Conversation\MySqlComment(1, new Fake\Identity(1), $connection))
 		->edit('Uaa new comment');
@@ -106,22 +94,16 @@ final class MySqlComment extends TestCase\Database {
 		);
 	}
 
-	private function preparedComments() {
+	private function preparedDatabase() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE comments');
+		$connection->query('TRUNCATE users');
+        $connection->query(
+            'INSERT INTO users (ID, role) VALUES (1, "user")'
+        );
 		$connection->query(
 			'INSERT INTO comments (ID, user_id, posted_at, content, document_id)
 			VALUES (1, 1, "2000-01-01 01:01:01", "great comment", 6)'
-		);
-		return $connection;
-	}
-
-	private function preparedDatabase() {
-		$connection = $this->connection();
-		$connection->query('TRUNCATE users');
-		$this->preparedComments();
-		$connection->query(
-			'INSERT INTO users (ID, role) VALUES (1, "user")'
 		);
 		return $connection;
 	}

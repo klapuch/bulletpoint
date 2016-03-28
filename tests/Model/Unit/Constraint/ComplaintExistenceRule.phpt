@@ -15,7 +15,7 @@ require __DIR__ . '/../../../bootstrap.php';
 
 final class ComplaintExistenceRule extends \Tester\TestCase {
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Stížnost neexistuje
+	* @throws \Bulletpoint\Exception\ExistenceException Stížnost neexistuje
 	*/
 	public function testUnknownEmail() {
 		(new Constraint\ComplaintExistenceRule(

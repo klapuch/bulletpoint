@@ -27,7 +27,7 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 				new Access\ConstantIdentity(
 					2,
 					new Access\ConstantRole(
-						'admin',
+						'administrator',
 						new Access\MySqlRole(2, $connection)
 					),
 					'facedown'
@@ -75,7 +75,7 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\DuplicateException Titulek již existuje
+	* @throws \Bulletpoint\Exception\DuplicateException Titulek již existuje
 	*/
 	public function testAddingExistingOne() {
 		$connection = $this->connection();
@@ -102,10 +102,10 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 		$connection->query('TRUNCATE users');
 		$connection->query('TRUNCATE information_sources');
 		$connection->query(
-			'INSERT INTO users (ID, role, username)
+			'INSERT INTO users (ID, role, username, email)
 			VALUES
-			(1, "user", "cucak"),
-			(2, "admin", "facedown")'
+			(1, "member", "cucak", "e"),
+			(2, "administrator", "facedown", "e2")'
 		);
 		$connection->query(
 			'INSERT INTO information_sources

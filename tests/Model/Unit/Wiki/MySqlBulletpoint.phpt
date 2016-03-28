@@ -96,6 +96,14 @@ final class MySqlBulletpoint extends TestCase\Database {
 		);
 	}
 
+    /**
+     * @throws \Bulletpoint\Exception\DuplicateException Bulletpoint již existuje
+     */
+    public function testEditingToDuplication() {
+        $connection = $this->preparedBulletpoints();
+        (new Wiki\MySqlBulletpoint(1, $connection))->edit('second');
+    }
+
 	private function preparedInformationSources() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE information_sources');
@@ -115,7 +123,7 @@ final class MySqlBulletpoint extends TestCase\Database {
 			'INSERT INTO bulletpoints
 			(ID, content, user_id, information_source_id, created_at, document_id)
 			VALUES (1, "first", 1, 1, "2000-01-01 01:01:01", 1),
-			(2, "second", 2, 2, "2000-01-01 01:01:01", 2)'
+			(2, "second", 2, 2, "2000-01-01 01:01:01", 1)'
 		);
 		return $connection;
 	}

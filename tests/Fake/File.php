@@ -1,7 +1,7 @@
 <?php
 namespace Bulletpoint\Fake;
 
-use Bulletpoint\Core\Filesystem;
+use Bulletpoint\Model\Filesystem;
 
 final class File implements Filesystem\File {
 	private $name;

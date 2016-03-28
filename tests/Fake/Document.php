@@ -5,25 +5,27 @@ use Bulletpoint\Model\{Access, Wiki};
 
 final class Document implements Wiki\Document {
 	private $id;
+	private $description;
 
-	public function __construct(int $id) {
+	public function __construct(int $id, string $description = '') {
 		$this->id = $id;
+		$this->description = $description;
 	}
 
 	public function author(): Access\Identity {
-
+        return new Identity();
 	}
 
 	public function description(): string {
-
+        return $this->description;
 	}
 
 	public function title(): string {
-
+        return 'title method';
 	}
 
 	public function source(): Wiki\InformationSource {
-
+        return new InformationSource();
 	}
 
 	public function id(): int {
@@ -31,9 +33,9 @@ final class Document implements Wiki\Document {
 	}
 
 	public function date(): \Datetime {
-		
+		return new \DateTime();
 	}
+
 	public function edit(string $title, string $description) {
-		
 	}
 }

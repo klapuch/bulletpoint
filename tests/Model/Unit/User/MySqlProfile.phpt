@@ -68,7 +68,8 @@ final class MySqlProfile extends TestCase\Database {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE bulletpoints');
 		$connection->query(
-			'INSERT INTO bulletpoints (user_id) VALUES (1), (1), (2)'
+			'INSERT INTO bulletpoints (user_id, content, document_id) VALUES
+            (1, "a", 1), (1, "b", 2), (2, "c", 3)'
 		);
 		return $connection;
 	}
@@ -77,7 +78,8 @@ final class MySqlProfile extends TestCase\Database {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE documents');
 		$connection->query(
-			'INSERT INTO documents (user_id) VALUES (1), (1), (2)'
+			'INSERT INTO documents (user_id, title) VALUES
+            (1, "a"), (1, "b"), (2, "c")'
 		);
 		return $connection;
 	}

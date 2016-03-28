@@ -1,0 +1,7 @@
+{if $comments->valid()}
+    {foreach $comments as $comment}
+        {control discussion-{$comment->id()}}
+    {/foreach}
+{else}
+    <p>V diskuzi nejsou žádné komentáře</p>
+{/if}

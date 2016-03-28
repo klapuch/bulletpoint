@@ -1,14 +1,18 @@
 <?php
 declare(strict_types = 1);
-use Bulletpoint\Core\Control;
 
-require __DIR__ . '/../home/app/Core/Control/AutoLoader.php';
-require __DIR__ . '/../home/vendor/autoload.php';
-
-spl_autoload_register([
-	new Control\AutoLoader([__DIR__ . '/../home/app', __DIR__]),
-	'load'
-]);
+require __DIR__ . '/../vendor/autoload.php';
 
 Tester\Environment::setup();
 date_default_timezone_set('Europe/Prague');
+
+$configurator = new Nette\Configurator;
+$configurator->setDebugMode(false);
+$configurator->setTempDirectory(__DIR__ . '/temp');
+$configurator->createRobotLoader()
+    ->addDirectory(__DIR__)
+    ->addDirectory(__DIR__ . '/../app')
+    ->addDirectory(__DIR__ . '/../vendor/mockery')
+    ->register();
+
+return $configurator->createContainer();

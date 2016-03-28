@@ -1,0 +1,21 @@
+{block content}
+{define description}Úprava stávajícího dokumentu{/define}
+<div class="row">
+    <h1>{block title}Úprava dokumentu <strong>{$document->title()}</strong>{/block}</h1>
+</div>
+<form n:name="editProposalForm" class="form-horizontal" role="form">
+    {formContainer document}
+        <div class="form-group">
+            {label title /}
+            {input title class => "form-control", placeholder => "Titulek"}
+        </div>
+        <div class="form-group">
+            {label description /}
+            {input description class => "form-control", placeholder => "Popis", rows => 30}
+            <p class="help-block">Popis slouží k přiblížení titulku čtenáři</p>
+        </div>
+        <div class="form-group">
+            {input act class => "btn btn-success", value => "Upravit"}
+        </div>
+    {/formContainer}
+</form>

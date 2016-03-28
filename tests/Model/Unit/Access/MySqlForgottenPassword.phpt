@@ -18,9 +18,6 @@ final class MySqlForgottenPassword extends TestCase\Database {
 	public function testChanging() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO users (`password`, email) VALUES ("123", "foo@bar.cz")'
-		);
-		$connection->query(
 			'INSERT INTO forgotten_passwords
 			(user_id, used, reminder)
 			VALUES (1, 0, "123456")'
@@ -50,6 +47,9 @@ final class MySqlForgottenPassword extends TestCase\Database {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE forgotten_passwords');
 		$connection->query('TRUNCATE users');
+        $connection->query(
+            'INSERT INTO users (`password`, email) VALUES ("123", "foo@bar.cz")'
+        );
 		return $connection;
 	}
 }

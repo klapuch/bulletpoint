@@ -15,7 +15,7 @@ require __DIR__ . '/../../../bootstrap.php';
 
 final class PunishmentExistenceRule extends \Tester\TestCase {
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Trest neexistuje
+	* @throws \Bulletpoint\Exception\ExistenceException Trest neexistuje
 	*/
 	public function testUnknownEmail() {
 		(new Constraint\PunishmentExistenceRule(

@@ -1,0 +1,37 @@
+{block content}
+{define description}Souhrn návrhů pro budoucí dokumenty{/define}
+<div class="btn-group btn-group-justified">
+    <a n:href="Navrhy:Dokumenty" class="btn btn-default active">Dokumenty</a>
+    <a n:href="Navrhy:Bulletpointy" class="btn btn-default">Bulletpointy</a>
+</div>
+<h1>{block title}Návrhy na dokumenty{/block}</h1>
+{if $proposals->valid()}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th><p>#</p></th>
+            <th><p>Datum</p></th>
+            <th><p>Autor</p></th>
+            <th><p>Titulek</p></th>
+            <th><p>Zobrazení</p></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr n:foreach="$proposals as $proposal">
+            <td><p>{$iterator->counter}</p></td>
+            <td><p>{$proposal->date()->format('j.n.Y H:i')}</p></td>
+            <td><p>
+                    <a n:href="Profil: $proposal->author()->username()">{$proposal->author()->username()}</a>
+                </p></td>
+            <td class="ellipsis"><p>
+                    <a n:href="NavrhnutyDokument: $proposal->id()">{$proposal->title()}</a>
+                </p></td>
+            <td>
+                <a class="btn btn-primary" n:href="NavrhnutyDokument: $proposal->id()"
+                   role="button">Zobrazit</a></td>
+        </tr>
+        </tbody>
+    </table>
+{else}
+    <h2>Nebyly navrhnuty žádné dokumenty</h2>
+{/if}

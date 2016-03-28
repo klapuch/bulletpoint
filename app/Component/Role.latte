@@ -1,0 +1,15 @@
+{if $user->isAllowed('role')}
+    {if $identity->id() !== $owner->id() && $identity->role()->rank() > $owner->role()->rank()}
+        <div class="row">
+            <div class="col-sm-2 col-sm-offset-5 text-center">
+                <h2>Role</h2>
+                <a class="btn btn-success" title="Povýšit"
+                        n:href="povysit!"
+                   role="button">▲</a>
+                <a class="btn btn-danger" title="Degradovat"
+                        n:href="degradovat!"
+                   role="button">▼</a>
+            </div>
+        </div>
+    {/if}
+{/if}

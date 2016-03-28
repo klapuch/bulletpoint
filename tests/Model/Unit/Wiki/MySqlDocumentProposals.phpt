@@ -21,7 +21,7 @@ final class MySqlDocumentProposals extends TestCase\Database {
 		$connection->query('TRUNCATE users');
 		$connection->query('TRUNCATE information_sources');
 		$connection->query(
-			'INSERT INTO users (ID, role, username) VALUES (2, "user", "cucak")'
+			'INSERT INTO users (ID, role, username) VALUES (2, "member", "cucak")'
 		);
 		$connection->query(
 			'INSERT INTO document_proposals
@@ -44,7 +44,7 @@ final class MySqlDocumentProposals extends TestCase\Database {
 				new Access\ConstantIdentity(
 					2,
 					new Access\ConstantRole(
-						'user',
+						'member',
 						new Access\MySqlRole(2, $connection)
 					),
 					'cucak'
@@ -88,7 +88,7 @@ final class MySqlDocumentProposals extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\DuplicateException Dokument již existuje
+	* @throws \Bulletpoint\Exception\DuplicateException Dokument již existuje
 	*/
 	public function testProposingExistingDocument() {
 		(new Wiki\MySqlDocumentProposals(

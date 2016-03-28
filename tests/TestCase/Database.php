@@ -1,7 +1,7 @@
 <?php
 namespace Bulletpoint\TestCase;
 
-use Bulletpoint\Core\Storage;
+use Bulletpoint\Model\Storage;
 
 abstract class Database extends Mockery {
 	private $database;

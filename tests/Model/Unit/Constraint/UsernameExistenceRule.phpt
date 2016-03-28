@@ -15,15 +15,15 @@ require __DIR__ . '/../../../bootstrap.php';
 
 final class UsernameExistenceRule extends \Tester\TestCase {
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Přezdívka neexistuje
+	* @throws \Bulletpoint\Exception\ExistenceException Přezdívka neexistuje
 	*/
-	public function testUnknownEmail() {
+	public function testUnknownUsername() {
 		(new Constraint\UsernameExistenceRule(
 			new Fake\Database($fetch = false)
 		))->isSatisfied('face');
 	}
 
-	public function testExistingEmail() {
+	public function testExistingUsername() {
 		(new Constraint\UsernameExistenceRule(
 			new Fake\Database($fetch = true)
 		))->isSatisfied('facedown');

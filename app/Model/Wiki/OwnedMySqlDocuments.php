@@ -1,0 +1,97 @@
+<?php
+namespace Bulletpoint\Model\Wiki;
+
+use Bulletpoint\Model\{
+    Storage, Access
+};
+use Bulletpoint\Exception;
+
+final class OwnedMySqlDocuments implements Documents {
+    private $myself;
+    private $database;
+
+    public function __construct(
+        Access\Identity $myself,
+        Storage\Database $database
+    ) {
+        $this->myself = $myself;
+        $this->database = $database;
+    }
+
+    public function iterate(): \Iterator {
+        $rows = $this->database->fetchAll(
+            'SELECT users.ID AS user_id,
+			users.role,
+			users.username,
+			documents.ID,
+			documents.created_at,
+			documents.description,
+			documents.title,
+			information_sources.ID AS source_id,
+			information_sources.place,
+			information_sources.`year`,
+			information_sources.author
+			FROM documents
+			INNER JOIN users
+			ON users.ID = documents.user_id
+			INNER JOIN information_sources
+			ON documents.information_source_id = information_sources.ID
+			WHERE user_id = ?
+			ORDER BY documents.created_at DESC',
+            [$this->myself->id()]
+        );
+        foreach($rows as $row) {
+            yield new ConstantDocument(
+                $row['title'],
+                $row['description'],
+                new Access\ConstantIdentity(
+                    $row['user_id'],
+                    new Access\ConstantRole(
+                        $row['role'],
+                        new Access\MySqlRole($row['user_id'], $this->database)
+                    ),
+                    $row['username']
+                ),
+                new \DateTime($row['created_at']),
+                new ConstantInformationSource(
+                    $row['place'],
+                    $row['year'],
+                    $row['author'],
+                    new MySqlInformationSource(
+                        $row['source_id'],
+                        $this->database
+                    )
+                ),
+                new MySqlDocument($row['ID'], $this->database)
+            );
+        }
+    }
+
+    public function add(
+        string $title,
+        string $description,
+        InformationSource $source
+    ): Document {
+        try {
+            $this->database->query(
+                'INSERT INTO documents
+                (user_id, information_source_id, description, title)
+                VALUES (?, ?, ?, ?)',
+                [
+                    $this->myself->id(),
+                    $source->id(),
+                    $description,
+                    $title,
+                ]
+            );
+            return new MySqlDocument(
+                $this->database->fetchColumn('SELECT LAST_INSERT_ID()'),
+                $this->database
+            );
+        } catch(\PDOException $ex) {
+            if($ex->getCode() === Storage\Database::INTEGRITY_CONSTRAINT)
+                throw new Exception\DuplicateException('Titulek již existuje');
+            throw $ex;
+        }
+    }
+}

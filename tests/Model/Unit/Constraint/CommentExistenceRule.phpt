@@ -15,7 +15,7 @@ require __DIR__ . '/../../../bootstrap.php';
 
 final class CommentExistenceRule extends \Tester\TestCase {
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Komentář neexistuje
+	* @throws \Bulletpoint\Exception\ExistenceException Komentář neexistuje
 	*/
 	public function testUnknownEmail() {
 		(new Constraint\CommentExistenceRule(

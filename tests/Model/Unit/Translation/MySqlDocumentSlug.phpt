@@ -45,36 +45,21 @@ final class MySqlDocumentSlug extends TestCase\Database {
 		);
 	}
 
-	public function testRenaming() {
-		$database = new Fake\Database($fetch = false);
-		$slug = new Translation\MySqlDocumentSlug(9, $database);
-		Assert::equal( // no restriction for slug
-			new Translation\MySqlDocumentSlug('abc cd', $database),
-			$slug->rename('abc cd')
-		);
-		Assert::equal(
-			new Translation\MySqlDocumentSlug('abc-abc-ab3', $database),
-			$slug->rename('abc-abc-ab3')
-		);
-		Assert::equal(
-			new Translation\MySqlDocumentSlug('abc-abc3_abc', $database),
-			$slug->rename('abc-abc3_abc')
-		);
-	}
-
 	/**
-	* @throws Bulletpoint\Exception\DuplicateException Slug "sl-ug" již existuje
+	* @throws \Bulletpoint\Exception\DuplicateException Slug "sl-ug" již existuje
 	*/
 	public function testRenamingToExistingOne() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO document_slugs (origin, slug) VALUES (9, "sl-ug")'
+			'INSERT INTO document_slugs
+            (origin, slug)
+            VALUES (9, "sl-ug"), (10, "ehhh")'
 		);
 		(new Translation\MySqlDocumentSlug(10, $connection))
 		->rename('sl-ug');
 	}
 
-	public function testValidRenaming() {
+	public function testRenaming() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
 			'INSERT INTO document_slugs (origin, slug)
@@ -83,12 +68,12 @@ final class MySqlDocumentSlug extends TestCase\Database {
 		$firstChange = (new Translation\MySqlDocumentSlug(9, $connection))
 		->rename('sl-ug');
 		$secondChange = (new Translation\MySqlDocumentSlug(10, $connection))
-		->rename('foo');
+		->rename('foo bar'); // no restriction for renaming
 		Assert::equal($firstChange, new Translation\MySqlDocumentSlug('sl-ug', $connection));
-		Assert::equal($secondChange, new Translation\MySqlDocumentSlug('foo', $connection));
+		Assert::equal($secondChange, new Translation\MySqlDocumentSlug('foo bar', $connection));
 		Assert::equal(
 			$connection->fetchAll('SELECT origin, slug FROM document_slugs'),
-			[['origin' => 9, 'slug' => 'sl-ug'], ['origin' => 10, 'slug' => 'foo']]
+			[['origin' => 10, 'slug' => 'foo bar'], ['origin' => 9, 'slug' => 'sl-ug']]
 		);
 	}
 

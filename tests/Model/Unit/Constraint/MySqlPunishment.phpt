@@ -46,7 +46,7 @@ final class MySqlPunishment extends TestCase\Database {
 
 	public function testExpiration() {
 		Assert::equal(
-			new \Datetime("2100-01-01 01:01:01"),
+			new \Datetime('2100-01-01 01:01:01'),
 			(new Constraint\MySqlPunishment(1, $this->preparedDatabase()))->expiration()
 		);
 	}

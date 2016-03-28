@@ -15,7 +15,7 @@ require __DIR__ . '/../../../bootstrap.php';
 
 final class InformationSourceExistenceRule extends \Tester\TestCase {
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Zdroj neexistuje
+	* @throws \Bulletpoint\Exception\ExistenceException Zdroj neexistuje
 	*/
 	public function testUnknownEmail() {
 		(new Constraint\InformationSourceExistenceRule(

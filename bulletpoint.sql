@@ -1,21 +1,7 @@
--- Adminer 4.2.4 MySQL dump
+-- Adminer 4.2.4-dev MySQL dump
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
-SET foreign_key_checks = 0;
-SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
-
-DROP TABLE IF EXISTS `punishments`;
-CREATE TABLE `punishments` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `sinner_id` int(11) NOT NULL,
-  `reason` varchar(100) COLLATE utf8_czech_ci NOT NULL,
-  `expiration` datetime NOT NULL,
-  `author_id` int(11) NOT NULL,
-  `forgiven` bit(1) NOT NULL DEFAULT b'0',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
-
 
 DROP TABLE IF EXISTS `bulletpoints`;
 CREATE TABLE `bulletpoints` (
@@ -156,7 +142,7 @@ DROP TABLE IF EXISTS `information_sources`;
 CREATE TABLE `information_sources` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `place` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
-  `year` year(4) DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
   `author` varchar(100) COLLATE utf8_czech_ci DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
@@ -171,8 +157,22 @@ CREATE TABLE `message_templates` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 INSERT INTO `message_templates` (`ID`, `message`, `designation`) VALUES
-(1, '<h1>Vítej na bulletpoint</h1>\r\n<p>Pro aktivaci účtu navštiv <a href=\"https://www.bulletpoint.cz/aktivace/aktivovat/%s\">tento odkaz</a> nebo využij <a href=\"https://www.bulletpoint.cz/aktivace/manualni-zadani\">manuálního zadání</a> s kódem: <strong>%s</strong></p>\r\n\r\n<p>S přáním krásného dne bulletpoint</p>',  'activation'),
-(2, '<h1>Zapomenuté heslo</h1>\r\n<p>Pro obnovu zapomenutého hesla navštiv <a href=\"https://www.bulletpoint.cz/zapomenute-heslo/reset/%s\">tento odkaz</a> nebo využij <a href=\"https://www.bulletpoint.cz/zapomenute-heslo/manualni-zadani\">manuálního zadání</a> s kódem: <strong>%s</strong></p>\r\n\r\n<p>S přáním krásného dne bulletpoint</p>',  'forgotten-password');
+(1, '<h1>Vítej na bulletpoint</h1>\r\n<p>Pro aktivaci účtu navštiv <a href=\"https://www.bulletpoint.cz/aktivace/aktivovat?code=%s\">tento odkaz</a> nebo do adresního řádku zkopíruj tento odkaz: https://www.bulletpoint.cz/aktivace/aktivovat?code=%s</p>\r\n\r\n<p>S přáním krásného dne bulletpoint</p>',  'activation'),
+(2, '<h1>Zapomenuté heslo</h1>\r\n<p>Pro obnovu zapomenutého hesla navštiv <a href=\"https://www.bulletpoint.cz/zapomenute-heslo/reset?reminder=%s\">tento odkaz</a> nebo do adresního řádku zkopíruj tento odkaz: https://www.bulletpoint.cz/zapomenute-heslo/reset?reminder=%s</p>\r\n\r\n<p>S přáním krásného dne bulletpoint</p>',  'forgotten-password');
+
+
+DROP TABLE IF EXISTS `punishments`;
+CREATE TABLE `punishments` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `sinner_id` int(11) NOT NULL,
+  `reason` varchar(100) COLLATE utf8_czech_ci NOT NULL,
+  `expiration` datetime NOT NULL,
+  `author_id` int(11) NOT NULL,
+  `forgiven` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`ID`),
+  KEY `sinner_id` (`sinner_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
@@ -201,4 +201,4 @@ CREATE TABLE `verification_codes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
--- 2016-02-28 20:33:20
+-- 2016-03-28 16:02:44

@@ -17,11 +17,14 @@ require __DIR__ . '/../../../bootstrap.php';
 final class MySqlVerificationCode extends TestCase\Database {
 	public function testSuccessfulActivation() {
 		$connection = $this->preparedValidCode();
-		$code = new Access\MySqlVerificationCode(
+		$code = (new Access\MySqlVerificationCode(
 			'valid:code',
 			$connection
-		);
-		$code->use();
+		))->use();
+        Assert::equal(
+            new Access\MySqlVerificationCode('valid:code', $connection),
+            $code
+        );
 		Assert::same(
 			1,
 			$connection->fetchColumn(
@@ -31,7 +34,7 @@ final class MySqlVerificationCode extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\DuplicateException Ověřovací kód již byl použit
+	* @throws \Bulletpoint\Exception\DuplicateException Ověřovací kód již byl použit
 	*/
 	public function testAlreadActivatedCode() {
 		$connection = $this->preparedDatabase();
@@ -46,13 +49,13 @@ final class MySqlVerificationCode extends TestCase\Database {
 	}
 
 	public function testOwner() {
-		$this->preparedValidCode();
+		$connection = $this->preparedValidCode();
 		$identity = (new Access\MySqlVerificationCode(
 			'valid:code',
-			$this->connection()
+			$connection
 		))->owner();
 		Assert::same(1, $identity->id());
-		Assert::same('user', (string)$identity->role());
+		Assert::same('member', (string)$identity->role());
 		Assert::same('face', $identity->username());
 	}
 
@@ -64,7 +67,7 @@ final class MySqlVerificationCode extends TestCase\Database {
 			VALUES (1, "valid:code", 0)'
 		);
 		$connection->query(
-			'INSERT INTO users (ID, role, username) VALUES (1, "user", "face")'
+			'INSERT INTO users (ID, role, username) VALUES (1, "member", "face")'
 		);
 		return $connection;
 	}

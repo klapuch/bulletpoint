@@ -15,7 +15,7 @@ require __DIR__ . '/../../../bootstrap.php';
 
 final class DocumentSlugExistenceRule extends \Tester\TestCase {
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Slug neexistuje
+	* @throws \Bulletpoint\Exception\ExistenceException Slug neexistuje
 	*/
 	public function testUnknownEmail() {
 		(new Constraint\DocumentSlugExistenceRule(

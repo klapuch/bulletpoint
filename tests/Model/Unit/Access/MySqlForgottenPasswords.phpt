@@ -17,9 +17,6 @@ require __DIR__ . '/../../../bootstrap.php';
 final class MySqlForgottenPasswords extends TestCase\Database {
 	public function testReminding() {
 		$connection = $this->preparedDatabase();
-		$connection->query(
-			'INSERT INTO users (`password`, email) VALUES ("123", "foo@bar.cz")'
-		);
 		(new Access\MySqlForgottenPasswords(
 			$connection
 		))->remind('foo@bar.cz');
@@ -44,6 +41,9 @@ final class MySqlForgottenPasswords extends TestCase\Database {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE forgotten_passwords');
 		$connection->query('TRUNCATE users');
+        $connection->query(
+            'INSERT INTO users (`password`, email) VALUES ("123", "foo@bar.cz")'
+        );
 		return $connection;
 	}
 }

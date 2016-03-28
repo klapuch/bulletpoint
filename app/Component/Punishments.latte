@@ -1,0 +1,25 @@
+{if $punishments->valid()}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th><p>#</p></th>
+            <th><p>Uživatel</p></th>
+            <th><p>Expirace</p></th>
+            <th><p>Důvod</p></th>
+            <th><p>Zrušení</p></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr n:foreach="$punishments as $punishment">
+            <td><p>{$iterator->counter}</p></td>
+            <td><a href="{plink Profil: $punishment->sinner()->username()}">
+                    <p>{$punishment->sinner()->username()}</p></a></td>
+            <td><p>{$punishment->expiration()->format('j.n.Y H:i')}</p></td>
+            <td><p>{$punishment->reason()}</p></td>
+            <td>{control punishment-{$punishment->id()}:minimal}</td>
+        </tr>
+        </tbody>
+    </table>
+{else}
+    <h2>Nikdo není potrestán</h2>
+{/if}

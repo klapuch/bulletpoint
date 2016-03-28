@@ -1,0 +1,18 @@
+{block content}
+<div class="row">
+    {define description}Úprava bulletpointu k dokumentu {$bulletpoint->document()->title()}{/define}
+    <h1>{block title}Úprava bulletpointu k dokumentu
+            <strong>{$bulletpoint->document()->title()}</strong>{/block}</h1>
+</div>
+<form n:name="editBulletpointForm" class="form-horizontal" role="form">
+    {formContainer bulletpoint}
+        <div class="form-group">
+            {label content /}
+            {input content class => "form-control", placeholder => "Obsah"}
+            <p class="help-block">Prosím, upravujte pouze překlepy</p>
+        </div>
+        <div class="form-group">
+            {input act class => "btn btn-success", value => "Upravit"}
+        </div>
+    {/formContainer}
+</form>

@@ -18,6 +18,8 @@ final class VerificationCodeRule extends \Tester\TestCase {
 		return [
 			[0],
 			['FoooBar'],
+            [''],
+            [' '],
 		];
 	}
 
@@ -37,7 +39,7 @@ final class VerificationCodeRule extends \Tester\TestCase {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Ověřovací kód neexistuje
+	* @throws \Bulletpoint\Exception\ExistenceException Ověřovací kód neexistuje
 	*/
 	public function testUnknownCode() {
 		(new Constraint\VerificationCodeRule(new Fake\Database($fetch = false)))

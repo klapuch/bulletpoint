@@ -30,7 +30,7 @@ final class ReserveVerificationCodes extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Ověřovací kód již byl použit
+	* @throws \Bulletpoint\Exception\ExistenceException Ověřovací kód již byl použit
 	*/
 	public function testRegeneratintForUsedOne() {
 		$connection = $this->preparedDatabase();
@@ -38,7 +38,7 @@ final class ReserveVerificationCodes extends TestCase\Database {
 			'INSERT INTO verification_codes (user_id, code, used)
 			VALUES (6, "123456", 1)'
 		);
-		$code = (new Access\ReserveVerificationCodes($connection))
+		(new Access\ReserveVerificationCodes($connection))
 		->generate('foo@bar.cz');
 	}
 

@@ -1,0 +1,32 @@
+{if $owner->id() !== $identity->id()}
+    {if $user->isAllowed('punishment-punishmentForm-form')}
+        {if $punishment->expired()}
+            <div class="row">
+                <div class="col-sm-2 col-sm-offset-5 text-center">
+                    <h2>Trest</h2>
+                    {control punishmentForm}
+                </div>
+            </div>
+        {/if}
+    {/if}
+    {if $user->isAllowed('punishment')}
+        {if !$punishment->expired()}
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-4 text-center">
+                    <h2>Odblokování</h2>
+                    <p>
+                        Blokace do
+                        <strong>
+                            {$punishment->expiration()->format('j.n.Y H:i')}
+                        </strong>
+                        z důvodu <strong>{$punishment->reason()}</strong>
+                    </p>
+                    <a class="btn btn-success"
+                            n:href="zrusit!"
+                       role="button">Zrušit</a>
+                </div>
+            </div>
+        {/if}
+        <hr>
+    {/if}
+{/if}

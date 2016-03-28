@@ -1,7 +1,7 @@
 <?php
 namespace Bulletpoint\Fake;
 
-use Bulletpoint\Core\Filesystem;
+use Bulletpoint\Model\Filesystem;
 
 final class Path implements Filesystem\Path {
 	private $folder;

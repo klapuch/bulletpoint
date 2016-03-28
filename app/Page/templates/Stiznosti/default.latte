@@ -1,0 +1,26 @@
+{block content}
+{define description}Stížnost na konkrétní komentář{/define}
+<h1>{block title}Stížnosti na komentáře{/block}</h1>
+{if $complaints->valid()}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th><p>#</p></th>
+            <th><p>Počet</p></th>
+            <th><p>Důvod</p></th>
+            <th><p>Detail</p></th>
+        </tr>
+        </thead>
+        <tbody n:inner-foreach="$complaints as $complaint">
+        <tr>
+            <td><p>{$iterator->counter}</p></td>
+            <td><p>{$complaint['total']}x</p></td>
+            <td><p>{$complaint['reason']}</p></td>
+            <td><p><a n:href="Stiznost: $complaint['target']->id()">Zobrazit</a>
+                </p></td>
+        </tr>
+        </tbody>
+    </table>
+{else}
+    <h2>Nejsou žádné stížnosti</h2>
+{/if}

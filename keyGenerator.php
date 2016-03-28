@@ -1,8 +1,9 @@
 <?php
 
 var_dump(
-	preg_replace(
-		'~(..)~', '\x$1',
-		bin2hex(random_bytes(16))
-	)
+    preg_replace(
+        '~(..)~',
+        '\x$1',
+        bin2hex(random_bytes(16))
+    )
 );

@@ -17,10 +17,6 @@ require __DIR__ . '/../../../bootstrap.php';
 final class MySqlVerificationCodes extends TestCase\Database {
 	public function testGenerating() {
 		$connection = $this->preparedDatabase();
-		$connection->query('TRUNCATE users');
-		$connection->query(
-			'INSERT INTO users (ID, email) VALUES (6, "foo@bar.cz")'
-		);
 		(new Access\MySqlVerificationCodes($connection))
 		->generate('foo@bar.cz');
 		Assert::same(
@@ -34,6 +30,10 @@ final class MySqlVerificationCodes extends TestCase\Database {
 	private function preparedDatabase() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE verification_codes');
+        $connection->query('TRUNCATE users');
+        $connection->query(
+            'INSERT INTO users (ID, email) VALUES (6, "foo@bar.cz")'
+        );
 		return $connection;
 	}
 }

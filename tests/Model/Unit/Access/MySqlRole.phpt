@@ -25,7 +25,7 @@ final class MySqlRole extends TestCase\Database {
 		);
 	}
 
-	public function testUndefinedRoleWithRank() {
+	public function testUndefinedRoleRank() {
 		Assert::same(
 			-1,
 			(new Access\MySqlRole(

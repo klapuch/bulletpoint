@@ -19,6 +19,8 @@ final class ReminderRule extends TestCase\Database {
 		return [
 			[0],
 			['FoooBar'],
+            [''],
+            [' '],
 		];
 	}
 
@@ -32,7 +34,7 @@ final class ReminderRule extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\DuplicateException Obnovovací kód byl již využit
+	* @throws \Bulletpoint\Exception\DuplicateException Obnovovací kód byl již využit
 	*/
 	public function testUsedCode() {
 		$connection = $this->preparedDatabase();
@@ -45,7 +47,7 @@ final class ReminderRule extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Obnovovací kód pozbyl platnosti 24 hodin
+	* @throws \Bulletpoint\Exception\ExistenceException Obnovovací kód pozbyl platnosti 24 hodin
 	*/
 	public function testExpiredCode() {
 		$connection = $this->preparedDatabase();
@@ -58,7 +60,7 @@ final class ReminderRule extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\ExistenceException Obnovovací kód neexistuje
+	* @throws \Bulletpoint\Exception\ExistenceException Obnovovací kód neexistuje
 	*/
 	public function testUnknownCode() {
 		$connection = $this->preparedDatabase();

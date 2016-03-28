@@ -28,7 +28,7 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
 				new Access\ConstantIdentity(
 					1,
 					new Access\ConstantRole(
-						'user',
+						'member',
 						new Access\MySqlRole(1, $connection)
 					),
 					'cucak'
@@ -51,7 +51,7 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
 				new Access\ConstantIdentity(
 					2,
 					new Access\ConstantRole(
-						'admin',
+						'administrator',
 						new Access\MySqlRole(2, $connection)
 					),
 					'facedown'
@@ -97,7 +97,7 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\DuplicateException Bulletpoint již existuje
+	* @throws \Bulletpoint\Exception\DuplicateException Bulletpoint již existuje
 	*/
 	public function testAddingExistingOne() {
 		$connection = $this->connection();
@@ -124,8 +124,9 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
 		$connection->query('TRUNCATE information_sources');
 		$connection->query('TRUNCATE bulletpoints');
 		$connection->query(
-			'INSERT INTO users (ID, role, username)
-			VALUES (1, "user", "cucak"), (2, "admin", "facedown")'
+			'INSERT INTO users (ID, role, username, email)
+			VALUES (1, "member", "cucak", "email"),
+			(2, "administrator", "facedown", "email2")'
 		);
 		$connection->query(
 			'INSERT INTO information_sources

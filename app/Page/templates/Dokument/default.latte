@@ -1,0 +1,53 @@
+{block content}
+<h1>
+    {block title}{$document->title()}{/block}
+    {define description}{$document->description()}{/define}
+    {if $user->isAllowed('Dokument', 'upravit')}
+        <a n:href="Dokument:upravit $slug">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        </a>
+    {/if}
+</h1>
+<h4>
+    Přidáno dne {$document->date()->format('j.n.Y H:i')}
+    uživatelem
+    <strong>
+        <a class="no-link" n:href="Profil: $document->author()->username()">
+            {$document->author()->username()}
+        </a>
+    </strong>
+</h4>
+<blockquote>
+    <p>{$document->description()|noescape|texy}</p>
+    <small>
+        {control informationSource}
+    </small>
+</blockquote>
+<div class="row">
+    <div class="col-sm-8">
+        <h2 id="bulletpointy">Bulletpointy</h2>
+        {control bulletpoints}
+        <a class="btn btn-default" n:href="Bulletpoint:pridat $slug"
+           role="button">Přidat bulletpoint</a>
+    </div>
+</div>
+<br>
+
+<h2 id="diskuze">Diskuze</h2>
+<div class="jumbotron">
+    {control discussion}
+</div>
+
+{if $user->isAllowed('commentForm')}
+    <div class="row"><h3>Přidat komentář</h3></div>
+    <form n:name="commentForm" class="form-horizontal" role="form">
+        {formContainer comment}
+            <div class="form-group">
+                {input content class => "form-control", rows => 7}
+            </div>
+            <div class="form-group">
+                {input act class => "btn btn-success", value => "Komentovat"}
+            </div>
+        {/formContainer}
+    </form>
+{/if}

@@ -28,7 +28,7 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
 				new Access\ConstantIdentity(
 					2,
 					new Access\ConstantRole(
-						'admin',
+						'administrator',
 						new Access\MySqlRole(2, $connection)
 					),
 					'facedown'
@@ -55,8 +55,8 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
 		$connection->query('TRUNCATE information_sources');
 		$connection->query('TRUNCATE bulletpoints');
 		$connection->query(
-			'INSERT INTO users (ID, role, username)
-			VALUES (1, "user", "cucak"), (2, "admin", "facedown")'
+			'INSERT INTO users (ID, role, username, email) VALUES
+            (1, "member", "cucak", "e"), (2, "administrator", "facedown", "e2")'
 		);
 		$connection->query(
 			'INSERT INTO information_sources

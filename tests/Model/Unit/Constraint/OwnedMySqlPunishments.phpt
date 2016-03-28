@@ -27,7 +27,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
 		);
         $connection->query(
 			'INSERT INTO users (ID, role, username)
-			VALUES (2, "user", "cucak")'
+			VALUES (2, "member", "cucak")'
 		);
         $rows = (new Constraint\OwnedMySqlPunishments(
 			new Fake\Identity(2),
@@ -39,7 +39,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
 				new Access\ConstantIdentity(
 					2,
 					new Access\ConstantRole(
-						'user',
+						'member',
 						new Access\MySqlRole(2, $connection)
 					),
 					'cucak'
@@ -56,7 +56,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
                 new Access\ConstantIdentity(
                     2,
                     new Access\ConstantRole(
-                        'user',
+                        'member',
                         new Access\MySqlRole(2, $connection)
                     ),
                     'cucak'
@@ -70,6 +70,22 @@ final class OwnedMySqlPunishments extends TestCase\Database {
 		$rows->next();
 		Assert::false($rows->valid());
 	}
+
+    public function testEmptyIterating() {
+        $connection = $this->preparedDatabase();
+        $sinner = new Fake\Identity(2);
+        $rows = (new Constraint\OwnedMySqlPunishments(
+            $sinner,
+            $connection,
+            new Fake\Punishments(new Fake\Identity, new Fake\Database)
+        ))->iterate();
+        Assert::equal(
+            new Constraint\InvalidPunishment($sinner),
+            $rows->current()
+        );
+        $rows->next();
+        Assert::false($rows->valid());
+    }
 
     /**
      * @throws \LogicException Nemůžeš potrestat sám sebe

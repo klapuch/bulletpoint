@@ -1,0 +1,28 @@
+{block content}
+{define description}Úprava stávajícího zdroje{/define}
+<div class="row">
+	<h1>{block title}Úprava zdroje{/block}</h1>
+	<hr>
+</div>
+<form n:name="informationSourceForm" class="form-horizontal" role="form">
+    {formContainer source}
+        <div class="form-group">
+            {label place /}
+            {input place class => "form-control", placeholder => "Místo"}
+            <p class="help-block">Místo určuje zdroj, odkud jsi čerpal - název knihy nebo přímý odkaz</p>
+        </div>
+        <div class="form-group">
+            {label year /}
+            {input year class => "form-control", placeholder => "Rok"}
+            <p class="help-block">Rok, kdy bylo dílo publikováno</p>
+        </div>
+        <div class="form-group">
+            {label author /}
+            {input author class => "form-control", placeholder => "Autor"}
+            <p class="help-block">Autor, který stojí za originálním dílem</p>
+        </div>
+        <div class="form-group">
+            {input act class => "btn btn-success", value => "Upravit"}
+        </div>
+    {/formContainer}
+</form>

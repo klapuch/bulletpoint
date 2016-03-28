@@ -21,9 +21,9 @@ final class MySqlDiscussion extends TestCase\Database {
 		$connection->query('TRUNCATE comments');
 		(new Conversation\MySqlDiscussion(
 			1,
-			new Fake\Identity(4, new Fake\Role('user')),
+			new Fake\Identity(4, new Fake\Role('member')),
 			$connection
-		))->contribute('new comment...');
+		))->post('new comment...');
 		Assert::same(
 			[
 				'user_id' => 4,
@@ -45,13 +45,13 @@ final class MySqlDiscussion extends TestCase\Database {
 			$identity,
 			$connection
 		);
-		$contributions = $discussion->contributions();
+		$comments = $discussion->comments();
 		Assert::equal(
 			new Conversation\ConstantComment(
 				new Access\ConstantIdentity(
 					1,
 					new Access\ConstantRole(
-						'user',
+						'member',
 						new Access\MySqlRole(1, $connection)
 					),
 					'cucak'
@@ -61,15 +61,15 @@ final class MySqlDiscussion extends TestCase\Database {
 				1,
 				new Conversation\MySqlComment(2, $identity, $connection)
 			),
-			$contributions->current()
+			$comments->current()
 		);
-		$contributions->next();
+		$comments->next();
 		Assert::equal(
 			new Conversation\ConstantComment(
 				new Access\ConstantIdentity(
 					2,
 					new Access\ConstantRole(
-						'admin',
+						'administrator',
 						new Access\MySqlRole(2, $connection)
 					),
 					'facedown'
@@ -79,10 +79,10 @@ final class MySqlDiscussion extends TestCase\Database {
 				1,
 				new Conversation\MySqlComment(1, $identity, $connection)
 			),
-			$contributions->current()
+			$comments->current()
 		);
-		$contributions->next();
-		Assert::false($contributions->valid());
+		$comments->next();
+		Assert::false($comments->valid());
 	}
 
 	private function preparedDatabase() {
@@ -90,9 +90,9 @@ final class MySqlDiscussion extends TestCase\Database {
 		$connection->query('TRUNCATE comments');
 		$connection->query('TRUNCATE users');
 		$connection->query(
-			'INSERT INTO users (ID, role, username)
+			'INSERT INTO users (ID, role, username, email)
 			VALUES
-			(1, "user", "cucak"), (2, "admin", "facedown")'
+			(1, "member", "cucak", "e"), (2, "administrator", "facedown", "e2")'
 		);
 		$connection->query(
 			'INSERT INTO comments (ID, user_id, content, posted_at, document_id)

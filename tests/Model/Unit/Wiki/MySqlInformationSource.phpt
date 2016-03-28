@@ -61,6 +61,19 @@ final class MySqlInformationSource extends TestCase\Database {
 				WHERE ID = 1'
 			)
 		);
+        (new Wiki\MySqlInformationSource(1, $connection))->edit('a', 20, 'b');
+        Assert::same(
+            [
+                'place' => 'a',
+                'year' => 20,
+                'author' => 'b',
+            ],
+            $connection->fetch(
+                'SELECT place, `year`, author
+				FROM information_sources
+				WHERE ID = 1'
+            )
+        );
 	}
 
 	public function testEditingWithEmptyYear() {

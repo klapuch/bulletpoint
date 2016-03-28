@@ -1,7 +1,7 @@
 <?php
 namespace Bulletpoint\Fake;
 
-use Bulletpoint\Core\Security;
+use Bulletpoint\Model\Security;
 
 final class Cipher implements Security\Cipher {
 	private $onDecrypt;

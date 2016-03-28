@@ -1,0 +1,28 @@
+includes:
+    - acl.neon
+
+parameters:
+php:
+	date.timezone: Europe/Prague
+application:
+	errorPresenter: Chyba
+	mapping:
+		*: Bulletpoint\*Module\Page\*Page
+
+session:
+	expiration: 14 days
+
+forms:
+    messages:
+        FILLED: "%label je pole, které musíte vyplnit"
+        PROTECTION: "Prosím, proveďte operaci znova, došlo k vypršení časového limitu"
+
+services:
+	router: Bulletpoint\Router\RouterFactory::createRouter
+	authenticator: Bulletpoint\Model\Access\Authenticator
+	- Bulletpoint\Model\Access\IdentityFactory
+	identity: @Bulletpoint\Model\Access\IdentityFactory::create()
+	- Bulletpoint\Model\Security\AES256CBC(%cryptography.key%)
+	- Bulletpoint\Model\Storage\PDODatabase(%database.host%, %database.user%, %database.pass%, %database.name%)
+	- Texy\Texy
+	- Bulletpoint\Model\Text\PublishingFormat

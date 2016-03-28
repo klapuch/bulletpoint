@@ -27,36 +27,37 @@ final class ActualMySqlPunishments extends TestCase\Database {
 		);
 		$connection->query(
 			'INSERT INTO users (ID, role, username)
-			VALUES (2, "user", "cucak")'
+			VALUES (2, "member", "cucak")'
 		);
 		$rows = (new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
 			$connection
 		))->iterate();
-		Assert::equal(
-			new Constraint\ConstantPunishment(
-				new Access\ConstantIdentity(
-					2,
-					new Access\ConstantRole(
-						'user',
-						new Access\MySqlRole(2, $connection)
-					),
-					'cucak'
-				),
-				'rude',
-				new \Datetime('2100-01-01 12:01:01'),
-				new Constraint\MySqlPunishment(1, $connection)
-			),
-			$rows->current()
-		);
-		$rows->next();
-		Assert::false($rows->valid());
+        Assert::equal(
+            new Constraint\ConstantPunishment(
+                new Access\ConstantIdentity(
+                    2,
+                    new Access\ConstantRole(
+                        'member',
+                        new Access\MySqlRole(2, $connection)
+                    ),
+                    'cucak'
+                ),
+                'rude',
+                new \Datetime('2100-01-01 12:01:01'),
+                new Constraint\MySqlPunishment(1, $connection)
+            ),
+            $rows->current()
+        );
+        $rows->next();
+        Assert::false($rows->valid());
 	}
 
 	public function testPunishing() {
+        $connection = $this->preparedDatabase();
 		(new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
-			$this->preparedDatabase()
+			$connection
 		))->punish(
 			new Fake\Identity(2),
 			new \Datetime('2100-01-01 12:00:00'),
@@ -68,7 +69,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 				'expiration' => '2100-01-01 12:00:00',
 				'reason' => 'rude'
 			],
-			$this->connection()->fetch(
+			$connection->fetch(
 				'SELECT author_id, expiration, reason
 				FROM punishments
 				WHERE sinner_id = 2'
@@ -84,9 +85,11 @@ final class ActualMySqlPunishments extends TestCase\Database {
 		);
 		$sinner = new Fake\Identity(2);
 		$punishments->punish($sinner, new \Datetime('tomorrow'), 'rude');
-        Assert::same(1, iterator_count($punishments->iterate()));
         $punishments->punish($sinner, new \Datetime('+5 months'), 'idiot');
-        Assert::same(2, iterator_count($punishments->iterate()));
+        $punishments->punish($sinner, new \Datetime('+5 months'), 'idiot');
+        Assert::same(3, $connection->fetchColumn(
+            'SELECT COUNT(ID) FROM punishments WHERE sinner_id = 2'
+        ));
 	}
 
 	public function testPunishingUserWithForgivenOne() {
@@ -110,7 +113,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 				'expiration' => '2100-01-01 12:00:00',
 				'reason' => 'rude',
 			],
-			$this->connection()->fetch(
+			$connection->fetch(
 				'SELECT author_id, expiration, reason
 				FROM punishments
 				WHERE sinner_id = 2 AND forgiven = 0'
@@ -119,7 +122,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 	}
 
 	/**
-	* @throws \LogicException Trest musí být udělen pouze na budoucí období
+	* @throws \LogicException Trest smí být udělen pouze na budoucí období
 	*/
 	public function testPunishingWithPastDate() {
 		(new Constraint\ActualMySqlPunishments(
@@ -138,11 +141,10 @@ final class ActualMySqlPunishments extends TestCase\Database {
 			'INSERT INTO punishments (sinner_id, expiration, reason)
 			VALUES (2, "NOW() - INTERVAL 2 DAY", "idiot")'
 		);
-		$punishments = new Constraint\ActualMySqlPunishments(
-			new Fake\Identity(1),
-			$connection
-		);
-		$punishments->punish(
+        (new Constraint\ActualMySqlPunishments(
+            new Fake\Identity(1),
+            $connection
+        ))->punish(
 			new Fake\Identity(2),
 			new \Datetime('2100-01-01 12:00:00'),
 			'rude'
@@ -153,7 +155,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 				'expiration' => '2100-01-01 12:00:00',
 				'reason' => 'rude'
 			],
-			$this->connection()->fetch(
+			$connection->fetch(
 				'SELECT author_id, expiration, reason
 				FROM punishments
 				WHERE sinner_id = 2

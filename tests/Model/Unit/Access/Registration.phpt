@@ -8,7 +8,8 @@
 namespace Bulletpoint\Model\Unit;
 
 use Tester\Assert;
-use Bulletpoint\Model\{Access, User};
+use Bulletpoint\Model\Access;
+use Bulletpoint\Model\User;
 use Bulletpoint\TestCase;
 use Bulletpoint\Fake;
 
@@ -17,15 +18,12 @@ require __DIR__ . '/../../../bootstrap.php';
 final class Registration extends TestCase\Database {
 	public function testSuccessfulRegistration() {
 		$connection = $this->preparedDatabase();
-		$identity = (new Access\Registration(
+		(new Access\Registration(
 			$connection,
 			new Fake\Cipher
-		))->register(
-			new User\Applicant(
-				new User\User('facedown', '123456'),
-				'facedown@email.cz'
-			)
-		);
+		))->register(new User\Applicant(
+            'facedown', '123456', 'facedown@email.cz')
+        );
 		Assert::same(
 			[
 				'username' => 'facedown',

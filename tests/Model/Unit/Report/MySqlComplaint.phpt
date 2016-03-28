@@ -48,7 +48,7 @@ final class MySqlComplaint extends TestCase\Database {
 			'INSERT INTO comment_complaints (comment_id) VALUES (1)'
 		);
 		Assert::equal(
-			new Report\MySqlTarget(1, new Fake\Identity(1), $connection),
+			new Report\Target(1),
 			(new Report\MySqlComplaint(
 				1,
 				new Fake\Identity(1),

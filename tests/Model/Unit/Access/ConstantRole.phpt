@@ -20,6 +20,13 @@ final class ConstantRole extends \Tester\TestCase {
 			(string)new Access\ConstantRole('', new Fake\Role('creator'))
 		);
 	}
+
+    public function testUnknownRole() {
+        Assert::same(
+            'fooo',
+            (string)new Access\ConstantRole('fooo', new Fake\Role('creator'))
+        );
+    }
 }
 
 

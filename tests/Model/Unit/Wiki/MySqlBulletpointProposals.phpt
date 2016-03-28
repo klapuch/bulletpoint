@@ -21,7 +21,7 @@ final class MySqlBulletpointProposals extends TestCase\Database {
 		$connection->query('TRUNCATE users');
 		$connection->query('TRUNCATE information_sources');
 		$connection->query(
-			'INSERT INTO users (ID, role, username) VALUES (2, "user", "facedown")'
+			'INSERT INTO users (ID, role, username) VALUES (2, "member", "facedown")'
 		);
 		$connection->query(
 			'INSERT INTO bulletpoint_proposals
@@ -42,7 +42,7 @@ final class MySqlBulletpointProposals extends TestCase\Database {
 				new Access\ConstantIdentity(
 					2,
 					new Access\ConstantRole(
-						'user',
+						'member',
 						new Access\MySqlRole(2, $connection)
 					),
 					'facedown'
@@ -88,7 +88,7 @@ final class MySqlBulletpointProposals extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\DuplicateException Bulletpoint již existuje
+	* @throws \Bulletpoint\Exception\DuplicateException Bulletpoint již existuje
 	*/
 	public function testProposingExistingBulletpoint() {
 		(new Wiki\MySqlBulletpointProposals(

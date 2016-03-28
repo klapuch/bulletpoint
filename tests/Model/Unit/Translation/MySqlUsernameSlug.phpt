@@ -51,13 +51,13 @@ final class MySqlUsernameSlug extends TestCase\Database {
 	}
 
 	/**
-	* @throws Bulletpoint\Exception\DuplicateException Přezdívka "sl-ug2" již existuje
+	* @throws \Bulletpoint\Exception\DuplicateException Přezdívka "sl-ug2" již existuje
 	*/
 	public function testRenamingToExistingOne() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO users (ID, username) VALUES
-			(9, "sl-ug"), (10, "sl-ug2")'
+			'INSERT INTO users (ID, username, email) VALUES
+			(9, "sl-ug", "e@e.cz"), (10, "sl-ug2", "d@e.cz")'
 		);
 		(new Translation\MySqlUsernameSlug('sl-ug', $connection))
 		->rename('sl-ug2');

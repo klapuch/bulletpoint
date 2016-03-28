@@ -12,7 +12,7 @@ use Tester\Assert;
 use Bulletpoint\Model\User;
 use Bulletpoint\TestCase;
 use Bulletpoint\Fake;
-use Bulletpoint\Core\Filesystem;
+use Bulletpoint\Model\Filesystem;
 
 require __DIR__ . '/../../../bootstrap.php';
 

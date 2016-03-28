@@ -1,0 +1,45 @@
+{block content}
+{define description}Účet{/define}
+<div class="row">
+    <h1 class="text-center">{block title}{$username}{/block}</h1>
+    {control profilePhoto:center}
+    <hr>
+</div>
+<form n:name="photoChangeForm" enctype="multipart/form-data" class="form-horizontal" role="form">
+    <div class="form-group">
+        <h2>Profilové foto</h2>
+        <input n:name="photo">
+    </div>
+    <div class="form-group">
+        <button n:name="change" class="btn btn-success">
+            Nahrát
+        </button>
+    </div>
+</form>
+<div class="row">
+	<hr>
+	<div class="form-group">
+		<label>Email</label>
+		<input type="email" name="email" value="{$email}" class="form-control" title="Změna emailu prozatím není povolena." disabled>
+	</div>
+	<hr>
+</div>
+<form n:name="passwordChangeForm" class="form-horizontal" role="form">
+    {formContainer passwords}
+        <div class="form-group">
+            <h2>Změna hesla</h2>
+            {label password /}
+            {input password class => "form-control", placeholder => "Heslo"}
+            <p class="help-block">Minimálně 6 znaků</p>
+        </div>
+        <div class="form-group">
+            {label repeatedPassword /}
+            {input repeatedPassword class => "form-control", placeholder => "Heslo znovu"}
+        </div>
+    {/formContainer}
+    <div class="form-group">
+        <button n:name="change" class="btn btn-success">
+            Změnit
+        </button>
+    </div>
+</form>
