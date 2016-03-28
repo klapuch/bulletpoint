@@ -2,7 +2,6 @@
 namespace Bulletpoint\Component;
 
 use Bulletpoint\Model\Wiki;
-use Nette\Application\UI;
 
 final class InformationSource extends BaseControl {
     private $informationSource;

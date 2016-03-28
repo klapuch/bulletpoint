@@ -1,11 +1,9 @@
 <?php
 namespace Bulletpoint\Component;
 
-use Bulletpoint\Exception;
 use Bulletpoint\Model\{
     Constraint, Access, User, Storage
 };
-use Nette\Application\UI;
 
 final class Punishment extends BaseControl {
     private $punishment;

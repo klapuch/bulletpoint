@@ -5,7 +5,6 @@ use Bulletpoint\Model\{
     Constraint, Access, Storage
 };
 use Nette\Application\UI;
-use Nette\Caching\Storages;
 
 final class Punishments extends BaseControl {
     private $punishments;
