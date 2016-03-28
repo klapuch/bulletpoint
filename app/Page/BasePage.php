@@ -62,7 +62,9 @@ abstract class BasePage extends Nette\Application\UI\Presenter {
 
     protected function createTemplate() {
         $template = parent::createTemplate();
-        $template->registerHelper('texy', [$this->texy, 'process']);
+        $template->addFilter('texy', function($text) {
+            return $this->texy->process($text);
+        });
         return $template;
     }
 
