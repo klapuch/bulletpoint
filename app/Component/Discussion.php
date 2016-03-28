@@ -5,7 +5,6 @@ use Bulletpoint\Model\{
     Conversation, Access, Storage, Report
 };
 use Nette\Application\UI;
-use Nette\Caching\Storages;
 
 final class Discussion extends BaseControl {
     private $discussion;
