@@ -1,9 +1,10 @@
 <?php
 namespace Bulletpoint\Model\Constraint;
 
+use Bulletpoint\Model\Access;
 use Nette\Caching\IStorage;
 
-final class CachedPunishments extends Punishments {
+final class CachedPunishments implements Punishments {
     private $origin;
     private $storage;
 
@@ -22,5 +23,13 @@ final class CachedPunishments extends Punishments {
             );
         }
         return new \ArrayIterator($this->storage->read($key));
+    }
+
+    public function punish(
+        Access\Identity $sinner,
+        \DateTime $expiration,
+        string $reason
+    ) {
+        $this->origin->punish($sinner, $expiration, $reason);
     }
 }
