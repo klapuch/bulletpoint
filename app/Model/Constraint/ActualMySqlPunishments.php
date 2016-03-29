@@ -1,7 +1,9 @@
 <?php
 namespace Bulletpoint\Model\Constraint;
 
-use Bulletpoint\Model\{Storage, Access};
+use Bulletpoint\Model\{
+    Storage, Access
+};
 use Bulletpoint\Exception;
 
 final class ActualMySqlPunishments extends Punishments {
