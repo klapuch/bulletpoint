@@ -27,7 +27,7 @@ final class MySqlComplaint extends TestCase\Database {
 		);
 	}
 
-	public function testCritic() {
+	public function testComplainer() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
 			'INSERT INTO comment_complaints (user_id) VALUES (1)'
@@ -38,7 +38,7 @@ final class MySqlComplaint extends TestCase\Database {
 				1,
 				new Fake\Identity(1),
 				$connection
-			))->critic()
+			))->complainer()
 		);
 	}
 

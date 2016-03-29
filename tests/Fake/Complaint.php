@@ -16,7 +16,7 @@ final class Complaint implements Report\Complaint {
         $this->id;
     }
 
-    public function critic(): Access\Identity {
+    public function complainer(): Access\Identity {
 
     }
 

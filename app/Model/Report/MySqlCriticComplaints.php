@@ -6,21 +6,21 @@ use Bulletpoint\Model\{
 };
 
 final class MySqlCriticComplaints implements Complaints {
-    private $critic;
+    private $complainer;
     private $database;
     private $origin;
 
     public function __construct(
-        Access\Identity $critic,
+        Access\Identity $complainer,
         Storage\Database $database,
         Complaints $origin
     ) {
-        $this->critic = $critic;
+        $this->complainer = $complainer;
         $this->database = $database;
         $this->origin = $origin;
     }
 
-    // TODO: May cause sql roundtrip - allow target be nullable and iterate only by critic
+    // TODO: May cause sql roundtrip - allow target be nullable and iterate only by complainer
     public function iterate(Target $target): \Iterator {
         $rows = $this->database->fetchAll(
             'SELECT comment_complaints.ID,
@@ -33,7 +33,7 @@ final class MySqlCriticComplaints implements Complaints {
 			INNER JOIN users
 			ON users.ID = user_id
 			WHERE comment_id = ? AND user_id = ? AND settled = 0',
-            [$target->id(), $this->critic->id()]
+            [$target->id(), $this->complainer->id()]
         );
         foreach($rows as $row) {
             yield new ConstantComplaint(
@@ -47,7 +47,7 @@ final class MySqlCriticComplaints implements Complaints {
                 ),
                 new Target($row['target']),
                 $row['reason'],
-                new MySqlComplaint($row['ID'], $this->critic, $this->database)
+                new MySqlComplaint($row['ID'], $this->complainer, $this->database)
             );
         }
     }
@@ -68,7 +68,7 @@ final class MySqlCriticComplaints implements Complaints {
             'SELECT 1
 			FROM comment_complaints
 			WHERE comment_id = ? AND user_id = ? AND settled = 0',
-            [$target->id(), $this->critic->id()]
+            [$target->id(), $this->complainer->id()]
         );
     }
 }

@@ -4,18 +4,18 @@ namespace Bulletpoint\Model\Report;
 use Bulletpoint\Model\Access;
 
 final class ConstantComplaint implements Complaint {
-    private $critic;
+    private $complainer;
     private $target;
     private $reason;
     private $origin;
 
     public function __construct(
-        Access\Identity $critic,
+        Access\Identity $complainer,
         Target $target,
         string $reason,
         Complaint $origin
     ) {
-        $this->critic = $critic;
+        $this->complainer = $complainer;
         $this->target = $target;
         $this->reason = $reason;
         $this->origin = $origin;
@@ -25,8 +25,8 @@ final class ConstantComplaint implements Complaint {
         return $this->origin->id();
     }
 
-    public function critic(): Access\Identity {
-        return $this->critic;
+    public function complainer(): Access\Identity {
+        return $this->complainer;
     }
 
     public function target(): Target {

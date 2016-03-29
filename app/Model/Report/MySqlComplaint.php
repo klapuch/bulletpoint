@@ -24,7 +24,7 @@ final class MySqlComplaint implements Complaint {
         return $this->id;
     }
 
-    public function critic(): Access\Identity {
+    public function complainer(): Access\Identity {
         $id = $this->database->fetchColumn(
             'SELECT user_id FROM comment_complaints WHERE ID = ?',
             [$this->id]
