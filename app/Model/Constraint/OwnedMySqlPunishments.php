@@ -6,23 +6,39 @@ use Bulletpoint\Model\{
 };
 use Bulletpoint\Exception;
 
-final class OwnedMySqlPunishments extends Punishments {
+final class OwnedMySqlPunishments implements Punishments {
+    private $sinner;
+    private $database;
     private $origin;
 
     public function __construct(
-        Access\Identity $myself,
+        Access\Identity $sinner,
         Storage\Database $database,
         Punishments $origin
     ) {
-        parent::__construct($myself, $database);
+        $this->sinner = $sinner;
+        $this->database = $database;
         $this->origin = $origin;
     }
 
     public function iterate(): \Iterator {
-        $punishments = $this->iterateBy('sinner_id = ?', [$this->myself->id()]);
-        if($punishments->valid())
-            return $punishments;
-        return new \ArrayIterator([new InvalidPunishment($this->myself)]);
+        $rows = $this->database->fetchAll(
+            'SELECT ID, reason, expiration
+			FROM punishments
+			WHERE sinner_id = ?
+			ORDER BY forgiven ASC, expiration DESC',
+            [$this->sinner->id()]
+        );
+        if(!$rows)
+            yield from [new InvalidPunishment($this->sinner)];
+        foreach($rows as $row) {
+            yield new ConstantPunishment(
+                $this->sinner,
+                $row['reason'],
+                new \DateTime($row['expiration']),
+                new MySqlPunishment($row['ID'], $this->database)
+            );
+        }
     }
 
     public function punish(
@@ -30,7 +46,7 @@ final class OwnedMySqlPunishments extends Punishments {
         \DateTime $expiration,
         string $reason
     ) {
-        if($sinner->id() === $this->myself->id())
+        if($sinner->id() === $this->sinner->id())
             throw new \LogicException('Nemůžeš potrestat sám sebe');
         $this->origin->punish($sinner, $expiration, $reason);
     }

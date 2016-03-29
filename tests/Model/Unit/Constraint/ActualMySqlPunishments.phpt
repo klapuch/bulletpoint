@@ -35,14 +35,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 		))->iterate();
         Assert::equal(
             new Constraint\ConstantPunishment(
-                new Access\ConstantIdentity(
-                    2,
-                    new Access\ConstantRole(
-                        'member',
-                        new Access\MySqlRole(2, $connection)
-                    ),
-                    'cucak'
-                ),
+                new Access\MySqlIdentity(2, $connection),
                 'rude',
                 new \Datetime('2100-01-01 12:01:01'),
                 new Constraint\MySqlPunishment(1, $connection)

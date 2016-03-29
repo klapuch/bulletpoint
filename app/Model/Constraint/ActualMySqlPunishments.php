@@ -6,9 +6,32 @@ use Bulletpoint\Model\{
 };
 use Bulletpoint\Exception;
 
-final class ActualMySqlPunishments extends Punishments {
+final class ActualMySqlPunishments implements Punishments {
+    private $myself;
+    private $database;
+
+    public function __construct(
+        Access\Identity $myself,
+        Storage\Database $database
+    ) {
+        $this->myself = $myself;
+        $this->database = $database;
+    }
     public function iterate(): \Iterator {
-        return $this->iterateBy('forgiven = 0 AND NOW() < expiration');
+        $rows = $this->database->fetchAll(
+            'SELECT ID, reason, expiration, sinner_id
+			FROM punishments
+			WHERE forgiven = 0 AND NOW() < expiration
+			ORDER BY expiration ASC'
+        );
+        foreach($rows as $row) {
+            yield new ConstantPunishment(
+                new Access\MySqlIdentity($row['sinner_id'], $this->database),
+                $row['reason'],
+                new \DateTime($row['expiration']),
+                new MySqlPunishment($row['ID'], $this->database)
+            );
+        }
     }
 
     public function punish(
@@ -21,7 +44,16 @@ final class ActualMySqlPunishments extends Punishments {
                 'Trest smí být udělen pouze na budoucí období'
             );
         }
-        parent::punish($sinner, $expiration, $reason);
+        $this->database->query(
+            'INSERT INTO punishments (sinner_id, reason, expiration, author_id)
+			VALUES (?, ?, ?, ?)',
+            [
+                $sinner->id(),
+                $reason,
+                current($expiration),
+                $this->myself->id(),
+            ]
+        );
     }
 
     private function past(\DateTime $expiration): bool {

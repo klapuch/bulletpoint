@@ -29,21 +29,15 @@ final class OwnedMySqlPunishments extends TestCase\Database {
 			'INSERT INTO users (ID, role, username)
 			VALUES (2, "member", "cucak")'
 		);
+        $sinner = new Fake\Identity(2);
         $rows = (new Constraint\OwnedMySqlPunishments(
-			new Fake\Identity(2),
+			$sinner,
 			$connection,
 			new Fake\Punishments(new Fake\Identity, new Fake\Database)
 		))->iterate();
         Assert::equal(
 			new Constraint\ConstantPunishment(
-				new Access\ConstantIdentity(
-					2,
-					new Access\ConstantRole(
-						'member',
-						new Access\MySqlRole(2, $connection)
-					),
-					'cucak'
-				),
+				$sinner,
 				'rude',
 				new \Datetime('2099-01-01 12:01:01'),
 				new Constraint\MySqlPunishment(2, $connection)
@@ -53,14 +47,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
         $rows->next();
         Assert::equal(
             new Constraint\ConstantPunishment(
-                new Access\ConstantIdentity(
-                    2,
-                    new Access\ConstantRole(
-                        'member',
-                        new Access\MySqlRole(2, $connection)
-                    ),
-                    'cucak'
-                ),
+                $sinner,
                 'rude',
                 new \Datetime('2100-01-01 12:01:01'),
                 new Constraint\MySqlPunishment(1, $connection)
