@@ -25,14 +25,7 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
 		))->iterate();
 		Assert::equal(
 			new Wiki\ConstantBulletpoint(
-				new Access\ConstantIdentity(
-					1,
-					new Access\ConstantRole(
-						'member',
-						new Access\MySqlRole(1, $connection)
-					),
-					'cucak'
-				),
+				new Access\MySqlIdentity(1, $connection),
 				'first',
 				new \Datetime('2000-01-01 01:01:01'),
 				new Wiki\ConstantInformationSource(
@@ -48,14 +41,7 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
 		$rows->next();
 		Assert::equal(			
 			new Wiki\ConstantBulletpoint(
-				new Access\ConstantIdentity(
-					2,
-					new Access\ConstantRole(
-						'administrator',
-						new Access\MySqlRole(2, $connection)
-					),
-					'facedown'
-				),
+				new Access\MySqlIdentity(2, $connection),
 				'second',
 				new \Datetime('1999-01-01 01:01:01'),
 				new Wiki\ConstantInformationSource(

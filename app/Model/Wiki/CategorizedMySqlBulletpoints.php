@@ -6,8 +6,9 @@ use Bulletpoint\Model\{
 };
 use Bulletpoint\Exception;
 
-final class CategorizedMySqlBulletpoints extends Bulletpoints {
+final class CategorizedMySqlBulletpoints implements Bulletpoints {
     private $myself;
+    private $database;
     private $document;
 
     public function __construct(
@@ -15,13 +16,46 @@ final class CategorizedMySqlBulletpoints extends Bulletpoints {
         Storage\Database $database,
         Document $document
     ) {
-        parent::__construct($database);
         $this->myself = $myself;
+        $this->database = $database;
         $this->document = $document;
     }
 
     public function iterate(): \Iterator {
-        return $this->iterateBy('document_id = ?', [$this->document->id()]);
+        $rows = $this->database->fetchAll(
+            'SELECT 
+			information_sources.ID AS source_id,
+			information_sources.place,
+			information_sources.`year`,
+			information_sources.author,
+			bulletpoints.ID AS bulletpoint_id,
+			bulletpoints.user_id,
+			bulletpoints.created_at,
+			bulletpoints.content
+			FROM bulletpoints
+			LEFT JOIN information_sources
+			ON information_sources.ID = bulletpoints.information_source_id
+			WHERE document_id = ?
+			ORDER BY bulletpoints.created_at DESC',
+            [$this->document->id()]
+        );
+        foreach($rows as $row) {
+            yield new ConstantBulletpoint(
+                new Access\MySqlIdentity($row['user_id'], $this->database),
+                $row['content'],
+                new \DateTime($row['created_at']),
+                new ConstantInformationSource(
+                    $row['place'],
+                    $row['year'],
+                    $row['author'],
+                    new MySqlInformationSource(
+                        $row['source_id'],
+                        $this->database
+                    )
+                ),
+                new MySqlBulletpoint($row['bulletpoint_id'], $this->database)
+            );
+        }
     }
 
     public function add(string $content, InformationSource $source) {

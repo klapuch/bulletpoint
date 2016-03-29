@@ -3,7 +3,7 @@ namespace Bulletpoint\Fake;
 
 use Bulletpoint\Model\{Wiki};
 
-final class Bulletpoints extends Wiki\Bulletpoints {
+final class Bulletpoints implements Wiki\Bulletpoints {
 	public function add(string $content, Wiki\InformationSource $source) {
 		
 	}

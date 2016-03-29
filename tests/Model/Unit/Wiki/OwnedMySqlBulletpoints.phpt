@@ -18,29 +18,18 @@ require __DIR__ . '/../../../bootstrap.php';
 final class OwnedMySqlBulletpoints extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabase();
+        $owner = new Fake\Identity(2);
 		$rows = (new Wiki\OwnedMySqlBulletpoints(
-			new Fake\Identity(2),
+			$owner,
 			$connection,
 			new Fake\Bulletpoints(new Fake\Database)
 		))->iterate();
 		Assert::equal(
 			new Wiki\ConstantBulletpoint(
-				new Access\ConstantIdentity(
-					2,
-					new Access\ConstantRole(
-						'administrator',
-						new Access\MySqlRole(2, $connection)
-					),
-					'facedown'
-				),
+				$owner,
 				'second',
 				new \Datetime('1999-01-01 01:01:01'),
-				new Wiki\ConstantInformationSource(
-					'book',
-					1998,
-					'čapek',
-					new Wiki\MySqlInformationSource(2, $connection)
-				),
+                new Wiki\MySqlInformationSource(2, $connection),
 				new Wiki\MySqlBulletpoint(2, $connection)
 			),
 			$rows->current()

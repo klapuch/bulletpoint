@@ -3,7 +3,7 @@ namespace Bulletpoint\Model\Wiki;
 
 use Nette\Caching\IStorage;
 
-final class CachedBulletpoints extends Bulletpoints {
+final class CachedBulletpoints implements Bulletpoints {
     private $origin;
     private $storage;
 

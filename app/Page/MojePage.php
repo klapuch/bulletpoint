@@ -16,7 +16,7 @@ final class MojePage extends BasePage {
 		$this->template->bulletpoints = (new Wiki\OwnedMySqlBulletpoints(
 			$this->identity,
 			$this->database,
-			new class($this->database) extends Wiki\Bulletpoints {
+			new class() implements Wiki\Bulletpoints {
 				public function add(
 					string $content,
 					Wiki\InformationSource $source
