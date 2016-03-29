@@ -20,22 +20,8 @@ final class OwnedMySqlDocuments implements Documents {
 
     public function iterate(): \Iterator {
         $rows = $this->database->fetchAll(
-            'SELECT users.ID AS user_id,
-			users.role,
-			users.username,
-			documents.ID,
-			documents.created_at,
-			documents.description,
-			documents.title,
-			information_sources.ID AS source_id,
-			information_sources.place,
-			information_sources.`year`,
-			information_sources.author
+            'SELECT ID, created_at, description, title, information_source_id
 			FROM documents
-			INNER JOIN users
-			ON users.ID = documents.user_id
-			INNER JOIN information_sources
-			ON documents.information_source_id = information_sources.ID
 			WHERE user_id = ?
 			ORDER BY documents.created_at DESC',
             [$this->myself->id()]
@@ -44,23 +30,11 @@ final class OwnedMySqlDocuments implements Documents {
             yield new ConstantDocument(
                 $row['title'],
                 $row['description'],
-                new Access\ConstantIdentity(
-                    $row['user_id'],
-                    new Access\ConstantRole(
-                        $row['role'],
-                        new Access\MySqlRole($row['user_id'], $this->database)
-                    ),
-                    $row['username']
-                ),
+                $this->myself,
                 new \DateTime($row['created_at']),
-                new ConstantInformationSource(
-                    $row['place'],
-                    $row['year'],
-                    $row['author'],
-                    new MySqlInformationSource(
-                        $row['source_id'],
-                        $this->database
-                    )
+                new MySqlInformationSource(
+                    $row['information_source_id'],
+                    $this->database
                 ),
                 new MySqlDocument($row['ID'], $this->database)
             );

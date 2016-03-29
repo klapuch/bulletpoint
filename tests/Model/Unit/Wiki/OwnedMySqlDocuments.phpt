@@ -18,27 +18,16 @@ require __DIR__ . '/../../../bootstrap.php';
 final class OwnedMySqlDocuments extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabaseForIterating();
-		$rows = (new Wiki\OwnedMySqlDocuments(new Fake\Identity(2), $connection))
+        $owner = new Fake\Identity(2);
+		$rows = (new Wiki\OwnedMySqlDocuments($owner, $connection))
 		->iterate();
 		Assert::equal(
 			new Wiki\ConstantDocument(
 				'firstTitle',
 				'first',
-				new Access\ConstantIdentity(
-					2,
-					new Access\ConstantRole(
-						'administrator',
-						new Access\MySqlRole(2, $connection)
-					),
-					'facedown'
-				),
+				$owner,
 				new \Datetime('1999-01-01 01:01:01'),
-				new Wiki\ConstantInformationSource(
-					'wikipedie',
-					2005,
-					'facedown',
-					new Wiki\MySqlInformationSource(1, $connection)
-				),
+                new Wiki\MySqlInformationSource(1, $connection),
 				new Wiki\MySqlDocument(1, $connection)
 			),
 			$rows->current()
