@@ -8,6 +8,7 @@ services:
             - addRole(creator)
 
             - addResource(Default)
+            - addResource(Prochazet)
             - addResource(Prihlasit)
             - addResource(Odhlasit)
             - addResource(Dokument)
@@ -51,6 +52,7 @@ services:
             - addResource(Stiznost)
 
             - allow(guest, Default)
+            - allow(guest, Prochazet)
             - allow(guest, Prihlasit)
             - allow(guest, Odhlasit)
             - allow(guest, Dokument, default)

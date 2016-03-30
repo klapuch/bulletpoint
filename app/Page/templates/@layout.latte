@@ -47,6 +47,10 @@
                             </ul>
                         </li>
                     {/if}
+                    <li {ifCurrent Prochazet:dokumenty}class="active"{/ifCurrent}
+                        title="Nový dokument">
+                        <a n:href="Prochazet:dokumenty">Procházet</a>
+                    </li>
                     {if $user->loggedIn}
                         <li class="dropdown {ifCurrent Moje:*}active{/ifCurrent}">
                             <a href="#" class="dropdown-toggle" title="Moje"
