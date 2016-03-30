@@ -106,14 +106,8 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
 
 	private function preparedDatabase() {
 		$connection = $this->connection();
-		$connection->query('TRUNCATE users');
 		$connection->query('TRUNCATE information_sources');
 		$connection->query('TRUNCATE bulletpoints');
-		$connection->query(
-			'INSERT INTO users (ID, role, username, email)
-			VALUES (1, "member", "cucak", "email"),
-			(2, "administrator", "facedown", "email2")'
-		);
 		$connection->query(
 			'INSERT INTO information_sources
 			(ID, place, author, `year`)

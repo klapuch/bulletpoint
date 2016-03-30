@@ -17,17 +17,12 @@ require __DIR__ . '/../../../bootstrap.php';
 final class ActualMySqlPunishments extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabase();
-		$connection->query('TRUNCATE users');
 		$connection->query(
 			'INSERT INTO punishments (sinner_id, expiration, reason, forgiven)
 			VALUES
 			(2, "2100-01-01 12:01:01", "rude", 0),
 			(2, "2100-01-01 12:01:01", "rude", 1),
 			(2, "1999-01-01 12:01:01", "rude", 0)'
-		);
-		$connection->query(
-			'INSERT INTO users (ID, role, username)
-			VALUES (2, "member", "cucak")'
 		);
 		$rows = (new Constraint\ActualMySqlPunishments(
 			new Fake\Identity(1),
