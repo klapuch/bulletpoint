@@ -12,11 +12,13 @@ final class MySqlTargets implements Targets {
 
     public function iterate(): \Iterator {
         $rows = $this->database->fetchAll(
-            'SELECT COUNT(ID) AS total,
+            'SELECT COUNT(comment_complaints.ID) AS total,
 			reason,
 			comment_id AS target
 			FROM comment_complaints
-			WHERE settled = 0
+			LEFT JOIN comments
+			ON comments.ID = comment_complaints.comment_id
+			WHERE visible = 1 AND settled = 0 
 			GROUP BY target, reason
 			ORDER BY total DESC
 			LIMIT 20'

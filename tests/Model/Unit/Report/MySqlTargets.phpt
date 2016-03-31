@@ -24,7 +24,8 @@ final class MySqlTargets extends TestCase\Database {
 			(1, 0, "Jiné", NOW()),
 			(1, 0, "Jiné", NOW()),
 			(1, 0, "Spam", NOW()),
-			(2, 0, "Vulgarita", NOW() - INTERVAL 1 DAY)'
+			(2, 0, "Vulgarita", NOW() - INTERVAL 1 DAY),
+			(3, 0, "Vulgarita", NOW())'
 		);
 		$rows = (new Report\MySqlTargets($connection))->iterate();
         Assert::equal(
@@ -48,6 +49,11 @@ final class MySqlTargets extends TestCase\Database {
 	private function preparedDatabase() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE comment_complaints');
+		$connection->query('TRUNCATE comments');
+        $connection->query(
+            'INSERT INTO comments (ID, visible)
+             VALUES (1, 1), (2, 1), (3, 0)'
+        );
 		$connection->query(
 			'INSERT INTO comment_complaints
 			(ID, comment_id, settled, reason, user_id)

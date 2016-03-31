@@ -1,7 +1,7 @@
 {block content}
 {define description}Stížnost na konkrétní komentář{/define}
 <h1>{block title}Stížnosti na komentáře{/block}</h1>
-{if targets->valid()}
+{if $targets->valid()}
     <table class="table table-hover">
         <thead>
         <tr>
@@ -11,7 +11,7 @@
             <th><p>Detail</p></th>
         </tr>
         </thead>
-        <tbody n:inner-foreach="targets as $target">
+        <tbody n:inner-foreach="$targets as $target">
         <tr>
             <td><p>{$iterator->counter}</p></td>
             <td><p>{$target['total']}x</p></td>
