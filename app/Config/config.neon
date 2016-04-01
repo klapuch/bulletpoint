@@ -1,34 +1,43 @@
-includes:
-    - acl.neon
-
-parameters:
-php:
-	date.timezone: Europe/Prague
-application:
-	errorPresenter: Chyba
-	mapping:
-		*: Bulletpoint\*Module\Page\*Page
-
-session:
-	expiration: 14 days
-	cookie_secure: 1
-	use_strict_mode: 1
-	cookie_httponly: 1
-
-forms:
-    messages:
-        FILLED: "%label je pole, které musíte vyplnit"
-        PROTECTION: "Prosím, proveďte operaci znova, došlo k vypršení časového limitu"
-
-services:
-	router: Bulletpoint\Router\RouterFactory::createRouter
-	authenticator: Bulletpoint\Model\Access\Authenticator
-	identity: @Bulletpoint\Model\Access\IdentityFactory::create()
-	- Texy\Texy
-	texy: Bulletpoint\Model\Text\PublishingFormat
-	latte.latteFactory:
-	    setup:
-	        - addFilter('texy', [@texy, process])
-	- Bulletpoint\Model\Access\IdentityFactory
-	- Bulletpoint\Model\Security\AES256CBC(%cryptography.key%)
-	- Bulletpoint\Model\Storage\PDODatabase(%database.host%, %database.user%, %database.pass%, %database.name%)
+common:
+    includes:
+        - acl.neon
+    parameters:
+    php:
+        date.timezone: Europe/Prague
+    application:
+        errorPresenter: Chyba
+        mapping:
+            *: Bulletpoint\*Module\Page\*Page
+    session:
+        expiration: 14 days
+        cookie_secure: 1
+        use_strict_mode: 1
+        cookie_httponly: 1
+    http:
+        headers:
+            X-Frame-Options: DENY
+            X-Content-Type-Options: nosniff
+            Strict-Transport-Security: "max-age=31536000; includeSubDomains; preload"
+            X-XSS-Protection: "1; mode=block; report=https://bulletpoint.report-uri.io/r/default/csp/enforce"
+            X-Powered-By: ""
+    forms:
+        messages:
+            FILLED: "%label je pole, které musíte vyplnit"
+            PROTECTION: "Prosím, proveďte operaci znova, došlo k vypršení časového limitu"
+    services:
+        router: Bulletpoint\Router\RouterFactory::createRouter
+        authenticator: Bulletpoint\Model\Access\Authenticator
+        identity: @Bulletpoint\Model\Access\IdentityFactory::create()
+        - Texy\Texy
+        texy: Bulletpoint\Model\Text\PublishingFormat
+        latte.latteFactory:
+            setup:
+                - addFilter('texy', [@texy, process])
+        - Bulletpoint\Model\Access\IdentityFactory
+        - Bulletpoint\Model\Security\AES256CBC(%cryptography.key%)
+        - Bulletpoint\Model\Storage\PDODatabase(%database.host%, %database.user%, %database.pass%, %database.name%)
+production < common:
+    http:
+        headers:
+            Content-Security-Policy: "default-src 'self' ; script-src 'self' ; style-src 'self' ; img-src 'self' data: ; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ; media-src 'none' ; object-src 'none' ; child-src 'none' ; frame-ancestors 'none' ; upgrade-insecure-requests; block-all-mixed-content; report-uri https://bulletpoint.report-uri.io/r/default/csp/enforce;"
+development < common:
