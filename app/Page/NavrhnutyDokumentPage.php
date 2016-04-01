@@ -24,6 +24,7 @@ final class NavrhnutyDokumentPage extends BasePage {
             'title' => $proposal->title(),
             'description' => $proposal->description(),
         ];
+        $this->template->proposal = $proposal;
     }
 
     protected function createComponentEditProposalForm() {
