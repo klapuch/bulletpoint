@@ -3,9 +3,10 @@ namespace Bulletpoint\Component;
 
 use Bulletpoint\Exception;
 use Bulletpoint\Model\{
-    Wiki, Storage, Translation
+    Wiki, Storage, Translation, Text
 };
 use Nette\Utils\Strings;
+use Texy;
 
 final class DocumentProposal extends BaseControl {
     private $proposal;
@@ -20,14 +21,19 @@ final class DocumentProposal extends BaseControl {
         $this->database = $database;
     }
 
+    public function createTemplate() {
+        $template = parent::createTemplate();
+        $template->addFilter(
+            'texy',
+            [new Text\PublishingFormat(new Texy\Texy), 'process']
+        );
+        return $template;
+    }
+
     public function render() {
         $this->template->setFile(__DIR__ . '/DocumentProposal.latte');
         $this->template->proposal = $this->proposal;
         $this->template->backlink = $this->presenter->storeRequest();
-        $this->template->registerHelper(
-            'texy',
-            [$this->presenter->texy, 'process']
-        );
         $this->template->render();
     }
 

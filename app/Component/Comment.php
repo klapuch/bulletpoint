@@ -2,8 +2,9 @@
 namespace Bulletpoint\Component;
 
 use Bulletpoint\Model\{
-    Conversation, User, Filesystem, Access, Report, Storage
+    Conversation, User, Filesystem, Access, Report, Storage, Text
 };
+use Texy;
 
 final class Comment extends BaseControl {
     private $comment;
@@ -24,6 +25,15 @@ final class Comment extends BaseControl {
         $this->database = $database;
     }
 
+    public function createTemplate() {
+        $template = parent::createTemplate();
+        $template->addFilter(
+            'texy',
+            [new Text\PublishingFormat(new Texy\Texy), 'process']
+        );
+        return $template;
+    }
+
     public function render() {
         $this->template->setFile(__DIR__ . '/Comment.latte');
         $this->template->comment = $this->comment;
@@ -34,10 +44,6 @@ final class Comment extends BaseControl {
             )->valid();
         }
         $this->template->backlink = $this->presenter->storeRequest('+ 45 minutes');
-        $this->template->registerHelper(
-            'texy',
-            [$this->presenter->texy, 'process']
-        );
         $this->template->render();
     }
 
