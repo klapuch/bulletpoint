@@ -4,8 +4,9 @@ namespace Bulletpoint\Page;
 use Nette;
 use Nette\Http\IResponse;
 use Nette\Security;
-use Bulletpoint\Model\Access;
-use Bulletpoint\Model\Constraint;
+use Bulletpoint\Model\{
+    Access, Constraint
+};
 
 abstract class BasePage extends Nette\Application\UI\Presenter {
     use \Nextras\Application\UI\SecuredLinksPresenterTrait;
@@ -58,14 +59,6 @@ abstract class BasePage extends Nette\Application\UI\Presenter {
         } else
             $this->isPunished($this->identity);
         parent::startup();
-    }
-
-    protected function createTemplate() {
-        $template = parent::createTemplate();
-        $template->addFilter('texy', function($text) {
-            return $this->texy->process($text);
-        });
-        return $template;
     }
 
     public function afterRender() {

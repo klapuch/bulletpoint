@@ -21,15 +21,6 @@ final class DocumentProposal extends BaseControl {
         $this->database = $database;
     }
 
-    public function createTemplate() {
-        $template = parent::createTemplate();
-        $template->addFilter(
-            'texy',
-            [new Text\PublishingFormat(new Texy\Texy), 'process']
-        );
-        return $template;
-    }
-
     public function render() {
         $this->template->setFile(__DIR__ . '/DocumentProposal.latte');
         $this->template->proposal = $this->proposal;

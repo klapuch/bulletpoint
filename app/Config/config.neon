@@ -23,9 +23,12 @@ forms:
 services:
 	router: Bulletpoint\Router\RouterFactory::createRouter
 	authenticator: Bulletpoint\Model\Access\Authenticator
-	- Bulletpoint\Model\Access\IdentityFactory
 	identity: @Bulletpoint\Model\Access\IdentityFactory::create()
+	- Texy\Texy
+	texy: Bulletpoint\Model\Text\PublishingFormat
+	latte.latteFactory:
+	    setup:
+	        - addFilter('texy', [@texy, process])
+	- Bulletpoint\Model\Access\IdentityFactory
 	- Bulletpoint\Model\Security\AES256CBC(%cryptography.key%)
 	- Bulletpoint\Model\Storage\PDODatabase(%database.host%, %database.user%, %database.pass%, %database.name%)
-	- Texy\Texy
-	- Bulletpoint\Model\Text\PublishingFormat
