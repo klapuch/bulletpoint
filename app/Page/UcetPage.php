@@ -9,8 +9,13 @@ use Bulletpoint\Component;
 use Nette\Application\UI;
 
 final class UcetPage extends BasePage {
-    /** @inject @var \Bulletpoint\Model\Security\AES256CBC */
+    /**
+     * @var \Bulletpoint\Model\Security\AES256CBC @inject
+     */
     public $cipher;
+    /**
+     * @var \Bulletpoint\Model\User\Account
+     */
     private $account;
 
     public function startup() {
@@ -31,7 +36,8 @@ final class UcetPage extends BasePage {
         $form = new Component\BaseForm();
         $form->addProtection();
         $form->addUpload('photo', 'Soubor')
-            ->addRule(UI\Form::FILLED, '%label musí být vybrán');
+            ->addRule(UI\Form::FILLED, '%label musí být vybrán')
+            ->addRule(UI\Form::MAX_FILE_SIZE, 'Fotka nesmí přesahovat 500 kB.', 500 * 1024);
         $form->onSuccess[] = function() {
             $this->photoChangeFormSucceeded();
         };
