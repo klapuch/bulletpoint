@@ -30,7 +30,18 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
 				'second',
 				new \Datetime('1999-01-01 01:01:01'),
                 new Wiki\MySqlInformationSource(2, $connection),
-				new Wiki\MySqlBulletpoint(2, $connection)
+				new Wiki\MySqlBulletpoint(2, $connection),
+                new Wiki\ConstantDocument(
+                    'fooTitle',
+                    'fooDescription',
+                    new Access\MySqlIdentity(666, $connection),
+                    new \DateTime('2000-01-01'),
+                    new Wiki\MySqlInformationSource(
+                        100,
+                        $connection
+                    ),
+                    new Wiki\MySqlDocument(9, $connection)
+                )
 			),
 			$rows->current()
 		);
@@ -41,13 +52,19 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
 	private function preparedDatabase() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE bulletpoints');
+		$connection->query('TRUNCATE documents');
 		$connection->query(
 			'INSERT INTO bulletpoints
 			(ID, content, user_id, information_source_id, document_id, created_at)
 			VALUES
-			(1, "first", 1, 1, 1, "2000-01-01 01:01:01"),
-			(2, "second", 2, 2, 1, "1999-01-01 01:01:01")'
+			(1, "first", 1, 1, 9, "2000-01-01 01:01:01"),
+			(2, "second", 2, 2, 9, "1999-01-01 01:01:01")'
 		);
+        $connection->query(
+            'INSERT INTO documents
+            (ID, title, description, created_at, user_id, information_source_id)
+            VALUES (9, "fooTitle", "fooDescription", "2000-01-01", 666, 100)'
+        );
 		return $connection;
 	}
 }

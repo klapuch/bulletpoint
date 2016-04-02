@@ -5,7 +5,7 @@ use Bulletpoint\Model\{
     Access, Storage
 };
 
-final class MySqlCriticComplaints implements Complaints {
+final class MySqlComplainerComplaints implements Complaints {
     private $complainer;
     private $database;
     private $origin;
@@ -20,10 +20,15 @@ final class MySqlCriticComplaints implements Complaints {
         $this->origin = $origin;
     }
 
-    // TODO: May cause sql roundtrip - allow target be nullable and iterate only by complainer
-    public function iterate(Target $target): \Iterator {
+    public function iterate(Target $target = null): \Iterator {
+        $condition = 'user_id = ? AND settled = 0';
+        $parameters = [$this->complainer->id()];
+        if($target !== null) {
+            $condition = 'comment_id = ? AND ' . $condition;
+            $parameters = array_merge([$target->id()], $parameters);
+        }
         $rows = $this->database->fetchAll(
-            'SELECT comment_complaints.ID,
+            "SELECT comment_complaints.ID,
             comment_id AS target,
 			reason,
 			user_id,
@@ -32,8 +37,8 @@ final class MySqlCriticComplaints implements Complaints {
 			FROM comment_complaints
 			INNER JOIN users
 			ON users.ID = user_id
-			WHERE comment_id = ? AND user_id = ? AND settled = 0',
-            [$target->id(), $this->complainer->id()]
+			WHERE $condition",
+            $parameters
         );
         foreach($rows as $row) {
             yield new ConstantComplaint(

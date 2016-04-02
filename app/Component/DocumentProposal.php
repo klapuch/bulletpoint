@@ -23,7 +23,9 @@ final class DocumentProposal extends BaseControl {
 
     public function render() {
         $this->template->setFile(__DIR__ . '/DocumentProposal.latte');
-        $this->template->proposal = $this->proposal;
+        $this->template->id = $this->proposal->id();
+        $this->template->username = $this->proposal->author()->username();
+        $this->template->description = $this->proposal->description();
         $this->template->backlink = $this->presenter->storeRequest();
         $this->template->render();
     }

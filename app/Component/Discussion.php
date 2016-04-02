@@ -5,6 +5,7 @@ use Bulletpoint\Model\{
     Conversation, Access, Storage, Report
 };
 use Nette\Application\UI;
+use Nette\Caching\Storages;
 
 final class Discussion extends BaseControl {
     private $discussion;
@@ -30,19 +31,23 @@ final class Discussion extends BaseControl {
 
     protected function createComponentDiscussion() {
         $components = [];
+        $complaints = new Report\AllowedComplaints(
+            new Report\CachedComplaints(
+                new Report\MySqlComplainerComplaints(
+                    $this->identity,
+                    $this->database,
+                    new Report\MySqlUnsettledComplaints(
+                        $this->identity,
+                        $this->database
+                    )
+                ),
+                new Storages\MemoryStorage
+            )
+        );
         foreach($this->discussion->comments() as $comment) {
             $components[$comment->id()] = new Comment(
                 $comment,
-                new Report\AllowedComplaints(
-                    new Report\MySqlCriticComplaints(
-                        $this->identity,
-                        $this->database,
-                        new Report\MySqlUnsettledComplaints(
-                            $this->identity,
-                            $this->database
-                        )
-                    )
-                ),
+                $complaints,
                 $this->identity,
                 $this->database
             );

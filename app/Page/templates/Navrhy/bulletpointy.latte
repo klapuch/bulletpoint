@@ -12,7 +12,6 @@
         <tr>
             <th><p>#</p></th>
             <th><p>Datum</p></th>
-            <th><p>Autor</p></th>
             <th><p>Dokument</p></th>
             <th><p>Obsah</p></th>
             <th><p>Zobrazení</p></th>
@@ -22,9 +21,6 @@
         <tr n:foreach="$proposals as $proposal">
             <td><p>{$iterator->counter}</p></td>
             <td><p>{$proposal->date()->format('j.n.Y H:i')}</p></td>
-            <td><p>
-                    <a n:href="Profil: $proposal->author()->username()">{$proposal->author()->username()}</a>
-                </p></td>
             <td><p>
                     <a n:href="Dokument: $template->webalize($proposal->document()->title())">{$proposal->document()->title()}</a>
                 </p></td>

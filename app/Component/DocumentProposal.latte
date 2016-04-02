@@ -1,15 +1,15 @@
 <h2>Nový dokument od
-    <a href="{plink Profil: $proposal->author()->username()}">{$proposal->author()->username()}</a>
+    <a href="{plink Profil: $username}">{$username}</a>
 </h2>
 {control profilePhoto:center}
 <blockquote>
-    <p>{$proposal->description()|noescape|texy}</p>
+    <p>{$description|noescape|texy}</p>
     <small>
         {control informationSource}
     </small>
 </blockquote>
 <a class="btn btn-primary"
-   href="{plink NavrhnutyDokument:upravit, $proposal->id()}" role="button">Upravit</a>
+   href="{plink NavrhnutyDokument:upravit, $id}" role="button">Upravit</a>
 <a class="btn btn-success" n:href="prijmout!"
    role="button">✔</a>
 <a class="btn btn-danger" n:href="odmitnout!"

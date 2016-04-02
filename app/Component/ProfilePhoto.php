@@ -17,7 +17,7 @@ final class ProfilePhoto extends BaseControl {
         $template = parent::createTemplate();
         $template->setFile(__DIR__ . '/ProfilePhoto.latte');
         $template->class = '';
-        $template->owner = $this->owner;
+        $template->username = $this->owner->username();
         $template->photo = $this->photo();
         return $template;
     }

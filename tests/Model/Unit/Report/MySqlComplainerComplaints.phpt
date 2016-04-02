@@ -15,13 +15,14 @@ use Bulletpoint\Model\Access;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class MySqlUnsettledComplaints extends TestCase\Database {
+final class MySqlComplainerComplaints extends TestCase\Database {
     public function testIteratingWithTarget() {
         $connection = $this->preparedDatabase();
         $myself = new Fake\Identity(7);
-        $complaints = (new Report\MySqlUnsettledComplaints(
+        $complaints = (new Report\MySqlComplainerComplaints(
             $myself,
-            $connection
+            $connection,
+            new Fake\Complaints()
         ))->iterate(new Report\Target(1));
         Assert::equal(
             new Report\ConstantComplaint(
@@ -46,9 +47,10 @@ final class MySqlUnsettledComplaints extends TestCase\Database {
     public function testIteratingWithoutTarget() {
         $connection = $this->preparedDatabase();
         $myself = new Fake\Identity(7);
-        $complaints = (new Report\MySqlUnsettledComplaints(
+        $complaints = (new Report\MySqlComplainerComplaints(
             $myself,
-            $connection
+            $connection,
+            new Fake\Complaints()
         ))->iterate();
         Assert::equal(
             new Report\ConstantComplaint(
@@ -67,79 +69,67 @@ final class MySqlUnsettledComplaints extends TestCase\Database {
             $complaints->current()
         );
         $complaints->next();
+        Assert::equal(
+            new Report\ConstantComplaint(
+                new Access\ConstantIdentity(
+                    7,
+                    new Access\ConstantRole(
+                        'member',
+                        new Access\MySqlRole(7, $connection)
+                    ),
+                    'face'
+                ),
+                new Report\Target(2),
+                'Vulgarita',
+                new Report\MySqlComplaint(2, $myself, $connection)
+            ),
+            $complaints->current()
+        );
+        $complaints->next();
         Assert::false($complaints->valid());
     }
 
-    public function testIteratingForVisibleComment() {
-        $connection = $this->preparedDatabase();
-        $connection->query(
-            'INSERT INTO comments(ID, visible) VALUES (2, 0)'
-        );
-        $connection->query(
-            'INSERT INTO comment_complaints
-			(comment_id, settled, user_id, reason)
-			VALUES (2, 0, 1, "vulgarita")'
-        );
-        Assert::false((new Report\MySqlUnsettledComplaints(
-            new Fake\Identity(7),
-            $connection
-        ))->iterate(new Report\Target(2))->valid());
-    }
-
-    public function testSettling() {
-        $connection = $this->preparedDatabase();
-        (new Report\MySqlUnsettledComplaints(
-            new Fake\Identity(7),
-            $connection
-        ))->settle(new Report\Target(1));
-        Assert::same(
-            1,
-            $connection->fetchColumn('SELECT settled FROM comment_complaints')
-        );
-    }
 
     public function testComplaining() {
         $connection = $this->preparedDatabase();
-        $identity = new Fake\Identity(2);
-        $complaint = (new Report\MySqlUnsettledComplaints($identity, $connection))
-            ->complain(new Report\Target(6), 'vulgarita');
-        Assert::equal(
-            new Report\MySqlComplaint(2, $identity, $connection),
-            $complaint
-        );
-        Assert::same(
-            [
-                'comment_id' => 6,
-                'reason' => 'Vulgarita'
-            ],
-            $connection->fetch(
-                'SELECT comment_id, reason
-				FROM comment_complaints WHERE ID = 2'
-            )
-        );
+        (new Report\MySqlComplainerComplaints(
+            new Fake\Identity(7),
+            $connection,
+            new Fake\Complaints()
+        ))->complain(new Report\Target(666), 'rude');
+        Assert::true(true); // No exception was thrown
+    }
 
+    /**
+     * @throws \OverflowException Tento komentář jsi již nahlásil
+     */
+    public function testAlreadyCompalinedTarget() {
+        $connection = $this->preparedDatabase();
+        (new Report\MySqlComplainerComplaints(
+            new Fake\Identity(7),
+            $connection,
+            new Fake\Complaints()
+        ))->complain(new Report\Target(1), 'rude');
     }
 
     private function preparedDatabase() {
         $connection = $this->connection();
         $connection->query('TRUNCATE comment_complaints');
         $connection->query('TRUNCATE users');
-        $connection->query('TRUNCATE comments');
-        $connection->query(
-            'INSERT INTO comments(ID, visible) VALUES (1, 1)'
-        );
         $connection->query(
             'INSERT INTO comment_complaints
 			(comment_id, settled, user_id, reason)
-			VALUES (1, 0, 7, "vulgarita")'
+			VALUES 
+			(1, 0, 7, "vulgarita"), (2, 0, 7, "vulgarita"), (1, 0, 2, "vulgarita")'
         );
         $connection->query(
-            'INSERT INTO users (ID, role, username, email) VALUES
-            (7, "member", "face", "e1")'
+            'INSERT INTO users (ID, role, username, email)
+            VALUES
+            (7, "member", "face", "e1"), (2, "member", "face2", "e2")'
         );
         return $connection;
     }
 }
 
 
-(new MySqlUnsettledComplaints())->run();
+(new MySqlComplainerComplaints())->run();

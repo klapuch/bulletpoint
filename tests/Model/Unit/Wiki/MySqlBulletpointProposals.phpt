@@ -19,6 +19,7 @@ final class MySqlBulletpointProposals extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabase();
 		$connection->query('TRUNCATE users');
+		$connection->query('TRUNCATE documents');
 		$connection->query('TRUNCATE information_sources');
 		$connection->query(
 			'INSERT INTO users (ID, role, username) VALUES (2, "member", "facedown")'
@@ -29,6 +30,11 @@ final class MySqlBulletpointProposals extends TestCase\Database {
 			VALUES (100, "fooContent", 2, "0", 1, "2000-01-01 01:01:01"),
 			(9, "fooContent2", 2, "+1", 1, "2000-01-01 01:01:01")'
 		);
+        $connection->query(
+            'INSERT INTO documents
+            (ID, title, description, created_at, user_id, information_source_id)
+            VALUES (100, "fooTitle", "fooDescription", "2000-01-01", 3, 9)'
+        );
 		$connection->query(
 			'INSERT INTO information_sources
 			(place, `year`, author)
@@ -39,24 +45,22 @@ final class MySqlBulletpointProposals extends TestCase\Database {
 		->iterate();
 		Assert::equal(
 			new Wiki\ConstantBulletpointProposal(
-				new Access\ConstantIdentity(
-					2,
-					new Access\ConstantRole(
-						'member',
-						new Access\MySqlRole(2, $connection)
-					),
-					'facedown'
-				),
+                new Access\MySqlIdentity(2, $connection),
 				new \Datetime('2000-01-01 01:01:01'),
-				new Wiki\ConstantInformationSource(
-					'wikipedie',
-					2000,
-					'facedown',
-					new Wiki\MySqlInformationSource(1, $connection)
-				),
+                new Wiki\MySqlInformationSource(1, $connection),
 				'fooContent',
-				new Wiki\MySqlDocument(100, $connection),
-				new Wiki\MySqlBulletpointProposal(1, $admin, $connection)
+                new Wiki\MySqlBulletpointProposal(1, $admin, $connection),
+                new Wiki\ConstantDocument(
+                    'fooTitle',
+                    'fooDescription',
+                    new Access\MySqlIdentity(3, $connection),
+                    new \DateTime('2000-01-01'),
+                    new Wiki\MySqlInformationSource(
+                        9,
+                        $connection
+                    ),
+                    new Wiki\MySqlDocument(100, $connection)
+                )
 			),
 			$rows->current()
 		);

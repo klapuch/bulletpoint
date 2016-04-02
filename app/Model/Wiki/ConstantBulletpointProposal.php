@@ -8,23 +8,23 @@ final class ConstantBulletpointProposal implements BulletpointProposal {
     private $date;
     private $source;
     private $content;
-    private $document;
     private $origin;
+    private $document;
 
     public function __construct(
         Access\Identity $author,
         \DateTime $date,
         InformationSource $source,
         string $content,
-        Document $document,
-        BulletpointProposal $origin
+        BulletpointProposal $origin,
+        Document $document
     ) {
         $this->author = $author;
         $this->date = $date;
         $this->source = $source;
         $this->content = $content;
-        $this->document = $document;
         $this->origin = $origin;
+        $this->document = $document;
     }
 
     public function author(): Access\Identity {

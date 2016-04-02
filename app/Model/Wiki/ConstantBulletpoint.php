@@ -9,19 +9,22 @@ final class ConstantBulletpoint implements Bulletpoint {
     private $date;
     private $source;
     private $origin;
+    private $document;
 
     public function __construct(
         Access\Identity $author,
         string $content,
         \DateTime $date,
         InformationSource $source,
-        Bulletpoint $origin
+        Bulletpoint $origin,
+        Document $document = null
     ) {
         $this->author = $author;
         $this->content = $content;
         $this->date = $date;
         $this->source = $source;
         $this->origin = $origin;
+        $this->document = $document;
     }
 
     public function author(): Access\Identity {
@@ -45,7 +48,9 @@ final class ConstantBulletpoint implements Bulletpoint {
     }
 
     public function document(): Document {
-        return $this->origin->document();
+        if($this->document === null)
+            return $this->origin->document();
+        return $this->document;
     }
 
     public function edit(string $content) {

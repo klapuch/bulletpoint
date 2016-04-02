@@ -14,7 +14,7 @@ final class AllowedComplaints implements Complaints {
         $this->origin = $origin;
     }
 
-    public function iterate(Target $target): \Iterator {
+    public function iterate(Target $target = null): \Iterator {
         return $this->origin->iterate($target);
     }
 

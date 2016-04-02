@@ -13,8 +13,37 @@ use Nette\Caching\Storages;
 use Nette\Utils\Strings;
 
 final class DokumentPage extends BasePage {
+    /**
+     * @var \Bulletpoint\Model\Wiki\Document
+     */
+    private $document;
+
+    public function startup() {
+        parent::startup();
+        try {
+            if(!isset($this->parameters['slug']))
+                return;
+            $slug = $this->parameters['slug'];
+            (new Constraint\DocumentSlugExistenceRule($this->database))
+                ->isSatisfied($slug);
+            $id = (new Translation\MySqlDocumentSlug(
+                $slug,
+                $this->database
+            ))->origin();
+            $this->document = new Wiki\CachedDocument(
+                new Wiki\MySqlDocument($id, $this->database),
+                new Storages\MemoryStorage()
+            );
+        } catch(Exception\ExistenceException $ex) {
+            $this->error(
+                'Dokument neexistuje',
+                IResponse::S404_NOT_FOUND
+            );
+        }
+    }
+
     protected function createComponentInformationSource() {
-        return new Component\InformationSource($this->document()->source());
+        return new Component\InformationSource($this->document->source());
     }
 
     protected function createComponentBulletpoints() {
@@ -23,7 +52,7 @@ final class DokumentPage extends BasePage {
                 new Wiki\CategorizedMySqlBulletpoints(
                     $this->identity,
                     $this->database,
-                    $this->document()
+                    $this->document
                 ),
                 new Storages\MemoryStorage
             ),
@@ -36,7 +65,7 @@ final class DokumentPage extends BasePage {
         return new Component\Discussion(
             new Conversation\CachedDiscussion(
                 new Conversation\MySqlDiscussion(
-                    $this->document()->id(),
+                    $this->document->id(),
                     $this->identity,
                     $this->database
                 ),
@@ -50,7 +79,7 @@ final class DokumentPage extends BasePage {
     public function renderDefault(string $slug) {
         $this->template->identity = $this->identity;
         $this->template->backlink = $this->storeRequest('+ 45 minutes');
-        $this->template->document = $document = $this->document();
+        $this->template->document = $document = $this->document;
         $this->template->slug = $slug;
     }
 
@@ -103,7 +132,7 @@ final class DokumentPage extends BasePage {
     }
 
     public function actionUpravit(string $slug) {
-        $this->template->document = $document = $this->document();
+        $this->template->document = $document = $this->document;
         $this['editForm']['document']->defaults = [
             'title' => $document->title(),
             'description' => $document->description(),
@@ -125,7 +154,7 @@ final class DokumentPage extends BasePage {
 
     public function editFormSucceeded(UI\Form $form) {
         try {
-            $document = $this->document();
+            $document = $this->document;
             $values = $form->values->document;
             $slug = (new Storage\Transaction($this->database))
                 ->start(
@@ -162,32 +191,11 @@ final class DokumentPage extends BasePage {
 
     public function commentFormSucceeded(UI\Form $form) {
         (new Conversation\MySqlDiscussion(
-            $this->document()->id(),
+            $this->document->id(),
             $this->identity,
             $this->database
         ))->post($form->values->comment->content);
         $this->flashMessage('Komentář byl přidán', 'success');
         $this->redirect('this#diskuze');
-    }
-
-    private function document(): Wiki\Document {
-        try {
-            $slug = $this->getParameter('slug');
-            (new Constraint\DocumentSlugExistenceRule($this->database))
-                ->isSatisfied($slug);
-            $id = (new Translation\MySqlDocumentSlug(
-                $slug,
-                $this->database
-            ))->origin();
-            return new Wiki\CachedDocument(
-                new Wiki\MySqlDocument($id, $this->database),
-                new Storages\MemoryStorage()
-            );
-        } catch(Exception\ExistenceException $ex) {
-            $this->error(
-                'Dokument neexistuje',
-                IResponse::S404_NOT_FOUND
-            );
-        }
     }
 }

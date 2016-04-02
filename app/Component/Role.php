@@ -11,6 +11,7 @@ final class Role extends BaseControl {
     private $identity;
 
     public function __construct(User\Profile $profile, Access\Identity $identity) {
+        parent::__construct();
         $this->profile = $profile;
         $this->identity = $identity;
     }

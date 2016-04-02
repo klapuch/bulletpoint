@@ -20,21 +20,21 @@ final class MySqlProfile implements Profile {
 
     public function comments(): int {
         return $this->database->fetchColumn(
-            'SELECT COUNT(ID) AS count FROM comments WHERE user_id = ?',
+            'SELECT COUNT(ID) FROM comments WHERE user_id = ?',
             [$this->owner->id()]
         );
     }
 
     public function bulletpoints(): int {
         return $this->database->fetchColumn(
-            'SELECT COUNT(ID) AS count FROM bulletpoints WHERE user_id = ?',
+            'SELECT COUNT(ID) FROM bulletpoints WHERE user_id = ?',
             [$this->owner->id()]
         );
     }
 
     public function documents(): int {
         return $this->database->fetchColumn(
-            'SELECT COUNT(ID) AS count FROM documents WHERE user_id = ?',
+            'SELECT COUNT(ID) FROM documents WHERE user_id = ?',
             [$this->owner->id()]
         );
     }

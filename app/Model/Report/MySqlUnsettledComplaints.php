@@ -18,9 +18,15 @@ final class MySqlUnsettledComplaints implements Complaints {
         $this->database = $database;
     }
 
-    public function iterate(Target $target): \Iterator {
+    public function iterate(Target $target = null): \Iterator {
+        $condition = 'visible = 1 AND settled = 0';
+        $parameters = [];
+        if($target !== null) {
+            $condition = 'comment_id = ? AND ' . $condition;
+            $parameters = array_merge([$target->id()], $parameters);
+        }
         $rows = $this->database->fetchAll(
-            'SELECT comment_complaints.ID,
+            "SELECT comment_complaints.ID,
             comment_id AS target,
 			reason,
 			comment_complaints.user_id,
@@ -31,8 +37,8 @@ final class MySqlUnsettledComplaints implements Complaints {
 			ON comments.ID = comment_id
 			INNER JOIN users
 			ON users.ID = comment_complaints.user_id
-			WHERE comment_id = ? AND visible = 1 AND settled = 0',
-            [$target->id()]
+			WHERE $condition",
+            $parameters
         );
         foreach($rows as $row) {
             yield new ConstantComplaint(

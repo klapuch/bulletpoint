@@ -20,6 +20,12 @@
                     </a>
                 {else}
                     {if $user->isAllowed('discussion-discussion', 'stezovat!')}
+                        {var complained = false}
+                        {foreach $complaints as $complaint}
+                            {if $complaint->target()->id() === $comment->id()}
+                                {var complained = true}
+                            {/if}
+                        {/foreach}
                         {if !$complained}
                             <a class="text-right ajax no-link darken"
                                title="Nahlásit jako spam" n:href="stezovat! spam">

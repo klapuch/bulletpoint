@@ -23,7 +23,7 @@ final class StiznostPage extends BasePage {
         return new Component\Comment(
             $this->comment(),
             new Report\AllowedComplaints(
-                new Report\MySqlCriticComplaints(
+                new Report\MySqlComplainerComplaints(
                     $this->identity,
                     $this->database,
                     new Report\MySqlUnsettledComplaints(

@@ -10,8 +10,33 @@ use Nette\Http\IResponse;
 use Nette\Application\UI;
 
 final class BulletpointPage extends BasePage {
+    /**
+     * @var \Bulletpoint\Model\Wiki\Bulletpoint
+     */
+    private $bulletpoint;
+
+    public function startup() {
+        parent::startup();
+        try {
+            if(!isset($this->parameters['id']))
+                return;
+            $id = $this->parameters['id'];
+            (new Constraint\BulletpointExistenceRule($this->database))
+                ->isSatisfied($id);
+            $this->bulletpoint = new Wiki\MySqlBulletpoint(
+                $id,
+                $this->database
+            );
+        } catch(Exception\ExistenceException $ex) {
+            $this->error(
+                'Bulletpoint neexistuje',
+                IResponse::S404_NOT_FOUND
+            );
+        }
+    }
+
     public function actionUpravit(int $id) {
-        $this->template->bulletpoint = $bulletpoint = $this->bulletpoint();
+        $this->template->bulletpoint = $bulletpoint = $this->bulletpoint;
         $this['editBulletpointForm']['bulletpoint']->defaults = [
             'content' => $bulletpoint->content(),
         ];
@@ -32,7 +57,7 @@ final class BulletpointPage extends BasePage {
 
     public function editBulletpointFormSucceeded(UI\Form $form) {
         try {
-            $bulletpoint = $this->bulletpoint();
+            $bulletpoint = $this->bulletpoint;
             $bulletpoint->edit($form->values->bulletpoint->content);
             $this->flashMessage('Bulletpoint byl upraven', 'success');
             $this->redirect(
@@ -122,21 +147,4 @@ final class BulletpointPage extends BasePage {
             $this->flashMessage($ex->getMessage(), 'danger');
         }
     }
-
-    private function bulletpoint(): Wiki\Bulletpoint {
-        try {
-            (new Constraint\BulletpointExistenceRule($this->database))
-                ->isSatisfied($this->getParameter('id'));
-            return new Wiki\MySqlBulletpoint(
-                $this->getParameter('id'),
-                $this->database
-            );
-        } catch(Exception\ExistenceException $ex) {
-            $this->error(
-                'Bulletpoint neexistuje',
-                IResponse::S404_NOT_FOUND
-            );
-        }
-    }
-
 }
