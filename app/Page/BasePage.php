@@ -11,7 +11,7 @@ use Bulletpoint\Model\{
 abstract class BasePage extends Nette\Application\UI\Presenter {
     use \Nextras\Application\UI\SecuredLinksPresenterTrait;
 
-    /** @inject @var \Bulletpoint\Model\Storage\PDODatabase */
+    /** @inject @var \Bulletpoint\Model\Storage\Database */
     public $database;
     /** @inject @var \Bulletpoint\Model\Access\Identity */
     public $identity;

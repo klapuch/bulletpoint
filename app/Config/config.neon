@@ -43,7 +43,9 @@ common:
                 - addFilter('texy', [@texy, process])
         - Bulletpoint\Model\Access\IdentityFactory
         - Bulletpoint\Model\Security\AES256CBC(%cryptography.key%)
-        - Bulletpoint\Model\Storage\PDODatabase(%database.host%, %database.user%, %database.pass%, %database.name%)
+        pdo:
+            class: Bulletpoint\Model\Storage\PDODatabase
+            arguments: [%database.host%, %database.user%, %database.pass%, %database.name%]
 production < common:
     parameters:
         php:
@@ -52,6 +54,10 @@ production < common:
         headers:
             Content-Security-Policy: "default-src 'self' ; script-src 'self' ; style-src 'self' ; img-src 'self' data: ; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ; media-src 'none' ; object-src 'none' ; child-src 'none' ; frame-ancestors 'none' ; upgrade-insecure-requests; block-all-mixed-content; report-uri https://bulletpoint.report-uri.io/r/default/csp/enforce;"
 development < common:
-        parameters:
+    services:
+        pdo:
+            autowired: no
+        - Bulletpoint\Model\Storage\ProfiledDatabase(@pdo)
+    parameters:
         php:
             display_errors: 1
