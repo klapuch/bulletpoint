@@ -30,12 +30,26 @@ final class Bulletpoints extends BaseControl {
 
     protected function createComponentBulletpoints() {
         $components = [];
+        $ratings = (new Rating\MySqlBulletpointRatings(
+            $this->bulletpoints,
+            $this->identity,
+            $this->database
+        ))->iterate();
+        $userRatings = (new Rating\MySqlUserBulletpointRatings(
+            $this->bulletpoints,
+            $this->identity,
+            $this->database
+        ))->iterate();
         foreach($this->bulletpoints->iterate() as $bulletpoint) {
             $components[$bulletpoint->id()] = new Bulletpoint(
                 $bulletpoint,
+                $ratings->current(),
+                $userRatings->current(),
                 $this->identity,
                 $this->database
             );
+            $ratings->next();
+            $userRatings->next();
         }
         return new UI\Multiplier(
             function($id) use ($components) {

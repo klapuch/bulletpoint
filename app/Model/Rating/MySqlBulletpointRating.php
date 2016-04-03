@@ -63,7 +63,7 @@ final class MySqlBulletpointRating implements Rating {
     }
 
     private function isReset(string $rating): bool {
-        return self::NEUTRAL
+        return $rating === self::NEUTRAL
         || (bool)$this->database->fetch(
             'SELECT 1
 			FROM bulletpoint_ratings

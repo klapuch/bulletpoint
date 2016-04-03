@@ -22,7 +22,7 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
 		$rows = (new Wiki\OwnedMySqlBulletpoints(
 			$owner,
 			$connection,
-			new Fake\Bulletpoints(new Fake\Database)
+			new Fake\Bulletpoints()
 		))->iterate();
 		Assert::equal(
 			new Wiki\ConstantBulletpoint(
