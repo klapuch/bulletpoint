@@ -67,7 +67,23 @@ final class MySqlUserBulletpointRatings extends TestCase\Database {
         );
         $ratings->next();
         Assert::false($ratings->valid());
+    }
 
+    public function testIteratingWithoutIdentity() {
+        $myself = new Fake\Identity(0);
+        $ratings = (new Rating\MySqlUserBulletpointRatings(
+            new Fake\Bulletpoints([1, 2, 3]),
+            $myself,
+            new Fake\Database
+        ))->iterate();
+        Assert::equal(
+            [
+                new Rating\InvalidRating,
+                new Rating\InvalidRating,
+                new Rating\InvalidRating
+            ],
+            iterator_to_array($ratings)
+        );
     }
 
     private function preparedDatabase() {
