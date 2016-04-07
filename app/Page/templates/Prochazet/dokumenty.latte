@@ -9,7 +9,8 @@
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             {else}
-                <a n:href="this, strana => $pagination->page - 1" aria-label="Previous">
+                <a n:href="this, strana => $pagination->page - 1"
+                        aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             {/if}
@@ -25,7 +26,8 @@
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             {else}
-                <a n:href="this, strana => $pagination->page + 1" aria-label="Next">
+                <a n:href="this, strana => $pagination->page + 1"
+                        aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             {/if}
@@ -43,9 +45,13 @@
         <tbody>
         <tr n:foreach="$documents as $document">
             <td><p>{$document->date()->format('j.n.Y H:i')}</p></td>
-            <td><p>
-                    <a n:href="Dokument: $template->webalize($document->title())">{$document->title()}</a>
-                </p></td>
+            <td>
+                <p>
+                    <a n:href="Dokument: $template->webalize($document->title())">
+                        {$document->title()}
+                    </a>
+                </p>
+            </td>
         </tr>
         </tbody>
     </table>

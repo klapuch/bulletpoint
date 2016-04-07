@@ -6,7 +6,7 @@ use Bulletpoint\Model\{
 };
 use Nette\Utils;
 
-final class LimitedMySqlDocuments implements Documents {
+final class LimitedMySqlDocuments implements Documents, \Countable {
     private $database;
     private $origin;
     private $pagination;
@@ -23,7 +23,7 @@ final class LimitedMySqlDocuments implements Documents {
 
     public function iterate(): \Iterator {
         $rows = $this->database->fetchAll(
-            'SELECT SQL_CALC_FOUND_ROWS ID,
+            'SELECT ID,
               created_at,
               description,
               title,
@@ -34,9 +34,8 @@ final class LimitedMySqlDocuments implements Documents {
 			  LIMIT ?, ?',
             [$this->pagination->offset, $this->pagination->length]
         );
-        $total = $this->database->fetchColumn('SELECT FOUND_ROWS()');
         foreach($rows as $row) {
-            yield $total => new ConstantDocument(
+            yield new ConstantDocument(
                 $row['title'],
                 $row['description'],
                 new Access\MySqlIdentity($row['user_id'], $this->database),
@@ -56,5 +55,11 @@ final class LimitedMySqlDocuments implements Documents {
         InformationSource $source
     ): Document {
         return $this->origin->add($title, $description, $source);
+    }
+
+    public function count() {
+        return $this->database->fetchColumn(
+            'SELECT COUNT(ID) FROM documents'
+        );
     }
 }

@@ -9,7 +9,7 @@ final class ProchazetPage extends BasePage {
         $pagination = new Utils\Paginator;
         $pagination->itemsPerPage = 10;
         $pagination->page = $strana;
-        $documents = (new Wiki\LimitedMySqlDocuments(
+        $limitedDocuments = new Wiki\LimitedMySqlDocuments(
             $this->database,
             new Wiki\AllMySqlDocuments(
                 $this->database,
@@ -23,11 +23,11 @@ final class ProchazetPage extends BasePage {
                 }
             ),
             $pagination
-        ))->iterate();
+        );
+        $pagination->itemCount = count($limitedDocuments);
+        $this->template->documents = $documents = $limitedDocuments->iterate();
         if(!$documents->valid() || $strana < $pagination->firstPage)
             $this->error('Strana neexistuje');
-        $pagination->itemCount = $documents->key();
-        $this->template->documents = $documents;
         $this->template->pagination = $pagination;
     }
 }

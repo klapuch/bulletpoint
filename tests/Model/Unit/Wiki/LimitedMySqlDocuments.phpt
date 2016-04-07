@@ -21,13 +21,14 @@ final class LimitedMySqlDocuments extends TestCase\Database {
         $pagination = new \Nette\Utils\Paginator;
         $pagination->itemsPerPage = 1;
         $pagination->page = 1;
-        $rows = (new Wiki\LimitedMySqlDocuments(
+        $documents = new Wiki\LimitedMySqlDocuments(
             $connection,
             new Fake\Documents,
             $pagination
-        ))->iterate();
+        );
         $pagination->itemCount = 2;
-        Assert::same(2, $rows->key());
+        Assert::same(2, count($documents));
+        $rows = $documents->iterate();
         Assert::equal(
             new Wiki\ConstantDocument(
                 'secondTitle',
@@ -48,12 +49,13 @@ final class LimitedMySqlDocuments extends TestCase\Database {
         $pagination = $this->mockery('Nette\Utils\Paginator');
         $pagination->shouldReceive('getOffset')->andReturn(100)->once();
         $pagination->shouldReceive('getLength')->andReturn(2)->once();
-        $rows = (new Wiki\LimitedMySqlDocuments(
+        $documents = new Wiki\LimitedMySqlDocuments(
             $connection,
             new Fake\Documents,
             $pagination
-        ))->iterate();
-        Assert::null($rows->key());
+        );
+        Assert::same(2, count($documents));
+        $rows = $documents->iterate();
         Assert::false($rows->valid());
     }
 
