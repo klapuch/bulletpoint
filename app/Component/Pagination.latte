@@ -3,7 +3,11 @@
         <ul class="pagination">
             <li n:class="$pagination->first ? 'disabled' : ''">
                 {if $pagination->first}
-                    <a href="#" aria-label="Previous">
+                    <a n:href="this" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                {elseif $pagination->page == $pagination->firstPage + 1}
+                    <a n:href="this" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 {else}
@@ -14,7 +18,11 @@
             </li>
             {foreach range($pagination->firstPage, $pagination->lastPage) as $page}
                 <li n:class="$page == $pagination->page ? 'active' : ''">
-                    <a n:href="this, strana => $page">{$page}</a>
+                    {if $iterator->counter == 1}
+                        <a n:href="this">{$page}</a>
+                    {else}
+                        <a n:href="this, strana => $page">{$page}</a>
+                    {/if}
                 </li>
             {/foreach}
             <li n:class="$pagination->last ? 'disabled' : ''">
