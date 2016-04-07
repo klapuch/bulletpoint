@@ -5,6 +5,7 @@
     <ul class="pagination">
         <li n:class="$pagination->first ? 'disabled' : ''">
             {if $pagination->first}
+                <a href="#" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             {else}
@@ -20,6 +21,7 @@
         {/foreach}
         <li n:class="$pagination->last ? 'disabled' : ''">
             {if $pagination->last}
+                <a href="#" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             {else}

@@ -7,6 +7,7 @@ use Nette\Utils;
 final class ProchazetPage extends BasePage {
     public function renderDokumenty($strana = 1) {
         $pagination = new Utils\Paginator;
+        $pagination->itemsPerPage = 10;
         $pagination->page = $strana;
         $documents = (new Wiki\LimitedMySqlDocuments(
             $this->database,
