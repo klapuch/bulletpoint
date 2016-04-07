@@ -11,7 +11,17 @@ final class ProchazetPage extends BasePage {
         $pagination->page = $strana;
         $documents = (new Wiki\LimitedMySqlDocuments(
             $this->database,
-            new Wiki\OwnedMySqlDocuments($this->identity, $this->database),
+            new Wiki\AllMySqlDocuments(
+                $this->database,
+                new class implements Wiki\Documents {
+                    public function iterate(): \Iterator {  }
+                    public function add(
+                        string $title,
+                        string $description,
+                        Wiki\InformationSource $source
+                    ): Wiki\Document {  }
+                }
+            ),
             $pagination
         ))->iterate();
         if(!$documents->valid() || $strana < $pagination->firstPage)
