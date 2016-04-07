@@ -27,7 +27,7 @@ final class LimitedMySqlDocuments extends TestCase\Database {
             $pagination
         );
         $pagination->itemCount = 2;
-        Assert::same(2, count($documents));
+        Assert::same(2, $documents->count());
         $rows = $documents->iterate();
         Assert::equal(
             new Wiki\ConstantDocument(
@@ -54,7 +54,7 @@ final class LimitedMySqlDocuments extends TestCase\Database {
             new Fake\Documents,
             $pagination
         );
-        Assert::same(2, count($documents));
+        Assert::same(2, $documents->count());
         $rows = $documents->iterate();
         Assert::false($rows->valid());
     }

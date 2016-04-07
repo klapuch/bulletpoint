@@ -2,14 +2,23 @@
 namespace Bulletpoint\Page;
 
 use Bulletpoint\Model\Wiki;
+use Bulletpoint\Component;
 use Nette\Utils;
 
 final class ProchazetPage extends BasePage {
-    public function renderDokumenty($strana = 1) {
-        $pagination = new Utils\Paginator;
-        $pagination->itemsPerPage = 10;
-        $pagination->page = $strana;
-        $limitedDocuments = new Wiki\LimitedMySqlDocuments(
+    /**
+     * @var \Nette\Utils\Paginator
+     */
+    private $pagination;
+    /**
+     * @var \Bulletpoint\Model\Wiki\LimitedMySqlDocuments
+     */
+    private $limitedDocuments;
+
+    public function actionDokumenty() {
+        $this->pagination = new Utils\Paginator;
+        $this->pagination->itemsPerPage = 10;
+        $this->limitedDocuments = new Wiki\LimitedMySqlDocuments(
             $this->database,
             new Wiki\AllMySqlDocuments(
                 $this->database,
@@ -22,12 +31,18 @@ final class ProchazetPage extends BasePage {
                     ): Wiki\Document {  }
                 }
             ),
-            $pagination
+            $this->pagination
         );
-        $pagination->itemCount = count($limitedDocuments);
-        $this->template->documents = $documents = $limitedDocuments->iterate();
-        if(!$documents->valid() || $strana < $pagination->firstPage)
-            $this->error('Strana neexistuje');
-        $this->template->pagination = $pagination;
+        $this->pagination->itemCount = $this->limitedDocuments->count();
+    }
+
+    public function renderDokumenty() {
+        $this->template->documents = $this->limitedDocuments->iterate();
+    }
+
+    protected function createComponentPagination() {
+        return new Component\Pagination(
+            $this->pagination
+        );
     }
 }

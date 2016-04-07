@@ -1,39 +1,7 @@
 {block content}
 {define description}Procházení nejnovějších přidaných dokumentů{/define}
 <h1>{block title}Procházet{/block}</h1>
-<nav class="text-center">
-    <ul class="pagination">
-        <li n:class="$pagination->first ? 'disabled' : ''">
-            {if $pagination->first}
-                <a href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            {else}
-                <a n:href="this, strana => $pagination->page - 1"
-                        aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            {/if}
-        </li>
-        {foreach range($pagination->firstPage, $pagination->lastPage) as $page}
-            <li n:class="$page == $pagination->page ? 'active' : ''">
-                <a n:href="this, strana => $page">{$page}</a>
-            </li>
-        {/foreach}
-        <li n:class="$pagination->last ? 'disabled' : ''">
-            {if $pagination->last}
-                <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            {else}
-                <a n:href="this, strana => $pagination->page + 1"
-                        aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            {/if}
-        </li>
-    </ul>
-</nav>
+{control pagination}
 <div class="table-responsive">
     <table class="table table-hover">
         <thead>
