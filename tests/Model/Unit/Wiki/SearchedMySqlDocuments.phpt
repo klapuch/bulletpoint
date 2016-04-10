@@ -22,16 +22,18 @@ final class SearchedMySqlDocuments extends TestCase\Database {
 			'INSERT INTO documents (title, description)
 			VALUES ("Škoda", "fooDescription")'
 		);
-		$documents = (new Wiki\SearchedMySqlDocuments(
+		$documents = new Wiki\SearchedMySqlDocuments(
             'skod',
             $connection,
             new Fake\Documents
-        ))->iterate();
-        $document = $documents->current();
+        );
+        Assert::same(1, $documents->count());
+        $iterators = $documents->iterate();
+        $document = $iterators->current();
 		Assert::same('Škoda', $document->title());
 		Assert::same('fooDescription', $document->description());
-        $documents->next();
-        Assert::false($documents->valid());
+        $iterators->next();
+        Assert::false($iterators->valid());
 	}
 
 	public function testNoMatch() {
@@ -40,12 +42,13 @@ final class SearchedMySqlDocuments extends TestCase\Database {
 			'INSERT INTO documents (title, description)
 			VALUES ("The Sound Of Perseverance", "fooDescription")'
 		);
-		$documents = (new Wiki\SearchedMySqlDocuments(
+		$documents = new Wiki\SearchedMySqlDocuments(
             'fooooo',
             $connection,
             new Fake\Documents
-        ))->iterate();
-		Assert::false($documents->valid());
+        );
+        Assert::same(0, $documents->count());
+		Assert::false($documents->iterate()->valid());
 	}
 
 	public function testEllipsis() {
@@ -54,18 +57,19 @@ final class SearchedMySqlDocuments extends TestCase\Database {
 			'INSERT INTO documents (title, description)
 			VALUES ("fooTitle", REPEAT("0123456789", 11))'
 		);
-		$documents = (new Wiki\SearchedMySqlDocuments(
+		$documents = new Wiki\SearchedMySqlDocuments(
             'foo',
             $connection,
             new Fake\Documents
-        ))->iterate();
-        $document = $documents->current();
+        );
+        Assert::same(1, $documents->count());
+        $iterators = $documents->iterate();
 		Assert::same(
 			str_repeat('0123456789', 10) . '...',
-			$document->description()
+			$iterators->current()->description()
 		);
-        $documents->next();
-        Assert::false($documents->valid());
+        $iterators->next();
+        Assert::false($iterators->valid());
 	}
 
 	private function preparedDatabase() {

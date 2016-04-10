@@ -68,4 +68,11 @@ final class OwnedMySqlDocuments implements Documents {
             throw $ex;
         }
     }
+
+    public function count(): int {
+        return $this->database->fetchColumn(
+            'SELECT COUNT(*) FROM documents WHERE user_id = ?',
+            [$this->myself->id()]
+        );
+    }
 }

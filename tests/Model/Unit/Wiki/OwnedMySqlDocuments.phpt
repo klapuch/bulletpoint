@@ -19,8 +19,8 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabaseForIterating();
         $owner = new Fake\Identity(2);
-		$rows = (new Wiki\OwnedMySqlDocuments($owner, $connection))
-		->iterate();
+		$documents = new Wiki\OwnedMySqlDocuments($owner, $connection);
+        $rows = $documents->iterate();
 		Assert::equal(
 			new Wiki\ConstantDocument(
 				'firstTitle',
@@ -34,6 +34,7 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 		);
 		$rows->next();
 		Assert::false($rows->valid());
+        Assert::same(1, $documents->count());
 	}
 
 	public function testAdding() {

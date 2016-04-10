@@ -18,8 +18,11 @@ require __DIR__ . '/../../../bootstrap.php';
 final class AllMySqlDocuments extends TestCase\Database {
     public function testIterating() {
         $connection = $this->preparedDatabase();
-        $rows = (new Wiki\AllMySqlDocuments($connection, new Fake\Documents))
-            ->iterate();
+        $documents = new Wiki\AllMySqlDocuments(
+            $connection,
+            new Fake\Documents
+        );
+        $rows = $documents->iterate();
         Assert::equal(
             new Wiki\ConstantDocument(
                 'secondTitle',
@@ -45,6 +48,7 @@ final class AllMySqlDocuments extends TestCase\Database {
         );
         $rows->next();
         Assert::false($rows->valid());
+        Assert::same(2, $documents->count());
     }
 
     private function preparedDatabase() {

@@ -10,4 +10,5 @@ interface Documents {
         string $description,
         InformationSource $source
     ): Document;
+    public function count(): int;
 }

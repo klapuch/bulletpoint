@@ -47,4 +47,10 @@ final class AllMySqlDocuments implements Documents {
     ): Document {
         return $this->origin->add($title, $description, $source);
     }
+
+    public function count(): int {
+        return $this->database->fetchColumn(
+            'SELECT COUNT(*) FROM documents'
+        );
+    }
 }

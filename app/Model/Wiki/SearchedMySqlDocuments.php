@@ -5,7 +5,7 @@ use Bulletpoint\Model\{
     Storage, Access
 };
 
-final class SearchedMySqlDocuments implements Documents, \Countable {
+final class SearchedMySqlDocuments implements Documents {
     const MASK = '%s*';
     private $keyword;
     private $database;
@@ -54,20 +54,20 @@ final class SearchedMySqlDocuments implements Documents, \Countable {
         }
     }
 
-    public function count() {
-        return $this->database->fetchColumn(
-            'SELECT COUNT(*)
-			FROM documents
-			WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE)',
-            [sprintf(self::MASK, $this->keyword)]
-        );
-    }
-
     public function add(
         string $title,
         string $description,
         InformationSource $source
     ): Document {
         return $this->origin->add($title, $description, $source);
+    }
+
+    public function count(): int {
+        return $this->database->fetchColumn(
+            'SELECT COUNT(*)
+			FROM documents
+			WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE)',
+            [sprintf(self::MASK, $this->keyword)]
+        );
     }
 }

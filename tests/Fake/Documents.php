@@ -13,4 +13,8 @@ final class Documents implements Wiki\Documents{
         Wiki\InformationSource $source
     ): Wiki\Document {
     }
+
+    public function count(): int {
+        return 0;
+    }
 }

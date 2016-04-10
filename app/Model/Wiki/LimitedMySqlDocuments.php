@@ -6,7 +6,7 @@ use Bulletpoint\Model\{
 };
 use Nette\Utils;
 
-final class LimitedMySqlDocuments implements Documents, \Countable {
+final class LimitedMySqlDocuments implements Documents {
     private $database;
     private $origin;
     private $pagination;
@@ -57,9 +57,9 @@ final class LimitedMySqlDocuments implements Documents, \Countable {
         return $this->origin->add($title, $description, $source);
     }
 
-    public function count() {
+    public function count(): int {
         return $this->database->fetchColumn(
-            'SELECT COUNT(ID) FROM documents'
+            'SELECT COUNT(*) FROM documents'
         );
     }
 }
