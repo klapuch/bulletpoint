@@ -78,7 +78,7 @@ final class DokumentPage extends BasePage {
 
     public function renderDefault(string $slug) {
         $this->template->identity = $this->identity;
-        $this->template->backlink = $this->storeRequest('+ 45 minutes');
+        $this->template->backlink = $this->storeRequest('+45 minutes');
         $this->template->document = $document = $this->document;
         $this->template->slug = $slug;
     }

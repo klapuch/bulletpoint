@@ -13,11 +13,8 @@ final class InformationSource extends BaseControl {
 
     public function render() {
         $this->template->setFile(__DIR__ . '/InformationSource.latte');
-        $this->template->backlink = $this->presenter->storeRequest();
-        $this->template->place = $this->informationSource->place();
-        $this->template->year = $this->informationSource->year();
-        $this->template->author = $this->informationSource->author();
-        $this->template->id = $this->informationSource->id();
+        $this->template->backlink = $this->presenter->storeRequest('+45 minutes');
+        $this->template->source = $this->informationSource;
         $this->template->render();
     }
 }

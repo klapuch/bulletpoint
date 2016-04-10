@@ -14,7 +14,10 @@ final class CachedDocument implements Document {
     }
 
     public function author(): Access\Identity {
-        return $this->read(__FUNCTION__);
+        return new Access\CachedIdentity(
+            $this->read(__FUNCTION__),
+            $this->storage
+        );
     }
 
     public function title(): string {
@@ -26,7 +29,10 @@ final class CachedDocument implements Document {
     }
 
     public function source(): InformationSource {
-        return $this->read(__FUNCTION__);
+        return new CachedInformationSource(
+            $this->read(__FUNCTION__),
+            $this->storage
+        );
     }
 
     public function id(): int {
