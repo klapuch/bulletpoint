@@ -8,8 +8,9 @@
 {define description}Veřený profil uživatele {$username}{/define}
 <div class="text-center">
     <h1 title="Přezdívka">{block title}{$username}{/block}</h1>
-    <h6 title="Role">{$role}</h6>
+    {control role}
 </div>
+<br>
 {control profilePhoto:center}
 <div class="row text-center">
     <div class="col-sm-4">
@@ -26,6 +27,4 @@
     </div>
 </div>
 <hr>
-
 {control punishment}
-{control role}

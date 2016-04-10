@@ -7,6 +7,11 @@ use Bulletpoint\Model\{
 };
 
 final class Role extends BaseControl {
+    const CZECH_ROLES = [
+        'member' => 'Člen',
+        'administrator' => 'Administrátor',
+        'creator' => 'Tvůrce',
+    ];
     private $profile;
     private $identity;
 
@@ -22,7 +27,9 @@ final class Role extends BaseControl {
     public function render() {
         $this->template->setFile(__DIR__ . '/Role.latte');
         $this->template->identity = $this->identity;
-        $this->template->owner = $this->profile->owner();
+        $owner = $this->profile->owner();
+        $this->template->owner = $owner;
+        $this->template->czechRole = self::CZECH_ROLES[(string)$owner->role()];
         $this->template->render();
     }
 

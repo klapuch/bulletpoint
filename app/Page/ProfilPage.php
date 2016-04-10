@@ -47,12 +47,6 @@ final class ProfilPage extends BasePage {
         $this->template->comments = $this->profile->comments();
         $this->template->bulletpoints = $this->profile->bulletpoints();
         $this->template->documents = $this->profile->documents();
-        $czechRoles = [
-            'member' => 'Člen',
-            'administrator' => 'Administrátor',
-            'creator' => 'Tvůrce',
-        ];
-        $this->template->role = $czechRoles[(string)$this->owner->role()];
     }
     
     protected function createComponentPunishment() {
