@@ -3,11 +3,12 @@ namespace Bulletpoint\Page;
 
 use Bulletpoint\Model\Wiki;
 use Bulletpoint\Exception;
+use Nette\Utils;
 
 final class HledaniPage extends BasePage {
     public function renderDefault($keyword) {
         $this->template->keyword = $keyword;
-        $documents = (new Wiki\SearchedMySqlDocuments(
+        $documents = new Wiki\SearchedMySqlDocuments(
             $keyword,
             $this->database,
             new class implements Wiki\Documents {
@@ -18,7 +19,17 @@ final class HledaniPage extends BasePage {
                     Wiki\InformationSource $source
                 ): Wiki\Document {  }
             }
-        ))->iterate();
-        $this->template->documents = $documents;
+        );
+        $count = $this->template->count = $documents->count();
+        if($count === 1) {
+            $this->redirect(
+                'Dokument:',
+                Utils\Strings::webalize(
+                    $documents->iterate()->current()->title()
+                )
+            );
+        } elseif($count > 1) {
+            $this->template->documents = $documents->iterate();
+        }
     }
 }

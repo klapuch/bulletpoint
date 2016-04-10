@@ -5,7 +5,8 @@ use Bulletpoint\Model\{
     Storage, Access
 };
 
-final class SearchedMySqlDocuments implements Documents {
+final class SearchedMySqlDocuments implements Documents, \Countable {
+    const MASK = '%s*';
     private $keyword;
     private $database;
     private $origin;
@@ -36,7 +37,7 @@ final class SearchedMySqlDocuments implements Documents {
 			FROM documents
 			WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE)
 			ORDER BY MATCH(title) AGAINST(? IN BOOLEAN MODE) DESC',
-            array_fill(0, 2, $this->keyword . '*')
+            array_fill(0, 2, sprintf(self::MASK, $this->keyword))
         );
         foreach($rows as $row) {
             yield new ConstantDocument(
@@ -51,6 +52,15 @@ final class SearchedMySqlDocuments implements Documents {
                 new MySqlDocument($row['ID'], $this->database)
             );
         }
+    }
+
+    public function count() {
+        return $this->database->fetchColumn(
+            'SELECT COUNT(*)
+			FROM documents
+			WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE)',
+            [sprintf(self::MASK, $this->keyword)]
+        );
     }
 
     public function add(
