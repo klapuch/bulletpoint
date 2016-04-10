@@ -103,6 +103,6 @@ abstract class BasePage extends Nette\Application\UI\Presenter {
             return false;
         }
         $session[$name] = time();
-        return false;
+        return true;
     }
 }
