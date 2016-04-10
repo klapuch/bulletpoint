@@ -92,4 +92,11 @@ final class OwnedMySqlBulletpoints implements Bulletpoints {
             throw $ex;
         }
     }
+
+    public function count(): int {
+        return $this->database->fetchColumn(
+            'SELECT COUNT(*) FROM bulletpoints WHERE user_id = ?',
+            [$this->owner->id()]
+        );
+    }
 }

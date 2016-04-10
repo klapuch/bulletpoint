@@ -31,4 +31,15 @@ final class CachedBulletpoints implements Bulletpoints {
     ) {
         $this->origin->add($content, $document, $source);
     }
+
+    public function count(): int {
+        return $this->read(__FUNCTION__);
+    }
+
+    private function read(string $method) {
+        $key = __CLASS__ . '::' . $method;
+        if($this->storage->read($key) === null)
+            $this->storage->write($key, $this->origin->$method(), []);
+        return $this->storage->read($key);
+    }
 }

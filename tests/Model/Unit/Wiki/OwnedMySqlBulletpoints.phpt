@@ -19,10 +19,12 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabase();
         $owner = new Fake\Identity(2);
-		$rows = (new Wiki\OwnedMySqlBulletpoints(
+		$documents = new Wiki\OwnedMySqlBulletpoints(
 			$owner,
 			$connection
-		))->iterate();
+		);
+        $rows = $documents->iterate();
+        Assert::same(1, $documents->count());
 		Assert::equal(
 			new Wiki\ConstantBulletpoint(
 				$owner,

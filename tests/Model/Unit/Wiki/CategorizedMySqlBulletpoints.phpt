@@ -18,11 +18,13 @@ require __DIR__ . '/../../../bootstrap.php';
 final class CategorizedMySqlBulletpoints extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabase();
-		$rows = (new Wiki\CategorizedMySqlBulletpoints(
+		$documents = new Wiki\CategorizedMySqlBulletpoints(
 			$connection,
 			new Fake\Document(1),
             new Fake\Bulletpoints
-		))->iterate();
+		);
+        $rows = $documents->iterate();
+        Assert::same(2, $documents->count());
 		Assert::equal(
 			new Wiki\ConstantBulletpoint(
 				new Access\MySqlIdentity(1, $connection),

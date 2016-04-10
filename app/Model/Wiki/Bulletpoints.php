@@ -8,4 +8,5 @@ interface Bulletpoints {
         Document $document,
         InformationSource $source
     );
+    public function count(): int;
 }

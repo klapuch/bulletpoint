@@ -66,4 +66,10 @@ final class CategorizedMySqlBulletpoints implements Bulletpoints {
         return $this->origin->add($content, $document, $source);
     }
 
+    public function count(): int {
+        return $this->database->fetchColumn(
+            'SELECT COUNT(*) FROM bulletpoints WHERE document_id = ?',
+            [$this->document->id()]
+        );
+    }
 }

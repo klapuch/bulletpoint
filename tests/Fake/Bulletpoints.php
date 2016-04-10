@@ -22,4 +22,8 @@ final class Bulletpoints implements Wiki\Bulletpoints {
         foreach($this->id as $id)
             yield new Bulletpoint($id);
 	}
+
+    public function count(): int {
+        return 0;
+    }
 }
