@@ -9,14 +9,18 @@ final class HledaniPage extends BasePage {
         $keyword = $this->template->keyword = trim(
             $this->getParameter('keyword')
         );
-        $matches = (new Wiki\Fulltext($this->database))->matches($keyword);
-        $this->template->count = key($matches);
-        $this->template->matches = current($matches);
-        if(key($matches) === 1) {
-            $this->redirect(
-                'Dokument:',
-                $matches[1][0]['slug']
-            );
-        }
+        $documents = (new Wiki\SearchedMySqlDocuments(
+            $keyword,
+            $this->database,
+            new class implements Wiki\Documents {
+                public function iterate(): \Iterator {  }
+                public function add(
+                    string $title,
+                    string $description,
+                    Wiki\InformationSource $source
+                ): Wiki\Document {  }
+            }
+        ))->iterate();
+        $this->template->documents = $documents;
     }
 }

@@ -1,15 +1,20 @@
 {block content}
 {define description}Výsledky hledání pro klíčové slovo {$keyword} {/define}
 <div class="row">
-	<h1>{block title}Výsledky pro {$keyword}...{/block}</h1>
-	<p>Nalezeno {$count} výsledků</p>
-	<hr>
+    <h1>{block title}Výsledky pro {$keyword}...{/block}</h1>
+    <hr>
 </div>
-{if $count}
-	<div n:foreach="$matches as $match" class="row">
-		<a n:href="Dokument: $match['slug']"><h2>{$match[title]}</h2></a>
-		<p>{$match[description]}</p>
-		<a n:href="Dokument: $match['slug']">Více...</a>
-		<hr>
-	</div>
+{if $documents->valid()}
+    <div n:foreach="$documents as $document" class="row">
+        <a class="no-link" href="{plink Dokument: $template->webalize($document->title())}">
+            <h2>{$document->title()}</h2>
+        </a>
+        <p>{$document->description()}</p>
+        <a class="no-link" href="{plink Dokument: $template->webalize($document->title())}">
+            Více...
+        </a>
+        <hr>
+    </div>
+{else}
+    <p>Nebyly nalezeny žádné výsledky</p>
 {/if}
