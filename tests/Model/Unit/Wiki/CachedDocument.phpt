@@ -59,11 +59,35 @@ final class CachedDocument extends TestCase\Mockery {
         Assert::equal(new \DateTime('2000'), $document->date());
         Assert::equal(new \DateTime('2000'), $document->date());
 
-        Assert::equal(new Fake\Identity(10), $document->author());
-        Assert::equal(new Fake\Identity(10), $document->author());
+        Assert::equal(
+            new Access\CachedIdentity(
+                new Fake\Identity(10),
+                $this->cache
+            ),
+            $document->author()
+        );
+        Assert::equal(
+            new Access\CachedIdentity(
+                new Fake\Identity(10),
+                $this->cache
+            ),
+            $document->author()
+        );
 
-        Assert::equal(new Fake\InformationSource(10), $document->source());
-        Assert::equal(new Fake\InformationSource(10), $document->source());
+        Assert::equal(
+            new Wiki\CachedInformationSource(
+                new Fake\InformationSource(10),
+                $this->cache
+            ),
+            $document->source()
+        );
+        Assert::equal(
+            new Wiki\CachedInformationSource(
+                new Fake\InformationSource(10),
+                $this->cache
+            ),
+            $document->source()
+        );
 
         Assert::same(1, $document->id());
         Assert::same(1, $document->id());
