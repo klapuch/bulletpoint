@@ -50,9 +50,12 @@ final class DokumentPage extends BasePage {
         return new Component\Bulletpoints(
             new Wiki\CachedBulletpoints(
                 new Wiki\CategorizedMySqlBulletpoints(
-                    $this->identity,
                     $this->database,
-                    $this->document
+                    $this->document,
+                    new Wiki\OwnedMySqlBulletpoints(
+                        $this->identity,
+                        $this->database
+                    )
                 ),
                 new Storages\MemoryStorage
             ),

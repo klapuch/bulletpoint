@@ -1,6 +1,7 @@
 <?php
 namespace Bulletpoint\Model\Wiki;
 
+use Bulletpoint\Exception;
 use Bulletpoint\Model\{
     Storage, Access
 };
@@ -8,16 +9,13 @@ use Bulletpoint\Model\{
 final class OwnedMySqlBulletpoints implements Bulletpoints {
     private $owner;
     private $database;
-    private $origin;
 
     public function __construct(
         Access\Identity $owner,
-        Storage\Database $database,
-        Bulletpoints $origin
+        Storage\Database $database
     ) {
         $this->database = $database;
         $this->owner = $owner;
-        $this->origin = $origin;
     }
 
     public function iterate(): \Iterator {
@@ -68,7 +66,30 @@ final class OwnedMySqlBulletpoints implements Bulletpoints {
         }
     }
 
-    public function add(string $content, InformationSource $source) {
-        $this->origin->add($content, $source);
+    public function add(
+        string $content,
+        Document $document,
+        InformationSource $source
+    ) {
+        try {
+            $this->database->query(
+                'INSERT INTO bulletpoints
+			    (user_id, content, information_source_id, document_id)
+			    VALUES (?, ?, ?, ?)',
+                [
+                    $this->owner->id(),
+                    $content,
+                    $source->id(),
+                    $document->id(),
+                ]
+            );
+        } catch(\PDOException $ex) {
+            if($ex->getCode() === Storage\Database::INTEGRITY_CONSTRAINT) {
+                throw new Exception\DuplicateException(
+                    'Bulletpoint již existuje'
+                );
+            }
+            throw $ex;
+        }
     }
 }

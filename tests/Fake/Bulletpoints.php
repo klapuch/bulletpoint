@@ -10,7 +10,11 @@ final class Bulletpoints implements Wiki\Bulletpoints {
         $this->id = $id;
     }
 
-    public function add(string $content, Wiki\InformationSource $source) {
+    public function add(
+        string $content,
+        Wiki\Document $document,
+        Wiki\InformationSource $source
+    ) {
 		
 	}
 

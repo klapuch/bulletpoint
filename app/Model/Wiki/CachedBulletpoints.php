@@ -24,7 +24,11 @@ final class CachedBulletpoints implements Bulletpoints {
         return new \ArrayIterator($this->storage->read($key));
     }
 
-    public function add(string $content, InformationSource $source) {
-        $this->origin->add($content, $source);
+    public function add(
+        string $content,
+        Document $document,
+        InformationSource $source
+    ) {
+        $this->origin->add($content, $document, $source);
     }
 }

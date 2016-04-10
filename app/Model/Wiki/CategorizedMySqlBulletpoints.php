@@ -7,18 +7,18 @@ use Bulletpoint\Model\{
 use Bulletpoint\Exception;
 
 final class CategorizedMySqlBulletpoints implements Bulletpoints {
-    private $myself;
     private $database;
     private $document;
+    private $origin;
 
     public function __construct(
-        Access\Identity $myself,
         Storage\Database $database,
-        Document $document
+        Document $document,
+        Bulletpoints $origin
     ) {
-        $this->myself = $myself;
         $this->database = $database;
         $this->document = $document;
+        $this->origin = $origin;
     }
 
     public function iterate(): \Iterator {
@@ -58,27 +58,12 @@ final class CategorizedMySqlBulletpoints implements Bulletpoints {
         }
     }
 
-    public function add(string $content, InformationSource $source) {
-        try {
-            $this->database->query(
-                'INSERT INTO bulletpoints
-			    (user_id, content, information_source_id, document_id)
-			    VALUES (?, ?, ?, ?)',
-                [
-                    $this->myself->id(),
-                    $content,
-                    $source->id(),
-                    $this->document->id(),
-                ]
-            );
-        } catch(\PDOException $ex) {
-            if($ex->getCode() === Storage\Database::INTEGRITY_CONSTRAINT) {
-                throw new Exception\DuplicateException(
-                    'Bulletpoint již existuje'
-                );
-            }
-            throw $ex;
-        }
+    public function add(
+        string $content,
+        Document $document,
+        InformationSource $source
+    ) {
+        return $this->origin->add($content, $document, $source);
     }
 
 }

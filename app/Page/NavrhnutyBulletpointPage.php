@@ -15,9 +15,12 @@ final class NavrhnutyBulletpointPage extends BasePage {
         return new Component\Bulletpoints(
             new Wiki\CachedBulletpoints(
                 new Wiki\CategorizedMySqlBulletpoints(
-                    $this->identity,
                     $this->database,
-                    $this->proposal()->document()
+                    $this->proposal()->document(),
+                    new Wiki\OwnedMySqlBulletpoints(
+                        $this->identity,
+                        $this->database
+                    )
                 ),
                 new Storages\MemoryStorage
             ),

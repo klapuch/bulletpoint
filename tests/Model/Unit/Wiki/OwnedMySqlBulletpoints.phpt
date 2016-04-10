@@ -21,8 +21,7 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
         $owner = new Fake\Identity(2);
 		$rows = (new Wiki\OwnedMySqlBulletpoints(
 			$owner,
-			$connection,
-			new Fake\Bulletpoints()
+			$connection
 		))->iterate();
 		Assert::equal(
 			new Wiki\ConstantBulletpoint(
@@ -48,6 +47,45 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
 		$rows->next();
 		Assert::false($rows->valid());
 	}
+
+    public function testAdding() {
+        $connection = $this->preparedDatabase();
+        (new Wiki\OwnedMySqlBulletpoints(
+            new Fake\Identity(4),
+            $connection
+        ))->add(
+            'new content',
+            new Fake\Document(1),
+            new Fake\InformationSource(1, 'wikipeide', 2005, 'facedown')
+        );
+        Assert::same(
+            [
+                'user_id' => 4,
+                'information_source_id' => 1,
+                'document_id' => 1
+            ],
+            $connection->fetch(
+                'SELECT user_id, information_source_id, document_id
+				FROM bulletpoints
+				WHERE content = "new content"'
+            )
+        );
+    }
+
+    /**
+     * @throws \Bulletpoint\Exception\DuplicateException Bulletpoint již existuje
+     */
+    public function testAddingExistingOne() {
+        $connection = $this->preparedDatabase();
+        (new Wiki\OwnedMySqlBulletpoints(
+            new Fake\Identity(4),
+            $connection
+        ))->add(
+            'first',
+            new Fake\Document(9),
+            new Fake\InformationSource(1, 'wikipeide', 2005, 'facedown')
+        );
+    }
 
 	private function preparedDatabase() {
 		$connection = $this->connection();
