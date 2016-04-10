@@ -31,7 +31,6 @@ final class Punishment extends BaseControl {
     
     public function renderMinimal() {
         $this->template->setFile(__DIR__ . '/Punishment.Minimal.latte');
-        $this->template->punishment = $this->punishment;
         $this->template->render();
     }
 
