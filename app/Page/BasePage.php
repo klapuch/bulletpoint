@@ -67,6 +67,8 @@ abstract class BasePage extends Nette\Application\UI\Presenter {
     }
 
     protected function isPunished(Access\Identity $identity): bool {
+        if(!$this->elapsed(30, 'punishment'))
+            return false;
         $punishment = (new Constraint\OwnedMySqlPunishments(
             $identity,
             $this->database,
@@ -88,6 +90,19 @@ abstract class BasePage extends Nette\Application\UI\Presenter {
             $this->redirect('Prihlasit:');
             return true;
         }
+        return false;
+    }
+
+    private function elapsed($elapse, $name): bool {
+        $session = $this->getSession('elapsing');
+        if(isset($session[$name])) {
+            if((time() - $session[$name]) > $elapse) {
+                $session[$name] = time();
+                return true;
+            }
+            return false;
+        }
+        $session[$name] = time();
         return false;
     }
 }
