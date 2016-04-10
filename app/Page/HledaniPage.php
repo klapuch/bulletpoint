@@ -5,10 +5,8 @@ use Bulletpoint\Model\Wiki;
 use Bulletpoint\Exception;
 
 final class HledaniPage extends BasePage {
-    public function renderDefault() {
-        $keyword = $this->template->keyword = trim(
-            $this->getParameter('keyword')
-        );
+    public function renderDefault($keyword) {
+        $this->template->keyword = $keyword;
         $documents = (new Wiki\SearchedMySqlDocuments(
             $keyword,
             $this->database,
