@@ -1,5 +1,5 @@
 {if $owner->id() !== $identity->id()}
-    {if $user->isAllowed('punishment-punishmentForm-form')}
+    {if $user->isAllowed('punishment-punishmentForm-form') && $user->isAllowed('punishment')}
         {if $punishment->expired()}
             <div class="row">
                 <div class="col-sm-2 col-sm-offset-5 text-center">
@@ -7,10 +7,7 @@
                     {control punishmentForm}
                 </div>
             </div>
-        {/if}
-    {/if}
-    {if $user->isAllowed('punishment')}
-        {if !$punishment->expired()}
+        {else}
             <div class="row">
                 <div class="col-sm-4 col-sm-offset-4 text-center">
                     <h2>Odblokování</h2>

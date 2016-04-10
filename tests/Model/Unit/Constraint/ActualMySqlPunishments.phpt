@@ -17,6 +17,10 @@ require __DIR__ . '/../../../bootstrap.php';
 final class ActualMySqlPunishments extends TestCase\Database {
 	public function testIterating() {
 		$connection = $this->preparedDatabase();
+        $connection->query('TRUNCATE users');
+        $connection->query(
+            'INSERT INTO users (ID, username, role) VALUES (2, "xx", "member")'
+        );
 		$connection->query(
 			'INSERT INTO punishments (sinner_id, expiration, reason, forgiven)
 			VALUES
@@ -30,7 +34,11 @@ final class ActualMySqlPunishments extends TestCase\Database {
 		))->iterate();
         Assert::equal(
             new Constraint\ConstantPunishment(
-                new Access\MySqlIdentity(2, $connection),
+                new Access\ConstantIdentity(
+                    2,
+                    new Access\MySqlRole(2, $connection),
+                    'xx'
+                ),
                 'rude',
                 new \Datetime('2100-01-01 12:01:01'),
                 new Constraint\MySqlPunishment(1, $connection)
