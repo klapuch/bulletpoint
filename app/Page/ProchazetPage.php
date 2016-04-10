@@ -24,6 +24,7 @@ final class ProchazetPage extends BasePage {
                 $this->database,
                 new class implements Wiki\Documents {
                     public function iterate(): \Iterator {  }
+                    public function count(): int {  }
                     public function add(
                         string $title,
                         string $description,
