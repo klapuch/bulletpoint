@@ -13,7 +13,7 @@ final class MySqlVerificationCode implements VerificationCode {
         $this->database = $database;
     }
 
-    public function use (): VerificationCode {
+    public function use(): VerificationCode {
         if($this->used()) {
             throw new Exception\DuplicateException(
                 'Ověřovací kód již byl použit'

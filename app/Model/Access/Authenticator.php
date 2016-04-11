@@ -31,7 +31,7 @@ final class Authenticator implements IAuthenticator {
         )->fetch(\PDO::FETCH_NUM);
         if(!$this->exists($id))
             throw new AuthenticationException('Uživatel neexistuje');
-        elseif(!$this->activation($id))
+        elseif(!$this->activated($id))
             throw new AuthenticationException('Účet není aktivován');
         elseif(!$this->cipher->decrypt($plainPassword, $password))
             throw new AuthenticationException('Nesprávné heslo');
@@ -42,7 +42,7 @@ final class Authenticator implements IAuthenticator {
         return (int)$id !== 0;
     }
 
-    private function activation(int $id): bool {
+    private function activated(int $id): bool {
         return (bool)$this->database->fetch(
             'SELECT 1 FROM verification_codes WHERE user_id = ? AND used = 1',
             [$id]

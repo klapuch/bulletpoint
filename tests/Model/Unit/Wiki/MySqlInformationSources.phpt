@@ -24,7 +24,7 @@ final class MySqlInformationSources extends TestCase\Database {
 				new Wiki\MySqlInformationSource(2, $connection)
 			),
 			(new Wiki\MySqlInformationSources($connection))
-			->create('wikipedie', 2005, 'facedown'));
+			->add('wikipedie', 2005, 'facedown'));
 	}
 
 	public function testAddingNewSource() {
@@ -37,7 +37,7 @@ final class MySqlInformationSources extends TestCase\Database {
 				new Wiki\MySqlInformationSource(2, $connection)
 			),
 			(new Wiki\MySqlInformationSources($connection))
-			->create('book', 1888, 'facedown'));
+			->add('book', 1888, 'facedown'));
 	}
 
 	public function testAddingNewSourceWithEmptyYear() {
@@ -50,7 +50,7 @@ final class MySqlInformationSources extends TestCase\Database {
 				new Wiki\MySqlInformationSource(2, $connection)
 			),
 			(new Wiki\MySqlInformationSources($connection))
-			->create('xxx', '', 'facedown'));
+			->add('xxx', '', 'facedown'));
 	}
 
 	private function preparedDatabase() {

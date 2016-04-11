@@ -130,7 +130,7 @@ final class BulletpointPage extends BasePage {
                             ),
                             $values->bulletpoint->content,
                             (new Wiki\MySqlInformationSources($this->database))
-                                ->create(
+                                ->add(
                                     $source->place,
                                     $source->year,
                                     $source->author

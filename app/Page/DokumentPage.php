@@ -118,7 +118,7 @@ final class DokumentPage extends BasePage {
                             $document->title,
                             $document->description,
                             (new Wiki\MySqlInformationSources($this->database))
-                                ->create(
+                                ->add(
                                     $source->place,
                                     $source->year,
                                     $source->author

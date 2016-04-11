@@ -10,7 +10,7 @@ final class MySqlInformationSources implements InformationSources {
         $this->database = $database;
     }
 
-    public function create(
+    public function add(
         string $place,
         $year,
         string $author

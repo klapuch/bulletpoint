@@ -7,8 +7,7 @@ final class MojePage extends BasePage {
 	public function renderDokumenty() {
 		$this->template->documents = (new Wiki\OwnedMySqlDocuments(
 			$this->identity,
-			$this->database,
-			new Wiki\MySqlInformationSources($this->database)
+			$this->database
 		))->iterate();
 	}
 
