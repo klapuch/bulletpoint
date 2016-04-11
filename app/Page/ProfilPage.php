@@ -2,17 +2,14 @@
 namespace Bulletpoint\Page;
 
 use Bulletpoint\Model\{
-    Access, Constraint, User, Translation, Conversation, Wiki
+    Access, Constraint, Translation, Conversation, Wiki
 };
 use Bulletpoint\Exception;
 use Bulletpoint\Component;
 use Nette\Http\IResponse;
+use Nette\Caching\Storages;
 
 final class ProfilPage extends BasePage {
-    /**
-     * @var \Bulletpoint\Model\User\Profile
-     */
-    private $profile;
     /**
      * @var \Bulletpoint\Model\Access\Identity
      */
@@ -23,7 +20,7 @@ final class ProfilPage extends BasePage {
         try {
             (new Constraint\UsernameExistenceRule($this->database))
                 ->isSatisfied($this->getParameter('username'));
-            $this->profile = new User\MySqlProfile(
+            $this->owner = new Access\CachedIdentity(
                 new Access\MySqlIdentity(
                     (new Translation\MySqlUsernameSlug(
                         $this->getParameter('username'),
@@ -31,9 +28,8 @@ final class ProfilPage extends BasePage {
                     ))->origin(),
                     $this->database
                 ),
-                $this->database
+                new Storages\MemoryStorage
             );
-            $this->owner = $this->profile->owner();
         } catch(Exception\ExistenceException $ex) {
             $this->error(
                 'Uživatel neexistuje',
@@ -44,17 +40,16 @@ final class ProfilPage extends BasePage {
 
     public function renderDefault(string $username) {
         $this->template->username = $username;
-        $owner = $this->profile->owner();
         $this->template->comments = new Conversation\OwnedMySqlComments(
-            $owner,
+            $this->owner,
             $this->database
         );
         $this->template->bulletpoints = new Wiki\OwnedMySqlBulletpoints(
-            $owner,
+            $this->owner,
             $this->database
         );
         $this->template->documents = new Wiki\OwnedMySqlDocuments(
-            $owner,
+            $this->owner,
             $this->database
         );
     }
@@ -75,7 +70,7 @@ final class ProfilPage extends BasePage {
     }
 
     protected function createComponentRole() {
-        return new Component\Role($this->profile, $this->identity);
+        return new Component\Role($this->owner, $this->identity);
     }
 
     protected function createComponentProfilePhoto() {

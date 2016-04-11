@@ -1,6 +1,6 @@
 <h6>{$czechRole}</h6>
 {if $user->isAllowed('role')}
-    {if $identity->id() !== $owner->id() && $identity->role()->rank() > $owner->role()->rank()}
+    {if $myself->id() !== $owner->id() && $myself->role()->rank() > $owner->role()->rank()}
         <div class="row">
             <div class="col-sm-2 col-sm-offset-5 text-center">
                 <a class="btn btn-success" title="Povýšit"

@@ -12,24 +12,25 @@ final class Role extends BaseControl {
         'administrator' => 'Administrátor',
         'creator' => 'Tvůrce',
     ];
-    private $profile;
-    private $identity;
+    private $owner;
+    private $myself;
 
     public function __construct(
-        User\Profile $profile,
-        Access\Identity $identity
+        Access\Identity $owner,
+        Access\Identity $myself
     ) {
         parent::__construct();
-        $this->profile = $profile;
-        $this->identity = $identity;
+        $this->owner = $owner;
+        $this->myself = $myself;
     }
 
     public function render() {
         $this->template->setFile(__DIR__ . '/Role.latte');
-        $this->template->identity = $this->identity;
-        $owner = $this->profile->owner();
-        $this->template->owner = $owner;
-        $this->template->czechRole = self::CZECH_ROLES[(string)$owner->role()];
+        $this->template->myself = $this->myself;
+        $this->template->owner = $this->owner;
+        $this->template->czechRole = self::CZECH_ROLES[
+            (string)$this->owner->role()
+        ];
         $this->template->render();
     }
 
@@ -39,8 +40,8 @@ final class Role extends BaseControl {
     public function handlePovysit() {
         try {
             (new Access\RestrictedRole(
-                $this->identity,
-                $this->profile->owner()->role()
+                $this->myself,
+                $this->owner->role()
             ))->promote();
             $this->presenter->flashMessage('Uživatel je povýšen', 'success');
         } catch(\OverflowException $ex) {
@@ -60,8 +61,8 @@ final class Role extends BaseControl {
     public function handleDegradovat() {
         try {
             (new Access\RestrictedRole(
-                $this->identity,
-                $this->profile->owner()->role()
+                $this->myself,
+                $this->owner->role()
             ))->degrade();
             $this->presenter->flashMessage('Uživatel je degradován', 'success');
         } catch(\UnderflowException $ex) {
