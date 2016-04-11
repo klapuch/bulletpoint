@@ -2,7 +2,7 @@
 namespace Bulletpoint\Page;
 
 use Bulletpoint\Model\{
-    Access, Constraint, User, Translation
+    Access, Constraint, User, Translation, Conversation, Wiki
 };
 use Bulletpoint\Exception;
 use Bulletpoint\Component;
@@ -44,9 +44,19 @@ final class ProfilPage extends BasePage {
 
     public function renderDefault(string $username) {
         $this->template->username = $username;
-        $this->template->comments = $this->profile->comments();
-        $this->template->bulletpoints = $this->profile->bulletpoints();
-        $this->template->documents = $this->profile->documents();
+        $owner = $this->profile->owner();
+        $this->template->comments = new Conversation\OwnedMySqlComments(
+            $owner,
+            $this->database
+        );
+        $this->template->bulletpoints = new Wiki\OwnedMySqlBulletpoints(
+            $owner,
+            $this->database
+        );
+        $this->template->documents = new Wiki\OwnedMySqlDocuments(
+            $owner,
+            $this->database
+        );
     }
     
     protected function createComponentPunishment() {

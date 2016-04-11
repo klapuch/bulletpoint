@@ -7,14 +7,14 @@ use Bulletpoint\Model\{
 use Bulletpoint\Exception;
 
 final class OwnedMySqlDocuments implements Documents {
-    private $myself;
+    private $owner;
     private $database;
 
     public function __construct(
-        Access\Identity $myself,
+        Access\Identity $owner,
         Storage\Database $database
     ) {
-        $this->myself = $myself;
+        $this->owner = $owner;
         $this->database = $database;
     }
 
@@ -24,13 +24,13 @@ final class OwnedMySqlDocuments implements Documents {
 			FROM documents
 			WHERE user_id = ?
 			ORDER BY documents.created_at DESC',
-            [$this->myself->id()]
+            [$this->owner->id()]
         );
         foreach($rows as $row) {
             yield new ConstantDocument(
                 $row['title'],
                 $row['description'],
-                $this->myself,
+                $this->owner,
                 new \DateTime($row['created_at']),
                 new MySqlInformationSource(
                     $row['information_source_id'],
@@ -52,7 +52,7 @@ final class OwnedMySqlDocuments implements Documents {
                 (user_id, information_source_id, description, title)
                 VALUES (?, ?, ?, ?)',
                 [
-                    $this->myself->id(),
+                    $this->owner->id(),
                     $source->id(),
                     $description,
                     $title,
@@ -72,7 +72,7 @@ final class OwnedMySqlDocuments implements Documents {
     public function count(): int {
         return $this->database->fetchColumn(
             'SELECT COUNT(*) FROM documents WHERE user_id = ?',
-            [$this->myself->id()]
+            [$this->owner->id()]
         );
     }
 }
