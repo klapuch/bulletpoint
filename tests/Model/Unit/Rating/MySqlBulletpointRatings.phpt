@@ -22,7 +22,7 @@ final class MySqlBulletpointRatings extends TestCase\Database {
         $connection = $this->preparedDatabase();
         $myself = new Fake\Identity(1);
         $ratings = (new Rating\MySqlBulletpointRatings(
-            new Fake\Bulletpoints([1, 2, 3]),
+            new Fake\Bulletpoints([1, 2, 3], 3),
             $myself,
             $connection
         ))->iterate();

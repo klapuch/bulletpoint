@@ -5,9 +5,11 @@ use Bulletpoint\Model\{Wiki};
 
 final class Bulletpoints implements Wiki\Bulletpoints {
     private $id;
+    private $count;
 
-    public function __construct(array $id = []) {
+    public function __construct(array $id = [], int $count = null) {
         $this->id = $id;
+        $this->count = $count;
     }
 
     public function add(
@@ -24,6 +26,6 @@ final class Bulletpoints implements Wiki\Bulletpoints {
 	}
 
     public function count(): int {
-        return 0;
+        return $this->count;
     }
 }

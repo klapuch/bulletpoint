@@ -8,7 +8,7 @@ final class MySqlUserBulletpointRatings extends Ratings {
         return new \ArrayIterator(
             array_fill(
                 0,
-                iterator_count($this->bulletpoints->iterate()),
+                $this->bulletpoints->count(),
                 new InvalidRating
             )
         );

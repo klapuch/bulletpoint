@@ -25,15 +25,9 @@ abstract class Ratings {
         string $condition = null,
         array $parameters = []
     ): \Iterator {
-        if($condition !== null)
-            $condition .= ' AND';
         $placeholders = implode(
             ',',
-            array_fill(
-                0,
-                iterator_count($this->bulletpoints->iterate()),
-                '?'
-            )
+            array_fill(0, $this->bulletpoints->count(), '?')
         );
         $bulletpoints = (array)array_reduce(
             iterator_to_array($this->bulletpoints->iterate()),
@@ -42,16 +36,22 @@ abstract class Ratings {
                 return $previous;
             }
         );
-        $rows = $this->database->fetchAll(
-            "SELECT bulletpoint_id,
-            SUM(CASE WHEN rating = \"+1\" THEN 1 ELSE 0 END) AS pros,
-            SUM(CASE WHEN rating = \"-1\" THEN 1 ELSE 0 END) AS cons
-            FROM bulletpoint_ratings
-            WHERE $condition bulletpoint_id IN ($placeholders)
-            GROUP BY bulletpoint_id",
-            array_merge($parameters, $bulletpoints)
+        $rows = array_reverse(
+            $this->database->fetchAll(
+                sprintf(
+                    'SELECT bulletpoint_id,
+                    SUM(CASE WHEN rating = "+1" THEN 1 ELSE 0 END) AS pros,
+                    SUM(CASE WHEN rating = "-1" THEN 1 ELSE 0 END) AS cons
+                    FROM bulletpoint_ratings
+                    WHERE %s bulletpoint_id IN (%s)
+                    GROUP BY bulletpoint_id',
+                    $condition ? $condition . ' AND' : $condition,
+                    $placeholders
+                ),
+                array_merge($parameters, $bulletpoints)
+            )
         );
-        foreach(array_reverse($rows) as $row) {
+        foreach($rows as $row) {
             yield new ConstantRating(
                 (int)$row['pros'],
                 (int)$row['cons'],

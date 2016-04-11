@@ -22,7 +22,7 @@ final class MySqlUserBulletpointRatings extends TestCase\Database {
         $connection = $this->preparedDatabase();
         $myself = new Fake\Identity(1);
         $ratings = (new Rating\MySqlUserBulletpointRatings(
-            new Fake\Bulletpoints([1, 2, 3]),
+            new Fake\Bulletpoints([1, 2, 3], 3),
             $myself,
             $connection
         ))->iterate();
@@ -72,7 +72,7 @@ final class MySqlUserBulletpointRatings extends TestCase\Database {
     public function testIteratingWithoutIdentity() {
         $myself = new Fake\Identity(0);
         $ratings = (new Rating\MySqlUserBulletpointRatings(
-            new Fake\Bulletpoints([1, 2, 3]),
+            new Fake\Bulletpoints([1, 2, 3], 3),
             $myself,
             new Fake\Database
         ))->iterate();
