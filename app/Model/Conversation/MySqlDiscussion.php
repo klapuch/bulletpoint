@@ -24,38 +24,12 @@ final class MySqlDiscussion implements Discussion {
         return $this->id;
     }
 
-    public function comments(): \Iterator {
-        $rows = $this->database->fetchAll(
-            'SELECT users.ID AS user_id,
-			users.role,
-			users.username,
-			comments.posted_at,
-			comments.content,
-			comments.ID, 
-			comments.visible
-			FROM comments
-			INNER JOIN users
-			ON users.ID = comments.user_id
-			WHERE comments.document_id = ?
-			ORDER BY comments.posted_at DESC',
-            [$this->id]
+    public function comments(): Comments {
+        return new InDiscussionMySqlComments(
+            $this,
+            $this->myself,
+            $this->database
         );
-        foreach($rows as $row) {
-            yield new ConstantComment(
-                new Access\ConstantIdentity(
-                    $row['user_id'],
-                    new Access\ConstantRole(
-                        $row['role'],
-                        new Access\MySqlRole($row['user_id'], $this->database)
-                    ),
-                    $row['username']
-                ),
-                $row['content'],
-                new \DateTime($row['posted_at']),
-                $row['visible'],
-                new MySqlComment($row['ID'], $this->myself, $this->database)
-            );
-        }
     }
 
     public function post(string $content) {

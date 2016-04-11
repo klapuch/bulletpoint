@@ -25,7 +25,7 @@ final class Discussion extends BaseControl {
 
     public function render() {
         $this->template->setFile(__DIR__ . '/Discussion.latte');
-        $this->template->comments = $this->discussion->comments();
+        $this->template->comments = $this->discussion->comments()->iterate();
         $this->template->render();
     }
 
@@ -44,7 +44,7 @@ final class Discussion extends BaseControl {
                 new Storages\MemoryStorage
             )
         );
-        foreach($this->discussion->comments() as $comment) {
+        foreach($this->discussion->comments()->iterate() as $comment) {
             $components[$comment->id()] = new Comment(
                 $comment,
                 $complaints,

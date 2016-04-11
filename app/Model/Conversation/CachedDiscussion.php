@@ -20,15 +20,7 @@ final class CachedDiscussion implements Discussion {
         $this->origin->post($content);
     }
 
-    public function comments(): \Iterator {
-        $key = __CLASS__ . '::' . __FUNCTION__;
-        if($this->storage->read($key) === null) {
-            $this->storage->write(
-                $key,
-                iterator_to_array($this->origin->comments()),
-                []
-            );
-        }
-        return new \ArrayIterator($this->storage->read($key));
+    public function comments(): Comments {
+        return new CachedComments($this->origin->comments(), $this->storage);
     }
 }
