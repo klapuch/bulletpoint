@@ -1,26 +1,30 @@
 {block content}
 {define description}Procházení nejnovějších přidaných dokumentů{/define}
 <h1>{block title}Procházet{/block}</h1>
-{control pagination}
-<div class="table-responsive">
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th><p>Datum</p></th>
-            <th><p>Titulek</p></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr n:foreach="$documents as $document">
-            <td><p>{$document->date()->format('j.n.Y H:i')}</p></td>
-            <td>
-                <p>
-                    <a n:href="Dokument: $template->webalize($document->title())">
-                        {$document->title()}
-                    </a>
-                </p>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+{if $documents->valid()}
+    {control pagination}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th><p>Datum</p></th>
+                <th><p>Titulek</p></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr n:foreach="$documents as $document">
+                <td><p>{$document->date()->format('j.n.Y H:i')}</p></td>
+                <td>
+                    <p>
+                        <a n:href="Dokument: $template->webalize($document->title())">
+                            {$document->title()}
+                        </a>
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{else}
+    <h2>Nejsou dostupné žádné dokumenty</h2>
+{/if}
