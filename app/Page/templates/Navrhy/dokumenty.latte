@@ -21,10 +21,10 @@
             <td><p>{$iterator->counter}</p></td>
             <td><p>{$proposal->date()->format('j.n.Y H:i')}</p></td>
             <td><p>
-                    <a n:href="Profil: $proposal->author()->username()">{$proposal->author()->username()}</a>
+                    <a class="no-link" n:href="Profil: $proposal->author()->username()">{$proposal->author()->username()}</a>
                 </p></td>
             <td class="ellipsis"><p>
-                    <a n:href="NavrhnutyDokument: $proposal->id()">{$proposal->title()}</a>
+                    <a class="no-link" n:href="NavrhnutyDokument: $proposal->id()">{$proposal->title()}</a>
                 </p></td>
             <td>
                 <a class="btn btn-primary" n:href="NavrhnutyDokument: $proposal->id()"

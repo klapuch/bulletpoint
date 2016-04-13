@@ -1,7 +1,7 @@
 {block content}
 {define description}Detail navrženého bulletpointu{/define}
 <h1>{block title}Návrh bulletpointu k dokumentu
-    <a n:href="Dokument: $template->webalize($document->title())">
+    <a class="no-link" n:href="Dokument: $template->webalize($document->title())">
         <strong>{$document->title()}</strong></a>{/block}</h1>
 {control bulletpointProposal}
 <h2>Stávající bulletpointy</h2>

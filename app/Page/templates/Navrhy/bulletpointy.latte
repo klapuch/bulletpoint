@@ -22,10 +22,10 @@
             <td><p>{$iterator->counter}</p></td>
             <td><p>{$proposal->date()->format('j.n.Y H:i')}</p></td>
             <td><p>
-                    <a n:href="Dokument: $template->webalize($proposal->document()->title())">{$proposal->document()->title()}</a>
+                    <a class="no-link" n:href="Dokument: $template->webalize($proposal->document()->title())">{$proposal->document()->title()}</a>
                 </p></td>
             <td class="ellipsis">
-                <a n:href="NavrhnutyBulletpoint:Default, $proposal->id()">
+                <a class="no-link" n:href="NavrhnutyBulletpoint:Default, $proposal->id()">
                     <p>{$proposal->content()}</p></a></td>
             <td>
                 <a class="btn btn-primary" n:href="NavrhnutyBulletpoint: $proposal->id()"
