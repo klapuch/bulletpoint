@@ -21,11 +21,11 @@ final class LimitedForgottenPasswords extends TestCase\Database {
 	public function testLimitedReminding() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO forgotten_passwords (user_id, reminded_at)
+			'INSERT INTO forgotten_passwords (user_id, reminded_at, reminder)
 			VALUES 
-			(1, NOW() - INTERVAL 1 HOUR),
-			(1, NOW() - INTERVAL 2 HOUR),
-			(1, NOW() - INTERVAL 3 HOUR)'
+			(1, NOW() - INTERVAL 1 HOUR, "reminder1"),
+			(1, NOW() - INTERVAL 2 HOUR, "reminder2"),
+			(1, NOW() - INTERVAL 3 HOUR, "reminder3")'
 		);
 		(new Access\LimitedForgottenPasswords(
 			new Fake\ForgottenPasswords,
@@ -36,16 +36,16 @@ final class LimitedForgottenPasswords extends TestCase\Database {
 	public function testValidReminding() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO forgotten_passwords (user_id, reminded_at)
+			'INSERT INTO forgotten_passwords (user_id, reminded_at, reminder)
 			VALUES 
-			(1, NOW()),
-			(1, NOW() - INTERVAL 25 HOUR),
-			(1, NOW() - INTERVAL 25 HOUR),
-			(1, NOW() - INTERVAL 25 HOUR),
-			(1, NOW() - INTERVAL 24 HOUR),
-			(1, NOW() - INTERVAL 24 HOUR),
-			(1, NOW() - INTERVAL 24 HOUR),
-			(1, NOW() - INTERVAL 26 HOUR)'
+			(1, NOW(), "reminder0"),
+			(1, NOW() - INTERVAL 25 HOUR, "reminder1"),
+			(1, NOW() - INTERVAL 25 HOUR, "reminder2"),
+			(1, NOW() - INTERVAL 25 HOUR, "reminder3"),
+			(1, NOW() - INTERVAL 24 HOUR, "reminder4"),
+			(1, NOW() - INTERVAL 24 HOUR, "reminder5"),
+			(1, NOW() - INTERVAL 24 HOUR, "reminder6"),
+			(1, NOW() - INTERVAL 26 HOUR, "reminder7")'
 		);
 		(new Access\LimitedForgottenPasswords(
 			new Fake\ForgottenPasswords,

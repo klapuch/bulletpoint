@@ -2,6 +2,8 @@
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 DROP TABLE IF EXISTS `bulletpoints`;
 CREATE TABLE `bulletpoints` (
@@ -14,7 +16,8 @@ CREATE TABLE `bulletpoints` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `document_id,content` (`document_id`,`content`),
   KEY `document_id` (`document_id`),
-  KEY `information_source_id` (`information_source_id`)
+  KEY `information_source_id` (`information_source_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -30,7 +33,9 @@ CREATE TABLE `bulletpoint_proposals` (
   `arbiter` int(11) DEFAULT NULL,
   `arbiter_comment` varchar(100) COLLATE utf8_czech_ci DEFAULT NULL,
   `information_source_id` int(11) NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `information_source_id` (`information_source_id`),
+  KEY `author` (`author`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -43,7 +48,8 @@ CREATE TABLE `bulletpoint_ratings` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `bulletpoint_id,rating,user_id` (`bulletpoint_id`,`rating`,`user_id`),
   UNIQUE KEY `bulletpoind_id,user_id` (`bulletpoint_id`,`user_id`),
-  KEY `bulletpoint_id,rating` (`bulletpoint_id`,`rating`)
+  KEY `bulletpoint_id,rating` (`bulletpoint_id`,`rating`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -55,7 +61,8 @@ CREATE TABLE `comments` (
   `posted_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `document_id` int(11) NOT NULL,
   `visible` bit(1) NOT NULL DEFAULT b'1',
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `document_id` (`document_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -64,10 +71,13 @@ CREATE TABLE `comment_complaints` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `comment_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `reason` enum('Jiné','Vulgarita','Spam') COLLATE utf8_czech_ci NOT NULL DEFAULT 'Jiné',
+  `reason` enum('Jiné','Spam','Vulgarita') COLLATE utf8_czech_ci NOT NULL DEFAULT 'Jiné',
   `settled` bit(1) NOT NULL DEFAULT b'0',
   `complained_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `comment_id` (`comment_id`),
+  KEY `comment_id,user_id` (`comment_id`,`user_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -82,14 +92,15 @@ CREATE TABLE `documents` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `title` (`title`),
   KEY `information_source_id` (`information_source_id`),
-  FULLTEXT KEY `title_fulltext` (`title`)
+  KEY `user_id` (`user_id`),
+  FULLTEXT KEY `title_2` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
 DROP TABLE IF EXISTS `document_proposals`;
 CREATE TABLE `document_proposals` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `title` varchar(100) CHARACTER SET utf8 NOT NULL,
   `description` text COLLATE utf8_czech_ci NOT NULL,
   `author` int(11) NOT NULL,
   `decision` enum('+1','-1','0') COLLATE utf8_czech_ci NOT NULL DEFAULT '0',
@@ -98,7 +109,9 @@ CREATE TABLE `document_proposals` (
   `arbiter` int(11) DEFAULT NULL,
   `arbiter_comment` varchar(100) COLLATE utf8_czech_ci DEFAULT NULL,
   `information_source_id` int(11) NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `information_source_id` (`information_source_id`),
+  KEY `author` (`author`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -118,19 +131,21 @@ DROP TABLE IF EXISTS `forgotten_passwords`;
 CREATE TABLE `forgotten_passwords` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `reminder` varchar(200) COLLATE utf8_czech_ci NOT NULL,
+  `reminder` varchar(141) CHARACTER SET latin1 NOT NULL,
   `reminded_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `used` bit(1) NOT NULL DEFAULT b'0',
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `reminder` (`reminder`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
 DROP TABLE IF EXISTS `information_sources`;
 CREATE TABLE `information_sources` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `place` varchar(50) COLLATE utf8_czech_ci DEFAULT NULL,
+  `place` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
   `year` int(11) DEFAULT NULL,
-  `author` varchar(50) COLLATE utf8_czech_ci DEFAULT NULL,
+  `author` varchar(100) COLLATE utf8_czech_ci DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
@@ -143,7 +158,6 @@ CREATE TABLE `message_templates` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
-
 DROP TABLE IF EXISTS `punishments`;
 CREATE TABLE `punishments` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
@@ -152,7 +166,9 @@ CREATE TABLE `punishments` (
   `expiration` datetime NOT NULL,
   `author_id` int(11) NOT NULL,
   `forgiven` bit(1) NOT NULL DEFAULT b'0',
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `sinner_id` (`sinner_id`),
+  KEY `author_id` (`author_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -173,12 +189,13 @@ DROP TABLE IF EXISTS `verification_codes`;
 CREATE TABLE `verification_codes` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `code` varchar(100) COLLATE utf8_czech_ci NOT NULL,
+  `code` varchar(91) CHARACTER SET latin1 NOT NULL,
   `used` tinyint(4) NOT NULL DEFAULT '0',
   `used_at` datetime DEFAULT NULL,
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `token` (`code`)
+  UNIQUE KEY `code` (`code`),
+  UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
--- 2016-03-28 16:05:04
+-- 2016-04-13 12:33:35

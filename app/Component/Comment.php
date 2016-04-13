@@ -31,7 +31,7 @@ final class Comment extends BaseControl {
         $this->template->identity = $this->identity;
         if($this->presenter->user->loggedIn)
             $this->template->complaints = $this->complaints->iterate();
-        $this->template->backlink = $this->presenter->storeRequest('+ 45 minutes');
+        $this->template->backlink = $this->presenter->storeRequest('+45 minutes');
         $this->template->render();
     }
 

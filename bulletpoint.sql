@@ -2,6 +2,8 @@
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 DROP TABLE IF EXISTS `bulletpoints`;
 CREATE TABLE `bulletpoints` (
@@ -15,8 +17,10 @@ CREATE TABLE `bulletpoints` (
   UNIQUE KEY `document_id,content` (`document_id`,`content`),
   KEY `document_id` (`document_id`),
   KEY `information_source_id` (`information_source_id`),
+  KEY `user_id` (`user_id`),
   CONSTRAINT `bulletpoints_ibfk_1` FOREIGN KEY (`information_source_id`) REFERENCES `information_sources` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `bulletpoints_ibfk_3` FOREIGN KEY (`document_id`) REFERENCES `documents` (`ID`)
+  CONSTRAINT `bulletpoints_ibfk_3` FOREIGN KEY (`document_id`) REFERENCES `documents` (`ID`),
+  CONSTRAINT `bulletpoints_ibfk_4` FOREIGN KEY (`user_id`) REFERENCES `users` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -34,7 +38,9 @@ CREATE TABLE `bulletpoint_proposals` (
   `information_source_id` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `information_source_id` (`information_source_id`),
-  CONSTRAINT `bulletpoint_proposals_ibfk_4` FOREIGN KEY (`information_source_id`) REFERENCES `information_sources` (`ID`) ON DELETE CASCADE
+  KEY `author` (`author`),
+  CONSTRAINT `bulletpoint_proposals_ibfk_4` FOREIGN KEY (`information_source_id`) REFERENCES `information_sources` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `bulletpoint_proposals_ibfk_5` FOREIGN KEY (`author`) REFERENCES `users` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -47,7 +53,10 @@ CREATE TABLE `bulletpoint_ratings` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `bulletpoint_id,rating,user_id` (`bulletpoint_id`,`rating`,`user_id`),
   UNIQUE KEY `bulletpoind_id,user_id` (`bulletpoint_id`,`user_id`),
-  KEY `bulletpoint_id,rating` (`bulletpoint_id`,`rating`)
+  KEY `bulletpoint_id,rating` (`bulletpoint_id`,`rating`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `bulletpoint_ratings_ibfk_1` FOREIGN KEY (`bulletpoint_id`) REFERENCES `bulletpoints` (`ID`),
+  CONSTRAINT `bulletpoint_ratings_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -60,7 +69,8 @@ CREATE TABLE `comments` (
   `document_id` int(11) NOT NULL,
   `visible` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`ID`),
-  KEY `document_id` (`document_id`)
+  KEY `document_id` (`document_id`),
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -74,7 +84,10 @@ CREATE TABLE `comment_complaints` (
   `complained_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
   KEY `comment_id` (`comment_id`),
-  KEY `comment_id,user_id` (`comment_id`,`user_id`)
+  KEY `comment_id,user_id` (`comment_id`,`user_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `comment_complaints_ibfk_1` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`ID`),
+  CONSTRAINT `comment_complaints_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -89,8 +102,10 @@ CREATE TABLE `documents` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `title` (`title`),
   KEY `information_source_id` (`information_source_id`),
-  FULLTEXT KEY `title_fulltext` (`title`),
-  CONSTRAINT `documents_ibfk_3` FOREIGN KEY (`information_source_id`) REFERENCES `information_sources` (`ID`) ON DELETE CASCADE
+  KEY `user_id` (`user_id`),
+  FULLTEXT KEY `title_2` (`title`),
+  CONSTRAINT `documents_ibfk_3` FOREIGN KEY (`information_source_id`) REFERENCES `information_sources` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `documents_ibfk_4` FOREIGN KEY (`user_id`) REFERENCES `users` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -108,7 +123,9 @@ CREATE TABLE `document_proposals` (
   `information_source_id` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `information_source_id` (`information_source_id`),
-  CONSTRAINT `document_proposals_ibfk_6` FOREIGN KEY (`information_source_id`) REFERENCES `information_sources` (`ID`) ON DELETE CASCADE
+  KEY `author` (`author`),
+  CONSTRAINT `document_proposals_ibfk_6` FOREIGN KEY (`information_source_id`) REFERENCES `information_sources` (`ID`) ON DELETE CASCADE,
+  CONSTRAINT `document_proposals_ibfk_7` FOREIGN KEY (`author`) REFERENCES `users` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -134,7 +151,8 @@ CREATE TABLE `forgotten_passwords` (
   `used` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `reminder` (`reminder`),
-  KEY `user_id` (`user_id`)
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `forgotten_passwords_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -170,7 +188,10 @@ CREATE TABLE `punishments` (
   `author_id` int(11) NOT NULL,
   `forgiven` bit(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`ID`),
-  KEY `sinner_id` (`sinner_id`)
+  KEY `sinner_id` (`sinner_id`),
+  KEY `author_id` (`author_id`),
+  CONSTRAINT `punishments_ibfk_1` FOREIGN KEY (`sinner_id`) REFERENCES `users` (`ID`),
+  CONSTRAINT `punishments_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `users` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
@@ -201,4 +222,4 @@ CREATE TABLE `verification_codes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 
--- 2016-03-28 16:02:44
+-- 2016-04-13 12:33:35
