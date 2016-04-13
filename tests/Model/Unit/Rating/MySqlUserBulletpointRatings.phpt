@@ -70,17 +70,84 @@ final class MySqlUserBulletpointRatings extends TestCase\Database {
     }
 
     public function testIteratingWithoutIdentity() {
+        $connection = $this->preparedDatabase();
         $myself = new Fake\Identity(0);
         $ratings = (new Rating\MySqlUserBulletpointRatings(
             new Fake\Bulletpoints([1, 2, 3], 3),
             $myself,
-            new Fake\Database
+            $connection
         ))->iterate();
         Assert::equal(
             [
-                new Rating\InvalidRating,
-                new Rating\InvalidRating,
-                new Rating\InvalidRating
+                new Rating\ConstantRating(
+                    0,
+                    0,
+                    new Rating\MySqlBulletpointRating(
+                        new Wiki\MySqlBulletpoint(3, $connection),
+                        $myself,
+                        $connection
+                    )
+                ),
+                new Rating\ConstantRating(
+                    0,
+                    0,
+                    new Rating\MySqlBulletpointRating(
+                        new Wiki\MySqlBulletpoint(2, $connection),
+                        $myself,
+                        $connection
+                    )
+                ),
+                new Rating\ConstantRating(
+                    0,
+                    0,
+                    new Rating\MySqlBulletpointRating(
+                        new Wiki\MySqlBulletpoint(1, $connection),
+                        $myself,
+                        $connection
+                    )
+                ),
+            ],
+            iterator_to_array($ratings)
+        );
+    }
+
+    public function testIteratingWithoutRating() {
+        $connection = $this->preparedDatabase();
+        $myself = new Fake\Identity(999);
+        $ratings = (new Rating\MySqlUserBulletpointRatings(
+            new Fake\Bulletpoints([1, 2, 3], 3),
+            $myself,
+            $connection
+        ))->iterate();
+        Assert::equal(
+            [
+                new Rating\ConstantRating(
+                    1,
+                    0,
+                    new Rating\MySqlBulletpointRating(
+                        new Wiki\MySqlBulletpoint(3, $connection),
+                        $myself,
+                        $connection
+                    )
+                ),
+                new Rating\ConstantRating(
+                    0,
+                    0,
+                    new Rating\MySqlBulletpointRating(
+                        new Wiki\MySqlBulletpoint(2, $connection),
+                        $myself,
+                        $connection
+                    )
+                ),
+                new Rating\ConstantRating(
+                    0,
+                    0,
+                    new Rating\MySqlBulletpointRating(
+                        new Wiki\MySqlBulletpoint(1, $connection),
+                        $myself,
+                        $connection
+                    )
+                ),
             ],
             iterator_to_array($ratings)
         );
@@ -94,7 +161,7 @@ final class MySqlUserBulletpointRatings extends TestCase\Database {
 			(bulletpoint_id, rating, user_id)
 			VALUES (1, "+1", 1), (1, "+1", 2),
 			(2, "-1", 1),
-			(3, "0", 1), (3, "+1", 5), (3, "-1", 6)'
+			(3, "0", 1), (3, "+1", 5), (3, "-1", 6), (2, "+1", 999)'
         );
         return $connection;
     }

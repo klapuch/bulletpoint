@@ -29,7 +29,7 @@ abstract class Ratings {
             ',',
             array_fill(0, $this->bulletpoints->count(), '?')
         );
-        $bulletpoints = (array)array_reduce(
+        $bulletpointIds = (array)array_reduce(
             iterator_to_array($this->bulletpoints->iterate()),
             function($previous, Wiki\Bulletpoint $current) {
                 $previous[] = $current->id();
@@ -37,7 +37,7 @@ abstract class Ratings {
             }
         );
         $rows = array_reverse(
-            $this->database->fetchAll(
+            (array)$this->database->fetchAll(
                 sprintf(
                     'SELECT bulletpoint_id,
                     SUM(CASE WHEN rating = "+1" THEN 1 ELSE 0 END) AS pros,
@@ -48,22 +48,24 @@ abstract class Ratings {
                     $condition ? $condition . ' AND' : $condition,
                     $placeholders
                 ),
-                array_merge($parameters, $bulletpoints)
+                array_merge($parameters, $bulletpointIds)
             )
         );
-        foreach($rows as $row) {
+        foreach(array_reverse($bulletpointIds) as $bulletpoint) {
+            $row = current($rows);
             yield new ConstantRating(
                 (int)$row['pros'],
                 (int)$row['cons'],
                 new MySqlBulletpointRating(
                     new Wiki\MySqlBulletpoint(
-                        $row['bulletpoint_id'],
+                        $bulletpoint,
                         $this->database
                     ),
                     $this->myself,
                     $this->database
                 )
             );
+            next($rows);
         }
     }
 }
