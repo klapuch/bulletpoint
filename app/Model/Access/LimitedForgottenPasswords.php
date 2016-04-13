@@ -32,12 +32,13 @@ final class LimitedForgottenPasswords implements ForgottenPasswords {
     }
 
     private function overstepped(string $email): bool {
-        return $this->database->fetchColumn(
-            'SELECT COUNT(ID)
+        return (bool)$this->database->fetchColumn(
+            'SELECT 1
 			FROM forgotten_passwords
 			WHERE user_id = (SELECT ID FROM users WHERE email = ?)
-			AND reminded_at > NOW() - INTERVAL ? HOUR',
-            [$email, self::HOUR_LIMIT]
-        ) >= self::ATTEMPT_LIMIT;
+			AND reminded_at > NOW() - INTERVAL ? HOUR
+			HAVING COUNT(ID) >= ?',
+            [$email, self::HOUR_LIMIT, self::ATTEMPT_LIMIT]
+        );
     }
 }
