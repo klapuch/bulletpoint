@@ -25,19 +25,19 @@ abstract class Ratings {
         string $condition = null,
         array $parameters = []
     ): \Iterator {
-        $placeholders = implode(
-            ',',
-            array_fill(0, $this->bulletpoints->count(), '?')
-        );
         $bulletpointIds = (array)array_reduce(
-            iterator_to_array($this->bulletpoints->iterate()),
+            array_reverse(iterator_to_array($this->bulletpoints->iterate())),
             function($previous, Wiki\Bulletpoint $current) {
                 $previous[] = $current->id();
                 return $previous;
             }
         );
+        $placeholders = implode(
+            ',',
+            array_fill(0, count($bulletpointIds), '?')
+        );
         $rows = array_reverse(
-            (array)$this->database->fetchAll(
+            $this->database->fetchAll(
                 sprintf(
                     'SELECT bulletpoint_id,
                     SUM(CASE WHEN rating = "+1" THEN 1 ELSE 0 END) AS pros,
@@ -51,14 +51,14 @@ abstract class Ratings {
                 array_merge($parameters, $bulletpointIds)
             )
         );
-        foreach(array_reverse($bulletpointIds) as $bulletpoint) {
+        foreach($bulletpointIds as $bulletpointId) {
             $row = current($rows);
             yield new ConstantRating(
                 (int)$row['pros'],
                 (int)$row['cons'],
                 new MySqlBulletpointRating(
                     new Wiki\MySqlBulletpoint(
-                        $bulletpoint,
+                        $bulletpointId,
                         $this->database
                     ),
                     $this->myself,
