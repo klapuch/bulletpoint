@@ -11,8 +11,6 @@ $configurator->setDebugMode(false);
 $configurator->setTempDirectory(__DIR__ . '/temp');
 $configurator->createRobotLoader()
     ->addDirectory(__DIR__)
-    ->addDirectory(__DIR__ . '/../app')
-    ->addDirectory(__DIR__ . '/../vendor/mockery')
     ->register();
 
 return $configurator->createContainer();
