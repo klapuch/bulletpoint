@@ -8,8 +8,8 @@ final class ReversedBulletpoints implements Bulletpoints {
         $this->origin = $origin;
     }
 
-    public function iterate(): \Iterator {
-        return new \ArrayIterator(array_reverse(iterator_to_array($this->origin->iterate())));
+    public function iterate(): array {
+        return array_reverse($this->origin->iterate());
     }
 
     public function add(
@@ -17,7 +17,7 @@ final class ReversedBulletpoints implements Bulletpoints {
         Document $document,
         InformationSource $source
     ) {
-        return $this->origin->add($content, $document, $source);
+        $this->origin->add($content, $document, $source);
     }
 
     public function count(): int {

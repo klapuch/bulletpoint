@@ -20,9 +20,11 @@ final class Bulletpoints implements Wiki\Bulletpoints {
 		
 	}
 
-	public function iterate(): \Iterator {
+	public function iterate(): array {
+        $bulletpoints = [];
         foreach($this->id as $id)
-            yield new Bulletpoint($id);
+            $bulletpoints[] = new Bulletpoint($id);
+        return $bulletpoints;
 	}
 
     public function count(): int {

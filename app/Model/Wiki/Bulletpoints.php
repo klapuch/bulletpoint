@@ -2,7 +2,7 @@
 namespace Bulletpoint\Model\Wiki;
 
 interface Bulletpoints {
-    public function iterate(): \Iterator;
+    public function iterate(): array;
     public function add(
         string $content,
         Document $document,

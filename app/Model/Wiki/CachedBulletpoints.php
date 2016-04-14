@@ -12,16 +12,16 @@ final class CachedBulletpoints implements Bulletpoints {
         $this->storage = $storage;
     }
 
-    public function iterate(): \Iterator {
+    public function iterate(): array {
         $key = __CLASS__ . '::' . __FUNCTION__;
         if($this->storage->read($key) === null) {
             $this->storage->write(
                 $key,
-                iterator_to_array($this->origin->iterate()),
+                $this->origin->iterate(),
                 []
             );
         }
-        return new \ArrayIterator($this->storage->read($key));
+        return $this->storage->read($key);
     }
 
     public function add(

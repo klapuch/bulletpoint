@@ -23,41 +23,36 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
 			new Fake\Document(1),
             new Fake\Bulletpoints
 		);
-        $rows = $documents->iterate();
         Assert::same(2, $documents->count());
-		Assert::equal(
-			new Wiki\ConstantBulletpoint(
-				new Access\MySqlIdentity(1, $connection),
-				'first',
-				new \Datetime('2000-01-01 01:01:01'),
-				new Wiki\ConstantInformationSource(
-					'wikipedie',
-					2005,
-					'facedown',
-					new Wiki\MySqlInformationSource(1, $connection)
-				),
-				new Wiki\MySqlBulletpoint(1, $connection)
-			),
-			$rows->current()
-		);
-		$rows->next();
-		Assert::equal(			
-			new Wiki\ConstantBulletpoint(
-				new Access\MySqlIdentity(2, $connection),
-				'second',
-				new \Datetime('1999-01-01 01:01:01'),
-				new Wiki\ConstantInformationSource(
-					'book',
-					1998,
-					'čapek',
-					new Wiki\MySqlInformationSource(2, $connection)
-				),
-				new Wiki\MySqlBulletpoint(2, $connection)
-			),
-			$rows->current()
-		);
-		$rows->next();
-		Assert::false($rows->valid());
+        Assert::equal(
+            [
+                new Wiki\ConstantBulletpoint(
+                    new Access\MySqlIdentity(1, $connection),
+                    'first',
+                    new \Datetime('2000-01-01 01:01:01'),
+                    new Wiki\ConstantInformationSource(
+                        'wikipedie',
+                        2005,
+                        'facedown',
+                        new Wiki\MySqlInformationSource(1, $connection)
+                    ),
+                    new Wiki\MySqlBulletpoint(1, $connection)
+                ),
+                new Wiki\ConstantBulletpoint(
+                    new Access\MySqlIdentity(2, $connection),
+                    'second',
+                    new \Datetime('1999-01-01 01:01:01'),
+                    new Wiki\ConstantInformationSource(
+                        'book',
+                        1998,
+                        'čapek',
+                        new Wiki\MySqlInformationSource(2, $connection)
+                    ),
+                    new Wiki\MySqlBulletpoint(2, $connection)
+                ),
+            ],
+            $documents->iterate()
+        );
 	}
 
 	private function preparedDatabase() {

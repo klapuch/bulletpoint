@@ -18,7 +18,7 @@ final class OwnedMySqlBulletpoints implements Bulletpoints {
         $this->owner = $owner;
     }
 
-    public function iterate(): \Iterator {
+    public function iterate(): array {
         $rows = $this->database->fetchAll(
             'SELECT bulletpoints.ID,
             bulletpoints.user_id,
@@ -38,32 +38,36 @@ final class OwnedMySqlBulletpoints implements Bulletpoints {
 			ORDER BY bulletpoints.created_at DESC',
             [$this->owner->id()]
         );
-        foreach($rows as $row) {
-            yield new ConstantBulletpoint(
-                $this->owner,
-                $row['content'],
-                new \DateTime($row['created_at']),
-                new MySqlInformationSource(
-                    $row['information_source_id'],
-                    $this->database
-                ),
-                new MySqlBulletpoint($row['ID'], $this->database),
-                new ConstantDocument(
-                    $row['title'],
-                    $row['description'],
-                    new Access\MySqlIdentity(
-                        $row['document_author'],
-                        $this->database
-                    ),
-                    new \DateTime($row['document_date']),
+        return array_reduce(
+            $rows,
+            function($previous, $row) {
+                $previous[] = new ConstantBulletpoint(
+                    $this->owner,
+                    $row['content'],
+                    new \DateTime($row['created_at']),
                     new MySqlInformationSource(
-                        $row['document_source'],
+                        $row['information_source_id'],
                         $this->database
                     ),
-                    new MySqlDocument($row['document_id'], $this->database)
-                )
-            );
-        }
+                    new MySqlBulletpoint($row['ID'], $this->database),
+                    new ConstantDocument(
+                        $row['title'],
+                        $row['description'],
+                        new Access\MySqlIdentity(
+                            $row['document_author'],
+                            $this->database
+                        ),
+                        new \DateTime($row['document_date']),
+                        new MySqlInformationSource(
+                            $row['document_source'],
+                            $this->database
+                        ),
+                        new MySqlDocument($row['document_id'], $this->database)
+                    )
+                );
+                return $previous;
+            }
+        );
     }
 
     public function add(

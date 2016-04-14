@@ -1,4 +1,4 @@
-{if $bulletpoints->valid()}
+{if $bulletpoints}
     <ul n:inner-foreach="$bulletpoints as $bulletpoint" class="list-group">
         <li id="bulletpoint-{$bulletpoint->id()}" class="list-group-item">
             {control bulletpoints-{$bulletpoint->id()}}

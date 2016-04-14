@@ -23,31 +23,30 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
 			$owner,
 			$connection
 		);
-        $rows = $documents->iterate();
         Assert::same(1, $documents->count());
-		Assert::equal(
-			new Wiki\ConstantBulletpoint(
-				$owner,
-				'second',
-				new \Datetime('1999-01-01 01:01:01'),
-                new Wiki\MySqlInformationSource(2, $connection),
-				new Wiki\MySqlBulletpoint(2, $connection),
-                new Wiki\ConstantDocument(
-                    'fooTitle',
-                    'fooDescription',
-                    new Access\MySqlIdentity(666, $connection),
-                    new \DateTime('2000-01-01'),
-                    new Wiki\MySqlInformationSource(
-                        100,
-                        $connection
-                    ),
-                    new Wiki\MySqlDocument(9, $connection)
-                )
-			),
-			$rows->current()
-		);
-		$rows->next();
-		Assert::false($rows->valid());
+        Assert::equal(
+            [
+                new Wiki\ConstantBulletpoint(
+                    $owner,
+                    'second',
+                    new \Datetime('1999-01-01 01:01:01'),
+                    new Wiki\MySqlInformationSource(2, $connection),
+                    new Wiki\MySqlBulletpoint(2, $connection),
+                    new Wiki\ConstantDocument(
+                        'fooTitle',
+                        'fooDescription',
+                        new Access\MySqlIdentity(666, $connection),
+                        new \DateTime('2000-01-01'),
+                        new Wiki\MySqlInformationSource(
+                            100,
+                            $connection
+                        ),
+                        new Wiki\MySqlDocument(9, $connection)
+                    )
+                ),
+            ],
+            $documents->iterate()
+        );
 	}
 
     public function testAdding() {
