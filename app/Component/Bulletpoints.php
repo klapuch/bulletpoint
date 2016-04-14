@@ -31,12 +31,12 @@ final class Bulletpoints extends BaseControl {
     protected function createComponentBulletpoints() {
         $components = [];
         $ratings = (new Rating\MySqlBulletpointRatings(
-            $this->bulletpoints,
+            new Wiki\ReversedBulletpoints($this->bulletpoints),
             $this->identity,
             $this->database
         ))->iterate();
         $userRatings = (new Rating\MySqlUserBulletpointRatings(
-            $this->bulletpoints,
+            new Wiki\ReversedBulletpoints($this->bulletpoints),
             $this->identity,
             $this->database
         ))->iterate();
