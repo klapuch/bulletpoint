@@ -3,7 +3,7 @@ namespace Bulletpoint\Component;
 
 use Bulletpoint\Exception;
 use Bulletpoint\Model\{
-    Wiki, Storage
+    Wiki, Storage, Rating
 };
 
 final class BulletpointProposal extends BaseControl {
@@ -34,7 +34,12 @@ final class BulletpointProposal extends BaseControl {
             (new Storage\Transaction($this->database))
                 ->start(
                     function() {
-                        $this->proposal->accept();
+                        $acceptedBulletpoint = $this->proposal->accept();
+                        (new Rating\MySqlBulletpointRating(
+                            $acceptedBulletpoint,
+                            $acceptedBulletpoint->author(),
+                            $this->database
+                        ))->increase();
                     }
                 );
             $this->presenter->flashMessage('Návrh byl přijat', 'success');
