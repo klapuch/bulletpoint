@@ -1,9 +1,24 @@
 <?php
 namespace Bulletpoint\Model\Rating;
 
-use Bulletpoint\Model\Wiki;
+use Bulletpoint\Model\{
+    Wiki, Storage, Access
+};
 
 final class MySqlBulletpointRatings extends Ratings {
+    private $myself;
+    private $database;
+
+    public function __construct(
+        Wiki\Bulletpoints $bulletpoints,
+        Access\Identity $myself,
+        Storage\Database $database
+    ) {
+        parent::__construct($bulletpoints);
+        $this->myself = $myself;
+        $this->database = $database;
+    }
+
     public function iterate(): \Iterator {
         $placeholder = $this->placeholders();
         $rows = array_reverse(

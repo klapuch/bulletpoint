@@ -7,17 +7,9 @@ use Bulletpoint\Model\{
 
 abstract class Ratings {
     protected $bulletpoints;
-    protected $myself;
-    protected $database;
 
-    public function __construct(
-        Wiki\Bulletpoints $bulletpoints,
-        Access\Identity $myself,
-        Storage\Database $database
-    ) {
+    public function __construct(Wiki\Bulletpoints $bulletpoints) {
         $this->bulletpoints = $bulletpoints;
-        $this->myself = $myself;
-        $this->database = $database;
     }
     
     public abstract function iterate(): \Iterator;
