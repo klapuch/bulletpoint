@@ -38,7 +38,7 @@ final class OwnedMySqlBulletpoints implements Bulletpoints {
 			ORDER BY bulletpoints.created_at DESC',
             [$this->owner->id()]
         );
-        return array_reduce(
+        return (array)array_reduce(
             $rows,
             function($previous, $row) {
                 $previous[] = new ConstantBulletpoint(
