@@ -21,51 +21,17 @@ abstract class Ratings {
     }
     
     public abstract function iterate(): \Iterator;
-    protected function iterateBy(
-        string $condition = null,
-        array $parameters = []
-    ): \Iterator {
-        $bulletpointIds = (array)array_reduce(
-            array_reverse(iterator_to_array($this->bulletpoints->iterate())),
-            function($previous, Wiki\Bulletpoint $current) {
-                $previous[] = $current->id();
-                return $previous;
-            }
-        );
-        $placeholders = implode(
+    protected function placeholders(): \stdClass {
+        $origins = [];
+        foreach($this->bulletpoints->iterate() as $bulletpoint)
+            $origins[] = $bulletpoint->id();
+        $placeholder = implode(
             ',',
-            array_fill(0, count($bulletpointIds), '?')
+            array_fill(0, count($origins), '?')
         );
-        $rows = array_reverse(
-            $this->database->fetchAll(
-                sprintf(
-                    'SELECT bulletpoint_id,
-                    SUM(CASE WHEN rating = "+1" THEN 1 ELSE 0 END) AS pros,
-                    SUM(CASE WHEN rating = "-1" THEN 1 ELSE 0 END) AS cons
-                    FROM bulletpoint_ratings
-                    WHERE %s bulletpoint_id IN (%s)
-                    GROUP BY bulletpoint_id',
-                    $condition ? $condition . ' AND' : $condition,
-                    $placeholders
-                ),
-                array_merge($parameters, $bulletpointIds)
-            )
-        );
-        foreach($bulletpointIds as $bulletpointId) {
-            $row = current($rows);
-            yield new ConstantRating(
-                (int)$row['pros'],
-                (int)$row['cons'],
-                new MySqlBulletpointRating(
-                    new Wiki\MySqlBulletpoint(
-                        $bulletpointId,
-                        $this->database
-                    ),
-                    $this->myself,
-                    $this->database
-                )
-            );
-            next($rows);
-        }
+        return (object)[
+            'origins' => array_reverse($origins),
+            'marks' => $placeholder
+        ];
     }
 }

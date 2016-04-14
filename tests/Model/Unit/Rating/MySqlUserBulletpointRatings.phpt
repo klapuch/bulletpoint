@@ -22,58 +22,49 @@ final class MySqlUserBulletpointRatings extends TestCase\Database {
         $connection = $this->preparedDatabase();
         $myself = new Fake\Identity(1);
         $ratings = (new Rating\MySqlUserBulletpointRatings(
-            new Fake\Bulletpoints([1, 2, 3], 3),
+            new Fake\Bulletpoints([1, 2, 3]),
             $myself,
             $connection
         ))->iterate();
         Assert::equal(
-            new Rating\ConstantRating(
-                0,
-                0,
-                new Rating\MySqlBulletpointRating(
-                    new Wiki\MySqlBulletpoint(3, $connection),
-                    $myself,
-                    $connection
-                )
-            ),
-            $ratings->current()
+            [
+                new Rating\ConstantRating(
+                    0,
+                    0,
+                    new Rating\MySqlBulletpointRating(
+                        new Wiki\MySqlBulletpoint(3, $connection),
+                        $myself,
+                        $connection
+                    )
+                ),
+                new Rating\ConstantRating(
+                    0,
+                    1,
+                    new Rating\MySqlBulletpointRating(
+                        new Wiki\MySqlBulletpoint(2, $connection),
+                        $myself,
+                        $connection
+                    )
+                ),
+                new Rating\ConstantRating(
+                    1,
+                    0,
+                    new Rating\MySqlBulletpointRating(
+                        new Wiki\MySqlBulletpoint(1, $connection),
+                        $myself,
+                        $connection
+                    )
+                ),
+            ],
+            iterator_to_array($ratings)
         );
-
-        $ratings->next();
-        Assert::equal(
-            new Rating\ConstantRating(
-                0,
-                1,
-                new Rating\MySqlBulletpointRating(
-                    new Wiki\MySqlBulletpoint(2, $connection),
-                    $myself,
-                    $connection
-                )
-            ),
-            $ratings->current()
-        );
-        $ratings->next();
-        Assert::equal(
-            new Rating\ConstantRating(
-                1,
-                0,
-                new Rating\MySqlBulletpointRating(
-                    new Wiki\MySqlBulletpoint(1, $connection),
-                    $myself,
-                    $connection
-                )
-            ),
-            $ratings->current()
-        );
-        $ratings->next();
-        Assert::false($ratings->valid());
     }
 
     public function testIteratingWithoutIdentity() {
         $connection = $this->preparedDatabase();
         $myself = new Fake\Identity(0);
         $ratings = (new Rating\MySqlUserBulletpointRatings(
-            new Fake\Bulletpoints([1, 2, 3], 3),
+            new Fake\Bulletpoints([1, 2, 3]),
             $myself,
             $connection
         ))->iterate();
@@ -115,14 +106,14 @@ final class MySqlUserBulletpointRatings extends TestCase\Database {
         $connection = $this->preparedDatabase();
         $myself = new Fake\Identity(999);
         $ratings = (new Rating\MySqlUserBulletpointRatings(
-            new Fake\Bulletpoints([1, 2, 3], 3),
+            new Fake\Bulletpoints([1, 2, 3]),
             $myself,
             $connection
         ))->iterate();
         Assert::equal(
             [
                 new Rating\ConstantRating(
-                    1,
+                    0,
                     0,
                     new Rating\MySqlBulletpointRating(
                         new Wiki\MySqlBulletpoint(3, $connection),
@@ -131,7 +122,7 @@ final class MySqlUserBulletpointRatings extends TestCase\Database {
                     )
                 ),
                 new Rating\ConstantRating(
-                    0,
+                    1,
                     0,
                     new Rating\MySqlBulletpointRating(
                         new Wiki\MySqlBulletpoint(2, $connection),
