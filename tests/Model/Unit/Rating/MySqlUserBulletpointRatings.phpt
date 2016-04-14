@@ -151,7 +151,7 @@ final class MySqlUserBulletpointRatings extends TestCase\Database {
             'INSERT INTO bulletpoint_ratings 
 			(bulletpoint_id, rating, user_id)
 			VALUES (1, "+1", 1), (1, "+1", 2),
-			(2, "-1", 1),
+			(2, "-1", 1), (2, "+1", 9),
 			(3, "0", 1), (3, "+1", 5), (3, "-1", 6), (2, "+1", 999)'
         );
         return $connection;

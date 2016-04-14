@@ -28,7 +28,8 @@ final class MySqlUserBulletpointRatings extends Ratings {
                     CASE WHEN rating = "+1" THEN 1 ELSE 0 END AS pros,
                     CASE WHEN rating = "-1" THEN 1 ELSE 0 END AS cons
                     FROM bulletpoint_ratings
-                    WHERE user_id = ? AND bulletpoint_id IN (%s)',
+                    WHERE user_id = ? AND bulletpoint_id IN (%s)
+                    GROUP BY bulletpoint_id',
                     $placeholder->marks
                 ),
                 array_merge([$this->myself->id()], $placeholder->origins)
