@@ -14,9 +14,13 @@ abstract class Ratings {
     
     public abstract function iterate(): \Iterator;
     protected function placeholders(): \stdClass {
-        $origins = [];
-        foreach($this->bulletpoints->iterate() as $bulletpoint)
-            $origins[] = $bulletpoint->id();
+        $origins = array_reduce(
+            $this->bulletpoints->iterate(),
+            function($previous, Wiki\Bulletpoint $current) {
+                $previous[] = $current->id();
+                return $previous;
+            }
+        );
         $placeholder = implode(
             ',',
             array_fill(0, count($origins), '?')
