@@ -20,7 +20,7 @@ final class ConstantBulletpoint extends Tester\TestCase {
         $bulletpoint = new Wiki\ConstantBulletpoint(
             new Fake\Identity(1),
             'foo',
-            new \DateTime,
+            new \DateTimeImmutable,
             new Fake\InformationSource(),
             new Fake\Bulletpoint(),
             new Fake\Document(10, 'bar')
@@ -32,7 +32,7 @@ final class ConstantBulletpoint extends Tester\TestCase {
         $bulletpoint = new Wiki\ConstantBulletpoint(
             new Fake\Identity(1),
             'foo',
-            new \DateTime,
+            new \DateTimeImmutable,
             new Fake\InformationSource(),
             new Fake\Bulletpoint(100, new Fake\Document(10, 'bar'))
         );

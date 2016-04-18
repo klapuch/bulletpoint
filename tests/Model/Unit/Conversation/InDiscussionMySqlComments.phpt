@@ -37,7 +37,7 @@ final class InDiscussionMySqlComments extends TestCase\Database {
                     'cucak'
                 ),
                 'first',
-                new \Datetime('2000-01-01 01:01:01'),
+                new \DateTimeImmutable('2000-01-01 01:01:01'),
                 1,
                 new Conversation\MySqlComment(2, $identity, $connection)
             ),
@@ -55,7 +55,7 @@ final class InDiscussionMySqlComments extends TestCase\Database {
                     'facedown'
                 ),
                 'second',
-                new \Datetime('1999-09-09 09:09:09'),
+                new \DateTimeImmutable('1999-09-09 09:09:09'),
                 1,
                 new Conversation\MySqlComment(1, $identity, $connection)
             ),

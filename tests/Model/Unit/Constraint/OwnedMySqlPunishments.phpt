@@ -39,7 +39,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
 			new Constraint\ConstantPunishment(
 				$sinner,
 				'rude',
-				new \Datetime('2099-01-01 12:01:01'),
+				new \DateTimeImmutable('2099-01-01 12:01:01'),
 				new Constraint\MySqlPunishment(2, $connection)
 			),
 			$rows->current()
@@ -49,7 +49,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
             new Constraint\ConstantPunishment(
                 $sinner,
                 'rude',
-                new \Datetime('2100-01-01 12:01:01'),
+                new \DateTimeImmutable('2100-01-01 12:01:01'),
                 new Constraint\MySqlPunishment(1, $connection)
             ),
             $rows->current()
@@ -84,7 +84,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
             new Fake\Punishments(new Fake\Identity, new Fake\Database)
         ))->punish(
             new Fake\Identity(1),
-            new \Datetime('2100-01-01 12:00:00'),
+            new \DateTimeImmutable('2100-01-01 12:00:00'),
             'rude'
         );
     }
@@ -96,7 +96,7 @@ final class OwnedMySqlPunishments extends TestCase\Database {
             new Fake\Punishments(new Fake\Identity(1), new Fake\Database)
         ))->punish(
             new Fake\Identity(2),
-            new \Datetime('2100-01-01 12:00:00'),
+            new \DateTimeImmutable('2100-01-01 12:00:00'),
             'rude'
         );
         Assert::true(true);

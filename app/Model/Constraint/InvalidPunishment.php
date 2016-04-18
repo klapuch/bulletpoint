@@ -26,8 +26,8 @@ final class InvalidPunishment implements Punishment {
         return true;
     }
 
-    public function expiration(): \DateTime {
-        return new \DateTime('yesterday');
+    public function expiration(): \DateTimeImmutable {
+        return new \DateTimeImmutable('yesterday');
     }
 
     public function forgive() {

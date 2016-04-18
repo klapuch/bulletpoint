@@ -13,7 +13,7 @@ final class ConstantComment implements Comment {
     public function __construct(
         Access\Identity $author,
         string $content,
-        \DateTime $date,
+        \DateTimeImmutable $date,
         bool $visible,
         Comment $origin
     ) {
@@ -32,7 +32,7 @@ final class ConstantComment implements Comment {
         return $this->content;
     }
 
-    public function date(): \DateTime {
+    public function date(): \DateTimeImmutable {
         return $this->date;
     }
 

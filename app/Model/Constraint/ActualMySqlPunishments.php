@@ -38,7 +38,7 @@ final class ActualMySqlPunishments implements Punishments {
                     $row['username']
                 ),
                 $row['reason'],
-                new \DateTime($row['expiration']),
+                new \DateTimeImmutable($row['expiration']),
                 new MySqlPunishment($row['ID'], $this->database)
             );
         }
@@ -46,7 +46,7 @@ final class ActualMySqlPunishments implements Punishments {
 
     public function punish(
         Access\Identity $sinner,
-        \DateTime $expiration,
+        \DateTimeImmutable $expiration,
         string $reason
     ) {
         if($this->past($expiration)) {
@@ -66,7 +66,7 @@ final class ActualMySqlPunishments implements Punishments {
         );
     }
 
-    private function past(\DateTime $expiration): bool {
-        return $expiration < new \DateTime;
+    private function past(\DateTimeImmutable $expiration): bool {
+        return $expiration < new \DateTimeImmutable;
     }
 }

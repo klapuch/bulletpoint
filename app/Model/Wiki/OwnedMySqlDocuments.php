@@ -31,7 +31,7 @@ final class OwnedMySqlDocuments implements Documents {
                 $row['title'],
                 $row['description'],
                 $this->owner,
-                new \DateTime($row['created_at']),
+                new \DateTimeImmutable($row['created_at']),
                 new MySqlInformationSource(
                     $row['information_source_id'],
                     $this->database

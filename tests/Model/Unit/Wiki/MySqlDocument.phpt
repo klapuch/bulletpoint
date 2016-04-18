@@ -38,7 +38,7 @@ final class MySqlDocument extends TestCase\Database {
 
 	public function testDate() {
 		Assert::equal(
-			new \Datetime('2000-01-01 01:01:01'),
+			new \DateTimeImmutable('2000-01-01 01:01:01'),
 			(new Wiki\MySqlDocument(
 				1,
 				$this->preparedDocuments()

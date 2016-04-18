@@ -35,7 +35,7 @@ final class OwnedMySqlPunishments implements Punishments {
             yield new ConstantPunishment(
                 $this->sinner,
                 $row['reason'],
-                new \DateTime($row['expiration']),
+                new \DateTimeImmutable($row['expiration']),
                 new MySqlPunishment($row['ID'], $this->database)
             );
         }
@@ -43,7 +43,7 @@ final class OwnedMySqlPunishments implements Punishments {
 
     public function punish(
         Access\Identity $sinner,
-        \DateTime $expiration,
+        \DateTimeImmutable $expiration,
         string $reason
     ) {
         if($sinner->id() === $this->sinner->id())

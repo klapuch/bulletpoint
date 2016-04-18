@@ -32,8 +32,8 @@ final class Document implements Wiki\Document {
 		return $this->id;
 	}
 
-	public function date(): \Datetime {
-		return new \DateTime();
+	public function date(): \DateTimeImmutable {
+		return new \DateTimeImmutable();
 	}
 
 	public function edit(string $title, string $description) {

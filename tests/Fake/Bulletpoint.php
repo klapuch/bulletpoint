@@ -28,7 +28,7 @@ final class Bulletpoint implements Wiki\Bulletpoint {
 		return $this->id;
 	}
 
-	public function date(): \DateTime {
+	public function date(): \DateTimeImmutable {
 		
 	}
 

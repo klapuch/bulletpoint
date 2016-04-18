@@ -44,7 +44,7 @@ final class SearchedMySqlDocuments implements Documents {
                 $row['title'],
                 $row['description'],
                 new Access\MySqlIdentity($row['user_id'], $this->database),
-                new \DateTime($row['created_at']),
+                new \DateTimeImmutable($row['created_at']),
                 new MySqlInformationSource(
                     $row['information_source_id'],
                     $this->database

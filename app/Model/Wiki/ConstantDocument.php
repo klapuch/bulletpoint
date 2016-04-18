@@ -15,7 +15,7 @@ final class ConstantDocument implements Document {
         string $title,
         string $description,
         Access\Identity $author,
-        \DateTime $date,
+        \DateTimeImmutable $date,
         InformationSource $source,
         Document $origin
     ) {
@@ -39,7 +39,7 @@ final class ConstantDocument implements Document {
         return $this->title;
     }
 
-    public function date(): \DateTime {
+    public function date(): \DateTimeImmutable {
         return $this->date;
     }
 

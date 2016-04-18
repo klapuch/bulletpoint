@@ -38,8 +38,8 @@ final class MySqlComment implements Comment {
         );
     }
 
-    public function date(): \DateTime {
-        return new \DateTime(
+    public function date(): \DateTimeImmutable {
+        return new \DateTimeImmutable(
             $this->database->fetchColumn(
                 'SELECT posted_at FROM comments WHERE ID = ?',
                 [$this->id]

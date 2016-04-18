@@ -29,7 +29,7 @@ final class OwnedMySqlComments implements Comments {
             yield new ConstantComment(
                 $this->owner,
                 $row['content'],
-                new \DateTime($row['posted_at']),
+                new \DateTimeImmutable($row['posted_at']),
                 $row['visible'],
                 new MySqlComment($row['ID'], $this->owner, $this->database)
             );

@@ -49,7 +49,7 @@ final class MySqlDocumentProposals extends TestCase\Database {
 					),
 					'cucak'
 				),
-				new \Datetime('2000-01-01 01:01:01'),
+				new \DateTimeImmutable('2000-01-01 01:01:01'),
 				new Wiki\ConstantInformationSource(
 					'wikipedie',
 					2000,

@@ -46,7 +46,7 @@ final class MySqlBulletpointProposals extends TestCase\Database {
 		Assert::equal(
 			new Wiki\ConstantBulletpointProposal(
                 new Access\MySqlIdentity(2, $connection),
-				new \Datetime('2000-01-01 01:01:01'),
+				new \DateTimeImmutable('2000-01-01 01:01:01'),
                 new Wiki\MySqlInformationSource(1, $connection),
 				'fooContent',
                 new Wiki\MySqlBulletpointProposal(1, $admin, $connection),
@@ -54,7 +54,7 @@ final class MySqlBulletpointProposals extends TestCase\Database {
                     'fooTitle',
                     'fooDescription',
                     new Access\MySqlIdentity(3, $connection),
-                    new \DateTime('2000-01-01'),
+                    new \DateTimeImmutable('2000-01-01'),
                     new Wiki\MySqlInformationSource(
                         9,
                         $connection

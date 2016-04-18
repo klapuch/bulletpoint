@@ -33,7 +33,7 @@ final class CachedDocument extends TestCase\Mockery {
             ->times(4)
             ->with('Bulletpoint\Model\Wiki\CachedDocument::title');
         $this->cache->shouldReceive('read')
-            ->andReturn(new \DateTime('2000'))
+            ->andReturn(new \DateTimeImmutable('2000'))
             ->times(4)
             ->with('Bulletpoint\Model\Wiki\CachedDocument::date');
         $this->cache->shouldReceive('read')
@@ -56,8 +56,8 @@ final class CachedDocument extends TestCase\Mockery {
         Assert::same('<Any>', $document->title());
 
 
-        Assert::equal(new \DateTime('2000'), $document->date());
-        Assert::equal(new \DateTime('2000'), $document->date());
+        Assert::equal(new \DateTimeImmutable('2000'), $document->date());
+        Assert::equal(new \DateTimeImmutable('2000'), $document->date());
 
         Assert::equal(
             new Access\CachedIdentity(

@@ -39,7 +39,7 @@ final class CachedDocument implements Document {
         return $this->origin->id();
     }
 
-    public function date(): \DateTime {
+    public function date(): \DateTimeImmutable {
         return $this->read(__FUNCTION__);
     }
 

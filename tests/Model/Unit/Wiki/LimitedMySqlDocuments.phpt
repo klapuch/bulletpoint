@@ -34,7 +34,7 @@ final class LimitedMySqlDocuments extends TestCase\Database {
                 'secondTitle',
                 'second',
                 new Access\MySqlIdentity(1, $connection),
-                new \Datetime('2000-01-01 01:01:01'),
+                new \DateTimeImmutable('2000-01-01 01:01:01'),
                 new Wiki\MySqlInformationSource(1, $connection),
                 new Wiki\MySqlDocument(2, $connection)
             ),

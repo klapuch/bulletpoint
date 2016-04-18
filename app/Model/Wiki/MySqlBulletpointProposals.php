@@ -43,7 +43,7 @@ final class MySqlBulletpointProposals implements BulletpointProposals {
                     $row['proposal_author'],
                     $this->database
                 ),
-                new \DateTime($row['proposed_at']),
+                new \DateTimeImmutable($row['proposed_at']),
                 new MySqlInformationSource(
                     $row['information_source_id'], $this->database
                 ),
@@ -60,7 +60,7 @@ final class MySqlBulletpointProposals implements BulletpointProposals {
                         $row['document_author'],
                         $this->database
                     ),
-                    new \DateTime($row['document_date']),
+                    new \DateTimeImmutable($row['document_date']),
                     new MySqlInformationSource(
                         $row['document_source_id'],
                         $this->database

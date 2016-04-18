@@ -54,8 +54,8 @@ final class MySqlBulletpointProposal implements BulletpointProposal {
         return $this->id;
     }
 
-    public function date(): \DateTime {
-        return new \DateTime(
+    public function date(): \DateTimeImmutable {
+        return new \DateTimeImmutable(
             $this->database->fetchColumn(
                 'SELECT proposed_at FROM bulletpoint_proposals WHERE ID = ?',
                 [$this->id]

@@ -8,6 +8,6 @@ interface Punishment {
     public function id(): int;
     public function reason(): string;
     public function expired(): bool;
-    public function expiration(): \DateTime;
+    public function expiration(): \DateTimeImmutable;
     public function forgive();
 }

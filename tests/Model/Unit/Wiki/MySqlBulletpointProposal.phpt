@@ -41,7 +41,7 @@ final class MySqlBulletpointProposal extends TestCase\Database {
 
 	public function testDate() {
 		Assert::equal(
-			new \Datetime('2000-01-01 01:01:01'),
+			new \DateTimeImmutable('2000-01-01 01:01:01'),
 			(new Wiki\MySqlBulletpointProposal(
 				1,
 				new Fake\Identity(1),

@@ -57,8 +57,8 @@ final class MySqlDocumentProposal implements DocumentProposal {
         );
     }
 
-    public function date(): \DateTime {
-        return new \DateTime(
+    public function date(): \DateTimeImmutable {
+        return new \DateTimeImmutable(
             $this->database->fetchColumn(
                 'SELECT proposed_at FROM document_proposals WHERE ID = ?',
                 [$this->id]

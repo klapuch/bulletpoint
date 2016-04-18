@@ -29,7 +29,7 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
                 new Wiki\ConstantBulletpoint(
                     new Access\MySqlIdentity(1, $connection),
                     'first',
-                    new \Datetime('2000-01-01 01:01:01'),
+                    new \DateTimeImmutable('2000-01-01 01:01:01'),
                     new Wiki\ConstantInformationSource(
                         'wikipedie',
                         2005,
@@ -41,7 +41,7 @@ final class CategorizedMySqlBulletpoints extends TestCase\Database {
                 new Wiki\ConstantBulletpoint(
                     new Access\MySqlIdentity(2, $connection),
                     'second',
-                    new \Datetime('1999-01-01 01:01:01'),
+                    new \DateTimeImmutable('1999-01-01 01:01:01'),
                     new Wiki\ConstantInformationSource(
                         'book',
                         1998,

@@ -40,7 +40,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
                     'xx'
                 ),
                 'rude',
-                new \Datetime('2100-01-01 12:01:01'),
+                new \DateTimeImmutable('2100-01-01 12:01:01'),
                 new Constraint\MySqlPunishment(1, $connection)
             ),
             $rows->current()
@@ -56,7 +56,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 			$connection
 		))->punish(
 			new Fake\Identity(2),
-			new \Datetime('2100-01-01 12:00:00'),
+			new \DateTimeImmutable('2100-01-01 12:00:00'),
 			'rude'
 		);
 		Assert::same(
@@ -80,9 +80,9 @@ final class ActualMySqlPunishments extends TestCase\Database {
 			$connection
 		);
 		$sinner = new Fake\Identity(2);
-		$punishments->punish($sinner, new \Datetime('tomorrow'), 'rude');
-        $punishments->punish($sinner, new \Datetime('+5 months'), 'idiot');
-        $punishments->punish($sinner, new \Datetime('+5 months'), 'idiot');
+		$punishments->punish($sinner, new \DateTimeImmutable('tomorrow'), 'rude');
+        $punishments->punish($sinner, new \DateTimeImmutable('+5 months'), 'idiot');
+        $punishments->punish($sinner, new \DateTimeImmutable('+5 months'), 'idiot');
         Assert::same(3, $connection->fetchColumn(
             'SELECT COUNT(ID) FROM punishments WHERE sinner_id = 2'
         ));
@@ -100,7 +100,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 			$connection
 		))->punish(
 			new Fake\Identity(2),
-			new \Datetime('2100-01-01 12:00:00'),
+			new \DateTimeImmutable('2100-01-01 12:00:00'),
 			'rude'
 		);
 		Assert::same(
@@ -126,7 +126,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
 			$this->preparedDatabase()
 		))->punish(
 			new Fake\Identity(2),
-			new \Datetime('yesterday'),
+			new \DateTimeImmutable('yesterday'),
 			'rude'
 		);
 	}
@@ -142,7 +142,7 @@ final class ActualMySqlPunishments extends TestCase\Database {
             $connection
         ))->punish(
 			new Fake\Identity(2),
-			new \Datetime('2100-01-01 12:00:00'),
+			new \DateTimeImmutable('2100-01-01 12:00:00'),
 			'rude'
 		);
 		Assert::same(

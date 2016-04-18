@@ -9,7 +9,7 @@ interface Punishments {
     public function iterate(): \Iterator;
     public function punish(
         Access\Identity $sinner,
-        \DateTime $expiration,
+        \DateTimeImmutable $expiration,
         string $reason
     );
 }

@@ -44,7 +44,7 @@ final class PunishmentForm extends BaseControl {
             )
             ->addRule(
                 function($control) {
-                    return new \DateTime($control->value) > new \DateTime();
+                    return new \DateTimeImmutable($control->value) > new \DateTimeImmutable();
                 },
                 'Trest smí být udělen pouze na budoucí období'
             );
@@ -60,7 +60,7 @@ final class PunishmentForm extends BaseControl {
             $values = $form->values;
             $this->punishments->punish(
                 $this->sinner,
-                new \Datetime($values->expiration),
+                new \DateTimeImmutable($values->expiration),
                 $values->reason
             );
             $this->presenter->flashMessage('Trest byl udělen', 'success');

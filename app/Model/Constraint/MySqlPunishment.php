@@ -35,8 +35,8 @@ final class MySqlPunishment implements Punishment {
         );
     }
 
-    public function expiration(): \DateTime {
-        return new \DateTime(
+    public function expiration(): \DateTimeImmutable {
+        return new \DateTimeImmutable(
             $this->database->fetchColumn(
                 'SELECT expiration FROM punishments WHERE ID = ?',
                 [$this->id]
@@ -45,7 +45,7 @@ final class MySqlPunishment implements Punishment {
     }
 
     public function expired(): bool {
-        return $this->expiration() <= new \DateTime || $this->forgiven();
+        return $this->expiration() <= new \DateTimeImmutable || $this->forgiven();
     }
 
     public function forgive() {

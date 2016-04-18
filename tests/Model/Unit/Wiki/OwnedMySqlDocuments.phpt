@@ -26,7 +26,7 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 				'firstTitle',
 				'first',
 				$owner,
-				new \Datetime('1999-01-01 01:01:01'),
+				new \DateTimeImmutable('1999-01-01 01:01:01'),
                 new Wiki\MySqlInformationSource(1, $connection),
 				new Wiki\MySqlDocument(1, $connection)
 			),

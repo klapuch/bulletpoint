@@ -29,14 +29,14 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
                 new Wiki\ConstantBulletpoint(
                     $owner,
                     'second',
-                    new \Datetime('1999-01-01 01:01:01'),
+                    new \DateTimeImmutable('1999-01-01 01:01:01'),
                     new Wiki\MySqlInformationSource(2, $connection),
                     new Wiki\MySqlBulletpoint(2, $connection),
                     new Wiki\ConstantDocument(
                         'fooTitle',
                         'fooDescription',
                         new Access\MySqlIdentity(666, $connection),
-                        new \DateTime('2000-01-01'),
+                        new \DateTimeImmutable('2000-01-01'),
                         new Wiki\MySqlInformationSource(
                             100,
                             $connection

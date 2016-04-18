@@ -14,7 +14,7 @@ final class ConstantBulletpoint implements Bulletpoint {
     public function __construct(
         Access\Identity $author,
         string $content,
-        \DateTime $date,
+        \DateTimeImmutable $date,
         InformationSource $source,
         Bulletpoint $origin,
         Document $document = null
@@ -43,7 +43,7 @@ final class ConstantBulletpoint implements Bulletpoint {
         return $this->origin->id();
     }
 
-    public function date(): \DateTime {
+    public function date(): \DateTimeImmutable {
         return $this->date;
     }
 

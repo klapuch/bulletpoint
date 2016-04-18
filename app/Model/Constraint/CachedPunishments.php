@@ -27,7 +27,7 @@ final class CachedPunishments implements Punishments {
 
     public function punish(
         Access\Identity $sinner,
-        \DateTime $expiration,
+        \DateTimeImmutable $expiration,
         string $reason
     ) {
         $this->origin->punish($sinner, $expiration, $reason);

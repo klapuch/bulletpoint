@@ -14,7 +14,7 @@ final class ConstantPunishment implements Punishment {
     public function __construct(
         Access\Identity $sinner,
         string $reason,
-        \DateTime $expiration,
+        \DateTimeImmutable $expiration,
         Punishment $origin
     ) {
         $this->sinner = $sinner;
@@ -35,7 +35,7 @@ final class ConstantPunishment implements Punishment {
         return $this->reason;
     }
 
-    public function expiration(): \DateTime {
+    public function expiration(): \DateTimeImmutable {
         return $this->expiration;
     }
 

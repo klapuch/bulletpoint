@@ -28,7 +28,7 @@ final class AllMySqlDocuments extends TestCase\Database {
                 'secondTitle',
                 'second',
                 new Access\MySqlIdentity(1, $connection),
-                new \Datetime('2000-01-01 01:01:01'),
+                new \DateTimeImmutable('2000-01-01 01:01:01'),
                 new Wiki\MySqlInformationSource(1, $connection),
                 new Wiki\MySqlDocument(2, $connection)
             ),
@@ -40,7 +40,7 @@ final class AllMySqlDocuments extends TestCase\Database {
                 'firstTitle',
                 'first',
                 new Access\MySqlIdentity(2, $connection),
-                new \Datetime('1999-01-01 01:01:01'),
+                new \DateTimeImmutable('1999-01-01 01:01:01'),
                 new Wiki\MySqlInformationSource(1, $connection),
                 new Wiki\MySqlDocument(1, $connection)
             ),

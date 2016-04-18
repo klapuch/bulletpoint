@@ -17,7 +17,7 @@ final class Comment implements Conversation\Comment {
 	public function content(): string {
 
 	}
-	public function date(): \Datetime {
+	public function date(): \DateTimeImmutable {
 
 	}
 	public function id(): int {

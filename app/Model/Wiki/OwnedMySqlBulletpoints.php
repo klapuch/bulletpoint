@@ -44,7 +44,7 @@ final class OwnedMySqlBulletpoints implements Bulletpoints {
                 $previous[] = new ConstantBulletpoint(
                     $this->owner,
                     $row['content'],
-                    new \DateTime($row['created_at']),
+                    new \DateTimeImmutable($row['created_at']),
                     new MySqlInformationSource(
                         $row['information_source_id'],
                         $this->database
@@ -57,7 +57,7 @@ final class OwnedMySqlBulletpoints implements Bulletpoints {
                             $row['document_author'],
                             $this->database
                         ),
-                        new \DateTime($row['document_date']),
+                        new \DateTimeImmutable($row['document_date']),
                         new MySqlInformationSource(
                             $row['document_source'],
                             $this->database

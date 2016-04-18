@@ -45,7 +45,7 @@ final class CategorizedMySqlBulletpoints implements Bulletpoints {
                 $previous[] = new ConstantBulletpoint(
                     new Access\MySqlIdentity($row['user_id'], $this->database),
                     $row['content'],
-                    new \DateTime($row['created_at']),
+                    new \DateTimeImmutable($row['created_at']),
                     new ConstantInformationSource(
                         $row['place'],
                         $row['year'],

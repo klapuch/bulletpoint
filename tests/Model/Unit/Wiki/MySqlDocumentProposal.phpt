@@ -40,7 +40,7 @@ public function testDescription() {
 
 	public function testDate() {
 		Assert::equal(
-			new \Datetime('2000-01-01 01:01:01'),
+			new \DateTimeImmutable('2000-01-01 01:01:01'),
 			(new Wiki\MySqlDocumentProposal(
 				1,
 				new Fake\Identity(1),

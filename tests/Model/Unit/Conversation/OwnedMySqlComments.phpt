@@ -29,7 +29,7 @@ final class OwnedMySqlComments extends TestCase\Database {
             new Conversation\ConstantComment(
                 $owner,
                 'first',
-                new \Datetime('2000-01-01 01:01:01'),
+                new \DateTimeImmutable('2000-01-01 01:01:01'),
                 1,
                 new Conversation\MySqlComment(2, $owner, $connection)
             ),

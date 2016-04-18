@@ -39,7 +39,7 @@ final class MySqlBulletpoint extends TestCase\Database {
 
 	public function testDate() {
 		Assert::equal(
-			new \Datetime('2000-01-01 01:01:01'),
+			new \DateTimeImmutable('2000-01-01 01:01:01'),
 			(new Wiki\MySqlBulletpoint(
 				1,
 				$this->preparedBulletpoints()

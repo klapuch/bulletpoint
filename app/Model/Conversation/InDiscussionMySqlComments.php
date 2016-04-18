@@ -47,7 +47,7 @@ final class InDiscussionMySqlComments implements Comments {
                     $row['username']
                 ),
                 $row['content'],
-                new \DateTime($row['posted_at']),
+                new \DateTimeImmutable($row['posted_at']),
                 $row['visible'],
                 new MySqlComment($row['ID'], $this->myself, $this->database)
             );

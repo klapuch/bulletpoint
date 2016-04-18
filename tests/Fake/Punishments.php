@@ -12,7 +12,7 @@ final class Punishments implements Constraint\Punishments {
 
     public function punish(
         Access\Identity $sinner,
-        \DateTime $expiration,
+        \DateTimeImmutable $expiration,
         string $reason
     ) {
         // Do nothing
