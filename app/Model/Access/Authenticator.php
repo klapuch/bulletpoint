@@ -35,6 +35,8 @@ final class Authenticator implements IAuthenticator {
             throw new AuthenticationException('Účet není aktivován');
         elseif(!$this->cipher->decrypt($plainPassword, $password))
             throw new AuthenticationException('Nesprávné heslo');
+        if($this->cipher->deprecated($password))
+            $this->rehash($plainPassword, $id);
         return new Identity($id, $role, ['username' => $username]);
     }
 
@@ -46,6 +48,13 @@ final class Authenticator implements IAuthenticator {
         return (bool)$this->database->fetch(
             'SELECT 1 FROM verification_codes WHERE user_id = ? AND used = 1',
             [$id]
+        );
+    }
+
+    private function rehash(string $password, int $id) {
+        $this->database->query(
+            'UPDATE users SET `password` = ? WHERE ID = ?',
+            [$this->cipher->encrypt($password), $id]
         );
     }
 }

@@ -24,10 +24,32 @@ final class Authenticator extends TestCase\Database {
 			$connection,
 			new Fake\Cipher
 		))->authenticate(['facedown', '123456']);
-		Assert::same($identity->id, 1);
+        Assert::same(
+            '123456',
+            $connection->fetchColumn('SELECT `password` FROM users WHERE ID = 1')
+        );
+        Assert::same($identity->id, 1);
 		Assert::same($identity->roles, ['member']);
 		Assert::same($identity->username, 'facedown');
 	}
+
+    public function testRehashing() {
+        $connection = $this->preparedDatabase();
+        $connection->query(
+            'INSERT INTO verification_codes (user_id, used) VALUES (1, 1)'
+        );
+        $identity = (new Access\Authenticator(
+            $connection,
+            new Fake\Cipher($decrypted = true, $deprecated = true)
+        ))->authenticate(['facedown', '123456']);
+        Assert::same(
+            'encrypted',
+            $connection->fetchColumn('SELECT `password` FROM users WHERE ID = 1')
+        );
+        Assert::same($identity->id, 1);
+        Assert::same($identity->roles, ['member']);
+        Assert::same($identity->username, 'facedown');
+    }
 
 	/**
 	* @throws \Nette\Security\AuthenticationException Účet není aktivován
