@@ -17,82 +17,158 @@ require __DIR__ . '/../../../bootstrap.php';
 
 final class MySqlBulletpointRating extends TestCase\Database {
 	public function testPros() {
-		Assert::same(
-			2,
-			(new Rating\MySqlBulletpointRating(
+        $connection = $this->preparedDatabase();
+		Assert::equal(
+            [
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(1, $connection),
+                    new Rating\MySqlPoint(1, $connection)
+                ),
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(2, $connection),
+                    new Rating\MySqlPoint(2, $connection)
+                ),
+            ],
+			iterator_to_array((new Rating\MySqlBulletpointRating(
 				new Fake\Bulletpoint(1),
 				new Fake\Identity(1),
-				$this->preparedDatabase()
-			))->pros()
+				$connection
+			))->points())
 		);
 	}
 
 	public function testCons() {
-		Assert::same(
-			1,
-			(new Rating\MySqlBulletpointRating(
-				new Fake\Bulletpoint(1),
-				new Fake\Identity(1),
-				$this->preparedDatabase()
-			))->cons()
+        $connection = $this->preparedDatabase();
+		Assert::equal(
+			[
+                new Rating\ConstantPoint(
+                    -1,
+                    new Access\MySqlIdentity(3, $connection),
+                    new Rating\MySqlPoint(3, $connection)
+                ),
+            ],
+            iterator_to_array((new Rating\MySqlBulletpointRating(
+                new Fake\Bulletpoint(3),
+                new Fake\Identity(1),
+                $connection
+            ))->points())
 		);
 	}
 
-	public function testIncrementation() {
+	public function testRating() {
+        $connection = $this->preparedDatabase();
 		$rating = new Rating\MySqlBulletpointRating(
 			new Fake\Bulletpoint(1),
 			new Fake\Identity(4),
-			$this->preparedDatabase()
+			$connection
 		);
-		Assert::same(2, $rating->pros());
+        Assert::equal(
+            [
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(1, $connection),
+                    new Rating\MySqlPoint(1, $connection)
+                ),
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(2, $connection),
+                    new Rating\MySqlPoint(2, $connection)
+                ),
+            ],
+            iterator_to_array($rating->points())
+        );
 		$rating->increase();
-		Assert::same(3, $rating->pros());
+        Assert::equal(
+            [
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(1, $connection),
+                    new Rating\MySqlPoint(1, $connection)
+                ),
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(2, $connection),
+                    new Rating\MySqlPoint(2, $connection)
+                ),
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(4, $connection),
+                    new Rating\MySqlPoint(5, $connection)
+                ),
+            ],
+            iterator_to_array($rating->points())
+        );
+        $rating->decrease();
+        Assert::equal(
+            [
+                new Rating\ConstantPoint(
+                    -1,
+                    new Access\MySqlIdentity(4, $connection),
+                    new Rating\MySqlPoint(5, $connection)
+                ),
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(1, $connection),
+                    new Rating\MySqlPoint(1, $connection)
+                ),
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(2, $connection),
+                    new Rating\MySqlPoint(2, $connection)
+                ),
+            ],
+            iterator_to_array($rating->points())
+        );
+        $rating->decrease();
+        Assert::equal(
+            [
+                new Rating\ConstantPoint(
+                    0,
+                    new Access\MySqlIdentity(4, $connection),
+                    new Rating\MySqlPoint(5, $connection)
+                ),
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(1, $connection),
+                    new Rating\MySqlPoint(1, $connection)
+                ),
+                new Rating\ConstantPoint(
+                    1,
+                    new Access\MySqlIdentity(2, $connection),
+                    new Rating\MySqlPoint(2, $connection)
+                ),
+            ],
+            iterator_to_array($rating->points())
+        );
 	}
 
-	public function testDecrementation() {
-		$rating = new Rating\MySqlBulletpointRating(
-			new Fake\Bulletpoint(1),
-			new Fake\Identity(4),
-			$this->preparedDatabase()
-		);
-		Assert::same(1, $rating->cons());
-		$rating->decrease();
-		Assert::same(2, $rating->cons());
-	}
-
-	public function testUpdatingOnRatingChange() {
-		$rating = new Rating\MySqlBulletpointRating(
-			new Fake\Bulletpoint(1),
-			new Fake\Identity(1),
-			$this->preparedDatabase()
-		);
-		Assert::same(2, $rating->pros());
-		Assert::same(1, $rating->cons());
-		$rating->decrease();
-		Assert::same(1, $rating->pros());
-		Assert::same(2, $rating->cons());
-	}
-
-	public function testToggling() {
-		$rating = new Rating\MySqlBulletpointRating(
-			new Fake\Bulletpoint(1),
-			new Fake\Identity(1),
-			$this->preparedDatabase()
-		);
-		Assert::same(2, $rating->pros());
-		Assert::same(1, $rating->cons());
-		$rating->increase();
-		Assert::same(1, $rating->pros());
-		Assert::same(1, $rating->cons());
-	}
+    public function testNoPoint() {
+        $connection = $this->preparedDatabase();
+        Assert::equal(
+            [
+                new Rating\ConstantPoint(
+                    0,
+                    new Access\MySqlIdentity(4, $connection),
+                    new Rating\MySqlPoint(4, $connection)
+                ),
+            ],
+            iterator_to_array((new Rating\MySqlBulletpointRating(
+                new Fake\Bulletpoint(4),
+                new Fake\Identity(1),
+                $connection
+            ))->points())
+        );
+    }
 
 	private function preparedDatabase() {
 		$connection = $this->connection();
 		$connection->query('TRUNCATE bulletpoint_ratings');
 		$connection->query(
 			'INSERT INTO bulletpoint_ratings 
-			(bulletpoint_id, user_id, rating)
-			VALUES (1, 1, "+1"), (1, 2, "+1"), (1, 3, "-1")'
+			(ID, bulletpoint_id, user_id, point)
+			VALUES (1, 1, 1, 1), (2, 1, 2, 1), (3, 3, 3, -1), (4, 4, 4, 0)'
 		);
 		return $connection;
 	}

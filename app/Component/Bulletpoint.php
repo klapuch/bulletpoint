@@ -8,22 +8,19 @@ use Bulletpoint\Model\{
 final class Bulletpoint extends BaseControl {
     private $bulletpoint;
     private $rating;
-    private $userRating;
-    private $identity;
+    private $myself;
     private $database;
 
     public function __construct(
         Wiki\Bulletpoint $bulletpoint,
         Rating\Rating $rating,
-        Rating\Rating $userRating,
-        Access\Identity $identity,
+        Access\Identity $myself,
         Storage\Database $database
     ) {
         parent::__construct();
         $this->bulletpoint = $bulletpoint;
         $this->rating = $rating;
-        $this->userRating = $userRating;
-        $this->identity = $identity;
+        $this->myself = $myself;
         $this->database = $database;
     }
 
@@ -32,18 +29,12 @@ final class Bulletpoint extends BaseControl {
         $this->template->bulletpoint = $this->bulletpoint;
         $this->template->backlink = $this->presenter->storeRequest();
         $this->template->rating = $this->rating;
-        $this->template->userRating = $this->userRating;
+        $this->template->myself = $this->myself;
         if($this->presenter->isAjax()) {
             $this->template->rating = new Rating\MySqlBulletpointRating(
                 $this->bulletpoint,
-                $this->identity,
+                $this->myself,
                 $this->database
-            );
-            $this->template->userRating = new Rating\MySqlUserBulletpointRating(
-                $this->bulletpoint,
-                $this->identity,
-                $this->database,
-                $this->rating
             );
         }
         $this->template->render();

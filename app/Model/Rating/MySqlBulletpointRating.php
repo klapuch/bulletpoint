@@ -6,7 +6,9 @@ use Bulletpoint\Model\{
 };
 
 final class MySqlBulletpointRating implements Rating {
-    const NEUTRAL = '0';
+    const NEUTRAL = 0;
+    const PROS = +1;
+    const CONS = -1;
     private $bulletpoint;
     private $myself;
     private $database;
@@ -29,46 +31,45 @@ final class MySqlBulletpointRating implements Rating {
         $this->rate(self::CONS);
     }
 
-    public function pros(): int {
-        return $this->total(self::PROS);
-    }
-
-    public function cons(): int {
-        return $this->total(self::CONS);
-    }
-
-    private function total(string $rating): int {
-        return $this->database->fetchColumn(
-            'SELECT COUNT(ID)
+    public function points(): \Iterator {
+        $rows = $this->database->fetchAll(
+            'SELECT ID, point, user_id
 			FROM bulletpoint_ratings
-			WHERE bulletpoint_id = ? AND rating = ?',
-            [$this->bulletpoint->id(), $rating]
+			WHERE bulletpoint_id = ?',
+            [$this->bulletpoint->id()]
         );
+        foreach($rows as $row) {
+            yield new ConstantPoint(
+                $row['point'],
+                new Access\MySqlIdentity($row['user_id'], $this->database),
+                new MySqlPoint($row['ID'], $this->database)
+            );
+        }
     }
 
-    private function rate(string $rating) {
-        if($this->isReset($rating))
-            $rating = self::NEUTRAL;
+    private function rate(int $value) {
+        if($this->isReset($value))
+            $value = self::NEUTRAL;
         $this->database->query(
             'INSERT INTO bulletpoint_ratings
-			(user_id, rating, bulletpoint_id)
-			VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE rating = ?',
+			(user_id, point, bulletpoint_id)
+			VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE point = ?',
             [
                 $this->myself->id(),
-                $rating,
+                $value,
                 $this->bulletpoint->id(),
-                $rating,
+                $value,
             ]
         );
     }
 
-    private function isReset(string $rating): bool {
-        return $rating === self::NEUTRAL
+    private function isReset(int $value): bool {
+        return $value === self::NEUTRAL
         || (bool)$this->database->fetch(
             'SELECT 1
 			FROM bulletpoint_ratings
-			WHERE bulletpoint_id = ? AND rating = ? AND user_id = ?',
-            [$this->bulletpoint->id(), $rating, $this->myself->id()]
+			WHERE bulletpoint_id = ? AND point = ? AND user_id = ?',
+            [$this->bulletpoint->id(), $value, $this->myself->id()]
         );
     }
 }

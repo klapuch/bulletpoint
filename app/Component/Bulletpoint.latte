@@ -1,27 +1,41 @@
 {snippet}
+    {var pros = 0, cons = 0, ratedPros = false, ratedCons = false}
+    {foreach $rating->points() as $point}
+        {if $point->value() > 0}
+            {if $point->voter()->id() === $myself->id()}
+                {var $ratedPros = true}
+            {/if}
+            {var $pros = $pros + $point->value()}
+        {elseif $point->value() < 0}
+            {if $point->voter()->id() === $myself->id()}
+                {var $ratedCons = true}
+            {/if}
+            {var $cons = $cons - $point->value()}
+        {/if}
+    {/foreach}
     {if $user->isAllowed('bulletpoints-bulletpoints')}
         <a class="rating-badge ajax no-link" n:href="proti!">
-        <span n:class="badge, alert-danger, $userRating->cons() ? '' : 'opposite-rating'">
-							{$rating->cons()}
+        <span n:class="badge, alert-danger, $ratedCons ? '' : 'opposite-rating'">
+							{$cons}
             <span class="glyphicon glyphicon-thumbs-down"
                   aria-hidden="true"></span>
 						</span>
         </a>
         <a class="rating-badge ajax no-link" n:href="pro!">
-            <span n:class="badge, alert-success, $userRating->pros() ? '' : 'opposite-rating'">
-							{$rating->pros()}
+            <span n:class="badge, alert-success, $ratedPros ? '' : 'opposite-rating'">
+							{$pros}
                 <span class="glyphicon glyphicon-thumbs-up"
                       aria-hidden="true"></span>
 						</span>
         </a>
     {else}
         <span class="badge alert-danger badge-guest">
-						{$rating->cons()}
+						{$cons}
             <span class="glyphicon glyphicon-thumbs-down"
                   aria-hidden="true"></span>
 					</span>
         <span class="badge alert-success badge-guest">
-						{$rating->pros()}
+						{$pros}
             <span class="glyphicon glyphicon-thumbs-up"
                   aria-hidden="true"></span>
 					</span>

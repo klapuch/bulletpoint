@@ -44,11 +44,11 @@ CREATE TABLE `bulletpoint_ratings` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `bulletpoint_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `rating` enum('+1','-1','0') CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
+  `point` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `bulletpoint_id,rating,user_id` (`bulletpoint_id`,`rating`,`user_id`),
+  UNIQUE KEY `bulletpoint_id,point,user_id` (`bulletpoint_id`,`point`,`user_id`),
   UNIQUE KEY `bulletpoind_id,user_id` (`bulletpoint_id`,`user_id`),
-  KEY `bulletpoint_id,rating` (`bulletpoint_id`,`rating`),
+  KEY `bulletpoint_id,point` (`bulletpoint_id`,`point`),
   KEY `user_id` (`user_id`)
 ) ENGINE=MyIsam DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
