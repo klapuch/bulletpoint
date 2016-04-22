@@ -15,7 +15,7 @@ use Bulletpoint\Fake;
 require __DIR__ . '/../../../bootstrap.php';
 
 final class ReserveVerificationCodes extends TestCase\Database {
-	public function testGenerating() {
+	public function testRegenerating() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
 			'INSERT INTO verification_codes (user_id, code, used)
@@ -32,7 +32,7 @@ final class ReserveVerificationCodes extends TestCase\Database {
 	/**
 	* @throws \Bulletpoint\Exception\ExistenceException Ověřovací kód již byl použit
 	*/
-	public function testRegeneratintForUsedOne() {
+	public function testRegeneratingForUsedOne() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
 			'INSERT INTO verification_codes (user_id, code, used)

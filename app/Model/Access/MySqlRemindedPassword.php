@@ -5,7 +5,7 @@ use Bulletpoint\Model\{
     Storage, Security
 };
 
-final class MySqlForgottenPassword implements ForgottenPassword {
+final class MySqlRemindedPassword implements RemindedPassword {
     private $reminder;
     private $database;
     private $cipher;

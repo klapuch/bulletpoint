@@ -17,9 +17,10 @@ require __DIR__ . '/../../../bootstrap.php';
 final class MySqlForgottenPasswords extends TestCase\Database {
 	public function testReminding() {
 		$connection = $this->preparedDatabase();
-		(new Access\MySqlForgottenPasswords(
-			$connection
-		))->remind('foo@bar.cz');
+        (new Access\MySqlForgottenPasswords(
+            $connection,
+            new Fake\Cipher
+        ))->remind('foo@bar.cz');
 		Assert::same(
 			[
 				'user_id' => 1,

@@ -11,8 +11,7 @@ final class MySqlTargets implements Targets {
     }
 
     public function iterate(): \Iterator {
-        $rows = $this->database->fetchAll(
-            'SELECT COUNT(comment_complaints.ID) AS total,
+        $query = 'SELECT COUNT(comment_complaints.ID) AS total,
 			reason,
 			comment_id AS target
 			FROM comment_complaints
@@ -21,9 +20,8 @@ final class MySqlTargets implements Targets {
 			WHERE visible = 1 AND settled = 0 
 			GROUP BY target, reason
 			ORDER BY total DESC
-			LIMIT 20'
-        );
-        foreach($rows as $row) {
+			LIMIT 20';
+        foreach($this->database->query($query) as $row) {
             yield [
                 'total' => $row['total'],
                 'reason' => $row['reason'],

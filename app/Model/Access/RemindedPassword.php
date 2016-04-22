@@ -1,6 +1,6 @@
 <?php
 namespace Bulletpoint\Model\Access;
 
-interface ForgottenPassword {
+interface RemindedPassword {
     public function change(string $password);
 }

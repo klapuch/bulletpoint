@@ -15,17 +15,15 @@ final class AllMySqlDocuments implements Documents {
     }
 
     public function iterate(): \Iterator {
-        $rows = $this->database->fetchAll(
-            'SELECT ID,
+        $query = 'SELECT ID,
               created_at,
               description,
               title,
               information_source_id,
               user_id
 			  FROM documents
-			  ORDER BY created_at DESC'
-        );
-        foreach($rows as $row) {
+			  ORDER BY created_at DESC';
+        foreach($this->database->query($query) as $row) {
             yield new ConstantDocument(
                 $row['title'],
                 $row['description'],

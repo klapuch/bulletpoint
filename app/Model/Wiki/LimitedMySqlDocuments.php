@@ -22,7 +22,7 @@ final class LimitedMySqlDocuments implements Documents {
     }
 
     public function iterate(): \Iterator {
-        $rows = $this->database->fetchAll(
+        $query = sprintf(
             'SELECT ID,
               created_at,
               description,
@@ -31,10 +31,11 @@ final class LimitedMySqlDocuments implements Documents {
               user_id
 			  FROM documents
 			  ORDER BY created_at DESC
-			  LIMIT ?, ?',
-            [$this->pagination->offset, $this->pagination->length]
+			  LIMIT %d, %d',
+            (int)$this->pagination->offset,
+            (int)$this->pagination->length
         );
-        foreach($rows as $row) {
+        foreach($this->database->query($query) as $row) {
             yield new ConstantDocument(
                 $row['title'],
                 $row['description'],

@@ -4,7 +4,6 @@ namespace Bulletpoint\Model\Access;
 use Bulletpoint\Model\{
     Storage, Security, User
 };
-use Bulletpoint\Exception;
 
 final class Registration {
     private $database;

@@ -4,7 +4,6 @@ namespace Bulletpoint\Model\Constraint;
 use Bulletpoint\Model\{
     Storage, Access
 };
-use Bulletpoint\Exception;
 
 final class OwnedMySqlPunishments implements Punishments {
     private $sinner;

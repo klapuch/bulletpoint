@@ -12,7 +12,7 @@ final class ReserveVerificationCodes implements VerificationCodes {
     }
 
     public function generate(string $email): VerificationCode {
-        $code = (string)$this->database->fetchColumn(
+        $code = $this->database->fetchColumn(
             'SELECT code
 			FROM verification_codes
 			WHERE user_id = (SELECT ID FROM users WHERE email = ?)

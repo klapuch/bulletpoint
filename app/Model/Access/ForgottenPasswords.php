@@ -2,5 +2,5 @@
 namespace Bulletpoint\Model\Access;
 
 interface ForgottenPasswords {
-    public function remind(string $email);
+    public function remind(string $email): RemindedPassword;
 }

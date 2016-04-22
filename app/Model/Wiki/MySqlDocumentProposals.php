@@ -19,8 +19,7 @@ final class MySqlDocumentProposals implements DocumentProposals {
     }
 
     public function iterate(): \Iterator {
-        $rows = $this->database->fetchAll(
-            'SELECT document_proposals.ID AS proposal_id,
+        $query = 'SELECT document_proposals.ID AS proposal_id,
 			document_proposals.description,
 			document_proposals.title,
 			document_proposals.author AS proposal_author,
@@ -37,9 +36,8 @@ final class MySqlDocumentProposals implements DocumentProposals {
 			INNER JOIN information_sources
 			ON information_sources.ID = document_proposals.information_source_id
 			WHERE decision = "0"
-			ORDER BY proposed_at DESC'
-        );
-        foreach($rows as $row) {
+			ORDER BY proposed_at DESC';
+        foreach($this->database->query($query) as $row) {
             yield new ConstantDocumentProposal(
                 new Access\ConstantIdentity(
                     $row['proposal_author'],

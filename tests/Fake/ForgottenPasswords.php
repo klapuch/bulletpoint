@@ -4,7 +4,7 @@ namespace Bulletpoint\Fake;
 use Bulletpoint\Model\Access;
 
 final class ForgottenPasswords implements Access\ForgottenPasswords {
-	public function remind(string $email) {
-		
+	public function remind(string $email): Access\RemindedPassword {
+		return new RemindedPassword;
 	}
 }

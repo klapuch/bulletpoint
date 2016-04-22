@@ -44,6 +44,8 @@ final class PDODatabase implements Database {
     }
 
     public function query(string $query, array $parameters = []) {
+        if(empty($parameters))
+            return $this->connection->query($query);
         $statement = $this->connection->prepare($query);
         $statement->execute(array_values($parameters));
         return $statement;

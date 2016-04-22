@@ -9,10 +9,15 @@ use Nette\Application\UI;
 
 final class ForgottenPasswordForm extends BaseControl {
     private $database;
+    private $cipher;
 
-    public function __construct(Storage\Database $database) {
+    public function __construct(
+        Storage\Database $database,
+        Security\Cipher $cipher
+    ) {
         parent::__construct();
         $this->database = $database;
+        $this->cipher = $cipher;
     }
 
     public function createTemplate() {
@@ -74,7 +79,8 @@ final class ForgottenPasswordForm extends BaseControl {
                     function() use ($values) {
                         (new Access\LimitedForgottenPasswords(
                             new Access\MySqlForgottenPasswords(
-                                $this->database
+                                $this->database,
+                                $this->cipher
                             ),
                             $this->database
                         ))->remind($values->email);

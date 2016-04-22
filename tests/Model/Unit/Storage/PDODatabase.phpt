@@ -62,6 +62,10 @@ final class PDODatabase extends Tester\TestCase {
 			[['ID' => 1, 'name' => 'foo']],
 			$rows->fetchAll(\PDO::FETCH_ASSOC)
 		);
+        Assert::type(
+            'Traversable',
+            $this->database->query('SELECT * FROM test')
+        );
 	}
 
 	public function testFetching() {

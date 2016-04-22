@@ -18,8 +18,7 @@ final class ActualMySqlPunishments implements Punishments {
         $this->database = $database;
     }
     public function iterate(): \Iterator {
-        $rows = $this->database->fetchAll(
-            'SELECT punishments.ID,
+        $query = 'SELECT punishments.ID,
             reason,
             expiration,
             sinner_id,
@@ -28,9 +27,8 @@ final class ActualMySqlPunishments implements Punishments {
 			LEFT JOIN users
 			ON punishments.sinner_id = users.ID
 			WHERE forgiven = 0 AND NOW() < expiration
-			ORDER BY expiration ASC'
-        );
-        foreach($rows as $row) {
+			ORDER BY expiration ASC';
+        foreach($this->database->query($query) as $row) {
             yield new ConstantPunishment(
                 new Access\ConstantIdentity(
                     $row['sinner_id'],

@@ -14,7 +14,7 @@ use Bulletpoint\Fake;
 
 require __DIR__ . '/../../../bootstrap.php';
 
-final class MySqlForgottenPassword extends TestCase\Database {
+final class MySqlRemindedPassword extends TestCase\Database {
 	public function testChanging() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
@@ -22,7 +22,7 @@ final class MySqlForgottenPassword extends TestCase\Database {
 			(user_id, used, reminder)
 			VALUES (1, 0, "123456")'
 		);
-		(new Access\MySqlForgottenPassword(
+		(new Access\MySqlRemindedPassword(
 			'123456',
 			$connection,
 			new Fake\Cipher
@@ -55,4 +55,4 @@ final class MySqlForgottenPassword extends TestCase\Database {
 }
 
 
-(new MySqlForgottenPassword())->run();
+(new MySqlRemindedPassword())->run();

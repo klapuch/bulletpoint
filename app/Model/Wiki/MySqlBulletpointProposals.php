@@ -19,8 +19,7 @@ final class MySqlBulletpointProposals implements BulletpointProposals {
     }
 
     public function iterate(): \Iterator {
-        $rows = $this->database->fetchAll(
-            'SELECT bulletpoint_proposals.ID AS proposal_id,
+        $query = 'SELECT bulletpoint_proposals.ID AS proposal_id,
 			bulletpoint_proposals.content,
 			bulletpoint_proposals.author AS proposal_author,
 			bulletpoint_proposals.proposed_at,
@@ -35,9 +34,8 @@ final class MySqlBulletpointProposals implements BulletpointProposals {
 			LEFT JOIN documents
 			ON bulletpoint_proposals.document_id = documents.ID
 			WHERE decision = "0"
-			ORDER BY proposed_at DESC'
-        );
-        foreach($rows as $row) {
+			ORDER BY proposed_at DESC';
+        foreach($this->database->query($query) as $row) {
             yield new ConstantBulletpointProposal(
                 new Access\MySqlIdentity(
                     $row['proposal_author'],

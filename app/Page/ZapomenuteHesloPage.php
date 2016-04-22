@@ -14,7 +14,10 @@ final class ZapomenuteHesloPage extends BasePage {
     public $cipher;
 
     public function createComponentForgottenPasswordForm() {
-        return new Component\ForgottenPasswordForm($this->database);
+        return new Component\ForgottenPasswordForm(
+            $this->database,
+            $this->cipher
+        );
     }
 
     public function actionReset(string $reminder) {
@@ -42,7 +45,7 @@ final class ZapomenuteHesloPage extends BasePage {
             (new Storage\Transaction($this->database))
                 ->start(
                     function() use ($values, $reminder) {
-                        (new Access\MySqlForgottenPassword(
+                        (new Access\MySqlRemindedPassword(
                             $reminder,
                             $this->database,
                             $this->cipher
