@@ -21,10 +21,12 @@ class RouterFactory {
             'Bulletpoint:pridat'
         );
         $router[] = new Route(
-            'dokument/<slug [-a-z0-9_]+>', 'Dokument:default'
+            'dokument/<slug [-a-z0-9_]+>',
+            'Dokument:default'
         );
         $router[] = new Route(
-            'profil/<username [-a-z0-9_]+>', 'Profil:default'
+            'profil/<username [-a-z0-9_]+>',
+            'Profil:default'
         );
         $router[] = new Route(
             '<presenter>[/<action>][/<id [0-9]+>]',
