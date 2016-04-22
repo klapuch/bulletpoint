@@ -1,7 +1,9 @@
 <?php
 namespace Bulletpoint\Model\Security;
 
-// Strongly immutable class
+/**
+ * Strongly immutable class
+ */
 abstract class AES {
     private $key;
 
