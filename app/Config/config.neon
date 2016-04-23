@@ -59,5 +59,19 @@ development < common:
             autowired: no
         - Bulletpoint\Model\Storage\ProfiledDatabase(@database)
     parameters:
+        database:
+            host: 127.0.0.1
+            user: root
+            pass: ""
+            name: bulletpoint
+        cryptography:
+            key: \x1d\x6b\x3e\x91\x66\xdf\xb9\x90\x80\xf5\x03\xac\x6a\x3b\xcd\xae
         php:
             display_errors: 1
+test < development:
+    parameters:
+        database:
+            host: 127.0.0.1
+            user: root
+            pass: ""
+            name: bulletpoint_test

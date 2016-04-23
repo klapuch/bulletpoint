@@ -15,6 +15,4 @@ $configurator->addConfig(
     __DIR__ . '/Config/config.local.neon',
     Nette\Configurator::AUTO
 );
-$container = $configurator->createContainer();
-
-return $container;
+return $configurator->createContainer();
