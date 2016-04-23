@@ -36,21 +36,15 @@ final class UcetPage extends BasePage {
         return new Component\PhotoForm($this->identity);
     }
 
-    protected function createComponentPasswordChangeForm() {
-        $form = new Component\BaseForm();
-        $form->addProtection();
-        $form->addComponent(
-            (new Component\ReEnterPasswordContainer())->create(),
-            'passwords'
-        );
-        $form->addSubmit('change');
+    protected function createComponentReEnterPasswordForm() {
+        $form = new Component\ReEnterPasswordForm();
         $form->onSuccess[] = function(UI\Form $form) {
-            $this->passwordChangeFormSucceeded($form);
+            $this->reEnterPasswordFormSucceeded($form);
         };
         return $form;
     }
 
-    public function passwordChangeFormSucceeded(UI\Form $form) {
+    public function reEnterPasswordFormSucceeded(UI\Form $form) {
         $this->account->changePassword($form->values->passwords->password);
         $this->flashMessage('Heslo je změněno', 'success');
         $this->redirect('this');

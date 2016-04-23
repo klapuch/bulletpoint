@@ -24,21 +24,15 @@ final class ZapomenuteHesloPage extends BasePage {
         $this->template->reminder = $this->reminder();
     }
 
-    public function createComponentResetForm() {
-        $form = new Component\BaseForm();
-        $form->addProtection();
-        $form->addComponent(
-            (new Component\ReEnterPasswordContainer())->create(),
-            'passwords'
-        );
-        $form->addSubmit('reset');
+    protected function createComponentReEnterPasswordForm() {
+        $form = new Component\ReEnterPasswordForm();
         $form->onSuccess[] = function(UI\Form $form) {
-            $this->resetFormSucceeded($form);
+            $this->reEnterPasswordFormSucceeded($form);
         };
         return $form;
     }
 
-    public function resetFormSucceeded(UI\Form $form) {
+    public function reEnterPasswordFormSucceeded(UI\Form $form) {
         try {
             $values = $form->values;
             $reminder = $this->reminder();

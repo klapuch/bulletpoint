@@ -14,23 +14,6 @@
 		<input type="email" name="email" value="{$email}" class="form-control" title="Změna emailu prozatím není povolena." disabled>
 	</div>
 	<hr>
+    <h2>Změna hesla</h2>
 </div>
-<form n:name="passwordChangeForm" class="form-horizontal" role="form">
-    {formContainer passwords}
-        <div class="form-group">
-            <h2>Změna hesla</h2>
-            {label password /}
-            {input password class => "form-control", placeholder => "Heslo"}
-            <p class="help-block">Minimálně 6 znaků</p>
-        </div>
-        <div class="form-group">
-            {label repeatedPassword /}
-            {input repeatedPassword class => "form-control", placeholder => "Heslo znovu"}
-        </div>
-    {/formContainer}
-    <div class="form-group">
-        <button n:name="change" class="btn btn-success">
-            Změnit
-        </button>
-    </div>
-</form>
+{control reEnterPasswordForm}
