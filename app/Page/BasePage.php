@@ -67,8 +67,8 @@ abstract class BasePage extends Nette\Application\UI\Presenter {
     }
 
     protected function isPunished(Access\Identity $identity): bool {
-        if(!$this->elapsed(30, 'punishment'))
-            return false;
+        /*if(!$this->elapsed(30, 'punishment'))
+            return false;*/
         $punishment = (new Constraint\OwnedMySqlPunishments(
             $identity,
             $this->database,
