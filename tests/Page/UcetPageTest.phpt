@@ -18,10 +18,10 @@ final class UcetPageTest extends TestCase\Page {
         $this->checkRedirect('Ucet:default', '/prihlasit');
     }
 
-    /*public function testRenderDefaultForMember() {
+    public function testRenderDefaultForMember() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
-        Assert::true((string)$this->checkAction('Ucet:default')->getSource());
-    }*/
+        $this->checkAction('Ucet:default');
+    }
 }
 
 
