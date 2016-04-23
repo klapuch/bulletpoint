@@ -47,6 +47,9 @@ INSERT INTO `document_slugs` (`ID`, `origin`, `slug`) VALUES
 (3,	3,	'automobil-seat');
 
 TRUNCATE `forgotten_passwords`;
+INSERT INTO `forgotten_passwords` (`ID`, `user_id`, `reminder`, `reminded_at`, `used`) VALUES
+(1, 3, "e783eea09f0bc4490175d50b97215f2e6eea9b6dedd408ab80e783eea09f0bc4490175d50b97215f2e6eea9b6dedd408ab80:630bbe50c35d1a99d71a500dde94f16030ef4363", NOW() - INTERVAL 2 HOUR, 0),
+(2, 3, "b783eea09f0bc4490175d50b97215f2e6eea9b6dedd408ab80e783eea09f0bc4490175d50b97215f2e6eea9b6dedd408ab80:630bbe50c35d1a99d71a500dde94f16030ef4366", NOW() - INTERVAL 2 HOUR, 1);
 
 TRUNCATE `information_sources`;
 INSERT INTO `information_sources` (`ID`, `place`, `year`, `author`) VALUES
