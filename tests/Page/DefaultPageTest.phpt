@@ -9,19 +9,24 @@ namespace Bulletpoint\Page;
 
 use Tester;
 use Tester\Assert;
-use Bulletpoint\Model\Access;
 use Bulletpoint\TestCase;
-use Bulletpoint\Fake;
 
-require __DIR__ . '/../testbenchBootstrap.php';
+$container = require __DIR__ . '/../bootstrap.php';
 
-final class DefaultPageTest extends Tester\TestCase {
-    use \Testbench\TPresenter;
-
+final class DefaultPageTest extends TestCase\Page {
     public function testRenderDefault() {
         $this->checkAction('Default:default');
+    }
+
+    public function testSearching() {
+        $response = $this->checkForm(
+            'Default:default',
+            'searchForm',
+            ['keyword' => 'php']
+        );
+        Assert::contains('?keyword=php', $response->url);
     }
 }
 
 
-(new DefaultPageTest())->run();
+(new DefaultPageTest($container))->run();

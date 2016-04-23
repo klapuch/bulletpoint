@@ -29,8 +29,7 @@ final class HledaniPage extends BasePage {
                     $documents->iterate()->current()->title()
                 )
             );
-        } elseif($count > 1) {
-            $this->template->documents = $documents->iterate();
         }
+        $this->template->documents = $documents;
     }
 }
