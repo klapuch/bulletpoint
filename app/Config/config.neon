@@ -69,8 +69,6 @@ development < common:
         php:
             display_errors: 1
 test < development:
-    extensions:
-        fakeSession: Kdyby\FakeSession\DI\FakeSessionExtension
     parameters:
         database:
             host: 127.0.0.1
