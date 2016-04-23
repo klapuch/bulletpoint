@@ -70,7 +70,7 @@ TRUNCATE `users`;
 INSERT INTO `users` (`ID`, `username`, `password`, `email`, `role`) VALUES
 (1,	'facedown',	'c01d99ef43aed3f295446f747b8bdc16d9cce0e7116342a8da1214ab0c57f9dd81e1da2325a9cf90b9001c3d0980d295d61641f684d6ea20da2e6fe1139c2d40a60471ab0d0b6d4c43dea2b892126ac7',	'email@email.com',	'creator'),
 (2,	'banned',	'022b235f6cd6931f1bbd12c7fbcc7971b2d7df11014274d484553dfdc63a259d5d946edfd24dcd2a3e4b10c1be735be068d798ae6e92b7d4c1fc6cd4b03f2b83e1d1a1a9cb6e9b9e4db99ecbcd91b900',	'test@test.test',	'member'),
-(3,	'test2',	'022b235f6cd6931f1bbd12c7fbcc7971b2d7df11014274d484553dfdc63a259d5d946edfd24dcd2a3e4b10c1be735be068d798ae6e92b7d4c1fc6cd4b03f2b83e1d1a1a9cb6e9b9e4db99ecbcd91b900',	'test2@test.test',	'member');
+(3,	'test2',	'd369cdb1adedff043b2d84d24f61c735de8572fb95902d4fd17d7ebd82453e23af631499f7691703af6a2fac1af3e5bb771fc8b2a3d66a7aa6c43fc32c107deb4e76368f88e9734b7c1cf56118178504',	'test2@test.test',	'member');
 
 TRUNCATE `verification_codes`;
 INSERT INTO `verification_codes` (`ID`, `user_id`, `code`, `used`, `used_at`) VALUES
