@@ -65,6 +65,7 @@ services:
             - allow(guest, ZapomenuteHeslo)
             - allow(guest, Hledani)
             - allow(guest, Aktivace)
+            - deny(member, Aktivace)
             - allow(guest, Profil)
             - deny(guest, Ucet)
             - allow(member, Ucet)
