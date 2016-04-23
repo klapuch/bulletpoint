@@ -20,6 +20,10 @@ final class RegistracePageTest extends TestCase\Page {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Registrace:default');
     }
+
+    public function testRenderDefault() {
+        $this->checkAction('Registrace:default');
+    }
 }
 
 
