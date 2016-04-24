@@ -14,7 +14,7 @@ final class InformationSourceContainer {
             ->addRule(UI\Form::INTEGER, '%label musí být celočíselný')
             ->addRule(
                 UI\Form::RANGE,
-                '%label musí od od %d do %d',
+                '%label musí od %d do %d',
                 [0, date('Y')]
             );
         $container->addText('author', 'Autor');
