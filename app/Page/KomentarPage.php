@@ -46,7 +46,6 @@ final class KomentarPage extends BasePage {
 
     protected function createComponentEditCommentForm() {
         $form = new Component\BaseForm();
-        $form->addProtection();
         $form->addComponent(
             (new Component\CommentContainer())->create(),
             'comment'

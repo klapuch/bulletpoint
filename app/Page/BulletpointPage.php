@@ -44,7 +44,6 @@ final class BulletpointPage extends BasePage {
 
     protected function createComponentEditBulletpointForm() {
         $form = new Component\BaseForm();
-        $form->addProtection();
         $form->addComponent(
             (new Component\BulletpointContainer())->create(),
             'bulletpoint'

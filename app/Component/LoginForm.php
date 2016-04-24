@@ -14,7 +14,7 @@ final class LoginForm extends BaseControl {
 
     protected function createComponentForm() {
         $form = new BaseForm();
-        $form->addProtection();
+        
         $form->addText('username', 'Přezdívka')
             ->addRule(UI\Form::FILLED, '%label musí být vyplněna');
         $form->addPassword('password', 'Heslo')

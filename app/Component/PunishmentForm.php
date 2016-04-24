@@ -26,7 +26,7 @@ final class PunishmentForm extends BaseControl {
 
     public function createComponentForm() {
         $form = new BaseForm();
-        $form->addProtection();
+        
         $reasons = ['Nevhodné chování', 'Sprosté vyjadřování'];
         $form->addSelect(
             'reason',

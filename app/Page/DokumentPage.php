@@ -88,7 +88,7 @@ final class DokumentPage extends BasePage {
 
     protected function createComponentNewDocumentForm() {
         $form = new Component\BaseForm();
-        $form->addProtection();
+        
         $form->addComponent(
             (new Component\DocumentContainer())->create(),
             'document'
@@ -144,7 +144,7 @@ final class DokumentPage extends BasePage {
 
     protected function createComponentEditForm() {
         $form = new Component\BaseForm();
-        $form->addProtection();
+        
         $form->addComponent(
             (new Component\DocumentContainer())->create(),
             'document'
@@ -181,7 +181,6 @@ final class DokumentPage extends BasePage {
 
     protected function createComponentCommentForm() {
         $form = new Component\BaseForm();
-        $form->addProtection();
         $form->addComponent(
             (new Component\CommentContainer())->create(),
             'comment'

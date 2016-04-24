@@ -7,7 +7,6 @@ use Bulletpoint\Component;
 class DefaultPage extends BasePage {
     protected function createComponentSearchForm() {
         $form = new Component\BaseForm();
-        $form->addProtection();
         $form->addText('keyword')
             ->setType('search')
             ->addRule(UI\Form::FILLED, 'Zadej hledaný výraz');

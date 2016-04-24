@@ -36,7 +36,7 @@ final class ForgottenPasswordForm extends BaseControl {
 
     protected function createComponentForm() {
         $form = new BaseForm();
-        $form->addProtection();
+        
         $form->addText('captcha')
             ->addRule(UI\Form::FILLED, 'Text musí být opsán');
         $form->addText('email', 'Email')

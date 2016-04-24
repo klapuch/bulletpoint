@@ -52,7 +52,6 @@ final class NavrhnutyBulletpointPage extends BasePage {
 
     public function createComponentEditProposalForm() {
         $form = new Component\BaseForm();
-        $form->addProtection();
         $form->addComponent(
             (new Component\BulletpointContainer())->create(),
             'bulletpoint'

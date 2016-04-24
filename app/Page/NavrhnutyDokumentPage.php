@@ -51,7 +51,6 @@ final class NavrhnutyDokumentPage extends BasePage {
 
     protected function createComponentEditProposalForm() {
         $form = new Component\BaseForm();
-        $form->addProtection();
         $form->addComponent(
             (new Component\DocumentContainer())->create(),
             'document'

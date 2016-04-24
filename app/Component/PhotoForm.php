@@ -24,7 +24,7 @@ final class PhotoForm extends BaseControl {
 
     protected function createComponentForm() {
         $form = new BaseForm();
-        $form->addProtection();
+        
         $form->addUpload('photo', 'Soubor')
             ->addRule(UI\Form::FILLED, '%label musí být vybrán')
             ->addRule(UI\Form::MAX_FILE_SIZE, 'Fotka nesmí přesahovat 500 kB.', 500 * 1024);

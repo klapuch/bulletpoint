@@ -22,7 +22,6 @@ final class ReActivationForm extends BaseControl {
 
     protected function createComponentForm() {
         $form = new BaseForm();
-        $form->addProtection();
         $form->addText('email', 'Email')
             ->setType('email')
             ->addRule(UI\Form::FILLED, '%label musí být vyplněn')
