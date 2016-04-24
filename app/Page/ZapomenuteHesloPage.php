@@ -36,16 +36,11 @@ final class ZapomenuteHesloPage extends BasePage {
         try {
             $values = $form->values;
             $reminder = $this->reminder();
-            (new Storage\Transaction($this->database))
-                ->start(
-                    function() use ($values, $reminder) {
-                        (new Access\MySqlRemindedPassword(
-                            $reminder,
-                            $this->database,
-                            $this->cipher
-                        ))->change($values->passwords->password);
-                    }
-                );
+            (new Access\MySqlRemindedPassword(
+                $reminder,
+                $this->database,
+                $this->cipher
+            ))->change($values->passwords->password);
             $this->flashMessage('Heslo bylo změněno', 'success');
             $this->redirect('Prihlasit:');
         } catch(Exception\StorageException $ex) {

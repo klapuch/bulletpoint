@@ -21,21 +21,26 @@ final class MySqlRemindedPassword implements RemindedPassword {
     }
 
     public function change(string $password) {
-        $this->database->query(
-            'UPDATE users
-			SET `password` = ?
-			WHERE ID = (
-				SELECT user_id
-				FROM forgotten_passwords
-				WHERE reminder = ?
-			)',
-            [$this->cipher->encrypt($password), $this->reminder]
-        );
-        $this->database->query(
-            'UPDATE forgotten_passwords
-			SET used = 1
-			WHERE reminder = ?',
-            [$this->reminder]
-        );
+        (new Storage\Transaction($this->database))
+            ->start(
+                function() use ($password) {
+                    $this->database->query(
+                        'UPDATE users
+                        SET `password` = ?
+                        WHERE ID = (
+                            SELECT user_id
+                            FROM forgotten_passwords
+                            WHERE reminder = ?
+                        )',
+                        [$this->cipher->encrypt($password), $this->reminder]
+                    );
+                    $this->database->query(
+                        'UPDATE forgotten_passwords
+                        SET used = 1
+                        WHERE reminder = ?',
+                        [$this->reminder]
+                    );
+                }
+            );
     }
 }
