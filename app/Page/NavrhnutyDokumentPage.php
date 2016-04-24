@@ -27,7 +27,7 @@ final class NavrhnutyDokumentPage extends BasePage {
             );
         } catch(Exception\ExistenceException $ex) {
             $this->error(
-                'Dokument neexistuje',
+                $ex->getMessage(),
                 IResponse::S404_NOT_FOUND
             );
         }
