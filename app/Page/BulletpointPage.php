@@ -88,8 +88,8 @@ final class BulletpointPage extends BasePage {
         $this->template->document = new Wiki\MySqlDocument(
             (new Translation\MySqlDocumentSlug(
                 $slug,
-                $this->database)
-            )->origin(),
+                $this->database
+            ))->origin(),
             $this->database
         );
     }

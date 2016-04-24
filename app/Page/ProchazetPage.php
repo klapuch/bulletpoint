@@ -42,8 +42,6 @@ final class ProchazetPage extends BasePage {
     }
 
     protected function createComponentPagination() {
-        return new Component\Pagination(
-            $this->pagination
-        );
+        return new Component\Pagination($this->pagination);
     }
 }
