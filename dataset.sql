@@ -31,6 +31,8 @@ INSERT INTO `comments` (`ID`, `user_id`, `content`, `posted_at`, `document_id`, 
 
 
 TRUNCATE `comment_complaints`;
+INSERT INTO comment_complaints (`ID`, `comment_id`, `user_id`, `reason`, `settled`, `complained_at`) VALUES
+(1, 1, 3, "Spam", 0, NOW());
 
 TRUNCATE `documents`;
 INSERT INTO `documents` (`ID`, `user_id`, `title`, `description`, `created_at`, `information_source_id`) VALUES

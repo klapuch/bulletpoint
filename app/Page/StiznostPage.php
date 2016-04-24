@@ -57,7 +57,7 @@ final class StiznostPage extends BasePage {
             );
         } catch(Exception\ExistenceException $ex) {
             $this->error(
-                'Komentář neexistuje',
+                $ex->getMessage(),
                 IResponse::S404_NOT_FOUND
             );
         }
