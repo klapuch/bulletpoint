@@ -17,13 +17,13 @@ final class DocumentSlugExistenceRule extends \Tester\TestCase {
 	/**
 	* @throws \Bulletpoint\Exception\ExistenceException Slug neexistuje
 	*/
-	public function testUnknownEmail() {
+	public function testUnknownDocument() {
 		(new Constraint\DocumentSlugExistenceRule(
 			new Fake\Database($fetch = false)
 		))->isSatisfied('sl-ug');
 	}
 
-	public function testExistingEmail() {
+	public function testExistingDocument() {
 		(new Constraint\DocumentSlugExistenceRule(
 			new Fake\Database($fetch = true)
 		))->isSatisfied(2);

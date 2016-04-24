@@ -17,13 +17,13 @@ final class BulletpointExistenceRule extends \Tester\TestCase {
 	/**
 	* @throws \Bulletpoint\Exception\ExistenceException Bulletpoint neexistuje
 	*/
-	public function testUnknownEmail() {
+	public function testUnknownBulletpoint() {
 		(new Constraint\BulletpointExistenceRule(
 			new Fake\Database($fetch = false)
 		))->isSatisfied(1);
 	}
 
-	public function testExistingEmail() {
+	public function testExistingBulletpoint() {
 		(new Constraint\BulletpointExistenceRule(
 			new Fake\Database($fetch = true)
 		))->isSatisfied(2);

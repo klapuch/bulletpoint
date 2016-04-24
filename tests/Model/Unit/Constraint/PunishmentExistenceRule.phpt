@@ -17,13 +17,13 @@ final class PunishmentExistenceRule extends \Tester\TestCase {
 	/**
 	* @throws \Bulletpoint\Exception\ExistenceException Trest neexistuje
 	*/
-	public function testUnknownEmail() {
+	public function testUnknownPunishment() {
 		(new Constraint\PunishmentExistenceRule(
 			new Fake\Database($fetch = false)
 		))->isSatisfied(1);
 	}
 
-	public function testExistingEmail() {
+	public function testExistingPunishment() {
 		(new Constraint\PunishmentExistenceRule(
 			new Fake\Database($fetch = true)
 		))->isSatisfied(2);

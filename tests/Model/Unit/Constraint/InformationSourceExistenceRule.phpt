@@ -17,13 +17,13 @@ final class InformationSourceExistenceRule extends \Tester\TestCase {
 	/**
 	* @throws \Bulletpoint\Exception\ExistenceException Zdroj neexistuje
 	*/
-	public function testUnknownEmail() {
+	public function testUnknownSource() {
 		(new Constraint\InformationSourceExistenceRule(
 			new Fake\Database($fetch = false)
 		))->isSatisfied(1);
 	}
 
-	public function testExistingEmail() {
+	public function testExistingSource() {
 		(new Constraint\InformationSourceExistenceRule(
 			new Fake\Database($fetch = true)
 		))->isSatisfied(2);

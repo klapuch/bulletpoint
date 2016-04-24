@@ -17,13 +17,13 @@ final class CommentExistenceRule extends \Tester\TestCase {
 	/**
 	* @throws \Bulletpoint\Exception\ExistenceException Komentář neexistuje
 	*/
-	public function testUnknownEmail() {
+	public function testUnknownComment() {
 		(new Constraint\CommentExistenceRule(
 			new Fake\Database($fetch = false)
 		))->isSatisfied(1);
 	}
 
-	public function testExistingEmail() {
+	public function testExistingComment() {
 		(new Constraint\CommentExistenceRule(
 			new Fake\Database($fetch = true)
 		))->isSatisfied(2);

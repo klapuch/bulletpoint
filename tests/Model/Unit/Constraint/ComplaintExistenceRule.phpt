@@ -17,13 +17,13 @@ final class ComplaintExistenceRule extends \Tester\TestCase {
 	/**
 	* @throws \Bulletpoint\Exception\ExistenceException Stížnost neexistuje
 	*/
-	public function testUnknownEmail() {
+	public function testUnknownComplaint() {
 		(new Constraint\ComplaintExistenceRule(
 			new Fake\Database($fetch = false)
 		))->isSatisfied(1);
 	}
 
-	public function testExistingEmail() {
+	public function testExistingComplaint() {
 		(new Constraint\ComplaintExistenceRule(
 			new Fake\Database($fetch = true)
 		))->isSatisfied(2);
