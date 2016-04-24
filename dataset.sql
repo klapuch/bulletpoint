@@ -62,7 +62,7 @@ INSERT INTO `information_sources` (`ID`, `place`, `year`, `author`) VALUES
 (3,	'',	NULL,	''),
 (4,	'',	NULL,	''),
 (5,	'',	NULL,	''),
-(6,	'',	NULL,	'');
+(6,	'Wonderland',	2009,	'Alice');
 
 TRUNCATE `message_templates`;
 INSERT INTO `message_templates` (`ID`, `message`, `designation`) VALUES
