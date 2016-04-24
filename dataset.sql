@@ -15,7 +15,8 @@ TRUNCATE `bulletpoint_proposals`;
 INSERT INTO `bulletpoint_proposals` (`ID`, `document_id`, `content`, `author`, `decision`, `decided_at`, `proposed_at`, `arbiter`, `arbiter_comment`, `information_source_id`) VALUES
 (1,	1,	'Verze 7',	1,	'+1',	'2016-04-20 22:23:15',	'2016-04-20 18:33:46',	1,	NULL,	2),
 (2,	1,	'Strmá křivka učení',	1,	'+1',	'2016-04-20 22:23:21',	'2016-04-20 18:33:54',	1,	NULL,	3),
-(3,	1,	'Jednoduchost',	1,	'+1',	'2016-04-20 20:34:11',	'2016-04-20 18:34:03',	1,	NULL,	4);
+(3,	1,	'Jednoduchost',	1,	'+1',	'2016-04-20 20:34:11',	'2016-04-20 18:34:03',	1,	NULL,	4),
+(4,	1,	'Zajímavý bulletpoint',	1,	'0',	NULL,	'2016-04-20 18:34:03',	NULL,	NULL,	5);
 
 TRUNCATE `bulletpoint_ratings`;
 INSERT INTO `bulletpoint_ratings` (`ID`, `bulletpoint_id`, `user_id`, `point`) VALUES

@@ -84,7 +84,7 @@ final class NavrhnutyBulletpointPage extends BasePage {
             );
         } catch(Exception\ExistenceException $ex) {
             $this->error(
-                'Návrhnutý bulletpoint neexistuje',
+                $ex->getMessage(),
                 IResponse::S404_NOT_FOUND
             );
         }
