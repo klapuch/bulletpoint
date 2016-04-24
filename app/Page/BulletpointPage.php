@@ -29,7 +29,7 @@ final class BulletpointPage extends BasePage {
             );
         } catch(Exception\ExistenceException $ex) {
             $this->error(
-                'Bulletpoint neexistuje',
+                $ex->getMessage(),
                 IResponse::S404_NOT_FOUND
             );
         }
