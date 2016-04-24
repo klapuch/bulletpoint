@@ -25,6 +25,10 @@ INSERT INTO `bulletpoint_ratings` (`ID`, `bulletpoint_id`, `user_id`, `point`) V
 (3,	3,	1,	0);
 
 TRUNCATE `comments`;
+INSERT INTO `comments` (`ID`, `user_id`, `content`, `posted_at`, `document_id`, `visible`) VALUES
+(1, 1, "Some content", NOW(), 1, 1),
+(2, 1, "Some content2", NOW(), 1, 0);
+
 
 TRUNCATE `comment_complaints`;
 

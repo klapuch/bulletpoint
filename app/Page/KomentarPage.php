@@ -25,7 +25,7 @@ final class KomentarPage extends BasePage {
             );
         } catch(Exception\ExistenceException $ex) {
             $this->error(
-                'Komentář neexistuje',
+                $ex->getMessage(),
                 IResponse::S404_NOT_FOUND
             );
         }
@@ -33,11 +33,9 @@ final class KomentarPage extends BasePage {
 
     public function actionUpravit(int $id) {
         $comment = $this->comment();
-        if($comment->author()->id() !== $this->identity->id()
-            || !$comment->visible()
-        ) {
+        if($comment->author()->id() !== $this->identity->id() || !$comment->visible()) {
             $this->error(
-                'Komentář neexistuje',
+                'Komentář nemůžeš upravovat',
                 IResponse::S404_NOT_FOUND
             );
         }
