@@ -90,11 +90,11 @@ final class DokumentPage extends BasePage {
         $form = new Component\BaseForm();
         
         $form->addComponent(
-            (new Component\DocumentContainer())->create(),
+            new Component\DocumentContainer,
             'document'
         );
         $form->addComponent(
-            (new Component\InformationSourceContainer())->create(),
+            new Component\InformationSourceContainer,
             'source'
         );
         $form->onSuccess[] = function(UI\Form $form) {
@@ -146,7 +146,7 @@ final class DokumentPage extends BasePage {
         $form = new Component\BaseForm();
         
         $form->addComponent(
-            (new Component\DocumentContainer())->create(),
+            new Component\DocumentContainer,
             'document'
         );
         $form->onSuccess[] = function(UI\Form $form) {
@@ -182,7 +182,7 @@ final class DokumentPage extends BasePage {
     protected function createComponentCommentForm() {
         $form = new Component\BaseForm();
         $form->addComponent(
-            (new Component\CommentContainer())->create(),
+            new Component\CommentContainer,
             'comment'
         );
         $form->onSuccess[] = function(UI\Form $form) {

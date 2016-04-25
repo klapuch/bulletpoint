@@ -52,7 +52,7 @@ final class NavrhnutyDokumentPage extends BasePage {
     protected function createComponentEditProposalForm() {
         $form = new Component\BaseForm();
         $form->addComponent(
-            (new Component\DocumentContainer())->create(),
+            new Component\DocumentContainer,
             'document'
         );
         $form->onSuccess[] = function(UI\Form $form) {

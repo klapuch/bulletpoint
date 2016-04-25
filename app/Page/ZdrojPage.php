@@ -37,7 +37,7 @@ final class ZdrojPage extends BasePage {
     protected function createComponentInformationSourceForm() {
         $form = new Component\BaseForm();
         $form->addComponent(
-            (new Component\InformationSourceContainer())->create(),
+            new Component\InformationSourceContainer,
             'source'
         );
         $form->onSuccess[] = function(UI\Form $form) {

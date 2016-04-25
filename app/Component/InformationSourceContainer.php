@@ -2,13 +2,11 @@
 namespace Bulletpoint\Component;
 
 use Nette\Application\UI;
-use Nette\Forms\Container;
 
-final class InformationSourceContainer {
-    public function create(): Container {
-        $container = new Container();
-        $container->addText('place', 'Místo');
-        $container->addText('year', 'Rok')
+final class InformationSourceContainer extends BaseContainer {
+    public function configure() {
+        $this->addText('place', 'Místo');
+        $this->addText('year', 'Rok')
             ->setType('number')
             ->addCondition(UI\Form::FILLED)
             ->addRule(UI\Form::INTEGER, '%label musí být celočíselný')
@@ -17,8 +15,7 @@ final class InformationSourceContainer {
                 '%label musí od %d do %d',
                 [0, date('Y')]
             );
-        $container->addText('author', 'Autor');
-        $container->addSubmit('act');
-        return $container;
+        $this->addText('author', 'Autor');
+        $this->addSubmit('act');
     }
 }

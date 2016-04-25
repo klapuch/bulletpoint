@@ -45,7 +45,7 @@ final class BulletpointPage extends BasePage {
     protected function createComponentEditBulletpointForm() {
         $form = new Component\BaseForm();
         $form->addComponent(
-            (new Component\BulletpointContainer())->create(),
+            new Component\BulletpointContainer,
             'bulletpoint'
         );
         $form->onSuccess[] = function(UI\Form $form) {
@@ -96,11 +96,11 @@ final class BulletpointPage extends BasePage {
     protected function createComponentAddBulletpointForm() {
         $form = new Component\BaseForm();
         $form->addComponent(
-            (new Component\BulletpointContainer())->create(),
+            new Component\BulletpointContainer,
             'bulletpoint'
         );
         $form->addComponent(
-            (new Component\InformationSourceContainer())->create(),
+            new Component\InformationSourceContainer,
             'source'
         );
         $form->onSuccess[] = function(UI\Form $form) {

@@ -18,7 +18,7 @@ final class ReEnterPasswordForm extends BaseControl {
     protected function createComponentForm() {
         $form = new BaseForm();
         $form->addComponent(
-            (new ReEnterPasswordContainer())->create(),
+            new ReEnterPasswordContainer,
             'passwords'
         );
         $form->addSubmit('act');

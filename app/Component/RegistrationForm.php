@@ -73,7 +73,7 @@ final class RegistrationForm extends BaseControl {
                 'Email již existuje'
             );
         $form->addComponent(
-            (new ReEnterPasswordContainer())->create(),
+            new ReEnterPasswordContainer,
             'passwords'
         );
         $form->addSubmit('register');
