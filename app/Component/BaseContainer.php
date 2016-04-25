@@ -13,7 +13,7 @@ abstract class BaseContainer extends Forms\Container {
 
     protected function attached($obj) {
         parent::attached($obj);
-        if($obj instanceof \Nette\Forms\Form) {
+        if($obj instanceof Forms\Form) {
             $this->currentGroup = $this->form->currentGroup;
             $this->configure();
         }

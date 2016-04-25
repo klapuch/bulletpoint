@@ -4,7 +4,7 @@ namespace Bulletpoint\Component;
 use Nette\Application\UI;
 
 final class InformationSourceContainer extends BaseContainer {
-    public function configure() {
+    protected function configure() {
         $this->addText('place', 'Místo');
         $this->addText('year', 'Rok')
             ->setType('number')
