@@ -1,21 +1,16 @@
 <?php
 namespace Bulletpoint\Model\Access;
 
-use Nette;
-use Bulletpoint\Model\{
-    Storage, Security
-};
-use Nette\Security\{
-    IAuthenticator, Identity, AuthenticationException
-};
+use Bulletpoint;
+use Nette\Security;
 
-final class Authenticator implements IAuthenticator {
+final class Authenticator implements Security\IAuthenticator {
     private $database;
     private $cipher;
 
     public function __construct(
-        Storage\Database $database,
-        Security\Cipher $cipher
+        Bulletpoint\Model\Storage\Database $database,
+        Bulletpoint\Model\Security\Cipher $cipher
     ) {
         $this->database = $database;
         $this->cipher = $cipher;
@@ -30,14 +25,14 @@ final class Authenticator implements IAuthenticator {
             [$plainUsername]
         )->fetch(\PDO::FETCH_NUM);
         if(!$this->exists($id))
-            throw new AuthenticationException('Uživatel neexistuje');
+            throw new Security\AuthenticationException('Uživatel neexistuje');
         elseif(!$this->activated($id))
-            throw new AuthenticationException('Účet není aktivován');
+            throw new Security\AuthenticationException('Účet není aktivován');
         elseif(!$this->cipher->decrypt($plainPassword, $password))
-            throw new AuthenticationException('Nesprávné heslo');
+            throw new Security\AuthenticationException('Nesprávné heslo');
         if($this->cipher->deprecated($password))
             $this->rehash($plainPassword, $id);
-        return new Identity($id, $role, ['username' => $username]);
+        return new Security\Identity($id, $role, ['username' => $username]);
     }
 
     private function exists($id): bool {
