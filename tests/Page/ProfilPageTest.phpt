@@ -13,7 +13,7 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class ProfilPageTest extends TestCase\Page {
-    public function testRenderDefault() {
+    public function testDefault() {
         $this->checkAction('Profil:default', ['username' => 'facedown']);
     }
 

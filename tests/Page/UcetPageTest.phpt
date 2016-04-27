@@ -14,11 +14,11 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class UcetPageTest extends TestCase\Page {
-    public function testRenderDefaultForGuest() {
+    public function testDefaultWithForbiddenAccess() {
         $this->checkRedirect('Ucet:default', '/prihlasit');
     }
 
-    public function testRenderDefaultForMember() {
+    public function testDefault() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Ucet:default');
     }

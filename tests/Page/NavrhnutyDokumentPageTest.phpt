@@ -14,7 +14,7 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class NavrhnutyDokumentPageTest extends TestCase\Page {
-    public function testForbiddenAccessToRenderDefault() {
+    public function testDefaultWithForbiddenAccess() {
         $this->checkRedirect(
             'NavrhnutyDokument:default',
             '/prihlasit',
@@ -25,12 +25,12 @@ final class NavrhnutyDokumentPageTest extends TestCase\Page {
     /**
      * @throws \Nette\Application\BadRequestException Na tuto stránku nemáte dostatečné oprávnění
      */
-    public function testNotEnoughPermissionToRenderDefault() {
+    public function testDefaultWithNotEnoughPermission() {
         $this->logIn(3, ['member'], ['username' => 'test2']);
         $this->checkAction('NavrhnutyDokument:default', ['id' => 4]);
     }
 
-    public function testRenderDefault() {
+    public function testDefault() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('NavrhnutyDokument:default', ['id' => 4]);
     }
@@ -38,12 +38,12 @@ final class NavrhnutyDokumentPageTest extends TestCase\Page {
     /**
      * @throws \Nette\Application\BadRequestException Návrh neexistuje
      */
-    public function testUnknownRenderDefault() {
+    public function testUnknownProposal() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('NavrhnutyDokument:default', ['id' => 99]);
     }
 
-    public function testForbiddenAccessToRenderUpravit() {
+    public function testEditingWithForbiddenAccess() {
         $this->checkRedirect(
             'NavrhnutyDokument:upravit',
             '/prihlasit',
@@ -54,25 +54,20 @@ final class NavrhnutyDokumentPageTest extends TestCase\Page {
     /**
      * @throws \Nette\Application\BadRequestException Na tuto stránku nemáte dostatečné oprávnění
      */
-    public function testNotEnoughPermissionToRenderUpravit() {
+    public function testEditingWithNotEnoughPermission() {
         $this->logIn(3, ['member'], ['username' => 'test2']);
-        $this->checkAction('NavrhnutyDokument:upravit', ['id' => 4]);
-    }
-
-    public function testRenderUpravit() {
-        $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('NavrhnutyDokument:upravit', ['id' => 4]);
     }
 
     /**
      * @throws \Nette\Application\BadRequestException Návrh neexistuje
      */
-    public function testUnknownRenderUpravit() {
+    public function testEditingUnknownProposal() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('NavrhnutyDokument:upravit', ['id' => 99]);
     }
 
-    public function testDefaultValues() {
+    public function testEditing() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $response = $this->checkAction('NavrhnutyDokument:upravit', ['id' => 4]);
         $html = Tester\DomQuery::fromHtml((string)$response->getSource());

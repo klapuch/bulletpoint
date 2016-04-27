@@ -15,14 +15,14 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class PrihlasitPageTest extends TestCase\Page {
-    public function testRenderDefault() {
+    public function testDefault() {
         $this->checkAction('Prihlasit:default');
     }
 
     /**
      * @throws \Nette\Application\BadRequestException Přihlášení pro člena neexistuje
      */
-    public function testAlreadyLoggedInUser() {
+    public function testLoggingLoggedInUser() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Prihlasit:default');
     }
@@ -39,7 +39,7 @@ final class PrihlasitPageTest extends TestCase\Page {
         );
     }
     
-    public function testPunishedUser() {
+    public function testLoggingPunishedUser() {
         $this->checkForm(
             'Prihlasit:default',
             'loginForm-form',

@@ -23,7 +23,7 @@ final class OdhlasitPageTest extends TestCase\Page {
     /**
      * @throws \Nette\Application\BadRequestException Odhlášení pro hosta neexistuje
      */
-    public function testLogginOutForGuest() {
+    public function testLogginOutGuest() {
         $this->checkAction('Odhlasit:default');
     }
 }

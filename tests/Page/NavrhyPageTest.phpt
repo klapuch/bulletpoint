@@ -14,53 +14,53 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class NavrhyPageTest extends TestCase\Page {
-    public function testForbiddenAccessToRenderDefault() {
+    public function testDefaultWithForbiddenAccess() {
         $this->checkRedirect('Navrhy:default', '/prihlasit');
     }
 
     /**
      * @throws \Nette\Application\BadRequestException Na tuto stránku nemáte dostatečné oprávnění
      */
-    public function testNotEnoughPermissionToRenderDefault() {
+    public function testDefaultWithNotEnoughPermission() {
         $this->logIn(3, ['member'], ['username' => 'test2']);
         $this->checkAction('Navrhy:default');
     }
 
-    public function testRenderDefault() {
+    public function testDefault() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Navrhy:default');
     }
 
-    public function testForbiddenAccessToRenderDokumenty() {
+    public function testDocumentsWithForbiddenAccess() {
         $this->checkRedirect('Navrhy:dokumenty', '/prihlasit');
     }
 
     /**
      * @throws \Nette\Application\BadRequestException Na tuto stránku nemáte dostatečné oprávnění
      */
-    public function testNotEnoughPermissionToRenderDokumenty() {
+    public function testDocumentsWithNotEnoughPermission() {
         $this->logIn(3, ['member'], ['username' => 'test2']);
         $this->checkAction('Navrhy:dokumenty');
     }
 
-    public function testRenderDokumenty() {
+    public function testDocuments() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Navrhy:dokumenty');
     }
 
-    public function testForbiddenAccessToRenderBulletpointy() {
+    public function testBulletpointsWithForbiddenAccess() {
         $this->checkRedirect('Navrhy:bulletpointy', '/prihlasit');
     }
 
     /**
      * @throws \Nette\Application\BadRequestException Na tuto stránku nemáte dostatečné oprávnění
      */
-    public function testNotEnoughPermissionToRenderBulletpointy() {
+    public function testBulletpointsWithNotEnoughPermission() {
         $this->logIn(3, ['member'], ['username' => 'test2']);
         $this->checkAction('Navrhy:bulletpointy');
     }
 
-    public function testRenderBulletpointy() {
+    public function testBulletpoints() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Navrhy:bulletpointy');
     }

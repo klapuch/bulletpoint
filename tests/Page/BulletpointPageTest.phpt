@@ -14,7 +14,7 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class BulletpointPageTest extends TestCase\Page {
-    public function testRenderPridatOnLoggedOutUser() {
+    public function testAddingWithNotEnoughPermission() {
         $this->checkRedirect(
             'Bulletpoint:pridat',
             '/prihlasit',
@@ -22,7 +22,7 @@ final class BulletpointPageTest extends TestCase\Page {
         );
     }
 
-    public function testRenderPridatOnLoggedInUser() {
+    public function testAdding() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction(
             'Bulletpoint:pridat',
@@ -33,17 +33,12 @@ final class BulletpointPageTest extends TestCase\Page {
     /**
      * @throws \Nette\Application\BadRequestException Bulletpoint neexistuje
      */
-    public function testUnknownBulletpointWithRenderUpravit() {
+    public function testEditingUnknownComment() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Bulletpoint:upravit', ['id' => 999]);
     }
 
-    public function testRenderUpravitOnLoggedInUser() {
-        $this->logIn(1, ['creator'], ['username' => 'facedown']);
-        $this->checkAction('Bulletpoint:upravit', ['id' => 3]);
-    }
-
-    public function testRenderUpravitOnLoggedOutUser() {
+    public function testEditingWithNotEnoughPermission() {
         $this->checkRedirect(
             'Bulletpoint:upravit',
             '/prihlasit',
@@ -51,7 +46,7 @@ final class BulletpointPageTest extends TestCase\Page {
         );
     }
 
-    public function testDefaultValues() {
+    public function testEditing() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $response = $this->checkAction('Bulletpoint:upravit', ['id' => 3]);
         $html = Tester\DomQuery::fromHtml((string)$response->getSource());

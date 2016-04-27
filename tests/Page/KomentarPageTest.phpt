@@ -17,7 +17,7 @@ final class KomentarPageTest extends TestCase\Page {
     /**
      * @throws \Nette\Application\BadRequestException Komentář neexistuje
      */
-    public function testUnknownComment() {
+    public function testEditingUnknownComment() {
         $this->logIn(0, ['creator'], ['username' => 'noone']);
         $this->checkAction('Komentar:upravit', ['id' => 999]);
     }
@@ -38,7 +38,7 @@ final class KomentarPageTest extends TestCase\Page {
         $this->checkAction('Komentar:upravit', ['id' => 2]);
     }
 
-    public function testEditingMyComment() {
+    public function testEditing() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $response = $this->checkAction('Komentar:upravit', ['id' => 1]);
         $html = Tester\DomQuery::fromHtml((string)$response->getSource());

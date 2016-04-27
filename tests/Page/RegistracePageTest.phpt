@@ -16,12 +16,12 @@ final class RegistracePageTest extends TestCase\Page {
     /**
      * @throws \Nette\Application\BadRequestException Registrace pro člena neexistuje
      */
-    public function testRegistrationForLoggedInUser() {
+    public function testRegisteringLoggedInUser() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Registrace:default');
     }
 
-    public function testRenderDefault() {
+    public function testDefault() {
         $this->checkAction('Registrace:default');
     }
 }

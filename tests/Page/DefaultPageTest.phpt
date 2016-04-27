@@ -14,11 +14,11 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class DefaultPageTest extends TestCase\Page {
-    public function testRenderDefault() {
+    public function testDefault() {
         $this->checkAction('Default:default');
     }
 
-    public function testSearching() {
+    public function testSearchingForm() {
         $response = $this->checkForm(
             'Default:default',
             'searchForm',

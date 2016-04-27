@@ -25,21 +25,21 @@ final class StiznostPageTest extends TestCase\Page {
     /**
      * @throws \Nette\Application\BadRequestException Na tuto stránku nemáte dostatečné oprávnění
      */
-    public function testNotEnoughPermissionToRenderDefault() {
+    public function testDefaultWithNotEnoughPermission() {
         $this->logIn(3, ['member'], ['username' => 'test2']);
         $this->checkAction('Stiznost:default', ['id' => 1]);
     }
 
-    public function testForbiddenAccessToRenderDefault() {
+    public function testDefaultWithForbiddenAccess() {
         $this->checkRedirect('Stiznost:default', '/prihlasit', ['id' => 1]);
     }
 
-    public function testRenderDefault() {
+    public function testDefault() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Stiznost:default', ['id' => 1]);
     }
 
-    public function testRenderDefaultWithNoMoreComplaints() {
+    public function testNoMoreComplaints() {
         $this->container
             ->getByType('Bulletpoint\Model\Storage\Database')
             ->query('TRUNCATE comment_complaints');

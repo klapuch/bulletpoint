@@ -13,21 +13,21 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class MojePageTest extends TestCase\Page {
-    public function testRenderDokumentyAsMember() {
-        $this->logIn(1, ['creator'], ['username' => 'facedown']);
+    public function testDocuments() {
+        $this->logIn(1, ['member'], ['username' => 'facedown']);
         $this->checkAction('Moje:dokumenty');
     }
 
-    public function testRenderBulletpointyAsMember() {
-        $this->logIn(1, ['creator'], ['username' => 'facedown']);
+    public function testBulletpoints() {
+        $this->logIn(1, ['member'], ['username' => 'facedown']);
         $this->checkAction('Moje:bulletpointy');
     }
 
-    public function testRenderDokumentyAsGuest() {
+    public function testDocumentsWithNotEnoughPermission() {
         $this->checkRedirect('Moje:dokumenty', '/prihlasit');
     }
 
-    public function testRenderBulletpointyAsGuest() {
+    public function testBulletpointsWithNotEnoughPermission() {
         $this->checkRedirect('Moje:bulletpointy', '/prihlasit');
     }
 }

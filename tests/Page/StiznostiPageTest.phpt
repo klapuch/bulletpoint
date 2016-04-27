@@ -14,19 +14,19 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class StiznostiPageTest extends TestCase\Page {
-    public function testRenderDefault() {
+    public function testDefault() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Stiznosti:default');
     }
 
-    public function testForbiddenAccessToRenderDefault() {
+    public function testDefaultWithForbiddenAccess() {
         $this->checkRedirect('Stiznosti:default', '/prihlasit');
     }
 
     /**
      * @throws \Nette\Application\BadRequestException Na tuto stránku nemáte dostatečné oprávnění
      */
-    public function testNotEnoughPermissionToRenderDefault() {
+    public function testDefaultWithNotEnoughPermission() {
         $this->logIn(3, ['member'], ['username' => 'test2']);
         $this->checkAction('Stiznosti:default');
     }

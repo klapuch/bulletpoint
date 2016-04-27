@@ -31,7 +31,7 @@ final class AktivacePageTest extends TestCase\Page {
         );
     }
 
-    public function testAlreadyActivatedCode() {
+    public function testAlreadyUsed() {
         $this->checkRedirect(
             'Aktivace:aktivovat',
             '/prihlasit',

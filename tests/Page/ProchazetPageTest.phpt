@@ -14,7 +14,7 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class ProchazetPageTest extends TestCase\Page {
-    public function testRenderDefault() {
+    public function testDocuments() {
         $this->checkAction('Prochazet:dokumenty');
     }
 }

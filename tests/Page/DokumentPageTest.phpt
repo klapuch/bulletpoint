@@ -14,7 +14,7 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class DokumentPageTest extends TestCase\Page {
-    public function testRenderDefault() {
+    public function testDefault() {
         $this->checkAction('Dokument:default', ['slug' => 'php-programovaci-jazyk']);
     }
 
@@ -25,29 +25,24 @@ final class DokumentPageTest extends TestCase\Page {
         $this->checkAction('Dokument:default', ['slug' => 'fooo']);
     }
 
-    public function testRenderNovyOnLoggedInUser() {
+    public function testNew() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Dokument:novy');
     }
 
-    public function testRenderNovyOnLoggedOutUser() {
+    public function testNewWithNotEnoughPermission() {
         $this->checkRedirect('Dokument:novy', '/prihlasit');
     }
 
     /**
      * @throws \Nette\Application\BadRequestException Dokument neexistuje
      */
-    public function testUnknownDocumentWithRenderUpravit() {
+    public function testEditingForeignDocument() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $this->checkAction('Dokument:upravit', ['slug' => 'fooo']);
     }
 
-    public function testRenderUpravitOnLoggedInUser() {
-        $this->logIn(1, ['creator'], ['username' => 'facedown']);
-        $this->checkAction('Dokument:upravit', ['slug' => 'php-programovaci-jazyk']);
-    }
-
-    public function testRenderUpravitOnLoggedOutUser() {
+    public function testEditingWithNotEnoughPermission() {
         $this->checkRedirect(
             'Dokument:upravit',
             '/prihlasit',
@@ -55,7 +50,7 @@ final class DokumentPageTest extends TestCase\Page {
         );
     }
 
-    public function testDefaultValues() {
+    public function testEditing() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $response = $this->checkAction('Dokument:upravit', ['slug' => 'automobil-skoda-auto']);
         $html = Tester\DomQuery::fromHtml((string)$response->getSource());

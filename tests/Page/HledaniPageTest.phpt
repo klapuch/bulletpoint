@@ -13,7 +13,7 @@ use Bulletpoint\TestCase;
 $container = require __DIR__ . '/../bootstrap.php';
 
 final class HledaniPageTest extends TestCase\Page {
-    public function testSearchingExactResult() {
+    public function testExactResult() {
         $this->checkRedirect(
             'Hledani:default',
             '/dokument/php-programovaci-jazyk',
@@ -21,14 +21,14 @@ final class HledaniPageTest extends TestCase\Page {
         );
     }
 
-    public function testSearchingWithoutResult() {
+    public function testNoResults() {
         $this->checkAction(
             'Hledani:default',
             ['keyword' => 'xxxxxxxxxxxxxxxxx']
         );
     }
 
-    public function testSearchingMoreResults() {
+    public function testMoreResults() {
         $this->checkAction(
             'Hledani:default',
             ['keyword' => 'automobil']
