@@ -75,3 +75,5 @@ test < development:
             user: root
             pass: ""
             name: bulletpoint_test
+    services:
+        testbench.presenterMock: Bulletpoint\Fake\Presenter
