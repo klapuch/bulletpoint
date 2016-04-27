@@ -22,7 +22,7 @@ final class ZdrojPageTest extends TestCase\Page {
         $this->checkAction('Zdroj:upravit', ['id' => 999]);
     }
 
-    public function testDefaultValues() {
+    public function testEditing() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
         $response = $this->checkAction('Zdroj:upravit', ['id' => 6]);
         $html = Tester\DomQuery::fromHtml((string)$response->getSource());
