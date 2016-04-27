@@ -23,7 +23,7 @@ final class Identity implements Access\Identity {
 	}
 
 	public function role(): Access\Role {
-		return $this->role ?: new Fake\Role('guest');
+		return $this->role ?: new Role('guest', 1);
 	}
 
 	public function username(): string {
