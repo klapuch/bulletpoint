@@ -38,7 +38,7 @@ final class RoleTest extends TestCase\Component {
             new Fake\Identity(2, new Fake\Role('member', 1)),
             new Fake\Identity(1, new Fake\Role('creator', 3))
         );
-        $this->checkRenderOutput($role, __DIR__ . '/expected/Role-myselfWithHigherRole.expected');
+        $this->checkRenderOutput($role, __DIR__ . '/expectation/Role-myselfWithHigherRole.phtml');
     }
 }
 
