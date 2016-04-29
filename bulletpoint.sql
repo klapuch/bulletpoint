@@ -5,6 +5,9 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+CREATE DATABASE IF NOT EXISTS bulletpoint;
+USE bulletpoint;
+
 DROP TABLE IF EXISTS `bulletpoints`;
 CREATE TABLE `bulletpoints` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
