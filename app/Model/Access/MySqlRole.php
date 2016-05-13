@@ -47,11 +47,11 @@ final class MySqlRole implements Role {
         return $this->roles[(string)$this] ?? self::DEFAULT_RANK;
     }
 
-    private function change(int $rank) {
+    private function change(int $increment) {
         $this->database->query(
             'UPDATE users SET role = ? WHERE ID = ?',
             [
-                array_flip($this->roles)[$this->rank() + $rank],
+                array_flip($this->roles)[$this->rank() + $increment],
                 $this->id,
             ]
         );
