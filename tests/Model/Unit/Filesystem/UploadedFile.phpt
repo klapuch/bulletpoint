@@ -16,19 +16,23 @@ use Bulletpoint\Fake;
 require __DIR__ . '/../../../bootstrap.php';
 
 final class UploadedFile extends TestCase\Filesystem {
+	private $path;
+
+	/**
+	 * @var Filesystem\UploadedFile
+	 */
 	private $uploadedFile;
-	const FOLDER = __DIR__ . '/temp/';
 
 	protected function setUp() {
 		parent::setUp();
-		$this->preparedFilesystem();
+		$this->path = $this->preparedFilesystem();
 		$this->uploadedFile = new Filesystem\UploadedFile(
 			[
 				'name' => str_repeat('d1rt.y/../Er~\ ', 20),
 				'size' => 20,
 				'type' => 'useless',
 				'error' => 0,
-				'tmp_name' => self::FOLDER . 'file.txt'
+				'tmp_name' => $this->path . 'file.txt'
 			]
 		);
 	}
@@ -39,7 +43,7 @@ final class UploadedFile extends TestCase\Filesystem {
 	public function testMissingKey() {
 		new Filesystem\UploadedFile(
 			[
-				'tmp_name' => self::FOLDER . 'file.txt'
+				'tmp_name' => $this->path . 'file.txt'
 			]
 		);
 	}
@@ -58,39 +62,53 @@ final class UploadedFile extends TestCase\Filesystem {
 	/**
 	* @throws \Bulletpoint\Exception\UploadException Soubor nebyl vybrán
 	*/
-	public function testNotOkFileWithType() {
+	public function testTypeOnError() {
 		(new Filesystem\UploadedFile(
 			[
 				'name' => 'name',
 				'size' => 20,
 				'type' => 'useless',
 				'error' => UPLOAD_ERR_NO_FILE,
-				'tmp_name' => self::FOLDER . 'file.txt'
+				'tmp_name' => $this->path . 'file.txt'
 			]
 		))->type();
 	}
 
+	/**
+	 * Given directly from size key
+	 */
 	public function testSize() {
 		Assert::same($this->uploadedFile->size(), 20);
+		Assert::same(0,
+			(new Filesystem\UploadedFile(
+				[
+					'name' => 'name',
+					'size' => 'some hack?',
+					'type' => 'useless',
+					'error' => 0,
+					'tmp_name' => $this->path . 'file.txt'
+				]
+			))->size()
+		);
 	}
 
 	/**
 	* @throws \Bulletpoint\Exception\UploadException Soubor nebyl vybrán
 	*/
-	public function testNoFileError() {
+	public function testContentOnError() {
 		(new Filesystem\UploadedFile(
 			[
 				'name' => 'name',
 				'size' => 20,
 				'type' => 'useless',
 				'error' => UPLOAD_ERR_NO_FILE,
-				'tmp_name' => self::FOLDER . 'file.txt'
+				'tmp_name' => $this->path . 'file.txt'
 			]
 		))->content();
 	}
 
 	public function testLocation() {
-		Assert::same($this->uploadedFile->location(), self::FOLDER . 'file.txt');
+		Assert::same($this->uploadedFile->location(), $this->path . 'file.txt');
 	}
 
 	public function testError() {
@@ -98,8 +116,9 @@ final class UploadedFile extends TestCase\Filesystem {
 	}
 
 	private function preparedFilesystem() {
-		Tester\Helpers::purge(self::FOLDER);
-		file_put_contents(self::FOLDER . 'file.txt', 'data');
+		$name = Tester\FileMock::create('');
+		file_put_contents($name . 'file.txt', 'data');
+		return $name;
 	}
 }
 

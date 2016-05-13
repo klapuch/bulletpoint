@@ -18,6 +18,10 @@ require __DIR__ . '/../../../bootstrap.php';
 final class Image extends TestCase\Filesystem {
 	const FOLDER = __DIR__ . '/temp';
 	const SOURCE_IMAGE = self::FOLDER . '/image.png';
+
+	/**
+	 * @var Filesystem\Image
+	 */
 	private $image;
 	
 	protected function setUp() {
@@ -41,7 +45,7 @@ final class Image extends TestCase\Filesystem {
 		Assert::same((string)$image->size(), (string)$size);
 	}
 
-	public function testNotNeccesaryResize() {
+	public function testUnnecessaryResize() {
 		$this->preparedFilesystem();
 		$size = new Filesystem\Size(128, 256);
 		$image = $this->image->resize($size);

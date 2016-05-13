@@ -16,63 +16,62 @@ use Bulletpoint\Model\Filesystem;
 require __DIR__ . '/../../../bootstrap.php';
 
 final class Folder extends TestCase\Filesystem {
-	const FOLDER = __DIR__ . '/temp/';
+	private $path;
+
+	/**
+	 * @var Filesystem\Folder
+	 */
 	private $folder;
 	
 	protected function setUp() {
 		parent::setUp();
-		$this->preparedFilesystem();
-		$this->folder = new Filesystem\Folder(self::FOLDER);
+		$this->path = $this->preparedFilesystem();
+		$this->folder = new Filesystem\Folder($this->path);
 	}
 
-	public function testCommonSaving() {
+	public function testSaving() {
 		$filename = 'textFile.txt';
-		Assert::false(is_file(self::FOLDER . $filename));
 		$this->folder->save(new Fake\File(null, null, null, 'fooData', null), $filename);
-		Assert::true(is_file(self::FOLDER . $filename));
+		Assert::same('fooData', file_get_contents($this->path . '/' . $filename));
 	}
 
-	public function testSavingWithUknownFolder() {
-		$subFolder = self::FOLDER . 'subtemp/';
+	public function testUnknownFolder() {
+		$subFolder = $this->path . 'subtemp';
 		$filename = 'textFile.txt';
-		Assert::false(is_file($subFolder . $filename));
-		Assert::false(is_dir($subFolder));
+		Assert::false(file_exists($subFolder . $filename));
 		$folder = new Filesystem\Folder($subFolder);
 		$folder->save(new Fake\File(null, null, null, 'fooData', null), $filename);
-		Assert::same(file_get_contents($subFolder . $filename), 'fooData');
+		Assert::same(file_get_contents($subFolder . '/' . $filename), 'fooData');
 	}
 
-	public function testSavingWithOverwriting() {
+	public function testOverwriting() {
 		$filename = 'textFile.txt';
-		Assert::false(is_file(self::FOLDER . $filename));
-		file_put_contents(self::FOLDER . $filename, '1');
-		Assert::true(is_file(self::FOLDER . $filename));
+		Assert::false(is_file($this->path . $filename));
+		file_put_contents($this->path . $filename, '1');
+		Assert::true(is_file($this->path . $filename));
 		$this->folder->save(new Fake\File(null, null, null, '2', null), $filename);
-		Assert::same(file_get_contents(self::FOLDER . $filename), '2');
+		Assert::same(file_get_contents($this->path . '/' . $filename), '2');
 	}
 
 	public function testSuccessfulLoading() {
-		$file = $this->folder->load('file.txt');
+		$txtFile = 'file.txt';
+		file_put_contents($this->path . $txtFile, 'data');
+		Assert::true(is_file($this->path . $txtFile));
 		Assert::type(
 			'Bulletpoint\Model\Filesystem\SavedFile',
-			$file
+			$this->folder->load($txtFile)
 		);
-		Assert::same($file->content(), 'data');
 	}
 
-	/**
-	* @throws \RuntimeException unknownFile.txt does not exist
-	*/
 	public function testLoadingOfUnknownFile() {
-		$unknownFile = 'unknownFile.txt';
-		Assert::false(is_file(self::FOLDER . $unknownFile));
-		$this->folder->load($unknownFile)->content();
-		Assert::false(is_file(self::FOLDER . $unknownFile));
+		Assert::type(
+			'Bulletpoint\Model\Filesystem\SavedFile',
+			$this->folder->load('loadSomeFileWhichDoeNotExist.foo')
+		);
 	}
 
 	private function preparedFilesystem() {
-		Tester\Helpers::purge(self::FOLDER);
-		file_put_contents(self::FOLDER . 'file.txt', 'data');
+		return Tester\FileMock::create('');
 	}
 }
 

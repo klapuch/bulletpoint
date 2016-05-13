@@ -16,33 +16,24 @@ use Bulletpoint\Model\Filesystem;
 require __DIR__ . '/../../../bootstrap.php';
 
 final class ExistingPath extends TestCase\Filesystem {
-	const FOLDER = __DIR__ . '/temp/';
+	private $path;
 	
 	protected function setUp() {
 		parent::setUp();
-		$this->preparedFilesystem();
+		$this->path = $this->preparedFilesystem();
 	}
 
-	public function testExistingFolder() {
+	public function testFolder() {
 		$path = new Filesystem\ExistingPath(
-			new Fake\Path(self::FOLDER, '', '')
+			new Fake\Path(__DIR__, '', '')
 		);
-		Assert::same($path->folder(), self::FOLDER);
-	}
-
-	/**
-	* @throws \RuntimeException fooFolderBar is not a folder
-	*/
-	public function testUnknownFolder() {
-		$path = new Filesystem\ExistingPath(
-			new Fake\Path('fooFolderBar', '', '')
-		);
-		Assert::same($path->folder(), 'fooFolderBar');
+		Assert::same($path->folder(), __DIR__);
 	}
 
 	public function testExistingFile() {
+		file_put_contents($this->path . 'layout.phtml', '<html>');
 		$path = new Filesystem\ExistingPath(
-			new Fake\Path(self::FOLDER, 'layout', '.phtml')
+			new Fake\Path($this->path, 'layout', '.phtml')
 		);
 		Assert::same($path->file(), 'layout');
 	}
@@ -52,9 +43,9 @@ final class ExistingPath extends TestCase\Filesystem {
 	*/
 	public function testUnknownFile() {
 		$path = new Filesystem\ExistingPath(
-			new Fake\Path(self::FOLDER, 'fooLayout', '.phtml')
+			new Fake\Path($this->path, 'fooLayout', '.phtml')
 		);
-		Assert::same($path->file(), 'fooLayout');
+		$path->file();
 	}
 
 	public function testExtension() {
@@ -65,10 +56,11 @@ final class ExistingPath extends TestCase\Filesystem {
 	}
 
 	public function testWhole() {
+		file_put_contents($this->path . 'layout.phtml', '<html>');
 		$path = new Filesystem\ExistingPath(
-			new Fake\Path(self::FOLDER, 'layout', '.phtml')
+			new Fake\Path($this->path, 'layout', '.phtml')
 		);
-		Assert::same($path->full(), self::FOLDER . 'layout.phtml');
+		Assert::same($path->full(), $this->path . 'layout.phtml');
 	}
 
 	/**
@@ -76,14 +68,13 @@ final class ExistingPath extends TestCase\Filesystem {
 	*/
 	public function testUnknownWhole() {
 		$path = new Filesystem\ExistingPath(
-			new Fake\Path(self::FOLDER, 'fooFile', '.foo')
+			new Fake\Path($this->path, 'fooFile', '.foo')
 		);
 		$path->full();
 	}
 
 	private function preparedFilesystem() {
-		Tester\Helpers::purge(self::FOLDER);
-		file_put_contents(self::FOLDER . 'layout.phtml', 'data');
+		return Tester\FileMock::create('');
 	}
 }
 

@@ -9,8 +9,6 @@ final class ExistingPath implements Path {
     }
 
     public function folder(): string {
-        if($this->path->folder())
-            $this->checkFolder();
         return $this->path->folder();
     }
 
@@ -26,17 +24,6 @@ final class ExistingPath implements Path {
 
     public function full(): string {
         return $this->folder() . $this->file() . $this->extension();
-    }
-
-    private function checkFolder() {
-        if(!is_dir($this->path->folder())) {
-            throw new \RuntimeException(
-                sprintf(
-                    '%s is not a folder',
-                    $this->path->folder()
-                )
-            );
-        }
     }
 
     private function checkFile() {

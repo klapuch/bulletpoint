@@ -16,15 +16,19 @@ use Bulletpoint\Fake;
 require __DIR__ . '/../../../bootstrap.php';
 
 final class SavedFile extends TestCase\Filesystem {
+	private $path;
+
+	/**
+	 * @var Filesystem\SavedFile
+	 */
 	private $savedFile;
-	const FOLDER = __DIR__ . '/temp/';
 
 	protected function setUp() {
 		parent::setUp();
-		$this->preparedFilesystem();
+		$this->path = $this->preparedFilesystem();
 		$this->savedFile = new Filesystem\SavedFile(
 			new Fake\Path(
-				self::FOLDER,
+				$this->path,
 				'file',
 				'.txt'
 			)
@@ -32,7 +36,7 @@ final class SavedFile extends TestCase\Filesystem {
 	}
 
 	public function testName() {
-		Assert::same($this->savedFile->name(), 'file.txt');
+		Assert::same($this->savedFile->name(), '1.file.txt');
 	}
 
 	public function testType() {
@@ -48,12 +52,13 @@ final class SavedFile extends TestCase\Filesystem {
 	}
 
 	public function testLocation() {
-		Assert::same($this->savedFile->location(), self::FOLDER . 'file.txt');
+		Assert::same($this->savedFile->location(), $this->path . 'file.txt');
 	}
 
 	private function preparedFilesystem() {
-		Tester\Helpers::purge(self::FOLDER);
-		file_put_contents(self::FOLDER . 'file.txt', 'data');
+		$name = Tester\FileMock::create('');
+		file_put_contents($name . 'file.txt', 'data');
+		return $name;
 	}
 }
 

@@ -11,7 +11,8 @@ $configurator->setDebugMode(false);
 $configurator->setTempDirectory(__DIR__ . '/temp');
 $configurator->addConfig(__DIR__ . '/../app/config/config.neon', 'test');
 $configurator->createRobotLoader()
-    ->addDirectory(__DIR__)
+    ->addDirectory(__DIR__ . '/Fake')
+    ->addDirectory(__DIR__ . '/TestCase')
     ->register();
 
 Testbench\Bootstrap::setup(
