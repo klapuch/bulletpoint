@@ -18,7 +18,7 @@ final class MySqlVerificationCodes extends TestCase\Database {
 	public function testGenerating() {
 		$connection = $this->preparedDatabase();
 		(new Access\MySqlVerificationCodes($connection))
-		->generate('foo@bar.cz');
+		->generate('fooBarEmail');
 		Assert::same(
 			91,
 			$connection->fetchColumn(
@@ -32,7 +32,7 @@ final class MySqlVerificationCodes extends TestCase\Database {
 		$connection->query('TRUNCATE verification_codes');
         $connection->query('TRUNCATE users');
         $connection->query(
-            'INSERT INTO users (ID, email) VALUES (6, "foo@bar.cz")'
+            'INSERT INTO users (ID, email) VALUES (6, "fooBarEmail")'
         );
 		return $connection;
 	}
