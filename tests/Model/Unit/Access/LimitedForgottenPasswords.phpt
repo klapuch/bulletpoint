@@ -21,11 +21,11 @@ final class LimitedForgottenPasswords extends TestCase\Database {
 	public function testLimitedReminding() {
 		$connection = $this->preparedDatabase();
 		$connection->query(
-			'INSERT INTO forgotten_passwords (user_id, reminded_at, reminder)
+			'INSERT INTO forgotten_passwords (ID, user_id, reminded_at, reminder)
 			VALUES 
-			(1, NOW() - INTERVAL 1 HOUR, "reminder1"),
-			(1, NOW() - INTERVAL 2 HOUR, "reminder2"),
-			(1, NOW() - INTERVAL 3 HOUR, "reminder3")'
+			(1, 1, NOW() - INTERVAL 1 HOUR, "reminder1"),
+			(2, 1, NOW() - INTERVAL 2 HOUR, "reminder2"),
+			(3, 1, NOW() - INTERVAL 3 HOUR, "reminder3")'
 		);
 		(new Access\LimitedForgottenPasswords(
 			new Fake\ForgottenPasswords,

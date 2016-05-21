@@ -31,7 +31,7 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
                     'second',
                     new \DateTimeImmutable('1999-01-01 01:01:01'),
                     new Wiki\MySqlInformationSource(2, $connection),
-                    new Wiki\MySqlBulletpoint(2, $connection),
+                    new Wiki\MySqlBulletpoint(3, $connection),
                     new Wiki\ConstantDocument(
                         'fooTitle',
                         'fooDescription',
@@ -96,8 +96,8 @@ final class OwnedMySqlBulletpoints extends TestCase\Database {
 			'INSERT INTO bulletpoints
 			(ID, content, user_id, information_source_id, document_id, created_at)
 			VALUES
-			(1, "first", 1, 1, 9, "2000-01-01 01:01:01"),
-			(2, "second", 2, 2, 9, "1999-01-01 01:01:01")'
+			(2, "first", 1, 1, 9, "2000-01-01 01:01:01"),
+			(3, "second", 2, 2, 9, "1999-01-01 01:01:01")'
 		);
         $connection->query(
             'INSERT INTO documents

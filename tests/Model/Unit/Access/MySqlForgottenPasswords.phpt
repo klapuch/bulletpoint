@@ -25,13 +25,13 @@ final class MySqlForgottenPasswords extends TestCase\Database {
 			[
 				'user_id' => 1,
 				'reminder_length' => 141,
-				'reminded_at' => date('j.n.Y H:i'),
+				'reminded_at' => date('j.n.Y'),
 				'used' => 0
 			],
 			$connection->fetch(
 				'SELECT user_id,
 				LENGTH(reminder) AS reminder_length,
-				DATE_FORMAT(reminded_at, "%e.%c.%Y %H:%i") AS reminded_at,
+				DATE_FORMAT(reminded_at, "%e.%c.%Y") AS reminded_at,
 				used
 				FROM forgotten_passwords'
 			)

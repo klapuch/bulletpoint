@@ -34,9 +34,10 @@ final class MySqlIdentity extends TestCase\Database {
 	}
 
 	public function testUsername() {
+		$connection = $this->preparedDatabase();
 		Assert::same(
 			'facedown',
-			(new Access\MySqlIdentity(1, $this->preparedDatabase()))->username()
+			(new Access\MySqlIdentity(1, $connection))->username()
 		);
 	}
 
