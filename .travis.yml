@@ -13,9 +13,10 @@ install:
   - composer install --no-interaction --prefer-source
 
 before_script:
-  #- mysql -u root -e 'CREATE DATABASE bulletpoint;'
-  - mysql -u root facedown < tests/bulletpoint_test.sql
-  - mysql -u root facedown < tests/Model/Unit/Storage/pdo_test.sql
+  - mysql -u root -e 'CREATE DATABASE bulletpoint_test;'
+  - mysql -u root -e 'CREATE DATABASE pdo_test;'
+  - mysql -u root bulletpoint_test < tests/bulletpoint_test.sql
+  - mysql -u root pdo_test < tests/Model/Unit/Storage/pdo_test.sql
 
 script:
   - ./vendor/bin/tester -p $TESTER_PHP_BIN -o console -c ./tests/php.ini -s ./tests/
