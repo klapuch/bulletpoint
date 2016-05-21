@@ -1,0 +1,24 @@
+language: php
+
+php:
+  - 7.0
+
+env:
+  - TESTER_PHP_BIN="php-cgi"
+
+before_install:
+  - composer self-update
+
+install:
+  - composer install --no-interaction --prefer-source
+
+before_script:
+  #- mysql -u root -e 'CREATE DATABASE bulletpoint;'
+  - mysql -u root facedown < tests/bulletpoint_test.sql
+  - mysql -u root facedown < tests/Model/Unit/Storage/pdo_test.sql
+
+script:
+  - ./vendor/bin/tester -p $TESTER_PHP_BIN -o console -c ./tests/php.ini -s ./tests/
+
+after_failure:
+  - for i in $(find ./tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
