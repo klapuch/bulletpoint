@@ -28,7 +28,7 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 				$owner,
 				new \DateTimeImmutable('1999-01-01 01:01:01'),
                 new Wiki\MySqlInformationSource(1, $connection),
-				new Wiki\MySqlDocument(1, $connection)
+				new Wiki\MySqlDocument(2, $connection)
 			),
 			$rows->current()
 		);
@@ -93,8 +93,8 @@ final class OwnedMySqlDocuments extends TestCase\Database {
 			'INSERT INTO documents
 			(ID, user_id, created_at, description, information_source_id, title)
 			VALUES
-			(2, 1, "2000-01-01 01:01:01", "second", 1, "secondTitle"),
-			(1, 2, "1999-01-01 01:01:01", "first", 1, "firstTitle")'
+			(3, 1, "2000-01-01 01:01:01", "second", 1, "secondTitle"),
+			(2, 2, "1999-01-01 01:01:01", "first", 1, "firstTitle")'
 		);
 		return $connection;
 	}

@@ -5,6 +5,8 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+USE bulletpoint_test;
+
 TRUNCATE `bulletpoints`;
 INSERT INTO `bulletpoints` (`ID`, `user_id`, `content`, `information_source_id`, `document_id`, `created_at`) VALUES
 (1,	1,	'Jednoduchost',	4,	1,	'2016-04-20 18:34:11'),
