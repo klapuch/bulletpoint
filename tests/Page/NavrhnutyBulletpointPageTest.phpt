@@ -32,7 +32,7 @@ final class NavrhnutyBulletpointPageTest extends TestCase\Page {
 
     public function testDefault() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
-        $this->checkAction('NavrhnutyBulletpoint:default', ['id' => 4]);
+        $this->checkAction('NavrhnutyBulletpoint:default', ['id' => 3]);
     }
 
     /**
@@ -69,9 +69,9 @@ final class NavrhnutyBulletpointPageTest extends TestCase\Page {
 
     public function testEditing() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
-        $response = $this->checkAction('NavrhnutyBulletpoint:upravit', ['id' => 4]);
+        $response = $this->checkAction('NavrhnutyBulletpoint:upravit', ['id' => 3]);
         $html = Tester\DomQuery::fromHtml((string)$response->getSource());
-        Assert::true($html->has('input[value="Zajímavý bulletpoint"]'));
+        Assert::true($html->has('input[value="Jednoduchost"]'));
     }
 }
 

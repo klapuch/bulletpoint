@@ -52,10 +52,10 @@ final class DokumentPageTest extends TestCase\Page {
 
     public function testEditing() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
-        $response = $this->checkAction('Dokument:upravit', ['slug' => 'automobil-skoda-auto']);
+        $response = $this->checkAction('Dokument:upravit', ['slug' => 'automobil-seat']);
         $html = Tester\DomQuery::fromHtml((string)$response->getSource());
-        Assert::true($html->has('input[value="Automobil Škoda auto"]'));
-        Assert::same('Just Škoda', (string)$html->find('textarea')[0]);
+        Assert::true($html->has('input[value="Automobil Seat"]'));
+        Assert::same('Just Seat', (string)$html->find('textarea')[0]);
     }
 }
 

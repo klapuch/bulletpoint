@@ -44,7 +44,7 @@ final class Authenticator extends TestCase\Database {
         ))->authenticate(['facedown', '123456']);
         Assert::same(
             'encrypted',
-            $connection->fetchColumn('SELECT `password` FROM users WHERE ID = 1')
+            $connection->fetchColumn('SELECT `password` FROM users WHERE username = "facedown"')
         );
         Assert::same($identity->id, 1);
         Assert::same($identity->roles, ['member']);
