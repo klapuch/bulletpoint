@@ -48,9 +48,9 @@ final class BulletpointPageTest extends TestCase\Page {
 
     public function testEditing() {
         $this->logIn(1, ['creator'], ['username' => 'facedown']);
-        $response = $this->checkAction('Bulletpoint:upravit', ['id' => 3]);
+        $response = $this->checkAction('Bulletpoint:upravit', ['id' => 1]);
         $html = Tester\DomQuery::fromHtml((string)$response->getSource());
-        Assert::true($html->has('input[value="Strmá křivka učení"]'));
+        Assert::true($html->has('input[value="Jednoduchost"]'));
     }
 }
 
