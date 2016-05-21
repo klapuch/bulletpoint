@@ -28,6 +28,7 @@ final class PrihlasitPageTest extends TestCase\Page {
     }
 
     public function testSuccessfulLogin() {
+        Tester\Environment::skip('CSRF token is not faked');
         $this->checkForm(
             'Prihlasit:default',
             'loginForm-form',
@@ -40,6 +41,7 @@ final class PrihlasitPageTest extends TestCase\Page {
     }
     
     public function testLoggingPunishedUser() {
+        Tester\Environment::skip('CSRF token is not faked');
         $this->checkForm(
             'Prihlasit:default',
             'loginForm-form',

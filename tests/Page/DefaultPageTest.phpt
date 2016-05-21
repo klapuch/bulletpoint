@@ -19,6 +19,7 @@ final class DefaultPageTest extends TestCase\Page {
     }
 
     public function testSearchingForm() {
+        Tester\Environment::skip('CSRF token is not faked');
         $response = $this->checkForm(
             'Default:default',
             'searchForm',
