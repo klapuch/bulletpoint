@@ -22,11 +22,18 @@ CREATE SCHEMA constant;
 -- constants
 CREATE FUNCTION constant.references_name() RETURNS text[] AS $$SELECT ARRAY['wikipedia'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.theme_tags_min() RETURNS integer AS $$SELECT 1;$$ LANGUAGE sql IMMUTABLE;
 
 
 -- domains
 CREATE DOMAIN references_name AS text CHECK (VALUE = ANY(constant.references_name()));
 CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
+
+
+-- functions
+CREATE FUNCTION array_diff(anyarray, anyarray) RETURNS anyarray AS $BODY$
+	SELECT ARRAY(SELECT unnest($1) EXCEPT select unnest($2));
+$BODY$ LANGUAGE sql IMMUTABLE;
 
 
 -- tables
@@ -36,12 +43,36 @@ CREATE TABLE "references" (
 	name references_name NOT NULL
 );
 
+
+CREATE TABLE tags (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	name text NOT NULL
+);
+
+-- CREATE FUNCTION tags_trigger_row_ad() RETURNS trigger AS
+-- $BODY$
+-- 	BEGIN
+-- 		UPDATE themes
+-- 		SET tags = array_diff(tags, ARRAY[old.id])
+-- 		WHERE tags @> ARRAY[old.id];
+-- 	END;
+-- $BODY$ LANGUAGE plpgsql VOLATILE;
+--
+-- CREATE TRIGGER tags_row_ad_trigger
+-- 	AFTER DELETE
+-- 	ON tags
+-- 	FOR EACH ROW EXECUTE PROCEDURE tags_trigger_row_ad();
+
+
+-- TODO: check for existing item in tags
 CREATE TABLE themes (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	name text NOT NULL,
-	tags text[] NOT NULL,
-	created_at timestamptz NOT NULL DEFAULT now()
+	tags jsonb NOT NULL, -- TODO: use array
+	created_at timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT themes_tags_min CHECK (jsonb_array_length(tags) >= constant.theme_tags_min())
 );
+
 
 CREATE TABLE theme_references (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -51,11 +82,13 @@ CREATE TABLE theme_references (
 	CONSTRAINT theme_references_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id)
 );
 
+
 CREATE TABLE sources (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	link text NULL,
 	type sources_type NOT NULL
 );
+
 
 CREATE TABLE bulletpoints (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -66,12 +99,59 @@ CREATE TABLE bulletpoints (
 	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id)
 );
 
+
 -- views
 CREATE VIEW public_themes AS
 	SELECT
 		themes.id, themes.name, themes.tags, themes.created_at,
-		"references".id AS reference_id, "references".name AS reference_name, "references".url AS reference_url
+		"references".name AS reference_name, "references".url AS reference_url
 	FROM themes
 	LEFT JOIN theme_references ON themes.id = theme_references.theme_id
 	LEFT JOIN "references" ON "references".id = theme_references.reference_id;
 
+CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
+BEGIN
+    WITH inserted_theme AS (
+		INSERT INTO themes (name, tags) VALUES (new.name, new.tags) RETURNING id
+	), inserted_reference AS (
+		INSERT INTO "references" (name, url) VALUES (new.reference_name, new.reference_url) RETURNING id
+	)
+    INSERT INTO theme_references (theme_id, reference_id) VALUES (
+		(SELECT id FROM inserted_theme),
+		(SELECT id FROM inserted_reference)
+	);
+	RETURN new;
+END
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER public_themes_trigger_row_ii
+	INSTEAD OF INSERT
+	ON public_themes
+	FOR EACH ROW EXECUTE PROCEDURE public_themes_trigger_row_ii();
+
+
+CREATE VIEW public_bulletpoints AS
+	SELECT
+		bulletpoints.id, bulletpoints.text, bulletpoints.theme_id,
+		sources.link AS source_link, sources.type AS source_type
+	FROM bulletpoints
+	LEFT JOIN sources ON sources.id = bulletpoints.source_id;
+
+CREATE FUNCTION public_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
+BEGIN
+	WITH inserted_source AS (
+		INSERT INTO sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
+	)
+	INSERT INTO bulletpoints (theme_id, source_id, text) VALUES (
+		new.theme_id,
+		(SELECT id FROM inserted_source),
+		new.text
+	);
+	RETURN new;
+END
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER public_bulletpoints_trigger_row_ii
+	INSTEAD OF INSERT
+	ON public_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_ii();

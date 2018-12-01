@@ -30,8 +30,8 @@ final class ThemeTest extends TestCase\Runtime {
 		))->raw();
 		Assert::same($id, $theme['id']);
 		Assert::same('TEST', $theme['name']);
-		Assert::null($theme['reference_url']);
-		Assert::null($theme['reference_name']);
+		Assert::null($theme['reference']['url']);
+		Assert::null($theme['reference']['name']);
 	}
 
 	/**

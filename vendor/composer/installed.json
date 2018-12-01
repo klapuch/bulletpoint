@@ -472,6 +472,56 @@
         "homepage": "https://www.github.com/klapuch/Internal"
     },
     {
+        "name": "klapuch/iterator",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/klapuch/Iterator.git",
+            "reference": "15c25f927488b4fc489a2b35e27c443c13ac98a7"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/klapuch/Iterator/zipball/15c25f927488b4fc489a2b35e27c443c13ac98a7",
+            "reference": "15c25f927488b4fc489a2b35e27c443c13ac98a7",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.0"
+        },
+        "require-dev": {
+            "consistence/coding-standard": "^1.0",
+            "jakub-onderka/php-parallel-lint": "^0.9.2",
+            "mockery/mockery": "^0.9.9",
+            "nette/tester": "^1.7",
+            "phing/phing": "^2.16",
+            "phpstan/phpstan": "^0.7.0",
+            "sebastian/phpcpd": "^3.0",
+            "slevomat/coding-standard": "^2.3"
+        },
+        "time": "2017-11-11T20:45:53+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Klapuch\\Iterator\\": [
+                    "Core/"
+                ]
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "authors": [
+            {
+                "name": "Dominik Klapuch",
+                "email": "klapuchdominik@gmail.com",
+                "homepage": "https://www.github.com/klapuch",
+                "role": "Developer"
+            }
+        ],
+        "description": "Iterators replacing array functions",
+        "homepage": "https://www.github.com/klapuch/Iterator"
+    },
+    {
         "name": "klapuch/log",
         "version": "1.0.3",
         "version_normalized": "1.0.3.0",

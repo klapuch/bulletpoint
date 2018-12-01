@@ -15,6 +15,7 @@ final class Versions
   'klapuch/application' => 'dev-master@b7b805a91ef1642087e3533a631db90bdfd85a82',
   'klapuch/configuration' => 'dev-master@80340ae52b370bac9b5d55eb652c86ab37bc4234',
   'klapuch/internal' => '0.0.4@12d3d9446c7f6724dde836fb4301732c6cc8b308',
+  'klapuch/iterator' => 'dev-master@15c25f927488b4fc489a2b35e27c443c13ac98a7',
   'klapuch/log' => '1.0.3@06d18cae9fb670d5bb013bae585284945fb65ebb',
   'klapuch/output' => '2.11.3@e37d39abd7e3c06e34d4bd027c59c264a408dbc2',
   'klapuch/routing' => '0.0.13@ccc87e168370690f0eb848df296fc951e5358d2e',
@@ -57,7 +58,7 @@ final class Versions
   'symfony/finder' => 'v4.2.0@e53d477d7b5c4982d0e1bfd2298dbee63d01441d',
   'symfony/polyfill-mbstring' => 'v1.10.0@c79c051f5b3a46be09205c73b80b346e4153e494',
   'theseer/fdomdocument' => '1.6.6@6e8203e40a32a9c770bcb62fe37e68b948da6dca',
-  'klapuch/bulletpoint' => 'dev-master@bd4bc0963700c04d46a71f59c022dd6bfc6c812e',
+  'klapuch/bulletpoint' => 'dev-new@20c51c7d5ac590716664889f7ace46580a716abc',
 );
 
     private function __construct()

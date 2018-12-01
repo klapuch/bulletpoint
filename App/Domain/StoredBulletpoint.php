@@ -6,7 +6,7 @@ use Klapuch\Output;
 use Klapuch\Sql;
 use Klapuch\Storage;
 
-final class StoredTheme implements Theme {
+final class StoredBulletpoint implements Bulletpoint {
 	/** @var int */
 	private $id;
 
@@ -23,22 +23,22 @@ final class StoredTheme implements Theme {
 			$this->connection,
 			(new Sql\AnsiSelect([
 				'id',
-				'name',
-				'tags',
-				'reference_url',
-				'reference_name',
-			]))->from(['public_themes'])
+				'theme_id',
+				'source_link',
+				'source_type',
+				'text',
+			]))->from(['public_bulletpoints'])
 			->where('id = :id', ['id' => $this->id])
 		))->row();
 		return new Output\FilledFormat(
 			$format,
 			[
 				'id' => $row['id'],
-				'name' => $row['name'],
-				'tags' => $row['tags'],
-				'reference' => [
-					'url' => $row['reference_url'],
-					'name' => $row['reference_name'],
+				'theme_id' => $row['theme_id'],
+				'text' => $row['text'],
+				'source' => [
+					'link' => $row['source_link'],
+					'type' => $row['source_type'],
 				],
 			]
 		);

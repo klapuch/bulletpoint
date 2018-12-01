@@ -25,6 +25,7 @@ return array(
     'Klapuch\\Routing\\' => array($vendorDir . '/klapuch/routing/Core'),
     'Klapuch\\Output\\' => array($vendorDir . '/klapuch/output/Core'),
     'Klapuch\\Log\\' => array($vendorDir . '/klapuch/log/Core'),
+    'Klapuch\\Iterator\\' => array($vendorDir . '/klapuch/iterator/Core'),
     'Klapuch\\Internal\\' => array($vendorDir . '/klapuch/internal/Core'),
     'Klapuch\\Http\\' => array($vendorDir . '/klapuch/http/Core'),
     'Klapuch\\Configuration\\' => array($vendorDir . '/klapuch/configuration/Core'),

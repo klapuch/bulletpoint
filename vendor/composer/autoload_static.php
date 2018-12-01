@@ -39,6 +39,7 @@ class ComposerStaticInit2eeff16dc153fcd72defed6bfe2ddc2d
             'Klapuch\\Routing\\' => 16,
             'Klapuch\\Output\\' => 15,
             'Klapuch\\Log\\' => 12,
+            'Klapuch\\Iterator\\' => 17,
             'Klapuch\\Internal\\' => 17,
             'Klapuch\\Http\\' => 13,
             'Klapuch\\Configuration\\' => 22,
@@ -138,6 +139,10 @@ class ComposerStaticInit2eeff16dc153fcd72defed6bfe2ddc2d
         'Klapuch\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/klapuch/log/Core',
+        ),
+        'Klapuch\\Iterator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/klapuch/iterator/Core',
         ),
         'Klapuch\\Internal\\' => 
         array (
