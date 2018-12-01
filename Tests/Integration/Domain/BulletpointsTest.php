@@ -30,8 +30,8 @@ final class BulletpointsTest extends TestCase\Runtime {
 			iterator_to_array((new Domain\ThemeBulletpoints($theme, $this->connection))->all())
 		);
 		Assert::count(2, $bulletpoints);
-		Assert::same($id1, $bulletpoints[0]['id']);
-		Assert::same($id2, $bulletpoints[1]['id']);
+		Assert::same($id2, $bulletpoints[0]['id']);
+		Assert::same($id1, $bulletpoints[1]['id']);
 	}
 
 	public function testAddingNew(): void {

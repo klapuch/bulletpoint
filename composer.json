@@ -25,8 +25,7 @@
     "klapuch/configuration": "dev-master as 0.0.1",
     "klapuch/storage": "dev-master as 2.0.0",
     "klapuch/sql": "dev-master",
-    "klapuch/validation": "dev-master as 2.6.0",
-    "klapuch/iterator": "dev-master"
+    "klapuch/validation": "dev-master as 2.6.0"
   },
   "require-dev": {
     "nette/tester": "^2.0",

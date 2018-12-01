@@ -23,11 +23,13 @@ CREATE SCHEMA constant;
 CREATE FUNCTION constant.references_name() RETURNS text[] AS $$SELECT ARRAY['wikipedia'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.theme_tags_min() RETURNS integer AS $$SELECT 1;$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.bulletpoint_ratings_rating_range() RETURNS integer[] AS $$SELECT ARRAY[-1, 0, 1];$$ LANGUAGE sql IMMUTABLE;
 
 
 -- domains
 CREATE DOMAIN references_name AS text CHECK (VALUE = ANY(constant.references_name()));
 CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
+CREATE DOMAIN bulletpoint_ratings_rating AS integer CHECK (constant.bulletpoint_ratings_rating_range() @> ARRAY[VALUE]);
 
 
 -- functions
@@ -99,6 +101,29 @@ CREATE TABLE bulletpoints (
 	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id)
 );
 
+CREATE FUNCTION bulletpoints_trigger_row_ai() RETURNS trigger AS
+$BODY$
+BEGIN
+	INSERT INTO bulletpoint_ratings (rating, bulletpoint_id) VALUES (1, new.id);
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER bulletpoints_row_ai_trigger
+	AFTER INSERT
+	ON bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_ai();
+
+
+CREATE TABLE bulletpoint_ratings (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	rating bulletpoint_ratings_rating NOT NULL,
+	bulletpoint_id integer NOT NULL,
+	rated_at timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT bulletpoint_ratings_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id)
+);
+
 
 -- views
 CREATE VIEW public_themes AS
@@ -111,12 +136,12 @@ CREATE VIEW public_themes AS
 
 CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
-    WITH inserted_theme AS (
+	WITH inserted_theme AS (
 		INSERT INTO themes (name, tags) VALUES (new.name, new.tags) RETURNING id
 	), inserted_reference AS (
 		INSERT INTO "references" (name, url) VALUES (new.reference_name, new.reference_url) RETURNING id
 	)
-    INSERT INTO theme_references (theme_id, reference_id) VALUES (
+	INSERT INTO theme_references (theme_id, reference_id) VALUES (
 		(SELECT id FROM inserted_theme),
 		(SELECT id FROM inserted_reference)
 	);
@@ -133,9 +158,16 @@ CREATE TRIGGER public_themes_trigger_row_ii
 CREATE VIEW public_bulletpoints AS
 	SELECT
 		bulletpoints.id, bulletpoints.text, bulletpoints.theme_id,
-		sources.link AS source_link, sources.type AS source_type
+		sources.link AS source_link, sources.type AS source_type,
+		bulletpoint_ratings.rating
 	FROM bulletpoints
-	LEFT JOIN sources ON sources.id = bulletpoints.source_id;
+	JOIN (
+		SELECT bulletpoint_id, sum(rating) AS rating
+		FROM bulletpoint_ratings
+		GROUP BY bulletpoint_id
+	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
+	LEFT JOIN sources ON sources.id = bulletpoints.source_id
+	ORDER BY rating DESC, created_at DESC, id DESC;
 
 CREATE FUNCTION public_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN

@@ -27,6 +27,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'source_link',
 				'source_type',
 				'text',
+				'rating',
 			]))->from(['public_bulletpoints'])
 			->where('id = :id', ['id' => $this->id])
 		))->row();
@@ -36,6 +37,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'id' => $row['id'],
 				'theme_id' => $row['theme_id'],
 				'text' => $row['text'],
+				'rating' => $row['rating'],
 				'source' => [
 					'link' => $row['source_link'],
 					'type' => $row['source_type'],
