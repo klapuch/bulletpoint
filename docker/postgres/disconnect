@@ -1,0 +1,3 @@
+#!/bin/bash
+psql -U postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'bulletpoint'";
+psql -U postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'bulletpoint_test'";

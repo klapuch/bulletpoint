@@ -1,0 +1,49 @@
+parameters:
+	exceptionRules:
+		reportUnusedCatchesOfUncheckedExceptions: false
+		checkedExceptions: []
+		uncheckedExceptions: []
+		methodThrowTypeDeclarations: []
+		functionThrowTypeDeclarations: []
+
+extensions:
+	exceptionRules: Pepakriz\PHPStanExceptionRules\DI\ExceptionRulesExtension
+
+services:
+	-
+		class: Pepakriz\PHPStanExceptionRules\CheckedExceptionService(%exceptionRules.checkedExceptions%, %exceptionRules.uncheckedExceptions%)
+
+	-
+		class: Pepakriz\PHPStanExceptionRules\DefaultThrowTypeService(%exceptionRules.methodThrowTypeDeclarations%, %exceptionRules.functionThrowTypeDeclarations%)
+
+	-
+		class: Pepakriz\PHPStanExceptionRules\DefaultThrowTypeExtension
+		tags:
+			- exceptionRules.dynamicMethodThrowTypeExtension
+			- exceptionRules.dynamicStaticMethodThrowTypeExtension
+			- exceptionRules.dynamicConstructorThrowTypeExtension
+			- exceptionRules.dynamicFunctionThrowTypeExtension
+
+	-
+		class: Pepakriz\PHPStanExceptionRules\Extension\ReflectionExtension
+		tags:
+			- exceptionRules.dynamicConstructorThrowTypeExtension
+
+	-
+		class: Pepakriz\PHPStanExceptionRules\Extension\DateTimeExtension
+		tags:
+			- exceptionRules.dynamicConstructorThrowTypeExtension
+
+	-
+		class: Pepakriz\PHPStanExceptionRules\Rules\ThrowsPhpDocRule
+		arguments:
+			reportUnusedCatchesOfUncheckedExceptions: %exceptionRules.reportUnusedCatchesOfUncheckedExceptions%
+		tags: [phpstan.rules.rule]
+
+	-
+		class: Pepakriz\PHPStanExceptionRules\Rules\ThrowsPhpDocInheritanceRule
+		tags: [phpstan.rules.rule]
+
+	-
+		class: Pepakriz\PHPStanExceptionRules\Rules\UnreachableCatchRule
+		tags: [phpstan.rules.rule]

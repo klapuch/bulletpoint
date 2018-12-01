@@ -1,0 +1,36 @@
+{
+  "name": "klapuch/output",
+  "description": "printers, output, xml, json",
+  "homepage": "https://github.com/klapuch/Output",
+  "type": "library",
+  "authors": [
+	{
+	  "name": "Dominik Klapuch",
+	  "email": "klapuchdominik@gmail.com",
+	  "homepage": "https://www.github.com/klapuch",
+	  "role": "Developer"
+	}
+  ],
+  "require": {
+	"php": ">=7.1",
+	"ext-dom": "*",
+	"ext-xsl": "*",
+	"ext-simplexml": "*"
+  },
+  "require-dev": {
+	"nette/tester": "^2.0",
+	"jakub-onderka/php-parallel-lint": "^0.9.2",
+	"slevomat/coding-standard": "^2.3",
+	"sebastian/phpcpd": "^3.0",
+	"phing/phing": "^2.16",
+	"consistence/coding-standard": "^0.13.0",
+    "phpstan/phpstan": "*"
+  },
+  "autoload": {
+	"psr-4": {
+	  "Klapuch\\Output\\": [
+		"Core/"
+	  ]
+	}
+  }
+}

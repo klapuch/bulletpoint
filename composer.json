@@ -1,33 +1,57 @@
 {
-  "name": "bulletpoint",
+  "name": "klapuch/bulletpoint",
+  "description": "REST API for bulletpoint",
+  "homepage": "https://github.com/klapuch/bulletpoint",
   "type": "project",
+  "license": "proprietary",
   "authors": [
     {
-      "name": "Dominik Klapuch"
+      "name": "Dominik Klapuch",
+      "email": "klapuchdominik@gmail.com",
+      "homepage": "https://www.github.com/klapuch",
+      "role": "Developer"
     }
   ],
   "require": {
-    "mockery/mockery": "^0.9.4",
-    "dg/texy": "^2.8",
-    "nette/bootstrap": "~2.3.0",
-    "nette/caching": "~2.3.0",
-    "nette/di": "~2.3.0",
-    "nette/forms": "~2.3.0",
-    "nette/neon": "~2.3.0",
-    "nette/robot-loader": "~2.3.0",
-    "nette/security": "~2.3.0",
-    "nette/utils": "~2.3.0",
-    "nette/http": "~2.3.0",
-    "nette/application": "~2.3.0",
-    "latte/latte": "~2.3.0",
-    "tracy/tracy": "~2.3.0",
-    "nette/tester": "~1.0",
-    "nextras/secured-links": "^1.3",
-    "mrtnzlml/testbench": "@dev"
+    "php": ">=7.2",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "ext-apcu": "*",
+    "ext-xsl": "*",
+    "ext-bcmath": "*",
+    "ext-igbinary": "*",
+    "ext-curl": "*",
+    "klapuch/application": "@dev",
+    "klapuch/configuration": "dev-master as 0.0.1",
+    "klapuch/storage": "dev-master as 2.0.0",
+    "klapuch/sql": "dev-master",
+    "klapuch/validation": "dev-master as 2.6.0"
+  },
+  "require-dev": {
+    "nette/tester": "^2.0",
+    "jakub-onderka/php-parallel-lint": "^1.0.0",
+    "slevomat/coding-standard": "^4.8.3",
+    "sebastian/phpcpd": "^4.0.0",
+    "consistence/coding-standard": "^3.0",
+    "phpstan/phpstan": "^0.10.1",
+    "phpstan/phpstan-strict-rules": "*",
+    "mockery/mockery": "^1.0.0",
+    "klapuch/http": "^1.4",
+    "pepakriz/phpstan-exception-rules": "*",
+    "phpstan/phpstan-mockery": "^0.10.2"
   },
   "autoload": {
     "psr-4": {
-      "Bulletpoint\\": "app/"
+      "Bulletpoint\\": [
+        "App/"
+      ]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Bulletpoint\\": [
+        "Tests/"
+      ]
     }
   }
 }
