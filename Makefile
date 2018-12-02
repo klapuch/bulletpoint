@@ -5,7 +5,7 @@ PHPCS_CACHE_DIR := /tmp/cache
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --cache=$(PHPCS_CACHE_DIR)/phpcs --tab-width=4 -sp App Tests www
 PHPCPD_ARGS := App --exclude Endpoint/ --exclude Sql/ --exclude Task/ --names-exclude=CompleteDescription.php
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
-CHECK_TEST_EXTENSIONS := find Tests/Unit/ Tests/Integration/ Tests/Functional/ Tests/Elastic/ Tests/System/ -name '*.php' | grep -v '\Test.php$$'
+CHECK_TEST_EXTENSIONS := find Tests/Integration/ -name '*.php' | grep -v '\Test.php$$'
 
 check: validate-composer.lock check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests
 ci: validate-composer.lock check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
