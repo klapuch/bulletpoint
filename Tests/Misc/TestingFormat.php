@@ -13,6 +13,11 @@ final class TestingFormat implements Output\Format {
 		$this->origin = $origin;
 	}
 
+	/**
+	 * @param mixed $tag
+	 * @param mixed $content
+	 * @return \Klapuch\Output\Format
+	 */
 	public function with($tag, $content = null): Output\Format {
 		return $this->origin->with($tag, $content);
 	}
@@ -21,6 +26,11 @@ final class TestingFormat implements Output\Format {
 		return $this->origin->serialization();
 	}
 
+	/**
+	 * @param mixed $tag
+	 * @param callable $adjustment
+	 * @return \Klapuch\Output\Format
+	 */
 	public function adjusted($tag, callable $adjustment): Output\Format {
 		return $this->origin->adjusted($tag, $adjustment);
 	}
