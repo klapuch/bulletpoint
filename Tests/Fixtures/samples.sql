@@ -70,7 +70,7 @@ $BODY$ LANGUAGE plpgsql;
 
 CREATE FUNCTION samples.sources(replacements jsonb = '{}') RETURNS integer AS $BODY$
 DECLARE
-	v_id themes.id%type;
+	v_id sources.id%type;
 BEGIN
 	INSERT INTO sources (link, type) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'link'),
@@ -84,12 +84,28 @@ $BODY$ LANGUAGE plpgsql;
 
 CREATE FUNCTION samples.bulletpoints(replacements jsonb = '{}') RETURNS integer AS $BODY$
 DECLARE
-	v_id themes.id%type;
+	v_id bulletpoints.id%type;
 BEGIN
-	INSERT INTO bulletpoints (theme_id, source_id, text) VALUES (
+	INSERT INTO bulletpoints (theme_id, source_id, text, user_id) VALUES (
 		samples.random_if_not_exists((SELECT samples.themes()), replacements, 'theme_id'),
 		samples.random_if_not_exists((SELECT samples.sources()), replacements, 'source_id'),
-		samples.random_if_not_exists(md5(random()::text), replacements, 'text')
+		samples.random_if_not_exists(md5(random()::text), replacements, 'text'),
+		samples.random_if_not_exists((SELECT samples.users()), replacements, 'user_id')
+	)
+	RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION samples.users(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id users.id%type;
+BEGIN
+	INSERT INTO users (email, password, role) VALUES (
+		samples.random_if_not_exists(md5(random()::text), replacements, 'email'),
+		samples.random_if_not_exists(md5(random()::text), replacements, 'password'),
+		samples.random_if_not_exists(test_utils.random_array_pick(constant.roles()), replacements, 'role')::roles
 	)
 	RETURNING id INTO v_id;
 

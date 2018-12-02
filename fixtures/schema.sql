@@ -23,13 +23,15 @@ CREATE SCHEMA constant;
 CREATE FUNCTION constant.references_name() RETURNS text[] AS $$SELECT ARRAY['wikipedia'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.theme_tags_min() RETURNS integer AS $$SELECT 1;$$ LANGUAGE sql IMMUTABLE;
-CREATE FUNCTION constant.bulletpoint_ratings_rating_range() RETURNS integer[] AS $$SELECT ARRAY[-1, 0, 1];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $$SELECT ARRAY[-1, 0, 1];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member'];$$ LANGUAGE sql IMMUTABLE;
 
 
 -- domains
 CREATE DOMAIN references_name AS text CHECK (VALUE = ANY(constant.references_name()));
 CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
-CREATE DOMAIN bulletpoint_ratings_rating AS integer CHECK (constant.bulletpoint_ratings_rating_range() @> ARRAY[VALUE]);
+CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_ratings_point_range() @> ARRAY[VALUE]);
+CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 
 
 -- functions
@@ -66,6 +68,31 @@ CREATE TABLE tags (
 -- 	FOR EACH ROW EXECUTE PROCEDURE tags_trigger_row_ad();
 
 
+CREATE TABLE users (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	email citext NOT NULL,
+	password text NOT NULL,
+	role roles NOT NULL DEFAULT 'member'::roles
+);
+
+CREATE INDEX users_email_idx ON users USING btree (email);
+
+CREATE FUNCTION users_trigger_row_biu() RETURNS trigger AS $$
+BEGIN
+	IF EXISTS(SELECT 1 FROM users WHERE email = new.email AND id IS DISTINCT FROM CASE WHEN TG_OP = 'INSERT' THEN NULL ELSE new.id END) THEN
+		RAISE EXCEPTION USING MESSAGE = format('Email %s already exists', new.email);
+	END IF;
+
+	RETURN new;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER users_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON users
+	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_biu();
+
+
 -- TODO: check for existing item in tags
 CREATE TABLE themes (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -96,15 +123,17 @@ CREATE TABLE bulletpoints (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	theme_id integer NOT NULL,
 	source_id integer NOT NULL,
+	user_id integer NOT NULL,
 	text text NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
-	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id)
+	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id),
+	CONSTRAINT bulletpoint_user_id FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE FUNCTION bulletpoints_trigger_row_ai() RETURNS trigger AS
 $BODY$
 BEGIN
-	INSERT INTO bulletpoint_ratings (rating, bulletpoint_id) VALUES (1, new.id);
+	INSERT INTO bulletpoint_ratings (point, user_id, bulletpoint_id) VALUES (1, new.user_id, new.id);
 
 	RETURN new;
 END;
@@ -118,10 +147,13 @@ CREATE TRIGGER bulletpoints_row_ai_trigger
 
 CREATE TABLE bulletpoint_ratings (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	rating bulletpoint_ratings_rating NOT NULL,
+	point bulletpoint_ratings_point NOT NULL,
+	user_id integer NOT NULL,
 	bulletpoint_id integer NOT NULL,
 	rated_at timestamptz NOT NULL DEFAULT now(),
-	CONSTRAINT bulletpoint_ratings_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id)
+	CONSTRAINT bulletpoint_ratings_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id),
+	CONSTRAINT bulletpoint_ratings_user_id FOREIGN KEY (user_id) REFERENCES users(id),
+	CONSTRAINT bulletpoint_ratings_user_id_bulletpoint_id UNIQUE (user_id, bulletpoint_id)
 );
 
 
@@ -159,13 +191,15 @@ CREATE VIEW public_bulletpoints AS
 	SELECT
 		bulletpoints.id, bulletpoints.text, bulletpoints.theme_id,
 		sources.link AS source_link, sources.type AS source_type,
-		bulletpoint_ratings.rating
+		bulletpoint_ratings.rating,
+		users.id AS user_id
 	FROM bulletpoints
 	JOIN (
-		SELECT bulletpoint_id, sum(rating) AS rating
+		SELECT bulletpoint_id, sum(point) AS rating
 		FROM bulletpoint_ratings
 		GROUP BY bulletpoint_id
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
+	JOIN users ON users.id = bulletpoints.user_id
 	LEFT JOIN sources ON sources.id = bulletpoints.source_id
 	ORDER BY rating DESC, created_at DESC, id DESC;
 
@@ -174,10 +208,11 @@ BEGIN
 	WITH inserted_source AS (
 		INSERT INTO sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
 	)
-	INSERT INTO bulletpoints (theme_id, source_id, text) VALUES (
+	INSERT INTO bulletpoints (theme_id, source_id, text, user_id) VALUES (
 		new.theme_id,
 		(SELECT id FROM inserted_source),
-		new.text
+		new.text,
+		new.user_id
 	);
 	RETURN new;
 END
