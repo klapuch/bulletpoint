@@ -2,7 +2,7 @@
 .PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock composer-install, count-postgres-tests generate-routes check-test-extensions generate-nginx-conf check-changed-conf phpstan-test
 
 PHPCS_CACHE_DIR := /tmp/cache
-PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --cache=$(PHPCS_CACHE_DIR)/phpcs --tab-width=4 -sp App Tests www
+PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --cache=$(PHPCS_CACHE_DIR)/phpcs --tab-width=4 -sp App Tests
 PHPCPD_ARGS := App --exclude Endpoint/ --exclude Sql/ --exclude Task/ --names-exclude=CompleteDescription.php
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
 CHECK_TEST_EXTENSIONS := find Tests/Integration/ -name '*.php' | grep -v '\Test.php$$'
@@ -15,13 +15,13 @@ help:               ## help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 lint:               ## lint
-	vendor/bin/parallel-lint -e php,phpt App Tests www
+	vendor/bin/parallel-lint -e php,phpt App Tests
 
 phpcpd:             ## phpcpd
 	vendor/bin/phpcpd $(PHPCPD_ARGS)
 
 phpstan:            ## phpstan
-	vendor/bin/phpstan analyse -l max -c phpstan.neon App www
+	vendor/bin/phpstan analyse -l max -c phpstan.neon App
 	@make phpstan-test --no-print-directory
 
 phpstan-test:
