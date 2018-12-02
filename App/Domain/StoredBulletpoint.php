@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
@@ -10,7 +11,7 @@ final class StoredBulletpoint implements Bulletpoint {
 	/** @var int */
 	private $id;
 
-	/** @var Storage\Connection */
+	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
 	public function __construct(int $id, Storage\Connection $connection) {
@@ -30,7 +31,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'rating',
 				'user_id',
 			]))->from(['public_bulletpoints'])
-			->where('id = :id', ['id' => $this->id])
+				->where('id = :id', ['id' => $this->id])
 		))->row();
 		return new Output\FilledFormat(
 			$format,

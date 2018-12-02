@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
@@ -9,10 +10,10 @@ final class BulletpointRating implements Rating {
 	/** @var int */
 	private $bulletpoint;
 
-	/** @var Storage\Connection */
+	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var User */
+	/** @var \Bulletpoint\Domain\User */
 	private $user;
 
 	public function __construct(int $bulletpoint, User $user, Storage\Connection $connection) {

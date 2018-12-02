@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
@@ -9,10 +10,10 @@ final class ExistingBulletpoint implements Bulletpoint {
 	/** @var int */
 	private $id;
 
-	/** @var Storage\Connection */
+	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var Bulletpoint */
+	/** @var \Bulletpoint\Domain\Bulletpoint */
 	private $origin;
 
 	public function __construct(Bulletpoint $origin, int $id, Storage\Connection $connection) {
@@ -22,9 +23,9 @@ final class ExistingBulletpoint implements Bulletpoint {
 	}
 
 	/**
-	 * @param Output\Format $format
+	 * @param \Klapuch\Output\Format $format
 	 * @throws \UnexpectedValueException
-	 * @return Output\Format
+	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->exists($this->id))

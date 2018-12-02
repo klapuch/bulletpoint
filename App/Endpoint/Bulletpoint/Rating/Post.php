@@ -8,27 +8,18 @@ use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Internal;
 use Klapuch\Storage;
-use Klapuch\Uri;
 
 final class Post implements Application\View {
-	/** @var \Klapuch\Uri\Uri */
-	private $url;
-
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/**
-	 * @var Application\Request
-	 */
+	/** @var \Klapuch\Application\Request */
 	private $request;
 
-	/**
-	 * @var Domain\User
-	 */
+	/** @var \Bulletpoint\Domain\User */
 	private $user;
 
-	public function __construct(Application\Request $request, Uri\Uri $url, Storage\Connection $connection, Domain\User $user) {
-		$this->url = $url;
+	public function __construct(Application\Request $request, Storage\Connection $connection, Domain\User $user) {
 		$this->connection = $connection;
 		$this->request = $request;
 		$this->user = $user;

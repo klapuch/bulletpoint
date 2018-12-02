@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
@@ -6,7 +7,7 @@ use Klapuch\Sql;
 use Klapuch\Storage;
 
 final class StoredThemes implements Themes {
-	/** @var Storage\Connection */
+	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
 	public function __construct(Storage\Connection $connection) {

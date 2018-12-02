@@ -9,17 +9,12 @@ use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Storage;
-use Klapuch\Uri;
 
 final class Get implements Application\View {
-	/** @var \Klapuch\Uri\Uri */
-	private $url;
-
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	public function __construct(Uri\Uri $url, Storage\Connection $connection) {
-		$this->url = $url;
+	public function __construct(Storage\Connection $connection) {
 		$this->connection = $connection;
 	}
 

@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
@@ -6,7 +7,7 @@ use Klapuch\Sql;
 use Klapuch\Storage;
 
 final class ThemeBulletpoints implements Bulletpoints {
-	/** @var Storage\Connection */
+	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
 	/** @var int */
@@ -29,7 +30,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 				'rating',
 				'user_id',
 			]))->from(['public_bulletpoints'])
-			->where('theme_id = :theme_id', ['theme_id' => $this->theme])
+				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
 		))->rows();
 		foreach ($bulletpoints as $bulletpoint) {
 			yield new StoredBulletpoint(

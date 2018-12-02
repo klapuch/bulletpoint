@@ -1,4 +1,5 @@
-<?php declare(strict_types = 1);
+<?php
+declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
@@ -9,10 +10,10 @@ final class ExistingTheme implements Theme {
 	/** @var int */
 	private $id;
 
-	/** @var Storage\Connection */
+	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var Theme */
+	/** @var \Bulletpoint\Domain\Theme */
 	private $origin;
 
 	public function __construct(Theme $origin, int $id, Storage\Connection $connection) {

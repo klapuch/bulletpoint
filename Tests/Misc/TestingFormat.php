@@ -6,7 +6,7 @@ namespace Bulletpoint\Misc;
 use Klapuch\Output;
 
 final class TestingFormat implements Output\Format {
-	/** @var Output\Format */
+	/** @var \Klapuch\Output\Format */
 	private $origin;
 
 	public function __construct(Output\Format $origin) {
