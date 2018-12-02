@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Endpoint\Bulletpoint;
+namespace Bulletpoint\Endpoint\Bulletpoint\Rating;
 
 use Bulletpoint\Domain;
 use Bulletpoint\Response;

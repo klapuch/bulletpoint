@@ -7,8 +7,8 @@ PHPCPD_ARGS := App --exclude Endpoint/ --exclude Sql/ --exclude Task/ --names-ex
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
 CHECK_TEST_EXTENSIONS := find Tests/Unit/ Tests/Integration/ Tests/Functional/ Tests/Elastic/ Tests/System/ -name '*.php' | grep -v '\Test.php$$'
 
-check: validate-composer.lock check-changed-conf check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests
-ci: validate-composer.lock check-changed-conf check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
+check: validate-composer.lock check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests
+ci: validate-composer.lock check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
 init: lint generate-schemas move-schemas
 
 help:               ## help

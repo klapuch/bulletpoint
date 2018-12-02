@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2a7e4dd633c7a5c0db1240c9e8e431b",
+    "content-hash": "e4260f7089436d3042fef1c139df7bc7",
     "packages": [
         {
             "name": "klapuch/application",
@@ -209,22 +209,19 @@
         },
         {
             "name": "klapuch/output",
-            "version": "2.11.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Output.git",
-                "reference": "e37d39abd7e3c06e34d4bd027c59c264a408dbc2"
+                "reference": "e1f1cc58ff1a5f17e30abc78848f59f0ce2ba2be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Output/zipball/e37d39abd7e3c06e34d4bd027c59c264a408dbc2",
-                "reference": "e37d39abd7e3c06e34d4bd027c59c264a408dbc2",
+                "url": "https://api.github.com/repos/klapuch/Output/zipball/e1f1cc58ff1a5f17e30abc78848f59f0ce2ba2be",
+                "reference": "e1f1cc58ff1a5f17e30abc78848f59f0ce2ba2be",
                 "shasum": ""
             },
             "require": {
-                "ext-dom": "*",
-                "ext-simplexml": "*",
-                "ext-xsl": "*",
                 "php": ">=7.1"
             },
             "require-dev": {
@@ -232,7 +229,7 @@
                 "jakub-onderka/php-parallel-lint": "^0.9.2",
                 "nette/tester": "^2.0",
                 "phing/phing": "^2.16",
-                "phpstan/phpstan": "*",
+                "phpstan/phpstan": "^0.8.5",
                 "sebastian/phpcpd": "^3.0",
                 "slevomat/coding-standard": "^2.3"
             },
@@ -255,7 +252,7 @@
             ],
             "description": "printers, output, xml, json",
             "homepage": "https://github.com/klapuch/Output",
-            "time": "2017-09-17T12:36:06+00:00"
+            "time": "2018-04-07T18:48:26+00:00"
         },
         {
             "name": "klapuch/routing",
@@ -1578,16 +1575,16 @@
         },
         {
             "name": "pepakriz/phpstan-exception-rules",
-            "version": "v0.4.0",
+            "version": "v0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pepakriz/phpstan-exception-rules.git",
-                "reference": "55eaa1fa675d26b28bcc7ff6b67bfd449fd32d5b"
+                "reference": "7a842fe0368480c1f5629cb10cf8f4796e6282e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pepakriz/phpstan-exception-rules/zipball/55eaa1fa675d26b28bcc7ff6b67bfd449fd32d5b",
-                "reference": "55eaa1fa675d26b28bcc7ff6b67bfd449fd32d5b",
+                "url": "https://api.github.com/repos/pepakriz/phpstan-exception-rules/zipball/7a842fe0368480c1f5629cb10cf8f4796e6282e9",
+                "reference": "7a842fe0368480c1f5629cb10cf8f4796e6282e9",
                 "shasum": ""
             },
             "require": {
@@ -1609,7 +1606,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.3-dev"
+                    "dev-master": "0.4-dev"
                 }
             },
             "autoload": {
@@ -1622,7 +1619,7 @@
                 "MIT"
             ],
             "description": "Exception rules for PHPStan",
-            "time": "2018-11-27T19:24:38+00:00"
+            "time": "2018-12-02T16:01:47+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -2224,16 +2221,16 @@
         },
         {
             "name": "symfony/contracts",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "4a33574d5771f4b04334cd4f7d43de96a92efb62"
+                "reference": "3edf0ab943d1985a356721952cba36ff31bd6e5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/4a33574d5771f4b04334cd4f7d43de96a92efb62",
-                "reference": "4a33574d5771f4b04334cd4f7d43de96a92efb62",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/3edf0ab943d1985a356721952cba36ff31bd6e5f",
+                "reference": "3edf0ab943d1985a356721952cba36ff31bd6e5f",
                 "shasum": ""
             },
             "require": {
@@ -2288,7 +2285,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2018-10-31T08:00:32+00:00"
+            "time": "2018-11-24T09:35:08+00:00"
         },
         {
             "name": "symfony/finder",
@@ -2447,6 +2444,12 @@
             "package": "klapuch/configuration"
         },
         {
+            "alias": "2.6.0",
+            "alias_normalized": "2.6.0.0",
+            "version": "9999999-dev",
+            "package": "klapuch/output"
+        },
+        {
             "alias": "2.0.0",
             "alias_normalized": "2.0.0.0",
             "version": "9999999-dev",
@@ -2463,6 +2466,7 @@
     "stability-flags": {
         "klapuch/application": 20,
         "klapuch/configuration": 20,
+        "klapuch/output": 20,
         "klapuch/storage": 20,
         "klapuch/sql": 20,
         "klapuch/validation": 20,

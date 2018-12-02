@@ -23,6 +23,7 @@
     "ext-curl": "*",
     "klapuch/application": "@dev",
     "klapuch/configuration": "dev-master as 0.0.1",
+    "klapuch/output": "dev-master as 2.6.0",
     "klapuch/storage": "dev-master as 2.0.0",
     "klapuch/sql": "dev-master",
     "klapuch/validation": "dev-master as 2.6.0",
@@ -46,7 +47,10 @@
       "Bulletpoint\\": [
         "App/"
       ]
-    }
+    },
+    "files": [
+      "App/Http/statuses.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

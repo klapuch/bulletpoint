@@ -22,9 +22,9 @@ final class ExistingTheme implements Theme {
 	}
 
 	/**
-	 * @param Output\Format $format
+	 * @param \Klapuch\Output\Format $format
 	 * @throws \UnexpectedValueException
-	 * @return Output\Format
+	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format {
 		if (!$this->exists($this->id))

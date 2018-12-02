@@ -8,3 +8,7 @@ parameters:
 	ignoreErrors:
 		# Wait for PHP 7.3 solution
 		- '~Parameter #1 \$json of function json_decode expects string, string\|false given~'
+
+		# Fakes, intentional fails
+		- '~Method Bulletpoint\\Domain\\FakeUser::id\(\) should return int but returns int\|null~'
+		- '~Method Bulletpoint\\Domain\\FakeUser::properties\(\) should return array but returns array\|null~'
