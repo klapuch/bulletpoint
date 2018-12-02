@@ -21,6 +21,10 @@ final class BulletpointRating implements Rating {
 		$this->user = $user;
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 * @param int $point
+	 */
 	public function rate(int $point): void {
 		(new Storage\BuiltQuery(
 			$this->connection,
