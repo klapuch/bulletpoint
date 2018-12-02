@@ -20,11 +20,11 @@ final class RatingTest extends TestCase\Runtime {
 	public function testAddingRating(): void {
 		['id' => $bulletpoint] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
-		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->up();
+		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->rate(+1);
 		Assert::same(2, (new TypedQuery($this->connection, 'SELECT sum(point) FROM bulletpoint_ratings'))->field());
-		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->reset();
+		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->rate(0);
 		Assert::same(1, (new TypedQuery($this->connection, 'SELECT sum(point) FROM bulletpoint_ratings'))->field());
-		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->down();
+		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->rate(-1);
 		Assert::same(0, (new TypedQuery($this->connection, 'SELECT sum(point) FROM bulletpoint_ratings'))->field());
 	}
 
@@ -32,9 +32,9 @@ final class RatingTest extends TestCase\Runtime {
 		['id' => $bulletpoint] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
 		Assert::same(1, (new TypedQuery($this->connection, 'SELECT sum(point) FROM bulletpoint_ratings'))->field());
-		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->up();
-		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->up();
-		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->up();
+		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->rate(+1);
+		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->rate(+1);
+		(new Domain\BulletpointRating($bulletpoint, new Domain\FakeUser($user), $this->connection))->rate(+1);
 		Assert::same(2, (new TypedQuery($this->connection, 'SELECT sum(point) FROM bulletpoint_ratings'))->field());
 	}
 }

@@ -48,6 +48,13 @@ final class BulletpointsTest extends TestCase\Runtime {
 		(new Misc\TableCount($this->connection, 'bulletpoints', 1))->assert();
 		(new Misc\TableCount($this->connection, 'sources', 1))->assert();
 	}
+
+	public function testCountingByTheme(): void {
+		['id' => $theme] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
+		Assert::same(0, (new Domain\ThemeBulletpoints($theme, $this->connection))->count());
+		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['theme_id' => $theme]))->try();
+		Assert::same(1, (new Domain\ThemeBulletpoints($theme, $this->connection))->count());
+	}
 }
 
 (new BulletpointsTest())->run();

@@ -6,10 +6,6 @@ use Klapuch\Sql;
 use Klapuch\Storage;
 
 final class BulletpointRating implements Rating {
-	private const UP = 1;
-	private const DOWN = -1;
-	private const RESET = 0;
-
 	/** @var int */
 	private $bulletpoint;
 
@@ -25,19 +21,7 @@ final class BulletpointRating implements Rating {
 		$this->user = $user;
 	}
 
-	public function up(): void {
-		$this->vote(self::UP);
-	}
-
-	public function down(): void {
-		$this->vote(self::DOWN);
-	}
-
-	public function reset(): void {
-		$this->vote(self::RESET);
-	}
-
-	private function vote(int $point): void {
+	public function rate(int $point): void {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PgInsertInto(

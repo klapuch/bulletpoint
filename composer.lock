@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49c8c2d3f0689acffa701baab287034e",
+    "content-hash": "a2a7e4dd633c7a5c0db1240c9e8e431b",
     "packages": [
         {
             "name": "klapuch/application",
@@ -114,16 +114,16 @@
         },
         {
             "name": "klapuch/internal",
-            "version": "0.0.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Internal.git",
-                "reference": "12d3d9446c7f6724dde836fb4301732c6cc8b308"
+                "reference": "e4fbefa02ad447afd72a891482c731f141ca78f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Internal/zipball/12d3d9446c7f6724dde836fb4301732c6cc8b308",
-                "reference": "12d3d9446c7f6724dde836fb4301732c6cc8b308",
+                "url": "https://api.github.com/repos/klapuch/Internal/zipball/e4fbefa02ad447afd72a891482c731f141ca78f1",
+                "reference": "e4fbefa02ad447afd72a891482c731f141ca78f1",
                 "shasum": ""
             },
             "require": {
@@ -135,7 +135,7 @@
                 "nette/tester": "^1.7",
                 "phing/phing": "^2.16",
                 "phpstan/phpstan": "^0.7.0",
-                "sebastian/phpcpd": "^2.0",
+                "sebastian/phpcpd": "^4.0",
                 "slevomat/coding-standard": "^2.0.0"
             },
             "type": "project",
@@ -157,7 +157,7 @@
             ],
             "description": "PHP improved internals",
             "homepage": "https://www.github.com/klapuch/Internal",
-            "time": "2017-10-14T21:23:18+00:00"
+            "time": "2018-07-23T20:19:17+00:00"
         },
         {
             "name": "klapuch/log",
@@ -2465,7 +2465,8 @@
         "klapuch/configuration": 20,
         "klapuch/storage": 20,
         "klapuch/sql": 20,
-        "klapuch/validation": 20
+        "klapuch/validation": 20,
+        "klapuch/internal": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

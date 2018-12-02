@@ -22,7 +22,11 @@ final class BulletpointTest extends TestCase\Runtime {
 		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
 		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['text' => 'TEST']))->try();
 		$bulletpoint = (new Misc\TestingFormat(
-			(new Domain\StoredBulletpoint(
+			(new Domain\ExistingBulletpoint(
+				new Domain\StoredBulletpoint(
+					$id,
+					$this->connection
+				),
 				$id,
 				$this->connection
 			))->print(new Output\Json())
@@ -30,6 +34,17 @@ final class BulletpointTest extends TestCase\Runtime {
 		Assert::same($id, $bulletpoint['id']);
 		Assert::same('TEST', $bulletpoint['text']);
 		Assert::same(1, $bulletpoint['rating']);
+	}
+
+	/**
+	 * @throws \UnexpectedValueException Bulletpoint 1 does not exist
+	 */
+	public function testThrowingOnUnknown(): void {
+		(new Domain\ExistingBulletpoint(
+			new Domain\StoredBulletpoint(1, $this->connection),
+			1,
+			$this->connection
+		))->print(new Output\Json());
 	}
 }
 

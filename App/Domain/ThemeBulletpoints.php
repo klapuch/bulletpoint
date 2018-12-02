@@ -61,4 +61,13 @@ final class ThemeBulletpoints implements Bulletpoints {
 			))
 		))->execute();
 	}
+
+	public function count(): int {
+		return (new Storage\BuiltQuery(
+			$this->connection,
+			(new Sql\AnsiSelect(['count(*)']))
+				->from(['bulletpoints'])
+				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
+		))->field();
+	}
 }
