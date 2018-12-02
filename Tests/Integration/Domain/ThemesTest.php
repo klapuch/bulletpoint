@@ -26,7 +26,6 @@ final class ThemesTest extends TestCase\Runtime {
 		]);
 		(new Misc\TableCount($this->connection, 'themes', 1))->assert();
 		(new Misc\TableCount($this->connection, 'references', 1))->assert();
-		(new Misc\TableCount($this->connection, 'theme_references', 1))->assert();
 	}
 }
 

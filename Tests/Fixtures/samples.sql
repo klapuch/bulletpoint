@@ -57,9 +57,10 @@ CREATE FUNCTION samples.themes(replacements jsonb = '{}') RETURNS integer AS $BO
 DECLARE
 	v_id themes.id%type;
 BEGIN
-	INSERT INTO themes (name, tags, created_at) VALUES (
+	INSERT INTO themes (name, tags, reference_id, created_at) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'name'),
 		samples.random_if_not_exists(jsonb_build_array(md5(random()::text)), replacements, 'tags'),
+		samples.random_if_not_exists((SELECT samples."references"()), replacements, 'reference_id'),
 		now()
 	)
 	RETURNING id INTO v_id;
@@ -98,7 +99,7 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION samples.users(replacements jsonb = '{}') RETURNS integer AS $BODY$
+CREATE FUNCTION samples.users(replacements jsonb = '{}') RETURNS integer AS $BODY$
 DECLARE
 	v_id users.id%type;
 BEGIN
@@ -106,6 +107,20 @@ BEGIN
 		samples.random_if_not_exists(md5(random()::text), replacements, 'email'),
 		samples.random_if_not_exists(md5(random()::text), replacements, 'password'),
 		samples.random_if_not_exists(test_utils.random_array_pick(constant.roles()), replacements, 'role')::roles
+	)
+	RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE FUNCTION samples."references"(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id "references".id%type;
+BEGIN
+	INSERT INTO "references" (url, name) VALUES (
+		samples.random_if_not_exists(md5(random()::text), replacements, 'url'),
+		samples.random_if_not_exists(test_utils.random_array_pick(constant.references_name()), replacements, 'name')::references_name
 	)
 	RETURNING id INTO v_id;
 

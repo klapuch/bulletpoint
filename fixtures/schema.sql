@@ -98,17 +98,10 @@ CREATE TABLE themes (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	name text NOT NULL,
 	tags jsonb NOT NULL, -- TODO: use array
-	created_at timestamptz NOT NULL DEFAULT now(),
-	CONSTRAINT themes_tags_min CHECK (jsonb_array_length(tags) >= constant.theme_tags_min())
-);
-
-
-CREATE TABLE theme_references (
-	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	theme_id integer NOT NULL,
 	reference_id integer NOT NULL,
-	CONSTRAINT theme_references_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id),
-	CONSTRAINT theme_references_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id)
+	created_at timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT themes_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id),
+	CONSTRAINT themes_tags_min CHECK (jsonb_array_length(tags) >= constant.theme_tags_min())
 );
 
 
@@ -163,20 +156,15 @@ CREATE VIEW public_themes AS
 		themes.id, themes.name, themes.tags, themes.created_at,
 		"references".name AS reference_name, "references".url AS reference_url
 	FROM themes
-	LEFT JOIN theme_references ON themes.id = theme_references.theme_id
-	LEFT JOIN "references" ON "references".id = theme_references.reference_id;
+	LEFT JOIN "references" ON "references".id = themes.reference_id;
 
 CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
-	WITH inserted_theme AS (
-		INSERT INTO themes (name, tags) VALUES (new.name, new.tags) RETURNING id
-	), inserted_reference AS (
+	WITH inserted_reference AS (
 		INSERT INTO "references" (name, url) VALUES (new.reference_name, new.reference_url) RETURNING id
 	)
-	INSERT INTO theme_references (theme_id, reference_id) VALUES (
-		(SELECT id FROM inserted_theme),
-		(SELECT id FROM inserted_reference)
-	);
+	INSERT INTO themes (name, tags, reference_id) VALUES (new.name, new.tags, (SELECT id FROM inserted_reference));
+
 	RETURN new;
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
