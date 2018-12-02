@@ -99,8 +99,10 @@ CREATE TABLE themes (
 	name text NOT NULL,
 	tags jsonb NOT NULL, -- TODO: use array
 	reference_id integer NOT NULL,
+	user_id integer NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
 	CONSTRAINT themes_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id),
+	CONSTRAINT themes_user_id FOREIGN KEY (user_id) REFERENCES users(id),
 	CONSTRAINT themes_tags_min CHECK (jsonb_array_length(tags) >= constant.theme_tags_min())
 );
 
@@ -154,8 +156,10 @@ CREATE TABLE bulletpoint_ratings (
 CREATE VIEW public_themes AS
 	SELECT
 		themes.id, themes.name, themes.tags, themes.created_at,
-		"references".name AS reference_name, "references".url AS reference_url
+		"references".name AS reference_name, "references".url AS reference_url,
+		users.id AS user_id
 	FROM themes
+	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id;
 
 CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
@@ -163,7 +167,7 @@ BEGIN
 	WITH inserted_reference AS (
 		INSERT INTO "references" (name, url) VALUES (new.reference_name, new.reference_url) RETURNING id
 	)
-	INSERT INTO themes (name, tags, reference_id) VALUES (new.name, new.tags, (SELECT id FROM inserted_reference));
+	INSERT INTO themes (name, tags, reference_id, user_id) VALUES (new.name, new.tags, (SELECT id FROM inserted_reference), new.user_id);
 
 	RETURN new;
 END

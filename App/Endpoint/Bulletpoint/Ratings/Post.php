@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Endpoint\Bulletpoint\Rating;
+namespace Bulletpoint\Endpoint\Bulletpoint\Ratings;
 
 use Bulletpoint\Domain;
 use Bulletpoint\Response;
@@ -29,7 +29,7 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		['point' => $point] = (new Internal\DecodedJson($this->request->body()->serialization()));
+		['point' => $point] = (new Internal\DecodedJson($this->request->body()->serialization()))->values();
 		(new Domain\BulletpointRating(
 			$parameters['bulletpoint_id'],
 			$this->user,

@@ -57,10 +57,11 @@ CREATE FUNCTION samples.themes(replacements jsonb = '{}') RETURNS integer AS $BO
 DECLARE
 	v_id themes.id%type;
 BEGIN
-	INSERT INTO themes (name, tags, reference_id, created_at) VALUES (
+	INSERT INTO themes (name, tags, reference_id, user_id, created_at) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'name'),
 		samples.random_if_not_exists(jsonb_build_array(md5(random()::text)), replacements, 'tags'),
 		samples.random_if_not_exists((SELECT samples."references"()), replacements, 'reference_id'),
+		samples.random_if_not_exists((SELECT samples.users()), replacements, 'user_id'),
 		now()
 	)
 	RETURNING id INTO v_id;
