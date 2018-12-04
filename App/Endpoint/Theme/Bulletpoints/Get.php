@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Endpoint\Bulletpoints;
+namespace Bulletpoint\Endpoint\Theme\Bulletpoints;
 
 use Bulletpoint\Domain;
 use Bulletpoint\Misc;
