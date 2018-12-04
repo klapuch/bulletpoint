@@ -1,0 +1,29 @@
+{
+  "parser"  : "babel-eslint",
+  "extends" : [
+    "airbnb",
+  ],
+  "rules": {
+    "no-else-return": 0, // weird
+    "react/destructuring-assignment": 0, // used for dispatch, ..
+
+    "import/no-named-default": 0,
+    "import/no-named-as-default": 0, // Multiple exports because of Redux state and tests
+    "import/prefer-default-export": 0, // Multiple exports because of Redux state and tests
+    "arrow-body-style": 0,
+    "no-shadow": 0, // Shadowing is a nice language feature. Naming is hard.
+    "react/jsx-filename-extension": 0, // No, JSX belongs to .js files
+    "react/require-default-props": 0, // Does not work with API - first call is undefined
+    "react/no-array-index-key": 0, // TODO: not always unique
+    "react/forbid-prop-types": [0, { "forbid": ["array", "object"] }],
+    "jsx-a11y/anchor-is-valid": [ "error", {
+      "components": [ "Link" ],
+      "specialLink": [ "to" ],
+      "aspects": [ "noHref" ],
+    }],
+    import/no-extraneous-dependencies: [error, { devDependencies: true }],
+  },
+  env: {
+    browser: true, // because of document in tests,
+  }
+}
