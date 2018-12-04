@@ -1,15 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Scheduling;
+namespace Bulletpoint\Scheduling;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use FindMyFriends;
-use FindMyFriends\Configuration;
-use FindMyFriends\Elasticsearch\LazyElasticsearch;
+use Bulletpoint;
+use Bulletpoint\Configuration;
 use Klapuch\Configuration\ValidIni;
-use Klapuch\Log;
 use Klapuch\Storage;
 use Predis;
 
@@ -26,45 +24,31 @@ $connection = new Storage\CachedConnection(
 	new Predis\Client($configuration['REDIS']['uri'])
 );
 
-$elasticsearch = new LazyElasticsearch($configuration['ELASTICSEARCH']['hosts']);
-
-(new LoggedJob(
-	new SelectedJob(
-		$argv[1],
-		new MarkedJob(new Task\Cron($connection), $connection),
-		new MarkedJob(new Task\RefreshMaterializedView($connection), $connection),
-		new MarkedJob(new Task\GenerateJsonSchema($connection), $connection),
-		new MarkedJob(new Task\ElasticsearchReindex($elasticsearch->create()), $connection),
-		new FindMyFriends\Scheduling\Task\CheckChangedConfiguration(
-			new \SplFileInfo(__DIR__ . '/../../docker/nginx'),
-			new SerialJobs(
-				new Task\GenerateNginxRoutes(
-					new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/.routes.ini')),
-					new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
-				),
-				new FindMyFriends\Scheduling\Task\GenerateNginxConfiguration(
-					new \SplFileInfo(__DIR__ . '/../../docker/nginx/preflight.conf')
-				)
-			)
-		),
-		new MarkedJob(
+(new SelectedJob(
+	$argv[1],
+	new Bulletpoint\Scheduling\Task\CheckChangedConfiguration(
+		new \SplFileInfo(__DIR__ . '/../../docker/nginx'),
+		new SerialJobs(
 			new Task\GenerateNginxRoutes(
 				new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/.routes.ini')),
 				new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
 			),
-			$connection
-		),
-		new MarkedJob(
-			new FindMyFriends\Scheduling\Task\GenerateNginxConfiguration(
+			new Bulletpoint\Scheduling\Task\GenerateNginxConfiguration(
 				new \SplFileInfo(__DIR__ . '/../../docker/nginx/preflight.conf')
-			),
-			$connection
+			)
 		)
 	),
-	new Log\ChainedLogs(
-		new FindMyFriends\Log\FilesystemLogs(
-			new Log\DynamicLocation($configuration['LOGS']['directory'])
+	new MarkedJob(
+		new Task\GenerateNginxRoutes(
+			new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/.routes.ini')),
+			new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
 		),
-		new FindMyFriends\Log\ElasticsearchLogs($elasticsearch)
+		$connection
+	),
+	new MarkedJob(
+		new Bulletpoint\Scheduling\Task\GenerateNginxConfiguration(
+			new \SplFileInfo(__DIR__ . '/../../docker/nginx/preflight.conf')
+		),
+		$connection
 	)
 ))->fulfill();

@@ -15,11 +15,9 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 
--- schemas
+-- constants
 CREATE SCHEMA constant;
 
-
--- constants
 CREATE FUNCTION constant.references_name() RETURNS text[] AS $$SELECT ARRAY['wikipedia'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.theme_tags_min() RETURNS integer AS $$SELECT 1;$$ LANGUAGE sql IMMUTABLE;
@@ -101,8 +99,8 @@ CREATE TABLE themes (
 	reference_id integer NOT NULL,
 	user_id integer NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
-	CONSTRAINT themes_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id),
-	CONSTRAINT themes_user_id FOREIGN KEY (user_id) REFERENCES users(id),
+	CONSTRAINT themes_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id) ON DELETE SET NULL ON UPDATE RESTRICT,
+	CONSTRAINT themes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT,
 	CONSTRAINT themes_tags_min CHECK (jsonb_array_length(tags) >= constant.theme_tags_min())
 );
 
@@ -121,8 +119,8 @@ CREATE TABLE bulletpoints (
 	user_id integer NOT NULL,
 	text text NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
-	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id),
-	CONSTRAINT bulletpoint_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT bulletpoint_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
 
 CREATE FUNCTION bulletpoints_trigger_row_ai() RETURNS trigger AS
@@ -146,8 +144,8 @@ CREATE TABLE bulletpoint_ratings (
 	user_id integer NOT NULL,
 	bulletpoint_id integer NOT NULL,
 	rated_at timestamptz NOT NULL DEFAULT now(),
-	CONSTRAINT bulletpoint_ratings_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id),
-	CONSTRAINT bulletpoint_ratings_user_id FOREIGN KEY (user_id) REFERENCES users(id),
+	CONSTRAINT bulletpoint_ratings_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT bulletpoint_ratings_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT,
 	CONSTRAINT bulletpoint_ratings_user_id_bulletpoint_id UNIQUE (user_id, bulletpoint_id)
 );
 
@@ -214,3 +212,45 @@ CREATE TRIGGER public_bulletpoints_trigger_row_ii
 	INSTEAD OF INSERT
 	ON public_bulletpoints
 	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_ii();
+
+
+-- tables
+CREATE SCHEMA log;
+
+CREATE TYPE job_statuses AS ENUM (
+	'pending',
+	'processing',
+	'succeed',
+	'failed'
+);
+
+CREATE TABLE log.cron_jobs (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	marked_at timestamp with time zone NOT NULL DEFAULT now(),
+	name text NOT NULL,
+	self_id integer,
+	status job_statuses NOT NULL,
+	CONSTRAINT cron_jobs_id_fk FOREIGN KEY (self_id) REFERENCES log.cron_jobs(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE FUNCTION cron_jobs_trigger_row_bi() RETURNS trigger AS $BODY$
+BEGIN
+	IF (new.status = 'processing' AND (
+		SELECT status NOT IN ('succeed', 'failed')
+		FROM log.cron_jobs
+		WHERE name = new.name
+		ORDER BY id DESC
+		LIMIT 1
+		)
+	) THEN
+		RAISE EXCEPTION USING MESSAGE = format('Job "%s" can not be run, because previous is not fulfilled.', new.name);
+	END IF;
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER cron_jobs_row_bi_trigger
+	BEFORE INSERT
+	ON log.cron_jobs
+	FOR EACH ROW EXECUTE PROCEDURE cron_jobs_trigger_row_bi();

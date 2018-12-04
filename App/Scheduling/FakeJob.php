@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Scheduling;
+namespace Bulletpoint\Scheduling;
 
 final class FakeJob implements Job {
 	/** @var callable|null */

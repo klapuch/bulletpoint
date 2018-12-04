@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4260f7089436d3042fef1c139df7bc7",
+    "content-hash": "591b269d43ce35f3f15cdfa032e0e6d9",
     "packages": [
         {
             "name": "klapuch/application",
@@ -158,6 +158,54 @@
             "description": "PHP improved internals",
             "homepage": "https://www.github.com/klapuch/Internal",
             "time": "2018-07-23T20:19:17+00:00"
+        },
+        {
+            "name": "klapuch/iterator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klapuch/Iterator.git",
+                "reference": "15c25f927488b4fc489a2b35e27c443c13ac98a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klapuch/Iterator/zipball/15c25f927488b4fc489a2b35e27c443c13ac98a7",
+                "reference": "15c25f927488b4fc489a2b35e27c443c13ac98a7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "^1.0",
+                "jakub-onderka/php-parallel-lint": "^0.9.2",
+                "mockery/mockery": "^0.9.9",
+                "nette/tester": "^1.7",
+                "phing/phing": "^2.16",
+                "phpstan/phpstan": "^0.7.0",
+                "sebastian/phpcpd": "^3.0",
+                "slevomat/coding-standard": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Klapuch\\Iterator\\": [
+                        "Core/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Dominik Klapuch",
+                    "email": "klapuchdominik@gmail.com",
+                    "homepage": "https://www.github.com/klapuch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Iterators replacing array functions",
+            "homepage": "https://www.github.com/klapuch/Iterator",
+            "time": "2017-11-11T20:45:53+00:00"
         },
         {
             "name": "klapuch/log",
@@ -2470,7 +2518,8 @@
         "klapuch/storage": 20,
         "klapuch/sql": 20,
         "klapuch/validation": 20,
-        "klapuch/internal": 20
+        "klapuch/internal": 20,
+        "klapuch/iterator": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

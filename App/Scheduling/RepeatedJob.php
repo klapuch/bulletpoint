@@ -1,12 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Scheduling;
+namespace Bulletpoint\Scheduling;
 
 use Klapuch\Storage;
 
 final class RepeatedJob implements Job {
-	/** @var \FindMyFriends\Scheduling\Job */
+	/** @var \Bulletpoint\Scheduling\Job */
 	private $origin;
 
 	/** @var string */

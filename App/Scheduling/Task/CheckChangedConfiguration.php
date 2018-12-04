@@ -1,16 +1,16 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Scheduling\Task;
+namespace Bulletpoint\Scheduling\Task;
 
-use FindMyFriends\Scheduling;
+use Bulletpoint\Scheduling;
 use Klapuch\Iterator;
 
 final class CheckChangedConfiguration implements Scheduling\Job {
 	/** @var \SplFileInfo */
 	private $destination;
 
-	/** @var \FindMyFriends\Scheduling\Job */
+	/** @var \Bulletpoint\Scheduling\Job */
 	private $dependency;
 
 	public function __construct(\SplFileInfo $destination, Scheduling\Job $dependency) {

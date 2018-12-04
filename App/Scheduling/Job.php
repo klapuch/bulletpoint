@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Scheduling;
+namespace Bulletpoint\Scheduling;
 
 interface Job {
 	public function fulfill(): void;

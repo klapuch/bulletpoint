@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Scheduling\Task;
+namespace Bulletpoint\Scheduling\Task;
 
-use FindMyFriends\Scheduling;
+use Bulletpoint\Scheduling;
 use Klapuch\Configuration;
 
 final class GenerateNginxRoutes implements Scheduling\Job {

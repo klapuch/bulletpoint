@@ -1,13 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace FindMyFriends\Scheduling;
+namespace Bulletpoint\Scheduling;
 
 final class SelectedJob implements Job {
 	/** @var string */
 	private $name;
 
-	/** @var \FindMyFriends\Scheduling\Job[] */
+	/** @var \Bulletpoint\Scheduling\Job[] */
 	private $origins;
 
 	public function __construct(string $name, Job ...$origins) {
@@ -19,7 +19,7 @@ final class SelectedJob implements Job {
 	 * @throws \UnexpectedValueException
 	 */
 	public function fulfill(): void {
-		/** @var \FindMyFriends\Scheduling\Job[] $choices */
+		/** @var \Bulletpoint\Scheduling\Job[] $choices */
 		$choices = array_combine(
 			array_map(
 				static function(Job $origin): string {
