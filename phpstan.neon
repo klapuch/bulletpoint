@@ -1,0 +1,12 @@
+includes:
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+	# - vendor/pepakriz/phpstan-exception-rules/extension.neon TODO: enable
+parameters:
+	exceptionRules:
+		checkedExceptions:
+			- UnexpectedValueException
+	ignoreErrors:
+		# Fakes, intentional fails
+		- '~Method Bulletpoint\\Domain\\FakeUser::id\(\) should return int but returns int\|null~'
+		- '~Method Bulletpoint\\Domain\\FakeUser::properties\(\) should return array but returns array\|null~'
+		- '~Method Bulletpoint\\Scheduling\\FakeJob::name\(\) should return string but returns string\|null\.~'
