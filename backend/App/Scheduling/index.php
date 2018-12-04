@@ -31,8 +31,8 @@ $connection = new Storage\CachedConnection(
 		new SerialJobs(
 			new Task\GenerateNginxRoutes(
 				new ValidIni(new \SplFileInfo(
-								 __DIR__ . '/../Configuration/.routes.ini'
-							 )),
+					__DIR__ . '/../Configuration/.routes.ini'
+				)),
 				new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
 			),
 			new Bulletpoint\Scheduling\Task\GenerateNginxConfiguration(
@@ -43,8 +43,8 @@ $connection = new Storage\CachedConnection(
 	new MarkedJob(
 		new Task\GenerateNginxRoutes(
 			new ValidIni(new \SplFileInfo(
-							 __DIR__ . '/../Configuration/.routes.ini'
-						 )),
+				__DIR__ . '/../Configuration/.routes.ini'
+			)),
 			new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
 		),
 		$connection
