@@ -11,7 +11,7 @@ services:
     postgres:
       container_name: bulletpoint-postgres
       build: docker/postgres
-      env_file: ./docker/.env.local
+      env_file: docker/.env.local
       volumes:
         - ./:/var/www/bulletpoint
         - bulletpoint-postgres:/var/lib/postgresql/data

@@ -1,0 +1,10 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10.5.0
+    working_directory: ~/frontend
+    steps:
+      - checkout
+      - run: yarn
+      - run: yarn run check
