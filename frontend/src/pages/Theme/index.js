@@ -7,6 +7,7 @@ import { all } from '../../theme/bulletpoint/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
 import { allFetching as allThemeBulletpointsFetching, getByTheme as getBulletpointsByTheme } from '../../theme/bulletpoint/selects';
 import Loader from '../../ui/Loader';
+import Add from '../../bulletpoint/Add';
 
 type TagProps = {|
   children: string,
@@ -92,7 +93,7 @@ class Theme extends React.Component<Props> {
                       {bulletpoint.rating.up}
                       <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />
                     </span>
-                    {bulletpoint.text}
+                    {bulletpoint.content}
                     <br />
                     <small>
                       <cite>
@@ -103,7 +104,7 @@ class Theme extends React.Component<Props> {
                 );
               })}
             </ul>
-            <a className="btn btn-default" href="#" role="button">Add bulletpoint</a>
+            <Add />
           </div>
         </div>
         <br />
