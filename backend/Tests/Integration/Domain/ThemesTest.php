@@ -18,9 +18,11 @@ final class ThemesTest extends TestCase\Runtime {
 
 	public function testCreatingNewTheme(): void {
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
+		['id' => $tag1] = (new Fixtures\SamplePostgresData($this->connection, 'tags'))->try();
+		['id' => $tag2] = (new Fixtures\SamplePostgresData($this->connection, 'tags'))->try();
 		(new Domain\StoredThemes(new Domain\FakeUser($user), $this->connection))->create([
 			'name' => 'TEST',
-			'tags' => [1, 2],
+			'tags' => [$tag1, $tag2],
 			'reference' => [
 				'name' => 'wikipedia',
 				'url' => 'https://www.wikipedia.cz/test',

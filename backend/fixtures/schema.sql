@@ -20,7 +20,6 @@ CREATE SCHEMA constant;
 
 CREATE FUNCTION constant.references_name() RETURNS text[] AS $$SELECT ARRAY['wikipedia'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
-CREATE FUNCTION constant.theme_tags_min() RETURNS integer AS $$SELECT 1;$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $$SELECT ARRAY[-1, 0, 1];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member'];$$ LANGUAGE sql IMMUTABLE;
 
@@ -91,17 +90,23 @@ CREATE TRIGGER users_row_biu_trigger
 	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_biu();
 
 
--- TODO: check for existing item in tags
 CREATE TABLE themes (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	name text NOT NULL,
-	tags jsonb NOT NULL, -- TODO: use array
 	reference_id integer NOT NULL,
 	user_id integer NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
 	CONSTRAINT themes_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id) ON DELETE SET NULL ON UPDATE RESTRICT,
-	CONSTRAINT themes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT,
-	CONSTRAINT themes_tags_min CHECK (jsonb_array_length(tags) >= constant.theme_tags_min())
+	CONSTRAINT themes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
+);
+
+
+CREATE TABLE theme_tags (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	theme_id integer NOT NULL,
+	tag_id integer NOT NULL,
+	CONSTRAINT theme_tags_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT theme_tags_tag_id FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
@@ -123,8 +128,7 @@ CREATE TABLE bulletpoints (
 	CONSTRAINT bulletpoint_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
 
-CREATE FUNCTION bulletpoints_trigger_row_ai() RETURNS trigger AS
-$BODY$
+CREATE FUNCTION bulletpoints_trigger_row_ai() RETURNS trigger AS $BODY$
 BEGIN
 	INSERT INTO bulletpoint_ratings (point, user_id, bulletpoint_id) VALUES (1, new.user_id, new.id);
 
@@ -153,19 +157,29 @@ CREATE TABLE bulletpoint_ratings (
 -- views
 CREATE VIEW public_themes AS
 	SELECT
-		themes.id, themes.name, themes.tags, themes.created_at,
+		themes.id, themes.name, tags.tags, themes.created_at,
 		"references".name AS reference_name, "references".url AS reference_url,
 		users.id AS user_id
 	FROM themes
 	JOIN users ON users.id = themes.user_id
-	LEFT JOIN "references" ON "references".id = themes.reference_id;
+	LEFT JOIN "references" ON "references".id = themes.reference_id
+	LEFT JOIN (
+		SELECT theme_id, jsonb_agg(tags.name) AS tags
+		FROM theme_tags
+		JOIN tags ON tags.id = theme_tags.tag_id
+	    GROUP BY theme_id
+	) AS tags ON tags.theme_id = themes.id;
 
 CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
 	WITH inserted_reference AS (
 		INSERT INTO "references" (name, url) VALUES (new.reference_name, new.reference_url) RETURNING id
+	), inserted_theme AS (
+		INSERT INTO themes (name, reference_id, user_id) VALUES (new.name, (SELECT id FROM inserted_reference), new.user_id)
+		RETURNING id
 	)
-	INSERT INTO themes (name, tags, reference_id, user_id) VALUES (new.name, new.tags, (SELECT id FROM inserted_reference), new.user_id);
+	INSERT INTO theme_tags (theme_id, tag_id)
+	SELECT (SELECT id FROM inserted_theme), r.tag::integer FROM jsonb_array_elements(new.tags) AS r(tag);
 
 	RETURN new;
 END

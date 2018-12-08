@@ -57,9 +57,8 @@ CREATE FUNCTION samples.themes(replacements jsonb = '{}') RETURNS integer AS $BO
 DECLARE
 	v_id themes.id%type;
 BEGIN
-	INSERT INTO themes (name, tags, reference_id, user_id, created_at) VALUES (
+	INSERT INTO themes (name, reference_id, user_id, created_at) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'name'),
-		samples.random_if_not_exists(jsonb_build_array(md5(random()::text)), replacements, 'tags'),
 		samples.random_if_not_exists((SELECT samples."references"()), replacements, 'reference_id'),
 		samples.random_if_not_exists((SELECT samples.users()), replacements, 'user_id'),
 		now()
@@ -77,6 +76,19 @@ BEGIN
 	INSERT INTO sources (link, type) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'link'),
 		samples.random_if_not_exists('web', replacements, 'type')
+	)
+	RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE FUNCTION samples.tags(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id tags.id%type;
+BEGIN
+	INSERT INTO tags (name) VALUES (
+		samples.random_if_not_exists(md5(random()::text), replacements, 'name')
 	)
 	RETURNING id INTO v_id;
 
