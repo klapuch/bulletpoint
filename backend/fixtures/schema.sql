@@ -100,6 +100,19 @@ CREATE TABLE sources (
 	type sources_type NOT NULL
 );
 
+CREATE FUNCTION sources_trigger_row_bi() RETURNS trigger AS $BODY$
+BEGIN
+	new.link = nullif(new.link, '');
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER sources_row_bi_trigger
+	BEFORE INSERT
+	ON sources
+	FOR EACH ROW EXECUTE PROCEDURE sources_trigger_row_bi();
+
 
 CREATE TABLE bulletpoints (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -120,10 +133,23 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE FUNCTION bulletpoints_trigger_row_bi() RETURNS trigger AS $BODY$
+BEGIN
+	new.text = nullif(new.text, '');
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
 CREATE TRIGGER bulletpoints_row_ai_trigger
 	AFTER INSERT
 	ON bulletpoints
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_ai();
+
+CREATE TRIGGER bulletpoints_row_bi_trigger
+	BEFORE INSERT
+	ON bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_bi();
 
 
 CREATE TABLE bulletpoint_ratings (
