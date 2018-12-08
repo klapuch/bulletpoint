@@ -33,7 +33,7 @@ CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 
 -- functions
 CREATE FUNCTION array_diff(anyarray, anyarray) RETURNS anyarray AS $BODY$
-	SELECT ARRAY(SELECT unnest($1) EXCEPT select unnest($2));
+	SELECT ARRAY(SELECT unnest($1) EXCEPT SELECT unnest($2));
 $BODY$ LANGUAGE sql IMMUTABLE;
 
 
@@ -50,29 +50,13 @@ CREATE TABLE tags (
 	name text NOT NULL
 );
 
--- CREATE FUNCTION tags_trigger_row_ad() RETURNS trigger AS
--- $BODY$
--- 	BEGIN
--- 		UPDATE themes
--- 		SET tags = array_diff(tags, ARRAY[old.id])
--- 		WHERE tags @> ARRAY[old.id];
--- 	END;
--- $BODY$ LANGUAGE plpgsql VOLATILE;
---
--- CREATE TRIGGER tags_row_ad_trigger
--- 	AFTER DELETE
--- 	ON tags
--- 	FOR EACH ROW EXECUTE PROCEDURE tags_trigger_row_ad();
-
 
 CREATE TABLE users (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	email citext NOT NULL,
+	email citext NOT NULL UNIQUE,
 	password text NOT NULL,
 	role roles NOT NULL DEFAULT 'member'::roles
 );
-
-CREATE INDEX users_email_idx ON users USING btree (email);
 
 CREATE FUNCTION users_trigger_row_biu() RETURNS trigger AS $$
 BEGIN
