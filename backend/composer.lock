@@ -475,12 +475,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "3c7c64db268c4453ac438890baf98bb0e21b84ca"
+                "reference": "d11bf00cff35fb3c66bd16d3fc4eb299daf60179"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/3c7c64db268c4453ac438890baf98bb0e21b84ca",
-                "reference": "3c7c64db268c4453ac438890baf98bb0e21b84ca",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/d11bf00cff35fb3c66bd16d3fc4eb299daf60179",
+                "reference": "d11bf00cff35fb3c66bd16d3fc4eb299daf60179",
                 "shasum": ""
             },
             "require": {
@@ -527,7 +527,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2018-09-30T12:09:14+00:00"
+            "time": "2018-12-08T17:39:09+00:00"
         },
         {
             "name": "klapuch/uri",
@@ -2271,7 +2271,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.2.0",
+            "version": "v4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -2340,16 +2340,16 @@
         },
         {
             "name": "symfony/contracts",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "3edf0ab943d1985a356721952cba36ff31bd6e5f"
+                "reference": "1aa7ab2429c3d594dd70689604b5cf7421254cdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/3edf0ab943d1985a356721952cba36ff31bd6e5f",
-                "reference": "3edf0ab943d1985a356721952cba36ff31bd6e5f",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/1aa7ab2429c3d594dd70689604b5cf7421254cdf",
+                "reference": "1aa7ab2429c3d594dd70689604b5cf7421254cdf",
                 "shasum": ""
             },
             "require": {
@@ -2404,11 +2404,11 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2018-11-24T09:35:08+00:00"
+            "time": "2018-12-05T08:06:11+00:00"
         },
         {
             "name": "symfony/finder",
-            "version": "v4.2.0",
+            "version": "v4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
