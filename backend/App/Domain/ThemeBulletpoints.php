@@ -27,7 +27,10 @@ final class ThemeBulletpoints implements Bulletpoints {
 				'theme_id',
 				'source_link',
 				'source_type',
-				'rating',
+				'total_rating',
+				'up_rating',
+				'down_rating',
+				'neutral_rating',
 				'user_id',
 			]))->from(['public_bulletpoints'])
 				->where('theme_id = :theme_id', ['theme_id' => $this->theme])

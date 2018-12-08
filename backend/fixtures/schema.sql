@@ -181,17 +181,23 @@ CREATE VIEW public_bulletpoints AS
 	SELECT
 		bulletpoints.id, bulletpoints.text, bulletpoints.theme_id,
 		sources.link AS source_link, sources.type AS source_type,
-		bulletpoint_ratings.rating,
+			bulletpoint_ratings.up AS up_rating,
+			bulletpoint_ratings.down AS down_rating,
+			bulletpoint_ratings.neutral AS neutral_rating,
+			(bulletpoint_ratings.up + bulletpoint_ratings.down) AS total_rating,
 		users.id AS user_id
 	FROM bulletpoints
 	JOIN (
-		SELECT bulletpoint_id, sum(point) AS rating
+		SELECT
+			bulletpoint_id,
+			COALESCE(sum(point) FILTER (WHERE point = 1) OVER (PARTITION BY bulletpoint_id), 0) AS up,
+			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_id), 0) AS down,
+			COALESCE(sum(point) FILTER (WHERE point = 0) OVER (PARTITION BY bulletpoint_id), 0) AS neutral
 		FROM bulletpoint_ratings
-		GROUP BY bulletpoint_id
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
 	JOIN users ON users.id = bulletpoints.user_id
 	LEFT JOIN sources ON sources.id = bulletpoints.source_id
-	ORDER BY rating DESC, created_at DESC, id DESC;
+	ORDER BY total_rating DESC, length(bulletpoints.text) ASC, created_at DESC, id DESC;
 
 CREATE FUNCTION public_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN

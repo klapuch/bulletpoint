@@ -28,7 +28,10 @@ final class StoredBulletpoint implements Bulletpoint {
 				'source_link',
 				'source_type',
 				'text',
-				'rating',
+				'total_rating',
+				'up_rating',
+				'down_rating',
+				'neutral_rating',
 				'user_id',
 			]))->from(['public_bulletpoints'])
 				->where('id = :id', ['id' => $this->id])
@@ -39,7 +42,12 @@ final class StoredBulletpoint implements Bulletpoint {
 				'id' => $row['id'],
 				'theme_id' => $row['theme_id'],
 				'text' => $row['text'],
-				'rating' => $row['rating'],
+				'rating' => [
+					'up' => $row['up_rating'],
+					'down' => $row['down_rating'],
+					'neutral' => $row['neutral_rating'],
+					'total' => $row['total_rating'],
+				],
 				'user_id' => $row['user_id'],
 				'source' => [
 					'link' => $row['source_link'],
