@@ -1,12 +1,25 @@
 import React from 'react';
+import axios from 'axios';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore } from 'redux';
+import { createBrowserHistory } from 'history';
+import Router from './router';
+import combineReducers from './reducers';
 import * as serviceWorker from './serviceWorker';
+import withSettings from './api/connection';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+axios.defaults = withSettings(axios.defaults);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
+const history = createBrowserHistory();
+
+ReactDOM.render(
+	<Provider store={createStore(combineReducers, applyMiddleware(thunk, logger))}>
+		<Router history={history} />
+	</Provider>,
+	document.getElementById('root'),
+);
+
 serviceWorker.unregister();
