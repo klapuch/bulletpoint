@@ -189,7 +189,7 @@ CREATE VIEW public_bulletpoints AS
 	FROM bulletpoints
 	JOIN (
 		SELECT
-			bulletpoint_id,
+			DISTINCT ON (bulletpoint_id) bulletpoint_id,
 			COALESCE(sum(point) FILTER (WHERE point = 1) OVER (PARTITION BY bulletpoint_id), 0) AS up,
 			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_id), 0) AS down,
 			COALESCE(sum(point) FILTER (WHERE point = 0) OVER (PARTITION BY bulletpoint_id), 0) AS neutral
