@@ -27,7 +27,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'theme_id',
 				'source_link',
 				'source_type',
-				'text',
+				'content',
 				'total_rating',
 				'up_rating',
 				'down_rating',
@@ -41,7 +41,7 @@ final class StoredBulletpoint implements Bulletpoint {
 			[
 				'id' => $row['id'],
 				'theme_id' => $row['theme_id'],
-				'text' => $row['text'],
+				'content' => $row['content'],
 				'rating' => [
 					'up' => $row['up_rating'],
 					'down' => $row['down_rating'],

@@ -10,4 +10,4 @@ INSERT INTO themes (name, reference_id, user_id) VALUES ('PHP', 1, 1);
 
 INSERT INTO theme_tags (theme_id, tag_id) VALUES (1, 1), (1, 2);
 
-INSERT INTO bulletpoints (theme_id, source_id, user_id, text) VALUES (1, 1, 1, 'Good');
+INSERT INTO bulletpoints (theme_id, source_id, user_id, content) VALUES (1, 1, 1, 'Good');

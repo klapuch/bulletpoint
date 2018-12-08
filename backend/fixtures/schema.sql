@@ -119,7 +119,7 @@ CREATE TABLE bulletpoints (
 	theme_id integer NOT NULL,
 	source_id integer NOT NULL,
 	user_id integer NOT NULL,
-	text text NOT NULL,
+	content text NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
 	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT bulletpoint_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
@@ -135,7 +135,7 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION bulletpoints_trigger_row_bi() RETURNS trigger AS $BODY$
 BEGIN
-	new.text = nullif(new.text, '');
+	new.content = nullif(new.content, '');
 
 	RETURN new;
 END;
@@ -203,7 +203,7 @@ CREATE TRIGGER public_themes_trigger_row_ii
 
 CREATE VIEW public_bulletpoints AS
 	SELECT
-		bulletpoints.id, bulletpoints.text, bulletpoints.theme_id,
+		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id,
 		sources.link AS source_link, sources.type AS source_type,
 			bulletpoint_ratings.up AS up_rating,
 			bulletpoint_ratings.down AS down_rating,
@@ -221,17 +221,17 @@ CREATE VIEW public_bulletpoints AS
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
 	JOIN users ON users.id = bulletpoints.user_id
 	LEFT JOIN sources ON sources.id = bulletpoints.source_id
-	ORDER BY total_rating DESC, length(bulletpoints.text) ASC, created_at DESC, id DESC;
+	ORDER BY total_rating DESC, length(bulletpoints.content) ASC, created_at DESC, id DESC;
 
 CREATE FUNCTION public_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
 	WITH inserted_source AS (
 		INSERT INTO sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
 	)
-	INSERT INTO bulletpoints (theme_id, source_id, text, user_id) VALUES (
+	INSERT INTO bulletpoints (theme_id, source_id, content, user_id) VALUES (
 		new.theme_id,
 		(SELECT id FROM inserted_source),
-		new.text,
+		new.content,
 		new.user_id
 	);
 	RETURN new;

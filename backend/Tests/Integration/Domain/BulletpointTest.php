@@ -20,7 +20,7 @@ final class BulletpointTest extends TestCase\Runtime {
 
 	public function testBulletpointById(): void {
 		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
-		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['text' => 'TEST']))->try();
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['content' => 'TEST']))->try();
 		$bulletpoint = (new Misc\TestingFormat(
 			(new Domain\ExistingBulletpoint(
 				new Domain\StoredBulletpoint(
@@ -32,7 +32,7 @@ final class BulletpointTest extends TestCase\Runtime {
 			))->print(new Output\Json())
 		))->raw();
 		Assert::same($id, $bulletpoint['id']);
-		Assert::same('TEST', $bulletpoint['text']);
+		Assert::same('TEST', $bulletpoint['content']);
 		Assert::same(['up' => 1, 'down' => 0, 'neutral' => 0, 'total' => 1], $bulletpoint['rating']);
 	}
 

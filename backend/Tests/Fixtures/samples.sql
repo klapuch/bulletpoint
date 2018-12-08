@@ -100,10 +100,10 @@ CREATE FUNCTION samples.bulletpoints(replacements jsonb = '{}') RETURNS integer 
 DECLARE
 	v_id bulletpoints.id%type;
 BEGIN
-	INSERT INTO bulletpoints (theme_id, source_id, text, user_id) VALUES (
+	INSERT INTO bulletpoints (theme_id, source_id, content, user_id) VALUES (
 		samples.random_if_not_exists((SELECT samples.themes()), replacements, 'theme_id'),
 		samples.random_if_not_exists((SELECT samples.sources()), replacements, 'source_id'),
-		samples.random_if_not_exists(md5(random()::text), replacements, 'text'),
+		samples.random_if_not_exists(md5(random()::text), replacements, 'content'),
 		samples.random_if_not_exists((SELECT samples.users()), replacements, 'user_id')
 	)
 	RETURNING id INTO v_id;

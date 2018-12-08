@@ -27,7 +27,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 			$this->connection,
 			(new Sql\AnsiSelect([
 				'id',
-				'text',
+				'content',
 				'theme_id',
 				'source_link',
 				'source_type',
@@ -53,14 +53,14 @@ final class ThemeBulletpoints implements Bulletpoints {
 			(new Sql\PgInsertInto(
 				'public_bulletpoints',
 				[
-					'text' => ':text',
+					'content' => ':content',
 					'theme_id' => ':theme_id',
 					'source_type' => ':source_type',
 					'source_link' => ':source_link',
 					'user_id' => ':user_id',
 				],
 				[
-					'text' => $bulletpoint['text'],
+					'content' => $bulletpoint['content'],
 					'theme_id' => $this->theme,
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
