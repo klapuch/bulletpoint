@@ -8,7 +8,10 @@ import { getById, singleFetching as themeFetching } from '../../theme/selects';
 import { allFetching as allThemeBulletpointsFetching, getByTheme as getBulletpointsByTheme } from '../../theme/bulletpoint/selects';
 import Loader from '../../ui/Loader';
 
-const Tag = ({ children }) => <span style={{marginRight: 7}} className="label label-default">{children}</span>;
+type TagProps = {|
+  children: string,
+|};
+const Tag = ({ children }: TagProps) => <span style={{ marginRight: 7 }} className="label label-default">{children}</span>;
 type TagsProps = {|
   texts: Array<string>,
 |};
@@ -22,7 +25,7 @@ const Reference = ({ name, url }: ReferenceProps) => {
   if (name === 'wikipedia') {
     return (
       <a href={url} title="Wikipedia">
-        <span className="glyphicon glyphicon-link" aria-hidden="true"/>
+        <span className="glyphicon glyphicon-link" aria-hidden="true" />
       </a>
     );
   }
@@ -36,7 +39,7 @@ const Source = ({ type, link }: SourceProps) => {
   if (type === 'web') {
     return (
       <>
-        <span style={{marginRight: 4}} className="glyphicon glyphicon-globe" aria-hidden="true"/>
+        <span style={{ marginRight: 4 }} className="glyphicon glyphicon-globe" aria-hidden="true" />
         <a href={link}>{link}</a>
       </>
     );
@@ -47,6 +50,10 @@ const Source = ({ type, link }: SourceProps) => {
 type Props = {|
   +singleTheme: (number) => (void),
   +bulletpointsByTheme: (number) => (void),
+  +match: Object,
+  +theme: Object,
+  +bulletpoints: Array<Object>,
+  +fetching: boolean,
 |};
 const Title = styled.h1`
   display: inline-block;
@@ -61,7 +68,7 @@ class Theme extends React.Component<Props> {
   render() {
     const { theme, fetching, bulletpoints } = this.props;
     if (fetching) {
-      return <Loader />
+      return <Loader />;
     }
     return (
       <>
@@ -74,22 +81,22 @@ class Theme extends React.Component<Props> {
           <div className="col-sm-8">
             <h2 id="bulletpointy">Bulletpointy</h2>
             <ul className="list-group">
-              {bulletpoints.map(bulletpoint => {
+              {bulletpoints.map((bulletpoint) => {
                 return (
                   <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
                     <span className="badge alert-danger badge-guest">
                       {bulletpoint.rating.down}
-                      <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true"/>
+                      <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />
                     </span>
                     <span className="badge alert-success badge-guest">
                       {bulletpoint.rating.up}
-                      <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true"/>
+                      <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />
                     </span>
                     {bulletpoint.text}
-                    <br/>
+                    <br />
                     <small>
                       <cite>
-                        <Source type={bulletpoint.source.type} link={bulletpoint.source.link}/>
+                        <Source type={bulletpoint.source.type} link={bulletpoint.source.link} />
                       </cite>
                     </small>
                   </li>
@@ -99,7 +106,7 @@ class Theme extends React.Component<Props> {
             <a className="btn btn-default" href="#" role="button">Add bulletpoint</a>
           </div>
         </div>
-        <br/>
+        <br />
       </>
     );
   }
@@ -108,7 +115,7 @@ class Theme extends React.Component<Props> {
 const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
   theme: getById(theme, state),
   bulletpoints: getBulletpointsByTheme(theme, state),
-  fetching: themeFetching(theme, state) || allThemeBulletpointsFetching(theme, state)
+  fetching: themeFetching(theme, state) || allThemeBulletpointsFetching(theme, state),
 });
 const mapDispatchToProps = dispatch => ({
   singleTheme: (theme: number) => dispatch(single(theme)),

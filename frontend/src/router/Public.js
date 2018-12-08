@@ -16,12 +16,18 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
           <nav className="navbar navbar-default navbar-static-top">
             <div className="container">
               <div className="navbar-header">
-                <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                        aria-expanded="false" aria-controls="navbar">
+                <button
+                  type="button"
+                  className="navbar-toggle collapsed"
+                  data-toggle="collapse"
+                  data-target="#navbar"
+                  aria-expanded="false"
+                  aria-controls="navbar"
+                >
                   <span className="sr-only">Toggle navigation</span>
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
+                  <span className="icon-bar" />
+                  <span className="icon-bar" />
+                  <span className="icon-bar" />
                 </button>
                 <a className="navbar-brand" href="Default:" title="bulletpoint"><strong>bulletpoint</strong></a>
               </div>
@@ -31,8 +37,9 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
                     <a href="Prochazet:dokumenty">Procházet</a>
                   </li>
                   <li className="dropdown">
-                    <a href="#" className="dropdown-toggle" title="Moje" data-toggle="dropdown" role="button" aria-expanded="false">Moje
-                      <span className="caret"></span>
+                    <a href="#" className="dropdown-toggle" title="Moje" data-toggle="dropdown" role="button" aria-expanded="false">
+Moje
+                      <span className="caret" />
                     </a>
                     <ul className="dropdown-menu" role="menu">
                       <li title="Moje dokumenty">
@@ -53,9 +60,15 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
         <div id="footer">
           <div className="container">
             <p className="muted credit text-center">
-              <a href="https://github.com/klapuch/bulletpoint" className="no-link"
-                 target="_blank">
-                Created with <span id="heart">❤</span>
+              <a
+                href="https://github.com/klapuch/bulletpoint"
+                className="no-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Created with
+                {' '}
+                <span id="heart">❤</span>
               </a>
             </p>
           </div>

@@ -21,7 +21,7 @@ export default (state: State = init, action: Object): State => {
           [action.theme]: {
             payload: action.bulletpoints,
             fetching: action.fetching,
-          }
+          },
         },
       };
     case REQUESTED_THEME_BULLETPOINTS:
@@ -31,7 +31,7 @@ export default (state: State = init, action: Object): State => {
           ...state.all,
           [action.theme]: {
             fetching: action.fetching,
-          }
+          },
         },
       };
     case INVALIDATED_THEME_BULLETPOINTS:
@@ -41,7 +41,7 @@ export default (state: State = init, action: Object): State => {
           ...state.all,
           [action.theme]: {
             fetching: true,
-          }
+          },
         },
       };
     default:

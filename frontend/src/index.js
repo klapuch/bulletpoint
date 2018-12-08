@@ -16,10 +16,10 @@ axios.defaults = withSettings(axios.defaults);
 const history = createBrowserHistory();
 
 ReactDOM.render(
-	<Provider store={createStore(combineReducers, applyMiddleware(thunk, logger))}>
-		<Router history={history} />
-	</Provider>,
-	document.getElementById('root'),
+  <Provider store={createStore(combineReducers, applyMiddleware(thunk, logger))}>
+    <Router history={history} />
+  </Provider>,
+  document.getElementById('root'),
 );
 
 serviceWorker.unregister();
