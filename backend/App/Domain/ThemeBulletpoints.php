@@ -13,9 +13,13 @@ final class ThemeBulletpoints implements Bulletpoints {
 	/** @var int */
 	private $theme;
 
-	public function __construct(int $theme, Storage\Connection $connection) {
+	/** @var \Bulletpoint\Domain\User */
+	private $user;
+
+	public function __construct(int $theme, Storage\Connection $connection, User $user) {
 		$this->theme = $theme;
 		$this->connection = $connection;
+		$this->user = $user;
 	}
 
 	public function all(): \Iterator {
@@ -60,7 +64,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 					'theme_id' => $this->theme,
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
-					'user_id' => $bulletpoint['user_id'],
+					'user_id' => $this->user->id(),
 				]
 			))
 		))->execute();

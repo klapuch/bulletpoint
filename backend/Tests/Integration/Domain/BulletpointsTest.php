@@ -27,7 +27,7 @@ final class BulletpointsTest extends TestCase\Runtime {
 			static function (Domain\Bulletpoint $bulletpoint): array {
 				return (new Misc\TestingFormat($bulletpoint->print(new Output\Json())))->raw();
 			},
-			iterator_to_array((new Domain\ThemeBulletpoints($theme, $this->connection))->all())
+			iterator_to_array((new Domain\ThemeBulletpoints($theme, $this->connection, new Domain\FakeUser()))->all())
 		);
 		Assert::count(2, $bulletpoints);
 		Assert::same($id2, $bulletpoints[0]['id']);
@@ -39,9 +39,8 @@ final class BulletpointsTest extends TestCase\Runtime {
 	public function testAddingNew(): void {
 		['id' => $theme] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
-		(new Domain\ThemeBulletpoints($theme, $this->connection))->add([
+		(new Domain\ThemeBulletpoints($theme, $this->connection, new Domain\FakeUser($user)))->add([
 			'text' => 'TEST',
-			'user_id' => $user,
 			'source' => [
 				'link' => 'https://www.wikipedia.cz/test',
 				'type' => 'web',
@@ -53,9 +52,9 @@ final class BulletpointsTest extends TestCase\Runtime {
 
 	public function testCountingByTheme(): void {
 		['id' => $theme] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
-		Assert::same(0, (new Domain\ThemeBulletpoints($theme, $this->connection))->count());
+		Assert::same(0, (new Domain\ThemeBulletpoints($theme, $this->connection, new Domain\FakeUser()))->count());
 		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['theme_id' => $theme]))->try();
-		Assert::same(1, (new Domain\ThemeBulletpoints($theme, $this->connection))->count());
+		Assert::same(1, (new Domain\ThemeBulletpoints($theme, $this->connection, new Domain\FakeUser()))->count());
 	}
 }
 

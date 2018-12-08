@@ -24,7 +24,8 @@ final class Get implements Application\View {
 	public function response(array $parameters): Application\Response {
 		$bulletpoints = new Domain\ThemeBulletpoints(
 			$parameters['theme_id'],
-			$this->connection
+			$this->connection,
+			new Domain\FakeUser()
 		);
 		return new Response\JsonResponse(
 			new Response\PlainResponse(
