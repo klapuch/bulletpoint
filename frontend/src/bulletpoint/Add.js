@@ -48,6 +48,7 @@ type TargetType = {|
 |};
 
 type Props = {|
+  +onSubmit: (Object) => (void),
 |};
 type State = {|
   button: {|
@@ -97,11 +98,12 @@ class Add extends React.Component<Props, State> {
     if (this.state.button.state === 'default') {
       this.setState(prevState => ({ ...prevState, button: { state: 'opened' } }));
     } else if (this.state.button.state === 'opened') {
-      // submit
+      this.props.onSubmit(this.state.bulletpoint);
+      this.setToDefault();
     }
   };
 
-  onCancelClick = () => {
+  setToDefault = () => {
     this.setState({
       bulletpoint: {
         content: '',
@@ -148,7 +150,7 @@ class Add extends React.Component<Props, State> {
         <SubmitButton onClick={this.onSubmitClick} state={button.state}>
           Přidat bulletpoint
         </SubmitButton>
-        <CancelButton onClick={this.onCancelClick} state={button.state}>
+        <CancelButton onClick={this.setToDefault} state={button.state}>
           Zrušit
         </CancelButton>
       </>

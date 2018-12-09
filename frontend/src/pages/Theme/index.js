@@ -3,9 +3,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { single } from '../../theme/endpoints';
-import { all } from '../../theme/bulletpoint/endpoints';
+import { all, add } from '../../theme/bulletpoint/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
-import { allFetching as allThemeBulletpointsFetching, getByTheme as getBulletpointsByTheme } from '../../theme/bulletpoint/selects';
+import {
+  allFetching as allThemeBulletpointsFetching,
+  getByTheme as getBulletpointsByTheme,
+} from '../../theme/bulletpoint/selects';
 import Loader from '../../ui/Loader';
 import Add from '../../bulletpoint/Add';
 
@@ -55,12 +58,22 @@ type Props = {|
   +theme: Object,
   +bulletpoints: Array<Object>,
   +fetching: boolean,
+  +addThemeBulletpoint: (number, Object, (void) => (void)) => (void),
 |};
 const Title = styled.h1`
   display: inline-block;
 `;
 class Theme extends React.Component<Props> {
   componentDidMount(): void {
+    this.reload();
+  }
+
+  onSubmit(bulletpoint: Object): void {
+    const { match: { params: { id } } } = this.props;
+    this.props.addThemeBulletpoint(id, bulletpoint, this.reload);
+  }
+
+  reload(): void {
     const { match: { params: { id } } } = this.props;
     this.props.singleTheme(id);
     this.props.bulletpointsByTheme(id);
@@ -104,7 +117,7 @@ class Theme extends React.Component<Props> {
                 );
               })}
             </ul>
-            <Add />
+            <Add onSubmit={bulletpoint => this.onSubmit(bulletpoint)} />
           </div>
         </div>
         <br />
@@ -120,6 +133,11 @@ const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
 });
 const mapDispatchToProps = dispatch => ({
   singleTheme: (theme: number) => dispatch(single(theme)),
+  addThemeBulletpoint: (
+    theme: number,
+    bulletpoint: Object,
+    next: (void) => (void),
+  ) => dispatch(add(theme, bulletpoint, next)),
   bulletpointsByTheme: (theme: number) => dispatch(all(theme)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Theme);
