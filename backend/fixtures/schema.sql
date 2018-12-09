@@ -183,16 +183,19 @@ CREATE VIEW public_themes AS
 	) AS tags ON tags.theme_id = themes.id;
 
 CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
+	DECLARE v_theme_id integer;
 BEGIN
 	WITH inserted_reference AS (
-		INSERT INTO "references" (name, url) VALUES (new.reference_name, new.reference_url) RETURNING id
-	), inserted_theme AS (
-		INSERT INTO themes (name, reference_id, user_id) VALUES (new.name, (SELECT id FROM inserted_reference), new.user_id)
+		INSERT INTO "references" (name, url) VALUES (new.reference_name, new.reference_url)
 		RETURNING id
 	)
-	INSERT INTO theme_tags (theme_id, tag_id)
-	SELECT (SELECT id FROM inserted_theme), r.tag::integer FROM jsonb_array_elements(new.tags) AS r(tag);
+	INSERT INTO themes (name, reference_id, user_id) VALUES (new.name, (SELECT id FROM inserted_reference), new.user_id)
+	RETURNING id INTO v_theme_id;
 
+	INSERT INTO theme_tags (theme_id, tag_id)
+	SELECT v_theme_id, r.tag::integer FROM jsonb_array_elements(new.tags) AS r(tag);
+
+	new.id = v_theme_id;
 	RETURN new;
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;

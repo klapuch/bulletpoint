@@ -9,6 +9,7 @@ use Bulletpoint\Request;
 use Klapuch\Application;
 use Klapuch\Routing;
 use Klapuch\Storage;
+use Klapuch\Uri\Uri;
 
 /**
  * Routes for whole application
@@ -17,8 +18,12 @@ final class ApplicationRoutes implements Routing\Routes {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	public function __construct(Storage\Connection $connection) {
+	/** @var \Klapuch\Uri\Uri */
+	private $url;
+
+	public function __construct(Storage\Connection $connection, Uri $url) {
 		$this->connection = $connection;
+		$this->url = $url;
 	}
 
 	public function matches(): array {
@@ -29,7 +34,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new Endpoint\Theme\Get($this->connection);
 			},
 			'themes [POST]' => function() use ($user, $request): Application\View {
-				return new Endpoint\Themes\Post($request, $this->connection, $user);
+				return new Endpoint\Themes\Post($request, $this->connection, $user, $this->url);
 			},
 			'themes/{theme_id}/bulletpoints [GET]' => function(): Application\View {
 				return new Endpoint\Theme\Bulletpoints\Get($this->connection);

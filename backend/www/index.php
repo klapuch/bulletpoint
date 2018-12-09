@@ -37,7 +37,8 @@ echo (new class(
 						)
 					),
 					$redis
-				)
+				),
+				$uri
 			)
 		),
 		$uri,

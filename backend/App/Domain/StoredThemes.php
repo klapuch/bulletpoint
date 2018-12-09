@@ -18,8 +18,8 @@ final class StoredThemes implements Themes {
 		$this->user = $user;
 	}
 
-	public function create(array $theme): void {
-		(new Storage\BuiltQuery(
+	public function create(array $theme): int {
+		return (new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PgInsertInto(
 				'public_themes',
@@ -37,7 +37,7 @@ final class StoredThemes implements Themes {
 					'reference_name' => $theme['reference']['name'],
 					'reference_url' => $theme['reference']['url'],
 				]
-			))
-		))->execute();
+			))->returning(['id'])
+		))->field();
 	}
 }
