@@ -68,16 +68,16 @@ class Theme extends React.Component<Props> {
     this.reload();
   }
 
-  onSubmit(bulletpoint: Object): void {
+  onSubmit = (bulletpoint: Object) => {
     const { match: { params: { id } } } = this.props;
-    this.props.addThemeBulletpoint(id, bulletpoint, () => this.reload());
-  }
+    this.props.addThemeBulletpoint(id, bulletpoint, this.reload);
+  };
 
-  reload(): void {
+  reload = () => {
     const { match: { params: { id } } } = this.props;
     this.props.singleTheme(id);
     this.props.bulletpointsByTheme(id);
-  }
+  };
 
   render() {
     const { theme, fetching, bulletpoints } = this.props;
@@ -117,7 +117,7 @@ class Theme extends React.Component<Props> {
                 );
               })}
             </ul>
-            <Add onSubmit={bulletpoint => this.onSubmit(bulletpoint)} />
+            <Add onSubmit={this.onSubmit} />
           </div>
         </div>
         <br />

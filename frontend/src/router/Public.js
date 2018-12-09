@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 import Error404 from '../pages/Error/Error404';
 
 type Props = {
@@ -29,23 +29,12 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
                   <span className="icon-bar" />
                   <span className="icon-bar" />
                 </button>
-                <a className="navbar-brand" href="Default:" title="bulletpoint"><strong>bulletpoint</strong></a>
+                <Link to="/" className="navbar-brand" title="bulletpoint"><strong>bulletpoint</strong></Link>
               </div>
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
-                  <li title="Nový dokument">
-                    <a href="Prochazet:dokumenty">Procházet</a>
-                  </li>
-                  <li className="dropdown">
-                    <a href="#" className="dropdown-toggle" title="Moje" data-toggle="dropdown" role="button" aria-expanded="false">
-Moje
-                      <span className="caret" />
-                    </a>
-                    <ul className="dropdown-menu" role="menu">
-                      <li title="Moje dokumenty">
-                        <a href="Moje:dokumenty">Dokumenty</a>
-                      </li>
-                    </ul>
+                  <li>
+                    <Link title="Nové téma" to="/themes/create">Nové téma</Link>
                   </li>
                 </ul>
               </div>
