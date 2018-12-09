@@ -97,7 +97,9 @@ CREATE TABLE theme_tags (
 CREATE TABLE sources (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	link text NULL,
-	type sources_type NOT NULL
+	type sources_type NOT NULL,
+	CONSTRAINT link_type_not_null CHECK (CASE WHEN type = 'web' THEN link IS NOT NULL ELSE TRUE END),
+	CONSTRAINT link_type_null CHECK (CASE WHEN type = 'head' THEN link IS NULL ELSE TRUE END)
 );
 
 CREATE FUNCTION sources_trigger_row_bi() RETURNS trigger AS $BODY$
