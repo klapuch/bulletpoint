@@ -90,7 +90,8 @@ CREATE TABLE theme_tags (
 	theme_id integer NOT NULL,
 	tag_id integer NOT NULL,
 	CONSTRAINT theme_tags_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
-	CONSTRAINT theme_tags_tag_id FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE RESTRICT
+	CONSTRAINT theme_tags_tag_id FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT theme_tags_theme_id_tag_id UNIQUE (theme_id, tag_id)
 );
 
 
