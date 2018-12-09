@@ -10,6 +10,7 @@ type TargetType = {|
 
 type Props = {|
   +onSubmit: (Object) => (void),
+  +tags: Array<Object>,
 |};
 type State = {|
   theme: {|
@@ -63,12 +64,11 @@ class Add extends React.Component<Props, State> {
           <label htmlFor="name">Název</label>
           <input type="text" className="form-control" id="name" name="name" value={theme.name} onChange={this.onChange} />
         </div>
-        {theme.tags.map(tag => (
-          <div className="form-group">
+        {theme.tags.map(actualTag => (
+          <div key={actualTag} className="form-group">
             <label htmlFor="tag">Tag</label>
-            <select className="form-control" id="tag" name="tag" value={tag} onChange={this.onChange}>
-              <option value={1}>IT</option>
-              <option value={2}>Programming language</option>
+            <select className="form-control" id="tag" name="tag" value={actualTag} onChange={this.onChange}>
+              {this.props.tags.map(tag => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
             </select>
           </div>
         ))}
