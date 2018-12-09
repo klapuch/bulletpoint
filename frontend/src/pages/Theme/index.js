@@ -70,7 +70,7 @@ class Theme extends React.Component<Props> {
 
   onSubmit(bulletpoint: Object): void {
     const { match: { params: { id } } } = this.props;
-    this.props.addThemeBulletpoint(id, bulletpoint, this.reload);
+    this.props.addThemeBulletpoint(id, bulletpoint, () => this.reload());
   }
 
   reload(): void {
