@@ -22,18 +22,14 @@ type TagsProps = {|
 const Tags = ({ texts }: TagsProps) => texts.map(text => <Tag key={text}>{text}</Tag>);
 
 type ReferenceProps = {|
-  name: string,
   url: string,
 |};
-const Reference = ({ name, url }: ReferenceProps) => {
-  if (name === 'wikipedia') {
-    return (
-      <a href={url} title="Wikipedia">
-        <span className="glyphicon glyphicon-link" aria-hidden="true" />
-      </a>
-    );
-  }
-  return null;
+const Reference = ({ url }: ReferenceProps) => {
+  return (
+    <a href={url} title="Wikipedia">
+      <span className="glyphicon glyphicon-link" aria-hidden="true" />
+    </a>
+  );
 };
 type SourceProps = {|
   type: string,
@@ -88,7 +84,7 @@ class Theme extends React.Component<Props> {
       <>
         <div>
           <Title>{theme.name}</Title>
-          <Reference name={theme.reference.name} url={theme.reference.url} />
+          <Reference url={theme.reference.url} />
         </div>
         <Tags texts={theme.tags} />
         <div className="row">

@@ -24,7 +24,6 @@ final class ThemesTest extends TestCase\Runtime {
 			'name' => 'TEST',
 			'tags' => [$tag1, $tag2],
 			'reference' => [
-				'name' => 'wikipedia',
 				'url' => 'https://www.wikipedia.cz/test',
 			],
 		]);

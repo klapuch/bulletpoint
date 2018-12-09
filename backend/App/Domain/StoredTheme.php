@@ -27,7 +27,6 @@ final class StoredTheme implements Theme {
 				'name',
 				'tags',
 				'reference_url',
-				'reference_name',
 				'user_id',
 			]))->from(['public_themes'])
 				->where('id = :id', ['id' => $this->id])
@@ -41,7 +40,6 @@ final class StoredTheme implements Theme {
 				'user_id' => $row['user_id'],
 				'reference' => [
 					'url' => $row['reference_url'],
-					'name' => $row['reference_name'],
 				],
 			]
 		);

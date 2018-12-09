@@ -1,6 +1,6 @@
 INSERT INTO users (email, password) VALUES ('klapuchdominik@gmail.com', 'heslo1');
 
-INSERT INTO "references" (url, name) VALUES ('https://www.wikipedia.com', 'wikipedia');
+INSERT INTO "references" (url) VALUES ('https://www.wikipedia.com');
 INSERT INTO sources (link, type) VALUES ('https://www.wikipedia.com/php', 'web');
 
 INSERT INTO tags (name) VALUES ('programming language');

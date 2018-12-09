@@ -131,9 +131,8 @@ CREATE FUNCTION samples."references"(replacements jsonb = '{}') RETURNS integer 
 DECLARE
 	v_id "references".id%type;
 BEGIN
-	INSERT INTO "references" (url, name) VALUES (
-		samples.random_if_not_exists(md5(random()::text), replacements, 'url'),
-		samples.random_if_not_exists(test_utils.random_array_pick(constant.references_name()), replacements, 'name')::references_name
+	INSERT INTO "references" (url) VALUES (
+		samples.random_if_not_exists(md5(random()::text), replacements, 'url')
 	)
 	RETURNING id INTO v_id;
 

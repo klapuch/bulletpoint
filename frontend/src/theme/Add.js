@@ -17,7 +17,6 @@ type State = {|
     name: string,
     tags: Array<number>,
     reference: {|
-      name: string,
       url: string,
     |}
   |},
@@ -28,7 +27,6 @@ class Add extends React.Component<Props, State> {
       name: '',
       tags: [1],
       reference: {
-        name: 'wikipedia',
         url: '',
       },
     },
@@ -36,9 +34,7 @@ class Add extends React.Component<Props, State> {
 
   onChange = ({ target: { name, value } }: TargetType) => {
     let input = null;
-    if (name === 'reference_name') {
-      input = { reference: { ...this.state.theme.reference, name: value } };
-    } else if (name === 'reference_url') {
+    if (name === 'reference_url') {
       input = { reference: { ...this.state.theme.reference, url: value } };
     } else if (name === 'tags') {
       input = { ...this.state.theme, tags: [parseInt(value, 10)] };
@@ -75,10 +71,6 @@ class Add extends React.Component<Props, State> {
           </div>
         ))}
         <div className="form-group">
-          <label htmlFor="reference_type">Název odkazu</label>
-          <select className="form-control" id="reference_name" name="reference_name" value={theme.reference.name} onChange={this.onChange}>
-            <option value="wikipedia">Wikipedia</option>
-          </select>
           <label htmlFor="reference_url">URL odkazu</label>
           <input type="text" className="form-control" id="reference_url" name="reference_url" value={theme.reference.url} onChange={this.onChange} />
         </div>

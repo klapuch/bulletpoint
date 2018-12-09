@@ -26,7 +26,6 @@ final class StoredThemes implements Themes {
 				[
 					'name' => ':name',
 					'tags' => ':tags',
-					'reference_name' => ':reference_name',
 					'reference_url' => ':reference_url',
 					'user_id' => ':user_id',
 				],
@@ -34,7 +33,6 @@ final class StoredThemes implements Themes {
 					'name' => $theme['name'],
 					'tags' => json_encode($theme['tags']), // TODO: use array
 					'user_id' => $this->user->id(),
-					'reference_name' => $theme['reference']['name'],
 					'reference_url' => $theme['reference']['url'],
 				]
 			))->returning(['id'])

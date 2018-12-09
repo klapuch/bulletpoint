@@ -18,14 +18,12 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 -- constants
 CREATE SCHEMA constant;
 
-CREATE FUNCTION constant.references_name() RETURNS text[] AS $$SELECT ARRAY['wikipedia'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $$SELECT ARRAY[-1, 0, 1];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member'];$$ LANGUAGE sql IMMUTABLE;
 
 
 -- domains
-CREATE DOMAIN references_name AS text CHECK (VALUE = ANY(constant.references_name()));
 CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
 CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_ratings_point_range() @> ARRAY[VALUE]);
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
@@ -40,8 +38,7 @@ $BODY$ LANGUAGE sql IMMUTABLE;
 -- tables
 CREATE TABLE "references" (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	url text NOT NULL,
-	name references_name NOT NULL
+	url text NOT NULL
 );
 
 
@@ -171,7 +168,7 @@ CREATE TABLE bulletpoint_ratings (
 CREATE VIEW public_themes AS
 	SELECT
 		themes.id, themes.name, tags.tags, themes.created_at,
-		"references".name AS reference_name, "references".url AS reference_url,
+		"references".url AS reference_url,
 		users.id AS user_id
 	FROM themes
 	JOIN users ON users.id = themes.user_id
@@ -187,7 +184,7 @@ CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
 	DECLARE v_theme_id integer;
 BEGIN
 	WITH inserted_reference AS (
-		INSERT INTO "references" (name, url) VALUES (new.reference_name, new.reference_url)
+		INSERT INTO "references" (url) VALUES (new.reference_url)
 		RETURNING id
 	)
 	INSERT INTO themes (name, reference_id, user_id) VALUES (new.name, (SELECT id FROM inserted_reference), new.user_id)
