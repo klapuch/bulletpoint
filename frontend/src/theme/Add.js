@@ -40,6 +40,8 @@ class Add extends React.Component<Props, State> {
       input = { reference: { ...this.state.theme.reference, name: value } };
     } else if (name === 'reference_url') {
       input = { reference: { ...this.state.theme.reference, url: value } };
+    } else if (name === 'tags') {
+      input = { ...this.state.theme, tags: [parseInt(value, 10)] };
     } else {
       input = { ...this.state.theme, [name]: value };
     }
@@ -66,8 +68,8 @@ class Add extends React.Component<Props, State> {
         </div>
         {theme.tags.map(actualTag => (
           <div key={actualTag} className="form-group">
-            <label htmlFor="tag">Tag</label>
-            <select className="form-control" id="tag" name="tag" value={actualTag} onChange={this.onChange}>
+            <label htmlFor="tags">Tag</label>
+            <select className="form-control" id="tags" name="tags" value={actualTag} onChange={this.onChange}>
               {this.props.tags.map(tag => <option key={tag.id} value={tag.id}>{tag.name}</option>)}
             </select>
           </div>
