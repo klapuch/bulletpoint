@@ -5,15 +5,7 @@ import { Link } from 'react-router-dom';
 import { all } from '../../theme/endpoints';
 import { getAll, allFetching as themesFetching } from '../../theme/selects';
 import Loader from '../../ui/Loader';
-
-type TagProps = {|
-  children: string,
-|};
-const Tag = ({ children }: TagProps) => <span style={{ marginRight: 7 }} className="label label-default">{children}</span>;
-type TagsProps = {|
-  texts: Array<string>,
-|};
-const Tags = ({ texts }: TagsProps) => texts.map(text => <Tag key={text}>{text}</Tag>);
+import Tags from '../../theme/components/Tags';
 
 type Props = {|
   +themes: Array<Object>,

@@ -7,65 +7,31 @@ import { all, add } from '../../theme/bulletpoint/endpoints';
 import { rate } from '../../theme/bulletpoint/rating/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
 import {
-  allFetching as allThemeBulletpointsFetching,
-  getByTheme as getBulletpointsByTheme,
+  allFetching as fetchingAllThemeBulletpoints,
+  getByTheme as getThemeBulletpoints,
 } from '../../theme/bulletpoint/selects';
 import Loader from '../../ui/Loader';
 import Add from '../../bulletpoint/Add';
+import Tags from '../../theme/components/Tags';
+import Reference from '../../theme/components/Reference';
+import Source from '../../theme/components/Source';
+import { UpButton, DownButton } from '../../theme/bulletpoint/components/RateButton';
+import type { ThemeType } from '../../theme/endpoints';
 
-
-const RateButton = styled.span`
-  cursor: pointer;
-`;
-
-type TagProps = {|
-  children: string,
-|};
-const Tag = ({ children }: TagProps) => <span style={{ marginRight: 7 }} className="label label-default">{children}</span>;
-type TagsProps = {|
-  texts: Array<string>,
-|};
-const Tags = ({ texts }: TagsProps) => texts.map(text => <Tag key={text}>{text}</Tag>);
-
-type ReferenceProps = {|
-  url: string,
-|};
-const Reference = ({ url }: ReferenceProps) => {
-  return (
-    <a href={url} title="Wikipedia">
-      <span className="glyphicon glyphicon-link" aria-hidden="true" />
-    </a>
-  );
-};
-type SourceProps = {|
-  type: string,
-  link: string,
-|};
-const Source = ({ type, link }: SourceProps) => {
-  if (type === 'web') {
-    return (
-      <>
-        <span style={{ marginRight: 4 }} className="glyphicon glyphicon-globe" aria-hidden="true" />
-        <a href={link}>{link}</a>
-      </>
-    );
-  }
-  return null;
-};
-
-type Props = {|
-  +singleTheme: (number) => (void),
-  +bulletpointsByTheme: (number) => (void),
-  +match: Object,
-  +theme: Object,
-  +bulletpoints: Array<Object>,
-  +fetching: boolean,
-  +addThemeBulletpoint: (number, Object, (void) => (void)) => (void),
-  +changeRating: (number, number, number, (void) => (void)) => (void),
-|};
 const Title = styled.h1`
   display: inline-block;
 `;
+
+type Props = {|
+  +getSingleTheme: (number) => (void),
+  +getBulletpoints: (number) => (void),
+  +match: Object,
+  +theme: ThemeType,
+  +bulletpoints: Array<Object>,
+  +fetching: boolean,
+  +addBulletpoint: (number, Object, (void) => (void)) => (void),
+  +changeRating: (theme: number, bulletpoint: number, point: number, (void) => (void)) => (void),
+|};
 class Theme extends React.Component<Props> {
   componentDidMount(): void {
     this.reload();
@@ -73,13 +39,13 @@ class Theme extends React.Component<Props> {
 
   onSubmit = (bulletpoint: Object) => {
     const { match: { params: { id } } } = this.props;
-    this.props.addThemeBulletpoint(id, bulletpoint, this.reload);
+    this.props.addBulletpoint(id, bulletpoint, this.reload);
   };
 
   reload = () => {
     const { match: { params: { id } } } = this.props;
-    this.props.singleTheme(id);
-    this.props.bulletpointsByTheme(id);
+    this.props.getSingleTheme(id);
+    this.props.getBulletpoints(id);
   };
 
   changeRating = (bulletpoint: number, point: number) => {
@@ -103,27 +69,23 @@ class Theme extends React.Component<Props> {
           <div className="col-sm-8">
             <h2 id="bulletpointy">Bulletpointy</h2>
             <ul className="list-group">
-              {bulletpoints.map((bulletpoint) => {
-                return (
-                  <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
-                    <RateButton className="badge alert-danger badge-guest" onClick={() => this.changeRating(bulletpoint.id, -1)}>
-                      {bulletpoint.rating.down}
-                      <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />
-                    </RateButton>
-                    <RateButton className="badge alert-success badge-guest" onClick={() => this.changeRating(bulletpoint.id, +1)}>
-                      {bulletpoint.rating.up}
-                      <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />
-                    </RateButton>
-                    {bulletpoint.content}
-                    <br />
-                    <small>
-                      <cite>
-                        <Source type={bulletpoint.source.type} link={bulletpoint.source.link} />
-                      </cite>
-                    </small>
-                  </li>
-                );
-              })}
+              {bulletpoints.map(bulletpoint => (
+                <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
+                  <DownButton onClick={() => this.changeRating(bulletpoint.id, -1)}>
+                    {bulletpoint.rating.down}
+                  </DownButton>
+                  <UpButton onClick={() => this.changeRating(bulletpoint.id, +1)}>
+                    {bulletpoint.rating.up}
+                  </UpButton>
+                  {bulletpoint.content}
+                  <br />
+                  <small>
+                    <cite>
+                      <Source type={bulletpoint.source.type} link={bulletpoint.source.link} />
+                    </cite>
+                  </small>
+                </li>
+              ))}
             </ul>
             <Add onSubmit={this.onSubmit} />
           </div>
@@ -136,17 +98,17 @@ class Theme extends React.Component<Props> {
 
 const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
   theme: getById(theme, state),
-  bulletpoints: getBulletpointsByTheme(theme, state),
-  fetching: themeFetching(theme, state) || allThemeBulletpointsFetching(theme, state),
+  bulletpoints: getThemeBulletpoints(theme, state),
+  fetching: themeFetching(theme, state) || fetchingAllThemeBulletpoints(theme, state),
 });
 const mapDispatchToProps = dispatch => ({
-  singleTheme: (theme: number) => dispatch(single(theme)),
-  addThemeBulletpoint: (
+  getSingleTheme: (theme: number) => dispatch(single(theme)),
+  addBulletpoint: (
     theme: number,
     bulletpoint: Object,
     next: (void) => (void),
   ) => dispatch(add(theme, bulletpoint, next)),
-  bulletpointsByTheme: (theme: number) => dispatch(all(theme)),
+  getBulletpoints: (theme: number) => dispatch(all(theme)),
   changeRating: (
     theme: number,
     bulletpoint: number,

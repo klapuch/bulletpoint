@@ -9,6 +9,14 @@ import {
 import { fetchedSingle } from './selects';
 import * as response from '../api/response';
 
+export type ThemeType = {|
+  +tags: Array<string>,
+  +name: string,
+  +reference: {|
+    +url: string,
+  |}
+|};
+
 export const single = (id: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedSingle(id, getState())) return;
   dispatch(requestedSingle(id));
