@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import qs from 'qs';
 import { first, mapValues } from 'lodash';
-import { all } from '../../theme/endpoints';
+import { allByTag, allRecent } from '../../theme/endpoints';
 import { getAll, allFetching as themesFetching } from '../../theme/selects';
 import Loader from '../../ui/Loader';
 import Tags from '../../theme/components/Tags';
@@ -34,7 +34,7 @@ class Themes extends React.Component<Props> {
       return 'Nedávno přidaná témata';
     }
     const relatedTag = this.getRelatedTag(themes, tagId) || { name: null };
-    return <>Témata vybraná pro <strong>{relatedTag.name}</strong></>;
+    return <>Témata vybraná pro "<strong>{relatedTag.name}</strong>"</>;
   };
 
   render() {
@@ -69,6 +69,6 @@ const mapStateToProps = (state, { location: { search } }) => ({
   fetching: themesFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchThemes: (tag: ?number) => dispatch(all(tag)),
+  fetchThemes: (tag: ?number) => dispatch(tag === null ? allRecent() : allByTag(tag)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Themes);

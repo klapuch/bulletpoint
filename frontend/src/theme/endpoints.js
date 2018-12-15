@@ -43,8 +43,16 @@ export const create = (theme: PostedThemeType, next: (number) => (void)) => {
     .then(next);
 };
 
-export const all = (tag: ?number) => (dispatch: (mixed) => Object) => {
+const all = (params: Object) => (dispatch: (mixed) => Object) => {
   dispatch(requestedAll());
-  axios.get('/themes', { params: { tag_id: tag } })
+  axios.get('/themes', { params })
     .then(response => dispatch(receivedAll(response.data)));
 };
+
+export const allByTag = (tag: ?number) => (dispatch: (mixed) => Object) => (
+  dispatch(all({ tag_id: tag }))
+);
+
+export const allRecent = () => (dispatch: (mixed) => Object) => (
+  dispatch(all({ sort: '-created_at' }))
+);
