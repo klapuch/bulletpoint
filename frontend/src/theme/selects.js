@@ -12,3 +12,7 @@ export const getById = (id: number, state: Object): Object => (
 export const singleFetching = (id: number, state: Object): boolean => (
   state.theme.single[id] ? state.theme.single[id].fetching : true
 );
+
+export const allFetching = (state: Object): boolean => state.theme.all.fetching;
+
+export const getAll = (state: Object): Object => state.theme.all.payload;

@@ -3,6 +3,8 @@ import axios from 'axios';
 import {
   requestedSingle,
   receivedSingle,
+  requestedAll,
+  receivedAll,
 } from './actions';
 import { fetchedSingle } from './selects';
 import * as response from '../api/response';
@@ -19,4 +21,10 @@ export const create = (theme: Object, next: (number) => (void)) => {
     .then(response => response.headers)
     .then(headers => response.extractedLocationId(headers.location))
     .then(next);
+};
+
+export const all = () => (dispatch: (mixed) => Object) => {
+  dispatch(requestedAll());
+  axios.get('/themes')
+    .then(response => dispatch(receivedAll(response.data)));
 };

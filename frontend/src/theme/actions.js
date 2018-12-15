@@ -1,7 +1,9 @@
 // @flow
 
 export const RECEIVED_THEME = 'RECEIVED_THEME';
+export const RECEIVED_THEMES = 'RECEIVED_THEMES';
 export const REQUESTED_THEME = 'REQUESTED_THEME';
+export const REQUESTED_THEMES = 'REQUESTED_THEMES';
 export const INVALIDATED_THEME = 'INVALIDATED_THEME';
 
 export const invalidatedSingle = (id: number) => ({
@@ -19,5 +21,16 @@ export const receivedSingle = (id: number, theme: Object) => ({
   type: RECEIVED_THEME,
   id,
   theme,
+  fetching: false,
+});
+
+export const requestedAll = () => ({
+  type: REQUESTED_THEMES,
+  fetching: true,
+});
+
+export const receivedAll = (themes: Array<Object>) => ({
+  type: RECEIVED_THEMES,
+  themes,
   fetching: false,
 });

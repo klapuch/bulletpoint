@@ -1,15 +1,25 @@
 // @flow
 import {
   REQUESTED_THEME,
+  REQUESTED_THEMES,
   RECEIVED_THEME,
+  RECEIVED_THEMES,
   INVALIDATED_THEME,
 } from './actions';
 
 type State = {|
   +single: Object,
+  +all: {|
+    payload: Array<Object>,
+    fetching: boolean,
+  |},
 |};
 const init = {
   single: {},
+  all: {
+    payload: [],
+    fetching: true,
+  },
 };
 export default (state: State = init, action: Object): State => {
   switch (action.type) {
@@ -24,6 +34,14 @@ export default (state: State = init, action: Object): State => {
           },
         },
       };
+    case RECEIVED_THEMES:
+      return {
+        ...state,
+        all: {
+          payload: action.themes,
+          fetching: action.fetching,
+        },
+      };
     case REQUESTED_THEME:
       return {
         ...state,
@@ -34,6 +52,13 @@ export default (state: State = init, action: Object): State => {
             fetching: action.fetching,
           },
         },
+      };
+    case REQUESTED_THEMES:
+      return {
+        ...state,
+        all: {
+          fetching: action.fetching,
+        }
       };
     case INVALIDATED_THEME:
       return {
