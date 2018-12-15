@@ -23,6 +23,9 @@ const Title = styled.h1`
   display: inline-block;
 `;
 
+type State = {|
+  ratings: Object,
+|};
 type Props = {|
   +getTheme: (number) => (void),
   +getBulletpoints: (number) => (void),
@@ -33,7 +36,11 @@ type Props = {|
   +addBulletpoint: (number, PostedBulletpointType, (void) => (void)) => (void),
   +changeRating: (theme: number, bulletpoint: number, point: number, (void) => (void)) => (void),
 |};
-class Theme extends React.Component<Props> {
+class Theme extends React.Component<Props, State> {
+  state = {
+    ratings: {},
+  };
+
   componentDidMount(): void {
     this.reload();
   }
@@ -51,11 +58,34 @@ class Theme extends React.Component<Props> {
 
   handleChangeRating = (bulletpoint: number, point: number) => {
     const { match: { params: { id } } } = this.props;
-    this.props.changeRating(id, bulletpoint, point, this.reload);
+    this.props.changeRating(
+      id,
+      bulletpoint,
+      point,
+      () => this.setState((prevState) => {
+        if (typeof prevState.ratings[bulletpoint] === 'undefined') {
+          return ({
+            ratings: {
+              ...prevState.ratings,
+              [bulletpoint]: {
+                up: point === 1 ? 1 : -1,
+                down: point === 1 ? -1 : 1,
+              },
+            },
+          });
+        } else if (prevState.ratings[bulletpoint].up === 1 && point === 1) {
+          return prevState;
+        } else if (prevState.ratings[bulletpoint].down === 1 && point === -1) {
+          return prevState;
+        }
+        return ({ ratings: { ...prevState.ratings, [bulletpoint]: undefined } });
+      }),
+    );
   };
 
   render() {
     const { theme, fetching, bulletpoints } = this.props;
+    const { ratings } = this.state;
     if (fetching) {
       return <Loader />;
     }
@@ -70,23 +100,26 @@ class Theme extends React.Component<Props> {
           <div className="col-sm-8">
             <h2 id="bulletpointy">Bulletpointy</h2>
             <ul className="list-group">
-              {bulletpoints.map(bulletpoint => (
-                <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
-                  <DownButton onClick={() => this.handleChangeRating(bulletpoint.id, -1)}>
-                    {bulletpoint.rating.down}
-                  </DownButton>
-                  <UpButton onClick={() => this.handleChangeRating(bulletpoint.id, +1)}>
-                    {bulletpoint.rating.up}
-                  </UpButton>
-                  {bulletpoint.content}
-                  <br />
-                  <small>
-                    <cite>
-                      <Source type={bulletpoint.source.type} link={bulletpoint.source.link} />
-                    </cite>
-                  </small>
-                </li>
-              ))}
+              {bulletpoints.map((bulletpoint) => {
+                const { up, down } = ratings[bulletpoint.id] || { up: 0, down: 0 };
+                return (
+                  <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
+                    <DownButton onClick={() => this.handleChangeRating(bulletpoint.id, -1)}>
+                      {bulletpoint.rating.down + down}
+                    </DownButton>
+                    <UpButton onClick={() => this.handleChangeRating(bulletpoint.id, +1)}>
+                      {bulletpoint.rating.up + up}
+                    </UpButton>
+                    {bulletpoint.content}
+                    <br />
+                    <small>
+                      <cite>
+                        <Source type={bulletpoint.source.type} link={bulletpoint.source.link} />
+                      </cite>
+                    </small>
+                  </li>
+                );
+              })}
             </ul>
             <Add onSubmit={this.handleSubmit} />
           </div>
