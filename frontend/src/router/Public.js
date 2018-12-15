@@ -36,6 +36,15 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
                   <li>
                     <Link title="Nové téma" to="/themes/create">Nové téma</Link>
                   </li>
+                  <li className="dropdown">
+                    <a href="#" className="dropdown-toggle" title="Administrace" data-toggle="dropdown" role="button" aria-expanded="false">
+                      Témata
+                      <span className="caret" />
+                    </a>
+                    <ul className="dropdown-menu" role="menu">
+                      <li><Link to="/themes">Nedávno přidaná</Link></li>
+                    </ul>
+                  </li>
                 </ul>
               </div>
             </div>
