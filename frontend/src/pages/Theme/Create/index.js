@@ -6,19 +6,20 @@ import Add from '../../../theme/Add';
 import { getAll, allFetching as tagsFetching } from '../../../tags/selects';
 import { all } from '../../../tags/endpoints';
 import Loader from '../../../ui/Loader';
+import type { PostedThemeType } from '../../../theme/endpoints';
 
 type Props = {|
   +history: Object,
   +getAllTags: (void) => (void),
   +fetching: boolean,
-  +tags: Array<Object>,
+  +tags: Array<Object>, // TODO
 |};
 class Create extends React.Component<Props> {
   componentDidMount(): void {
     this.props.getAllTags();
   }
 
-  onSubmit = (theme: Object) => {
+  onSubmit = (theme: PostedThemeType) => {
     create(theme, (id: number) => {
       this.props.history.push(`/themes/${id}`);
     });

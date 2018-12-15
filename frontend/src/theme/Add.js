@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import Select from 'react-select';
-import type { OptionType } from 'react-select/src/types';
 import type { PostedThemeType } from './endpoints';
 
 type TargetType = {|
@@ -12,11 +11,11 @@ type TargetType = {|
 |};
 
 type Props = {|
-  +onSubmit: (Object) => (void),
+  +onSubmit: (PostedThemeType) => (void),
   +tags: Array<Object>,
 |};
 type State = {|
-  theme: { ...PostedThemeType, tags: Array<OptionType> },
+  theme: PostedThemeType,
 |};
 class Add extends React.Component<Props, State> {
   state = {
@@ -69,6 +68,7 @@ class Add extends React.Component<Props, State> {
         </div>
         <div className="form-group">
           <label htmlFor="tags">Tag</label>
+          {/* $FlowFixMe Bad type from lib */}
           <Select
             isMulti
             placeholder="Vyber..."

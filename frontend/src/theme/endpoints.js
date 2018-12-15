@@ -35,7 +35,7 @@ export const single = (id: number) => (dispatch: (mixed) => Object, getState: ()
     .then(response => dispatch(receivedSingle(id, response.data)));
 };
 
-export const create = (theme: Object, next: (number) => (void)) => {
+export const create = (theme: PostedThemeType, next: (number) => (void)) => {
   axios.post('/themes', theme)
     .then(response => response.headers)
     .then(headers => response.extractedLocationId(headers.location))
