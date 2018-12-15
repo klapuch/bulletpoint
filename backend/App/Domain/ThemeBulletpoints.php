@@ -13,10 +13,10 @@ final class ThemeBulletpoints implements Bulletpoints {
 	/** @var int */
 	private $theme;
 
-	/** @var \Bulletpoint\Domain\User */
+	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
-	public function __construct(int $theme, Storage\Connection $connection, User $user) {
+	public function __construct(int $theme, Storage\Connection $connection, Access\User $user) {
 		$this->theme = $theme;
 		$this->connection = $connection;
 		$this->user = $user;

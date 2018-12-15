@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Domain;
+namespace Bulletpoint\Domain\Access;
 
 final class FakeUser implements User {
 	/** @var int|null */

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Integration\Domain;
 
 use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Bulletpoint\Fixtures;
 use Bulletpoint\Misc;
 use Bulletpoint\TestCase;
@@ -22,7 +23,7 @@ final class ThemesTest extends TestCase\Runtime {
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
 		['id' => $tag1] = (new Fixtures\SamplePostgresData($this->connection, 'tags'))->try();
 		['id' => $tag2] = (new Fixtures\SamplePostgresData($this->connection, 'tags'))->try();
-		(new Domain\StoredThemes(new Domain\FakeUser($user), $this->connection))->create([
+		(new Domain\StoredThemes(new Access\FakeUser($user), $this->connection))->create([
 			'name' => 'TEST',
 			'tags' => [$tag1, $tag2],
 			'reference' => [
@@ -39,7 +40,7 @@ final class ThemesTest extends TestCase\Runtime {
 		(new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
 		$themes = (new Domain\PublicThemes(
 			new Domain\StoredThemes(
-				new Domain\FakeUser(),
+				new Access\FakeUser(),
 				$this->connection
 			)
 		));

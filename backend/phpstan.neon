@@ -7,6 +7,8 @@ parameters:
 			- UnexpectedValueException
 	ignoreErrors:
 		# Fakes, intentional fails
-		- '~Method Bulletpoint\\Domain\\FakeUser::id\(\) should return int but returns int\|null~'
-		- '~Method Bulletpoint\\Domain\\FakeUser::properties\(\) should return array but returns array\|null~'
+		- '~Method Bulletpoint\\Domain\\Access\\FakeUser::id\(\) should return int but returns int\|null~'
+		- '~Method Bulletpoint\\Domain\\Access\\FakeUser::properties\(\) should return array but returns array\|null~'
+		- '~Method Bulletpoint\\Domain\\Access\\FakeEntrance::enter\(\) should return Bulletpoint\\Domain\\Access\\User but returns Bulletpoint\\Domain\\Access\\User\|null~'
+		- '~Method Bulletpoint\\Domain\\Access\\FakeEntrance::exit\(\) should return Bulletpoint\\Domain\\Access\\User but returns Bulletpoint\\Domain\\Access\\User\|null~'
 		- '~Method Bulletpoint\\Scheduling\\FakeJob::name\(\) should return string but returns string\|null\.~'

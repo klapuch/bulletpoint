@@ -14,10 +14,13 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
+-- schemas (globals)
+CREATE SCHEMA audit;
 
 -- constants
 CREATE SCHEMA constant;
 
+CREATE FUNCTION constant.guest_id() RETURNS integer AS $$SELECT 0$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $$SELECT ARRAY[-1, 0, 1];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member'];$$ LANGUAGE sql IMMUTABLE;
@@ -28,8 +31,69 @@ CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
 CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_ratings_point_range() @> ARRAY[VALUE]);
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 
+-- schema audit
+CREATE TYPE audit.operation AS ENUM ('INSERT', 'UPDATE', 'DELETE');
+
+
+CREATE TABLE audit.history (
+	id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	"table" text NOT NULL,
+	operation audit.operation NOT NULL,
+	changed_at timestamp with time zone NOT NULL DEFAULT now(),
+	user_id integer,
+	old jsonb,
+	new jsonb
+);
+
+CREATE FUNCTION audit.trigger_table_audit() RETURNS trigger AS $BODY$
+DECLARE
+	r record;
+BEGIN
+	IF (TG_OP = 'DELETE') THEN
+		r = old;
+	ELSE
+		r = new;
+	END IF;
+
+	EXECUTE format(
+		'INSERT INTO audit.history ("table", operation, user_id, old, new) VALUES (%L, %L, %L, %L, %L)',
+		TG_TABLE_NAME,
+		TG_OP,
+		globals_get_user(),
+		CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(old) ELSE NULL END,
+		CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN row_to_json(new) ELSE NULL END
+		);
+
+	RETURN r;
+END;
+$BODY$ LANGUAGE plpgsql;
+
 
 -- functions
+CREATE FUNCTION globals_get_variable(in_variable text) RETURNS text AS $BODY$
+BEGIN
+	RETURN nullif(current_setting(format('globals.%s', in_variable)), '');
+	EXCEPTION WHEN OTHERS THEN RETURN NULL;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+
+CREATE FUNCTION globals_get_user() RETURNS integer AS $BODY$
+	SELECT globals_get_variable('user')::integer;
+$BODY$ LANGUAGE sql;
+
+
+CREATE FUNCTION globals_set_variable(in_variable text, in_value text) RETURNS text AS $BODY$
+	SELECT set_config(format('globals.%s', in_variable), in_value, false);
+$BODY$ LANGUAGE sql;
+
+
+CREATE FUNCTION globals_set_user(in_user integer) RETURNS void AS $BODY$
+BEGIN
+	PERFORM globals_set_variable('user', nullif(in_user, constant.guest_id())::text);
+END;
+$BODY$ LANGUAGE plpgsql;
+
 CREATE FUNCTION array_diff(anyarray, anyarray) RETURNS anyarray AS $BODY$
 	SELECT ARRAY(SELECT unnest($1) EXCEPT SELECT unnest($2));
 $BODY$ LANGUAGE sql IMMUTABLE;
@@ -41,11 +105,21 @@ CREATE TABLE "references" (
 	url text NOT NULL
 );
 
+CREATE TRIGGER references_audit_trigger
+	AFTER UPDATE OR DELETE OR INSERT
+	ON "references"
+	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
+
 
 CREATE TABLE tags (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	name text NOT NULL
 );
+
+CREATE TRIGGER tags_audit_trigger
+	AFTER UPDATE OR DELETE OR INSERT
+	ON tags
+	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
 
 
 CREATE TABLE users (
@@ -81,6 +155,11 @@ CREATE TABLE themes (
 	CONSTRAINT themes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
 
+CREATE TRIGGER themes_audit_trigger
+    AFTER UPDATE OR DELETE OR INSERT
+    ON themes
+    FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
+
 
 CREATE TABLE theme_tags (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -99,6 +178,11 @@ CREATE TABLE sources (
 	CONSTRAINT link_type_not_null CHECK (CASE WHEN type = 'web' THEN link IS NOT NULL ELSE TRUE END),
 	CONSTRAINT link_type_null CHECK (CASE WHEN type = 'head' THEN link IS NULL ELSE TRUE END)
 );
+
+CREATE TRIGGER sources_audit_trigger
+	AFTER UPDATE OR DELETE OR INSERT
+	ON sources
+	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
 
 CREATE FUNCTION sources_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
@@ -124,6 +208,11 @@ CREATE TABLE bulletpoints (
 	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT bulletpoint_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
+
+CREATE TRIGGER bulletpoints_audit_trigger
+	AFTER UPDATE OR DELETE OR INSERT
+	ON bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
 
 CREATE FUNCTION bulletpoints_trigger_row_ai() RETURNS trigger AS $BODY$
 BEGIN

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Domain;
+namespace Bulletpoint\Domain\Access;
 
 final class ConstantUser implements User {
 	private const SENSITIVE_COLUMNS = ['id', 'password'];

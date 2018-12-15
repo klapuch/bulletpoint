@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Domain;
+namespace Bulletpoint\Domain\Access;
 
 use Klapuch\Storage;
 
@@ -43,7 +43,7 @@ final class RegisteredUser implements User {
 	private function registered(int $id): bool {
 		return (new Storage\TypedQuery(
 			$this->connection,
-			'SELECT EXISTS(SELECT 1 FROM seekers WHERE id = :id)',
+			'SELECT EXISTS(SELECT 1 FROM users WHERE id = :id)',
 			['id' => $id]
 		))->field();
 	}

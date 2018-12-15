@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Endpoint\Themes;
 
 use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Bulletpoint\Http;
 use Bulletpoint\Response;
 use Klapuch\Application;
@@ -19,13 +20,13 @@ final class Post implements Application\View {
 	/** @var \Klapuch\Application\Request */
 	private $request;
 
-	/** @var \Bulletpoint\Domain\User */
+	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	public function __construct(Application\Request $request, Storage\Connection $connection, Domain\User $user, Uri $url) {
+	public function __construct(Application\Request $request, Storage\Connection $connection, Access\User $user, Uri $url) {
 		$this->connection = $connection;
 		$this->request = $request;
 		$this->user = $user;

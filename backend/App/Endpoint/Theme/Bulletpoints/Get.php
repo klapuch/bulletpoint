@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Endpoint\Theme\Bulletpoints;
 
 use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Bulletpoint\Misc;
 use Bulletpoint\Response;
 use Klapuch\Application;
@@ -25,7 +26,7 @@ final class Get implements Application\View {
 		$bulletpoints = new Domain\ThemeBulletpoints(
 			$parameters['theme_id'],
 			$this->connection,
-			new Domain\FakeUser()
+			new Access\FakeUser()
 		);
 		return new Response\JsonResponse(
 			new Response\PlainResponse(

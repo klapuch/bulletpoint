@@ -13,10 +13,10 @@ final class BulletpointRating implements Rating {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var \Bulletpoint\Domain\User */
+	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
-	public function __construct(int $bulletpoint, User $user, Storage\Connection $connection) {
+	public function __construct(int $bulletpoint, Access\User $user, Storage\Connection $connection) {
 		$this->bulletpoint = $bulletpoint;
 		$this->connection = $connection;
 		$this->user = $user;

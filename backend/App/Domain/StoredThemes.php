@@ -11,10 +11,10 @@ final class StoredThemes implements Themes {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var \Bulletpoint\Domain\User */
+	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
-	public function __construct(User $user, Storage\Connection $connection) {
+	public function __construct(Access\User $user, Storage\Connection $connection) {
 		$this->connection = $connection;
 		$this->user = $user;
 	}

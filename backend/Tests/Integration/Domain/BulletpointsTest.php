@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Integration\Domain;
 
 use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Bulletpoint\Fixtures;
 use Bulletpoint\Misc;
 use Bulletpoint\TestCase;
@@ -27,7 +28,7 @@ final class BulletpointsTest extends TestCase\Runtime {
 			static function (Domain\Bulletpoint $bulletpoint): array {
 				return (new Misc\TestingFormat($bulletpoint->print(new Output\Json())))->raw();
 			},
-			iterator_to_array((new Domain\ThemeBulletpoints($theme, $this->connection, new Domain\FakeUser()))->all())
+			iterator_to_array((new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser()))->all())
 		);
 		Assert::count(2, $bulletpoints);
 		Assert::same($id2, $bulletpoints[0]['id']);
@@ -39,7 +40,7 @@ final class BulletpointsTest extends TestCase\Runtime {
 	public function testAddingNew(): void {
 		['id' => $theme] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
-		(new Domain\ThemeBulletpoints($theme, $this->connection, new Domain\FakeUser($user)))->add([
+		(new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser($user)))->add([
 			'content' => 'TEST',
 			'source' => [
 				'link' => 'https://www.wikipedia.cz/test',
@@ -52,9 +53,9 @@ final class BulletpointsTest extends TestCase\Runtime {
 
 	public function testCountingByTheme(): void {
 		['id' => $theme] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
-		Assert::same(0, (new Domain\ThemeBulletpoints($theme, $this->connection, new Domain\FakeUser()))->count());
+		Assert::same(0, (new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser()))->count());
 		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['theme_id' => $theme]))->try();
-		Assert::same(1, (new Domain\ThemeBulletpoints($theme, $this->connection, new Domain\FakeUser()))->count());
+		Assert::same(1, (new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser()))->count());
 	}
 }
 

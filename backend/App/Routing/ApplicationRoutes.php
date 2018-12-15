@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Routing;
 
-use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Bulletpoint\Endpoint;
 use Bulletpoint\Request;
 use Klapuch\Application;
@@ -28,7 +28,10 @@ final class ApplicationRoutes implements Routing\Routes {
 
 	public function matches(): array {
 		$request = new Request\CachedRequest(new Application\PlainRequest());
-		$user = new Domain\FakeUser(1);
+		$user = (new Access\PgEntrance(
+			new Access\FakeEntrance(new Access\RegisteredUser(1, $this->connection)),
+			$this->connection
+		))->enter([]);
 		return [
 			'themes/{id} [GET]' => function(): Application\View {
 				return new Endpoint\Theme\Get($this->connection);

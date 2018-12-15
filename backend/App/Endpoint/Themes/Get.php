@@ -5,6 +5,7 @@ namespace Bulletpoint\Endpoint\Themes;
 
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Bulletpoint\Misc;
 use Bulletpoint\Response;
 use Klapuch\Application;
@@ -20,10 +21,10 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var \Bulletpoint\Domain\User */
+	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
-	public function __construct(Storage\Connection $connection, Domain\User $user) {
+	public function __construct(Storage\Connection $connection, Access\User $user) {
 		$this->connection = $connection;
 		$this->user = $user;
 	}
