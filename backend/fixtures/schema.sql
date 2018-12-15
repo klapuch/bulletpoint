@@ -62,7 +62,7 @@ BEGIN
 		globals_get_user(),
 		CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(old) ELSE NULL END,
 		CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN row_to_json(new) ELSE NULL END
-		);
+	);
 
 	RETURN r;
 END;
