@@ -2,7 +2,7 @@
 import React from 'react';
 import Select from 'react-select';
 import type { OptionType } from 'react-select/src/types';
-import type { ThemeType } from './endpoints';
+import type { PostedThemeType } from './endpoints';
 
 type TargetType = {|
   target: {|
@@ -16,7 +16,7 @@ type Props = {|
   +tags: Array<Object>,
 |};
 type State = {|
-  theme: { ...ThemeType, tags: Array<OptionType> },
+  theme: { ...PostedThemeType, tags: Array<OptionType> },
 |};
 class Add extends React.Component<Props, State> {
   state = {

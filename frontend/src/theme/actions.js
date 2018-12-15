@@ -1,6 +1,6 @@
 // @flow
 
-import type { ThemeType } from './endpoints';
+import type { FetchedThemeType } from './endpoints';
 
 export const RECEIVED_THEME = 'RECEIVED_THEME';
 export const RECEIVED_THEMES = 'RECEIVED_THEMES';
@@ -19,7 +19,7 @@ export const requestedSingle = (id: number) => ({
   fetching: true,
 });
 
-export const receivedSingle = (id: number, theme: ThemeType) => ({
+export const receivedSingle = (id: number, theme: FetchedThemeType) => ({
   type: RECEIVED_THEME,
   id,
   theme,
@@ -31,7 +31,7 @@ export const requestedAll = () => ({
   fetching: true,
 });
 
-export const receivedAll = (themes: Array<ThemeType>) => ({
+export const receivedAll = (themes: Array<FetchedThemeType>) => ({
   type: RECEIVED_THEMES,
   themes,
   fetching: false,

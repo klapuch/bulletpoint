@@ -9,10 +9,20 @@ import {
 import { fetchedSingle } from './selects';
 import * as response from '../api/response';
 
-export type ThemeType = {|
+export type FetchedThemeType = {|
+  +id: number,
+  +user_id: number,
   +tags: Array<string>,
   +name: string,
-  +tags: Array<string>,
+  +created_at: string,
+  +reference: {|
+    +url: string,
+  |}
+|};
+
+export type PostedThemeType = {|
+  +tags: Array<number>,
+  +name: string,
   +reference: {|
     +url: string,
   |}

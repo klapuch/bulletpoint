@@ -16,17 +16,17 @@ import Tags from '../../theme/components/Tags';
 import Reference from '../../theme/components/Reference';
 import Source from '../../theme/components/Source';
 import { UpButton, DownButton } from '../../theme/bulletpoint/components/RateButton';
-import type { ThemeType } from '../../theme/endpoints';
+import type { FetchedThemeType } from '../../theme/endpoints';
 
 const Title = styled.h1`
   display: inline-block;
 `;
 
 type Props = {|
-  +getSingleTheme: (number) => (void),
+  +getTheme: (number) => (void),
   +getBulletpoints: (number) => (void),
   +match: Object,
-  +theme: ThemeType,
+  +theme: FetchedThemeType,
   +bulletpoints: Array<Object>,
   +fetching: boolean,
   +addBulletpoint: (number, Object, (void) => (void)) => (void),
@@ -44,7 +44,7 @@ class Theme extends React.Component<Props> {
 
   reload = () => {
     const { match: { params: { id } } } = this.props;
-    this.props.getSingleTheme(id);
+    this.props.getTheme(id);
     this.props.getBulletpoints(id);
   };
 
@@ -102,7 +102,7 @@ const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
   fetching: themeFetching(theme, state) || fetchingAllThemeBulletpoints(theme, state),
 });
 const mapDispatchToProps = dispatch => ({
-  getSingleTheme: (theme: number) => dispatch(single(theme)),
+  getTheme: (theme: number) => dispatch(single(theme)),
   addBulletpoint: (
     theme: number,
     bulletpoint: Object,
