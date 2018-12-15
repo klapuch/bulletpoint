@@ -36,6 +36,9 @@ final class ApplicationRoutes implements Routing\Routes {
 			'themes [POST]' => function() use ($user, $request): Application\View {
 				return new Endpoint\Themes\Post($request, $this->connection, $user, $this->url);
 			},
+			'themes [GET]' => function() use ($user): Application\View {
+				return new Endpoint\Themes\Get($this->connection, $user);
+			},
 			'tags [GET]' => function(): Application\View {
 				return new Endpoint\Tags\Get($this->connection);
 			},

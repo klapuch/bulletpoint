@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
+use Klapuch\Dataset;
 use Klapuch\Sql;
 use Klapuch\Storage;
 
@@ -36,6 +37,39 @@ final class StoredThemes implements Themes {
 					'reference_url' => $theme['reference']['url'],
 				]
 			))->returning(['id'])
+		))->field();
+	}
+
+	public function all(Dataset\Selection $selection): \Iterator {
+		$themes = (new Storage\BuiltQuery(
+			$this->connection,
+			new Dataset\SelectiveStatement(
+				(new Sql\AnsiSelect([
+					'id',
+					'name',
+					'tags',
+					'reference_url',
+					'user_id',
+					'created_at',
+				]))->from(['public_themes']),
+				$selection
+			)
+		))->rows();
+		foreach ($themes as $theme) {
+			yield new StoredTheme(
+				$theme['id'],
+				new Storage\MemoryConnection($this->connection, $theme)
+			);
+		}
+	}
+
+	public function count(Dataset\Selection $selection): int {
+		return (new Storage\BuiltQuery(
+			$this->connection,
+			new Dataset\SelectiveStatement(
+				(new Sql\AnsiSelect(['count(*)']))->from(['public_themes']),
+				$selection
+			)
 		))->field();
 	}
 }

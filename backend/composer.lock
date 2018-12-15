@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3acb29dc805ae648f972f3bdf170318b",
+    "content-hash": "f95b011c89d2798eb7953cec10a96875",
     "packages": [
         {
             "name": "hashids/hashids",
@@ -177,6 +177,54 @@
                 "write"
             ],
             "time": "2018-03-10T09:19:53+00:00"
+        },
+        {
+            "name": "klapuch/dataset",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klapuch/Dataset.git",
+                "reference": "98cea255638f58baea85e8c1b6cb37e83be7a8df"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/98cea255638f58baea85e8c1b6cb37e83be7a8df",
+                "reference": "98cea255638f58baea85e8c1b6cb37e83be7a8df",
+                "shasum": ""
+            },
+            "require": {
+                "klapuch/sql": "dev-master",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "^1.0",
+                "jakub-onderka/php-parallel-lint": "^1.0.0",
+                "nette/tester": "^2.0",
+                "phing/phing": "^2.16",
+                "phpstan/phpstan": "^0.9.0",
+                "sebastian/phpcpd": "^3.0",
+                "slevomat/coding-standard": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Klapuch\\Dataset\\": [
+                        "Core/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Dominik Klapuch",
+                    "email": "klapuchdominik@gmail.com",
+                    "homepage": "https://www.github.com/klapuch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Operations applicable to datasets",
+            "homepage": "https://www.github.com/klapuch/Dataset",
+            "time": "2018-07-08T21:18:55+00:00"
         },
         {
             "name": "klapuch/internal",
@@ -2597,7 +2645,8 @@
         "klapuch/validation": 20,
         "klapuch/internal": 20,
         "klapuch/iterator": 20,
-        "klapuch/routing": 20
+        "klapuch/routing": 20,
+        "klapuch/dataset": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
