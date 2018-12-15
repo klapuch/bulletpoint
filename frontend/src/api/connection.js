@@ -22,7 +22,7 @@ export default function withSettings(inherited: Object): Object {
         }
         return data;
       }],
-      paramsSerializer: params => Qs.stringify(pickBy(params, param => param !== ''), { arrayFormat: 'brackets' }),
+      paramsSerializer: params => Qs.stringify(pickBy(params, param => param !== null), { arrayFormat: 'brackets' }),
     },
   );
 }

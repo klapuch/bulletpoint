@@ -263,7 +263,7 @@ CREATE VIEW public_themes AS
 	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id
 	LEFT JOIN (
-		SELECT theme_id, jsonb_agg(tags.name) AS tags
+		SELECT theme_id, jsonb_agg(tags.*) AS tags
 		FROM theme_tags
 		JOIN tags ON tags.id = theme_tags.tag_id
 	    GROUP BY theme_id

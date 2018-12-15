@@ -97,7 +97,7 @@ class Theme extends React.Component<Props, State> {
           <Title>{theme.name}</Title>
           <Reference url={theme.reference.url} />
         </div>
-        <Tags texts={theme.tags} />
+        <Tags tags={theme.tags} />
         <div className="row">
           <div className="col-sm-8">
             <h2 id="bulletpointy">Bulletpointy</h2>

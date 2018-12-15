@@ -139,3 +139,17 @@ BEGIN
 	RETURN v_id;
 END;
 $BODY$ LANGUAGE plpgsql;
+
+CREATE FUNCTION samples.theme_tags(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id themes.id%type;
+BEGIN
+	INSERT INTO theme_tags (tag_id, theme_id) VALUES (
+		samples.random_if_not_exists((SELECT samples.tags()), replacements, 'tag_id'),
+		samples.random_if_not_exists((SELECT samples.themes()), replacements, 'theme_id')
+	)
+	RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$ LANGUAGE plpgsql;

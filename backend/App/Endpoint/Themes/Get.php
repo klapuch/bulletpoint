@@ -21,12 +21,8 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
-
-	public function __construct(Storage\Connection $connection, Access\User $user) {
+	public function __construct(Storage\Connection $connection) {
 		$this->connection = $connection;
-		$this->user = $user;
 	}
 
 	/**
@@ -35,10 +31,19 @@ final class Get implements Application\View {
 	public function response(array $parameters): Application\Response {
 		$themes = new Domain\PublicThemes(
 			new Domain\StoredThemes(
-				$this->user,
+				new Access\FakeUser(),
 				$this->connection
 			)
 		);
+		if (isset($parameters['tag_id'])) {
+			$themes = new Domain\PublicThemes(
+				new Domain\TaggedThemes(
+					$themes,
+					$parameters['tag_id'],
+					$this->connection
+				)
+			);
+		}
 		return new Response\JsonResponse(
 			new Response\PlainResponse(
 				(new Misc\JsonPrintedObjects(
@@ -47,14 +52,17 @@ final class Get implements Application\View {
 					},
 					...iterator_to_array(
 						$themes->all(
-							new Constraint\AllowedSort(
-								new Dataset\RestSort($parameters['sort']),
-								self::SORTS
+							new Dataset\CombinedSelection(
+								new Constraint\AllowedSort(
+									new Dataset\RestSort($parameters['sort']),
+									self::SORTS
+								),
+								new Dataset\RestFilter($parameters)
 							)
 						)
 					)
 				)),
-				['X-Total-Count' => $themes->count(new Dataset\EmptySelection())]
+				['X-Total-Count' => $themes->count(new Dataset\RestFilter($parameters))]
 			)
 		);
 	}

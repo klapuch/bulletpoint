@@ -1,15 +1,25 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
+import qs from 'qs';
+import type { TagType } from '../../tags/endpoints';
 
 type TagProps = {|
-  children: string,
+  +children: string,
+  +id: number,
 |};
-const Tag = ({ children }: TagProps) => <span style={{ marginRight: 7 }} className="label label-default">{children}</span>;
+const Tag = ({ children, id }: TagProps) => (
+  <Link className="no-link" to={{ pathname: '/themes', search: qs.stringify({ tag: id }) }}>
+    <span style={{ marginRight: 7 }} className="label label-default">{children}</span>
+  </Link>
+);
 
 type TagsProps = {|
-  texts: Array<string>,
+  +tags: Array<TagType>,
 |};
-// $FlowFixMe Not sure why
-const Tags = ({ texts }: TagsProps) => texts.map(text => <Tag key={text}>{text}</Tag>);
+const Tags = ({ tags }: TagsProps) => (
+  // $FlowFixMe Not sure why
+  tags.map(tag => <Tag id={tag.id} key={tag.id}>{tag.name}</Tag>)
+);
 
 export default Tags;

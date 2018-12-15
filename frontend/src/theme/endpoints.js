@@ -8,11 +8,12 @@ import {
 } from './actions';
 import { fetchedSingle } from './selects';
 import * as response from '../api/response';
+import type { TagType } from '../tags/endpoints';
 
 export type FetchedThemeType = {|
   +id: number,
   +user_id: number,
-  +tags: Array<string>,
+  +tags: Array<TagType>,
   +name: string,
   +created_at: string,
   +reference: {|
@@ -42,8 +43,8 @@ export const create = (theme: PostedThemeType, next: (number) => (void)) => {
     .then(next);
 };
 
-export const all = () => (dispatch: (mixed) => Object) => {
+export const all = (tag: ?number) => (dispatch: (mixed) => Object) => {
   dispatch(requestedAll());
-  axios.get('/themes')
+  axios.get('/themes', { params: { tag_id: tag } })
     .then(response => dispatch(receivedAll(response.data)));
 };
