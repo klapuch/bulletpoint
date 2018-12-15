@@ -58,7 +58,8 @@ export default (state: State = init, action: Object): State => {
         ...state,
         all: {
           fetching: action.fetching,
-        }
+          payload: [],
+        },
       };
     case INVALIDATED_THEME:
       return {

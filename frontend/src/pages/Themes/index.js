@@ -6,14 +6,19 @@ import { all } from '../../theme/endpoints';
 import { getAll, allFetching as themesFetching } from '../../theme/selects';
 import Loader from '../../ui/Loader';
 
+type TagProps = {|
+  children: string,
+|};
+const Tag = ({ children }: TagProps) => <span style={{ marginRight: 7 }} className="label label-default">{children}</span>;
+type TagsProps = {|
+  texts: Array<string>,
+|};
+const Tags = ({ texts }: TagsProps) => texts.map(text => <Tag key={text}>{text}</Tag>);
+
 type Props = {|
-  +singleTheme: (number) => (void),
-  +bulletpointsByTheme: (number) => (void),
-  +match: Object,
-  +theme: Object,
-  +bulletpoints: Array<Object>,
+  +themes: Array<Object>,
   +fetching: boolean,
-  +addThemeBulletpoint: (number, Object, (void) => (void)) => (void),
+  +recentThemes: () => (void),
 |};
 class Themes extends React.Component<Props> {
   componentDidMount(): void {
@@ -28,36 +33,22 @@ class Themes extends React.Component<Props> {
     return (
       <>
         <h1>Nedávno přidaná témata</h1>
-        <div className="table-responsive">
-          <table className="table table-hover">
-            <thead>
-            <tr>
-              <th><p>Datum</p></th>
-              <th><p>Název</p></th>
-            </tr>
-            </thead>
-            <tbody>
-            {themes.map(theme => (
-              <tr key={theme.id}>
-                <td><p>{theme.created_at}</p></td>
-                <td>
-                  <p>
-                    <Link to={`themes/${theme.id}`}>
-                      {theme.name}
-                    </Link>
-                  </p>
-                </td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        </div>
+        <br />
+        {themes.map(theme => (
+          <React.Fragment key={theme.id}>
+            <Link className="no-link" to={`themes/${theme.id}`}>
+              <h2>{theme.name}</h2>
+            </Link>
+            <Tags texts={theme.tags} />
+            <hr />
+          </React.Fragment>
+        ))}
       </>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   themes: getAll(state),
   fetching: themesFetching(state),
 });
