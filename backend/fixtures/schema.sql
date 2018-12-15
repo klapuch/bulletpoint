@@ -100,7 +100,7 @@ CREATE TABLE sources (
 	CONSTRAINT link_type_null CHECK (CASE WHEN type = 'head' THEN link IS NULL ELSE TRUE END)
 );
 
-CREATE FUNCTION sources_trigger_row_bi() RETURNS trigger AS $BODY$
+CREATE FUNCTION sources_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
 	new.link = nullif(new.link, '');
 
@@ -108,10 +108,10 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE TRIGGER sources_row_bi_trigger
-	BEFORE INSERT
+CREATE TRIGGER sources_row_biu_trigger
+	BEFORE INSERT OR UPDATE
 	ON sources
-	FOR EACH ROW EXECUTE PROCEDURE sources_trigger_row_bi();
+	FOR EACH ROW EXECUTE PROCEDURE sources_trigger_row_biu();
 
 
 CREATE TABLE bulletpoints (
@@ -133,7 +133,7 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE FUNCTION bulletpoints_trigger_row_bi() RETURNS trigger AS $BODY$
+CREATE FUNCTION bulletpoints_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
 	new.content = nullif(new.content, '');
 
@@ -146,10 +146,10 @@ CREATE TRIGGER bulletpoints_row_ai_trigger
 	ON bulletpoints
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_ai();
 
-CREATE TRIGGER bulletpoints_row_bi_trigger
-	BEFORE INSERT
+CREATE TRIGGER bulletpoints_row_biu_trigger
+	BEFORE INSERT OR UPDATE
 	ON bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_bi();
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_biu();
 
 
 CREATE TABLE bulletpoint_ratings (
