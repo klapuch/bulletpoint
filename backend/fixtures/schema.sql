@@ -293,6 +293,12 @@ CREATE TRIGGER public_themes_trigger_row_ii
 	FOR EACH ROW EXECUTE PROCEDURE public_themes_trigger_row_ii();
 
 
+CREATE VIEW tagged_themes AS
+	SELECT tag_id, public_themes.*
+	FROM public_themes
+	JOIN theme_tags ON theme_tags.theme_id = public_themes.id;
+
+
 CREATE VIEW public_bulletpoints AS
 	SELECT
 		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id,

@@ -32,15 +32,14 @@ final class TaggedThemes implements Themes {
 			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect([
-					'pt.id',
-					'pt.name',
-					'pt.tags',
-					'pt.reference_url',
-					'pt.user_id',
-					'pt.created_at',
-				]))->from(['public_themes AS pt'])
-					->join('INNER', 'theme_tags', 'theme_tags.theme_id = pt.id')
-					->where('theme_tags.tag_id = :tag_id', ['tag_id' => $this->tag]),
+					'id',
+					'name',
+					'tags',
+					'reference_url',
+					'user_id',
+					'created_at',
+				]))->from(['tagged_themes'])
+					->where('tag_id = :tag_id', ['tag_id' => $this->tag]),
 				$selection
 			)
 		))->rows();
@@ -57,9 +56,8 @@ final class TaggedThemes implements Themes {
 			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['count(*)']))
-					->from(['public_themes AS pt'])
-					->join('INNER', 'theme_tags', 'theme_tags.theme_id = pt.id')
-					->where('theme_tags.tag_id = :tag_id', ['tag_id' => $this->tag]),
+					->from(['tagged_themes'])
+					->where('tag_id = :tag_id', ['tag_id' => $this->tag]),
 				$selection
 			)
 		))->field();
