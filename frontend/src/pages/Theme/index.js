@@ -28,8 +28,8 @@ type State = {|
   ratings: Object,
 |};
 type Props = {|
-  +getTheme: (number) => (void),
-  +getBulletpoints: (number) => (void),
+  +fetchTheme: (number) => (void),
+  +fetchBulletpoints: (number) => (void),
   +match: Object,
   +theme: FetchedThemeType,
   +bulletpoints: Array<FetchedBulletpointType>,
@@ -53,12 +53,12 @@ class Theme extends React.Component<Props, State> {
 
   reload = () => {
     const { match: { params: { id } } } = this.props;
-    this.props.getTheme(id);
-    this.props.getBulletpoints(id);
+    this.props.fetchTheme(id);
+    this.props.fetchBulletpoints(id);
     this.setState({ ratings: {} });
   };
 
-  handleChangeRating = (bulletpoint: number, point: number) => {
+  handleRatingChange = (bulletpoint: number, point: number) => {
     const { match: { params: { id } } } = this.props;
     this.props.changeRating(
       id,
@@ -110,13 +110,13 @@ class Theme extends React.Component<Props, State> {
                   <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
                     <DownButton
                       rated={isDown}
-                      onClick={() => this.handleChangeRating(bulletpoint.id, -1)}
+                      onClick={() => this.handleRatingChange(bulletpoint.id, -1)}
                     >
                       {bulletpoint.rating.down + down}
                     </DownButton>
                     <UpButton
                       rated={isUp}
-                      onClick={() => this.handleChangeRating(bulletpoint.id, +1)}
+                      onClick={() => this.handleRatingChange(bulletpoint.id, +1)}
                     >
                       {bulletpoint.rating.up + up}
                     </UpButton>
@@ -146,13 +146,13 @@ const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
   fetching: themeFetching(theme, state) || fetchingAllThemeBulletpoints(theme, state),
 });
 const mapDispatchToProps = dispatch => ({
-  getTheme: (theme: number) => dispatch(single(theme)),
+  fetchTheme: (theme: number) => dispatch(single(theme)),
   addBulletpoint: (
     theme: number,
     bulletpoint: PostedBulletpointType,
     next: (void) => (void),
   ) => dispatch(add(theme, bulletpoint, next)),
-  getBulletpoints: (theme: number) => dispatch(all(theme)),
+  fetchBulletpoints: (theme: number) => dispatch(all(theme)),
   changeRating: (
     theme: number,
     bulletpoint: number,

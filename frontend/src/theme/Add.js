@@ -55,7 +55,7 @@ class Add extends React.Component<Props, State> {
     }));
   };
 
-  onSubmitClick = () => {
+  handleClick = () => {
     this.props.onSubmit(this.state.theme);
   };
 
@@ -83,7 +83,7 @@ class Add extends React.Component<Props, State> {
           <label htmlFor="reference_url">URL odkazu</label>
           <input type="text" className="form-control" id="reference_url" name="reference_url" value={theme.reference.url} onChange={this.handleFormChange} />
         </div>
-        <a href="#" className="btn btn-success" onClick={this.onSubmitClick} role="button">Vytvořit téma</a>
+        <a href="#" className="btn btn-success" onClick={this.handleClick} role="button">Vytvořit téma</a>
       </form>
     );
   }

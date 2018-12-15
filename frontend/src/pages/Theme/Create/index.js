@@ -11,16 +11,16 @@ import type { TagType } from '../../../tags/endpoints';
 
 type Props = {|
   +history: Object,
-  +getAllTags: (void) => (void),
+  +fetchTags: (void) => (void),
   +fetching: boolean,
   +tags: Array<TagType>,
 |};
 class Create extends React.Component<Props> {
   componentDidMount(): void {
-    this.props.getAllTags();
+    this.props.fetchTags();
   }
 
-  onSubmit = (theme: PostedThemeType) => {
+  handleSubmit = (theme: PostedThemeType) => {
     create(theme, (id: number) => {
       this.props.history.push(`/themes/${id}`);
     });
@@ -34,7 +34,7 @@ class Create extends React.Component<Props> {
     return (
       <>
         <h1>Nové téma</h1>
-        <Add tags={tags} onSubmit={this.onSubmit} />
+        <Add tags={tags} onSubmit={this.handleSubmit} />
       </>
     );
   }
@@ -45,6 +45,6 @@ const mapStateToProps = state => ({
   fetching: tagsFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
-  getAllTags: () => dispatch(all()),
+  fetchTags: () => dispatch(all()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Create);
