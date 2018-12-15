@@ -7,12 +7,13 @@ import { getAll, allFetching as tagsFetching } from '../../../tags/selects';
 import { all } from '../../../tags/endpoints';
 import Loader from '../../../ui/Loader';
 import type { PostedThemeType } from '../../../theme/endpoints';
+import type { TagType } from '../../../tags/endpoints';
 
 type Props = {|
   +history: Object,
   +getAllTags: (void) => (void),
   +fetching: boolean,
-  +tags: Array<Object>, // TODO
+  +tags: Array<TagType>,
 |};
 class Create extends React.Component<Props> {
   componentDidMount(): void {

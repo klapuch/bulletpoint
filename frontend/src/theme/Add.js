@@ -2,6 +2,7 @@
 import React from 'react';
 import Select from 'react-select';
 import type { PostedThemeType } from './endpoints';
+import type { TagType } from '../tags/endpoints';
 
 type TargetType = {|
   target: {|
@@ -12,7 +13,7 @@ type TargetType = {|
 
 type Props = {|
   +onSubmit: (PostedThemeType) => (void),
-  +tags: Array<Object>,
+  +tags: Array<TagType>,
 |};
 type State = {|
   theme: PostedThemeType,

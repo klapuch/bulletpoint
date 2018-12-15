@@ -6,6 +6,11 @@ import {
 } from './actions';
 import { fetchedAll } from './selects';
 
+export type TagType = {|
+  +name: string,
+  +id: number,
+|};
+
 export const all = () => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedAll(getState())) return;
   dispatch(requestedAll());
