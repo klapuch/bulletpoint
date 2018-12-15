@@ -31,7 +31,6 @@ final class StoredBulletpoint implements Bulletpoint {
 				'total_rating',
 				'up_rating',
 				'down_rating',
-				'neutral_rating',
 				'user_id',
 			]))->from(['public_bulletpoints'])
 				->where('id = :id', ['id' => $this->id])
@@ -45,7 +44,6 @@ final class StoredBulletpoint implements Bulletpoint {
 				'rating' => [
 					'up' => $row['up_rating'],
 					'down' => $row['down_rating'],
-					'neutral' => $row['neutral_rating'],
 					'total' => $row['total_rating'],
 				],
 				'user_id' => $row['user_id'],

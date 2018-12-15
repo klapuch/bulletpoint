@@ -209,8 +209,7 @@ CREATE VIEW public_bulletpoints AS
 		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id,
 		sources.link AS source_link, sources.type AS source_type,
 			bulletpoint_ratings.up AS up_rating,
-			bulletpoint_ratings.down AS down_rating,
-			bulletpoint_ratings.neutral AS neutral_rating,
+			abs(bulletpoint_ratings.down) AS down_rating,
 			(bulletpoint_ratings.up + bulletpoint_ratings.down) AS total_rating,
 		users.id AS user_id
 	FROM bulletpoints
@@ -218,8 +217,7 @@ CREATE VIEW public_bulletpoints AS
 		SELECT
 			DISTINCT ON (bulletpoint_id) bulletpoint_id,
 			COALESCE(sum(point) FILTER (WHERE point = 1) OVER (PARTITION BY bulletpoint_id), 0) AS up,
-			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_id), 0) AS down,
-			COALESCE(sum(point) FILTER (WHERE point = 0) OVER (PARTITION BY bulletpoint_id), 0) AS neutral
+			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_id), 0) AS down
 		FROM bulletpoint_ratings
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
 	JOIN users ON users.id = bulletpoints.user_id

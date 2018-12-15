@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { single } from '../../theme/endpoints';
 import { all, add } from '../../theme/bulletpoint/endpoints';
+import { rate } from '../../theme/bulletpoint/rating/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
 import {
   allFetching as allThemeBulletpointsFetching,
@@ -11,6 +12,11 @@ import {
 } from '../../theme/bulletpoint/selects';
 import Loader from '../../ui/Loader';
 import Add from '../../bulletpoint/Add';
+
+
+const RateButton = styled.span`
+  cursor: pointer;
+`;
 
 type TagProps = {|
   children: string,
@@ -55,6 +61,7 @@ type Props = {|
   +bulletpoints: Array<Object>,
   +fetching: boolean,
   +addThemeBulletpoint: (number, Object, (void) => (void)) => (void),
+  +changeRating: (number, number, number, (void) => (void)) => (void),
 |};
 const Title = styled.h1`
   display: inline-block;
@@ -73,6 +80,11 @@ class Theme extends React.Component<Props> {
     const { match: { params: { id } } } = this.props;
     this.props.singleTheme(id);
     this.props.bulletpointsByTheme(id);
+  };
+
+  changeRating = (bulletpoint: number, point: number) => {
+    const { match: { params: { id } } } = this.props;
+    this.props.changeRating(id, bulletpoint, point, this.reload);
   };
 
   render() {
@@ -94,14 +106,14 @@ class Theme extends React.Component<Props> {
               {bulletpoints.map((bulletpoint) => {
                 return (
                   <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
-                    <span className="badge alert-danger badge-guest">
+                    <RateButton className="badge alert-danger badge-guest" onClick={() => this.changeRating(bulletpoint.id, -1)}>
                       {bulletpoint.rating.down}
                       <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />
-                    </span>
-                    <span className="badge alert-success badge-guest">
+                    </RateButton>
+                    <RateButton className="badge alert-success badge-guest" onClick={() => this.changeRating(bulletpoint.id, +1)}>
                       {bulletpoint.rating.up}
                       <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />
-                    </span>
+                    </RateButton>
                     {bulletpoint.content}
                     <br />
                     <small>
@@ -135,5 +147,11 @@ const mapDispatchToProps = dispatch => ({
     next: (void) => (void),
   ) => dispatch(add(theme, bulletpoint, next)),
   bulletpointsByTheme: (theme: number) => dispatch(all(theme)),
+  changeRating: (
+    theme: number,
+    bulletpoint: number,
+    point: number,
+    next: (void) => (void),
+  ) => dispatch(rate(theme, bulletpoint, point, next)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Theme);
