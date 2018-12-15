@@ -57,12 +57,12 @@ final class Get implements Application\View {
 									new Dataset\RestSort($parameters['sort']),
 									self::SORTS
 								),
-								new Dataset\RestFilter($parameters)
+								new Dataset\EmptySelection()
 							)
 						)
 					)
 				)),
-				['X-Total-Count' => $themes->count(new Dataset\RestFilter($parameters))]
+				['X-Total-Count' => $themes->count(new Dataset\EmptySelection())]
 			)
 		);
 	}

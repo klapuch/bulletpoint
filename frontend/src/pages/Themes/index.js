@@ -63,7 +63,7 @@ class Themes extends React.Component<Props> {
 const mapStateToProps = (state, { location: { search } }) => ({
   params: mapValues(
     { tag: null, ...qs.parse(search, { ignoreQueryPrefix: true }) },
-    (value, key) => (['tag'].includes(key) ? parseInt(value, 10) : value),
+    (value, key) => (['tag'].includes(key) && value !== null ? parseInt(value, 10) : value),
   ),
   themes: getAll(state),
   fetching: themesFetching(state),
