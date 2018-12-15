@@ -33,9 +33,6 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
               </div>
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
-                  <li>
-                    <Link title="Nové téma" to="/themes/create">Nové téma</Link>
-                  </li>
                   <li className="dropdown">
                     <a href="#" className="dropdown-toggle" title="Administrace" data-toggle="dropdown" role="button" aria-expanded="false">
                       Témata
@@ -44,6 +41,9 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
                     <ul className="dropdown-menu" role="menu">
                       <li><Link to="/themes">Nedávno přidaná</Link></li>
                     </ul>
+                  </li>
+                  <li>
+                    <Link title="Nové téma" to="/themes/create">Nové téma</Link>
                   </li>
                 </ul>
               </div>
