@@ -4,14 +4,18 @@ import {
   REQUESTED_TAGS,
   INVALIDATED_TAGS,
 } from './actions';
+import type { TagType } from './endpoints';
 
 type State = {|
-  +all: Object,
+  +all: {|
+    fetching: boolean,
+    payload: Array<TagType|Object>,
+  |},
 |};
 const init = {
   all: {
     fetching: true,
-    payload: null,
+    payload: [],
   },
 };
 export default (state: State = init, action: Object): State => {
@@ -29,6 +33,7 @@ export default (state: State = init, action: Object): State => {
         ...state,
         all: {
           fetching: action.fetching,
+          payload: [],
         },
       };
     case INVALIDATED_TAGS:
@@ -36,6 +41,7 @@ export default (state: State = init, action: Object): State => {
         ...state,
         all: {
           fetching: true,
+          payload: [],
         },
       };
     default:
