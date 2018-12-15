@@ -6,9 +6,10 @@ import { all } from '../../theme/endpoints';
 import { getAll, allFetching as themesFetching } from '../../theme/selects';
 import Loader from '../../ui/Loader';
 import Tags from '../../theme/components/Tags';
+import type { FetchedThemeType } from '../../theme/endpoints';
 
 type Props = {|
-  +themes: Array<Object>,
+  +themes: Array<FetchedThemeType>,
   +fetching: boolean,
   +recentThemes: () => (void),
 |};

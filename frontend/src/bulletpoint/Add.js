@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
+import type { PostedBulletpointType } from '../theme/bulletpoint/endpoints';
 
 const SpaceLink = styled.a`
   margin-right: 5px;
@@ -48,19 +49,13 @@ type TargetType = {|
 |};
 
 type Props = {|
-  +onSubmit: (Object) => (void),
+  +onSubmit: (PostedBulletpointType) => (void),
 |};
 type State = {|
   button: {|
     state: ButtonState,
   |},
-  bulletpoint: {|
-    content: string,
-    source: {|
-      link: string,
-      type: string,
-    |},
-  |},
+  bulletpoint: PostedBulletpointType,
 |};
 class Add extends React.Component<Props, State> {
   state = {

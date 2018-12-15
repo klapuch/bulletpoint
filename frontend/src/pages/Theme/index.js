@@ -17,6 +17,7 @@ import Reference from '../../theme/components/Reference';
 import Source from '../../theme/components/Source';
 import { UpButton, DownButton } from '../../theme/bulletpoint/components/RateButton';
 import type { FetchedThemeType } from '../../theme/endpoints';
+import type { FetchedBulletpointType, PostedBulletpointType } from '../../theme/bulletpoint/endpoints';
 
 const Title = styled.h1`
   display: inline-block;
@@ -27,9 +28,9 @@ type Props = {|
   +getBulletpoints: (number) => (void),
   +match: Object,
   +theme: FetchedThemeType,
-  +bulletpoints: Array<Object>,
+  +bulletpoints: Array<FetchedBulletpointType>,
   +fetching: boolean,
-  +addBulletpoint: (number, Object, (void) => (void)) => (void),
+  +addBulletpoint: (number, PostedBulletpointType, (void) => (void)) => (void),
   +changeRating: (theme: number, bulletpoint: number, point: number, (void) => (void)) => (void),
 |};
 class Theme extends React.Component<Props> {
@@ -37,7 +38,7 @@ class Theme extends React.Component<Props> {
     this.reload();
   }
 
-  onSubmit = (bulletpoint: Object) => {
+  handleSubmit = (bulletpoint: PostedBulletpointType) => {
     const { match: { params: { id } } } = this.props;
     this.props.addBulletpoint(id, bulletpoint, this.reload);
   };
@@ -48,7 +49,7 @@ class Theme extends React.Component<Props> {
     this.props.getBulletpoints(id);
   };
 
-  changeRating = (bulletpoint: number, point: number) => {
+  handleChangeRating = (bulletpoint: number, point: number) => {
     const { match: { params: { id } } } = this.props;
     this.props.changeRating(id, bulletpoint, point, this.reload);
   };
@@ -71,10 +72,10 @@ class Theme extends React.Component<Props> {
             <ul className="list-group">
               {bulletpoints.map(bulletpoint => (
                 <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
-                  <DownButton onClick={() => this.changeRating(bulletpoint.id, -1)}>
+                  <DownButton onClick={() => this.handleChangeRating(bulletpoint.id, -1)}>
                     {bulletpoint.rating.down}
                   </DownButton>
-                  <UpButton onClick={() => this.changeRating(bulletpoint.id, +1)}>
+                  <UpButton onClick={() => this.handleChangeRating(bulletpoint.id, +1)}>
                     {bulletpoint.rating.up}
                   </UpButton>
                   {bulletpoint.content}
@@ -87,7 +88,7 @@ class Theme extends React.Component<Props> {
                 </li>
               ))}
             </ul>
-            <Add onSubmit={this.onSubmit} />
+            <Add onSubmit={this.handleSubmit} />
           </div>
         </div>
         <br />
@@ -105,7 +106,7 @@ const mapDispatchToProps = dispatch => ({
   getTheme: (theme: number) => dispatch(single(theme)),
   addBulletpoint: (
     theme: number,
-    bulletpoint: Object,
+    bulletpoint: PostedBulletpointType,
     next: (void) => (void),
   ) => dispatch(add(theme, bulletpoint, next)),
   getBulletpoints: (theme: number) => dispatch(all(theme)),

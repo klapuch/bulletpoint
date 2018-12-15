@@ -1,5 +1,7 @@
 // @flow
 
+import type { FetchedBulletpointType } from './endpoints';
+
 export const RECEIVED_THEME_BULLETPOINTS = 'RECEIVED_THEME_BULLETPOINTS';
 export const REQUESTED_THEME_BULLETPOINTS = 'REQUESTED_THEME_BULLETPOINTS';
 export const INVALIDATED_THEME_BULLETPOINTS = 'INVALIDATED_THEME_BULLETPOINTS';
@@ -15,7 +17,7 @@ export const requestedAll = (theme: number) => ({
   fetching: true,
 });
 
-export const receivedAll = (theme: number, bulletpoints: Array<Object>) => ({
+export const receivedAll = (theme: number, bulletpoints: Array<FetchedBulletpointType>) => ({
   type: RECEIVED_THEME_BULLETPOINTS,
   theme,
   bulletpoints,

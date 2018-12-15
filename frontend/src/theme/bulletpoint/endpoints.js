@@ -7,6 +7,30 @@ import {
 } from './actions';
 import { fetchedAll } from './selects';
 
+export type FetchedBulletpointType = {|
+  +id: number,
+  +source: {|
+    +link: string,
+    +type: string,
+  |},
+  +user_id: number,
+  +rating: {|
+    +up: number,
+    +down: number,
+    +total: number,
+  |},
+  +content: string,
+  +theme_id: number,
+|};
+
+export type PostedBulletpointType = {|
+  +source: {|
+    +link: string,
+    +type: string,
+  |},
+  +content: string,
+|};
+
 export const all = (theme: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedAll(theme, getState())) return;
   dispatch(requestedAll(theme));
@@ -16,7 +40,7 @@ export const all = (theme: number) => (dispatch: (mixed) => Object, getState: ()
 
 export const add = (
   theme: number,
-  bulletpoint: Object,
+  bulletpoint: PostedBulletpointType,
   next: (void) => (void),
 ) => (dispatch: (mixed) => Object) => {
   axios.post(`/themes/${theme}/bulletpoints`, bulletpoint)
