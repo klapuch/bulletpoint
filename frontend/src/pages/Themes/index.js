@@ -24,6 +24,13 @@ class Themes extends React.Component<Props> {
     this.props.fetchThemes(tag);
   }
 
+  componentDidUpdate(prevProps: Props) {
+    const { tag } = this.props.params;
+    if (prevProps.params.tag !== tag) {
+      this.props.fetchThemes(tag);
+    }
+  }
+
   getRelatedTag = (themes: Array<FetchedThemeType>, tagId: ?number) => (
     first(first(themes.map(theme => theme.tags)).filter(tag => tag.id === tagId))
   );
