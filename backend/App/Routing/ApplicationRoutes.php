@@ -48,6 +48,9 @@ final class ApplicationRoutes implements Routing\Routes {
 			'bulletpoints/{id} [GET]' => function(): Application\View {
 				return new Endpoint\Bulletpoint\Get($this->connection);
 			},
+			'bulletpoints/{bulletpoint_id}/ratings [POST]' => function() use ($request, $user): Application\View {
+				return new Endpoint\Bulletpoint\Ratings\Post($request, $this->connection, $user);
+			},
 		];
 	}
 }
