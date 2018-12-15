@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type { ThemeType } from './endpoints';
 
 type TargetType = {|
   target: {|
@@ -13,13 +14,7 @@ type Props = {|
   +tags: Array<Object>,
 |};
 type State = {|
-  theme: {|
-    name: string,
-    tags: Array<number>,
-    reference: {|
-      url: string,
-    |}
-  |},
+  theme: { ...ThemeType, tags: Array<number> },
 |};
 class Add extends React.Component<Props, State> {
   state = {

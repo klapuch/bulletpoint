@@ -12,6 +12,7 @@ import * as response from '../api/response';
 export type ThemeType = {|
   +tags: Array<string>,
   +name: string,
+  +tags: Array<string>,
   +reference: {|
     +url: string,
   |}

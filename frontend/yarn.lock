@@ -8370,7 +8370,14 @@ postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.2, postcss@^7.0.5, postcss@^7.0.6:
     source-map "^0.6.1"
     supports-color "^5.5.0"
 
-prelude-ls@~1.1.2:
+prelude-extension@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/prelude-extension/-/prelude-extension-0.1.0.tgz#e5330b6a513d3fc9f81fb04b826f01207ca9028c"
+  integrity sha1-5TMLalE9P8n4H7BLgm8BIHypAow=
+  dependencies:
+    prelude-ls "^1.1.2"
+
+prelude-ls@^1.1.1, prelude-ls@^1.1.2, prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
@@ -8779,6 +8786,15 @@ react-scripts@2.1.1:
     workbox-webpack-plugin "3.6.3"
   optionalDependencies:
     fsevents "1.2.4"
+
+react-selectize@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-selectize/-/react-selectize-3.0.1.tgz#92efefd26ac68ba9caca971bc1cffd5851217f89"
+  integrity sha512-dT53g7iCbSY7BSSXbgnGsufhfboA/5sL1a1LkvbYTup3lN0rvXWnUP9mQX6Scey46kLEa5oIV35Fn+YKxG8tqA==
+  dependencies:
+    prelude-extension "^0.1.0"
+    prelude-ls "^1.1.1"
+    tether "^1.1.1"
 
 react@^16.6.3:
   version "16.6.3"
@@ -10014,6 +10030,11 @@ test-exclude@^4.2.1:
     object-assign "^4.1.0"
     read-pkg-up "^1.0.1"
     require-main-filename "^1.0.1"
+
+tether@^1.1.1:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/tether/-/tether-1.4.5.tgz#8efd7b35572767ba502259ba9b1cc167fcf6f2c1"
+  integrity sha512-fysT1Gug2wbRi7a6waeu39yVDwiNtvwj5m9eRD+qZDSHKNghLo6KqP/U3yM2ap6TNUL2skjXGJaJJTJqoC31vw==
 
 text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
