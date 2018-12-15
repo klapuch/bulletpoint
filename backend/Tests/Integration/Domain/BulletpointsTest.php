@@ -33,8 +33,8 @@ final class BulletpointsTest extends TestCase\Runtime {
 		Assert::count(2, $bulletpoints);
 		Assert::same($id2, $bulletpoints[0]['id']);
 		Assert::same($id1, $bulletpoints[1]['id']);
-		Assert::same(['up' => 1, 'down' => 0, 'total' => 1], $bulletpoints[0]['rating']);
-		Assert::same(['up' => 1, 'down' => 0, 'total' => 1], $bulletpoints[1]['rating']);
+		Assert::same(['up' => 1, 'down' => 0, 'total' => 1, 'user' => 0], $bulletpoints[0]['rating']);
+		Assert::same(['up' => 1, 'down' => 0, 'total' => 1, 'user' => 0], $bulletpoints[1]['rating']);
 	}
 
 	public function testAddingNew(): void {

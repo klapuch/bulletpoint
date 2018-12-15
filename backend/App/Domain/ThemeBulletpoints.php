@@ -34,6 +34,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 				'total_rating',
 				'up_rating',
 				'down_rating',
+				'user_rating',
 				'user_id',
 			]))->from(['public_bulletpoints'])
 				->where('theme_id = :theme_id', ['theme_id' => $this->theme])

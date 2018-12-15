@@ -33,7 +33,7 @@ final class BulletpointTest extends TestCase\Runtime {
 		))->raw();
 		Assert::same($id, $bulletpoint['id']);
 		Assert::same('TEST', $bulletpoint['content']);
-		Assert::same(['up' => 1, 'down' => 0, 'total' => 1], $bulletpoint['rating']);
+		Assert::same(['up' => 1, 'down' => 0, 'total' => 1, 'user' => 0], $bulletpoint['rating']);
 	}
 
 	/**

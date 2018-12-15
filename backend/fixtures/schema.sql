@@ -300,13 +300,15 @@ CREATE VIEW public_bulletpoints AS
 			bulletpoint_ratings.up AS up_rating,
 			abs(bulletpoint_ratings.down) AS down_rating,
 			(bulletpoint_ratings.up + bulletpoint_ratings.down) AS total_rating,
-		users.id AS user_id
+		users.id AS user_id,
+		bulletpoint_ratings.user_rating
 	FROM bulletpoints
 	JOIN (
 		SELECT
 			DISTINCT ON (bulletpoint_id) bulletpoint_id,
 			COALESCE(sum(point) FILTER (WHERE point = 1) OVER (PARTITION BY bulletpoint_id), 0) AS up,
-			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_id), 0) AS down
+			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_id), 0) AS down,
+			CASE WHEN user_id = globals_get_user() THEN point ELSE 0 END AS user_rating
 		FROM bulletpoint_ratings
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
 	JOIN users ON users.id = bulletpoints.user_id

@@ -18,6 +18,7 @@ export type FetchedBulletpointType = {|
     +up: number,
     +down: number,
     +total: number,
+    +user: number,
   |},
   +content: string,
   +theme_id: number,

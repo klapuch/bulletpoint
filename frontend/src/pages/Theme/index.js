@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { single } from '../../theme/endpoints';
@@ -54,6 +55,7 @@ class Theme extends React.Component<Props, State> {
     const { match: { params: { id } } } = this.props;
     this.props.getTheme(id);
     this.props.getBulletpoints(id);
+    this.setState({ ratings: {} });
   };
 
   handleChangeRating = (bulletpoint: number, point: number) => {
@@ -63,7 +65,7 @@ class Theme extends React.Component<Props, State> {
       bulletpoint,
       point,
       () => this.setState((prevState) => {
-        if (typeof prevState.ratings[bulletpoint] === 'undefined') {
+        if (isEmpty(prevState.ratings[bulletpoint])) {
           return ({
             ratings: {
               ...prevState.ratings,
@@ -102,12 +104,20 @@ class Theme extends React.Component<Props, State> {
             <ul className="list-group">
               {bulletpoints.map((bulletpoint) => {
                 const { up, down } = ratings[bulletpoint.id] || { up: 0, down: 0 };
+                const isUp = up === 0 && down === 0 ? bulletpoint.rating.user === 1 : up === 1;
+                const isDown = up === 0 && down === 0 ? bulletpoint.rating.user === -1 : down === 1;
                 return (
                   <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
-                    <DownButton onClick={() => this.handleChangeRating(bulletpoint.id, -1)}>
+                    <DownButton
+                      rated={isDown}
+                      onClick={() => this.handleChangeRating(bulletpoint.id, -1)}
+                    >
                       {bulletpoint.rating.down + down}
                     </DownButton>
-                    <UpButton onClick={() => this.handleChangeRating(bulletpoint.id, +1)}>
+                    <UpButton
+                      rated={isUp}
+                      onClick={() => this.handleChangeRating(bulletpoint.id, +1)}
+                    >
                       {bulletpoint.rating.up + up}
                     </UpButton>
                     {bulletpoint.content}
