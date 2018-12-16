@@ -31,7 +31,14 @@ class In extends React.Component<Props, State> {
     if (redirectToReferrer) {
       return <Redirect to={from} />;
     }
-    return <Form onSubmit={this.handleSubmit} />;
+    return (
+      <>
+        <div className="row">
+          <h1>Přihlášení</h1>
+        </div>
+        <Form onSubmit={this.handleSubmit} />
+      </>
+    );
   }
 }
 
