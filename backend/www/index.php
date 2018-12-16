@@ -45,7 +45,8 @@ echo (new class(
 		),
 		$uri,
 		$_SERVER['REQUEST_METHOD']
-	)
+	),
+	new Tracy\Logger(__DIR__ . '/../logs')
 ) implements Output\Template {
 	/** @var mixed[] */
 	private $configuration;
@@ -53,9 +54,13 @@ echo (new class(
 	/** @var \Klapuch\Routing\Routes */
 	private $routes;
 
-	public function __construct(array $configuration, Routing\Routes $routes) {
+	/** @var \Tracy\ILogger */
+	private $logger;
+
+	public function __construct(array $configuration, Routing\Routes $routes, Tracy\ILogger $logger) {
 		$this->configuration = $configuration;
 		$this->routes = $routes;
+		$this->logger = $logger;
 	}
 
 	public function render(array $variables = []): string {
@@ -74,7 +79,19 @@ echo (new class(
 				)
 			))->render();
 		} catch (\Throwable $e) {
-			throw $e;
+			$this->logger->log($e);
+			if ($e instanceof \UnexpectedValueException) {
+				return (new Application\RawTemplate(
+					new Bulletpoint\Response\JsonError($e)
+				))->render();
+			}
+			return (new Application\RawTemplate(
+				new Bulletpoint\Response\JsonError(
+					new \UnexpectedValueException(),
+					[],
+					HTTP_INTERNAL_SERVER_ERROR
+				)
+			))->render();
 		}
 	}
 })->render();
