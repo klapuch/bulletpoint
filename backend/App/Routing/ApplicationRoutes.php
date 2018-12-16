@@ -93,6 +93,12 @@ final class ApplicationRoutes implements Routing\Routes {
 			'refresh_tokens [POST]' => static function() use ($request): Application\View {
 				return new Endpoint\RefreshTokens\Post($request);
 			},
+			'users/me [GET]' => function() use ($user): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Users\Me\Get($this->connection, $user),
+					new Http\ChosenRole($user, ['member'])
+				);
+			},
 		];
 	}
 }
