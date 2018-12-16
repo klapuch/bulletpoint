@@ -2,7 +2,7 @@
 import * as tokens from '../token/endpoints';
 import * as session from '../access/session';
 import { requestedSignIn, requestedSignOut } from './actions';
-import * as message from '../ui/actions';
+import * as message from '../ui/message/actions';
 
 export type PostedCredentialsType = {|
   +email: string,

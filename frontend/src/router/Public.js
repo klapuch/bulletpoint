@@ -4,7 +4,7 @@ import { Route, Link } from 'react-router-dom';
 import Error404 from '../pages/Error/Error404';
 import * as session from '../access/session';
 import NavItem from './NavItem';
-import FlashMessage from '../ui/FlashMessage';
+import FlashMessage from '../ui/message/FlashMessage';
 
 type Props = {
   +component: any,
