@@ -1,6 +1,7 @@
 // @flow
 import { merge, pickBy } from 'lodash';
-import * as Qs from 'qs';
+import qs from 'qs';
+import * as session from '../access/session';
 
 export default function withSettings(inherited: Object): Object {
   return merge(
@@ -16,13 +17,13 @@ export default function withSettings(inherited: Object): Object {
         },
       },
       transformRequest: [...inherited.transformRequest, (data, headers) => {
-        const value = 'session.getValue()';
+        const value = session.getValue();
         if (value) {
           headers['Authorization'] = `Bearer ${value}`; // eslint-disable-line
         }
         return data;
       }],
-      paramsSerializer: params => Qs.stringify(pickBy(params, param => param !== null), { arrayFormat: 'brackets' }),
+      paramsSerializer: params => qs.stringify(pickBy(params, param => param !== null), { arrayFormat: 'brackets' }),
     },
   );
 }

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import Error404 from '../pages/Error/Error404';
+import * as session from '../access/session';
 
 type Props = {
   +component: any,
@@ -34,7 +35,7 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
                   <li className="dropdown">
-                    <a href="#" className="dropdown-toggle" title="Administrace" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <a href="#" className="dropdown-toggle" title="Témata" data-toggle="dropdown" role="button" aria-expanded="false">
                       Témata
                       <span className="caret" />
                     </a>
@@ -45,12 +46,16 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
                   <li>
                     <Link title="Nové téma" to="/themes/create">Nové téma</Link>
                   </li>
+                  {session.exists()
+                    ? <li title="Odhlásit se"><Link to="/sign/out">Odhlásit se</Link></li>
+                    : <li title="Přihlásit se"><Link to="/sign/in">Přihlásit se</Link></li>
+                  }
                 </ul>
               </div>
             </div>
           </nav>
           <div className="container">
-            {restrictive
+            {restrictive && session.exists()
               ? <Public component={Error404} {...props} />
               : <Component {...props} />}
           </div>

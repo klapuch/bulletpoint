@@ -89,7 +89,7 @@ class Add extends React.Component<Props, State> {
     }));
   };
 
-  onSubmitClick = () => {
+  onSubmit = () => {
     if (this.state.button.state === 'default') {
       this.setState(prevState => ({ ...prevState, button: { state: 'opened' } }));
     } else if (this.state.button.state === 'opened') {
@@ -142,7 +142,7 @@ class Add extends React.Component<Props, State> {
     return (
       <>
         {form}
-        <SubmitButton onClick={this.onSubmitClick} state={button.state}>
+        <SubmitButton onClick={this.onSubmit} state={button.state}>
           Přidat bulletpoint
         </SubmitButton>
         <CancelButton onClick={this.setToDefault} state={button.state}>
