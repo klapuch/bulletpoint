@@ -3,6 +3,7 @@ import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import Error404 from '../pages/Error/Error404';
 import * as session from '../access/session';
+import NavItem from './NavItem';
 
 type Props = {
   +component: any,
@@ -34,19 +35,25 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
               </div>
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
-                  <li className="dropdown">
-                    <a href="#" className="dropdown-toggle" title="Témata" data-toggle="dropdown" role="button" aria-expanded="false">
-                      Témata
-                      <span className="caret" />
-                    </a>
-                    <ul className="dropdown-menu" role="menu">
-                      <li><Link to="/themes">Nedávno přidaná</Link></li>
-                    </ul>
-                  </li>
-                  {session.exists() ? <li><Link title="Nové téma" to="/themes/create">Nové téma</Link></li> : null}
+                  <Route
+                    path="/themes"
+                    exact
+                    children={({ match }) => ( // eslint-disable-line
+                      <li className={['dropdown', match ? 'active' : null].join(' ')}>
+                        <a href="#" className="dropdown-toggle" title="Témata" data-toggle="dropdown" role="button" aria-expanded="false">
+                          Témata
+                          <span className="caret" />
+                        </a>
+                        <ul className="dropdown-menu" role="menu">
+                          <NavItem exact to="/themes">Nedávno přidaná</NavItem>
+                        </ul>
+                      </li>
+                    )}
+                  />
+                  {session.exists() ? <NavItem title="Nové téma" to="/themes/create">Nové téma</NavItem> : null}
                   {session.exists()
-                    ? <li title="Odhlásit se"><Link to="/sign/out">Odhlásit se</Link></li>
-                    : <li title="Přihlásit se"><Link to="/sign/in">Přihlásit se</Link></li>
+                    ? <NavItem title="Odhlásit se" to="/sign/out">Odhlásit se</NavItem>
+                    : <NavItem title="Přihlásit se" to="/sign/in">Přihlásit se</NavItem>
                   }
                 </ul>
               </div>
