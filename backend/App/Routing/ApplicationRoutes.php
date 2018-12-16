@@ -6,9 +6,11 @@ namespace Bulletpoint\Routing;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Endpoint;
 use Bulletpoint\Http;
-use Bulletpoint\Request;
+use Bulletpoint\Misc;
+use Bulletpoint\Request\CachedRequest;
 use Bulletpoint\View\AuthenticatedView;
 use Klapuch\Application;
+use Klapuch\Encryption;
 use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri\Uri;
@@ -23,17 +25,24 @@ final class ApplicationRoutes implements Routing\Routes {
 	/** @var \Klapuch\Uri\Uri */
 	private $url;
 
-	public function __construct(Storage\Connection $connection, Uri $url) {
+	/** @var \Klapuch\Encryption\Cipher */
+	private $cipher;
+
+	public function __construct(Storage\Connection $connection, Uri $url, Encryption\Cipher $cipher) {
 		$this->connection = $connection;
 		$this->url = $url;
+		$this->cipher = $cipher;
 	}
 
 	public function matches(): array {
-		$request = new Request\CachedRequest(new Application\PlainRequest());
-		$user = (new Access\PgEntrance(
-			new Access\FakeEntrance(new Access\RegisteredUser(1, $this->connection)),
-			$this->connection
-		))->enter([]);
+		$request = new CachedRequest(new Application\PlainRequest());
+		$user = (new Access\HarnessedEntrance(
+			new Access\PgEntrance(
+				new Access\ApiEntrance($this->connection),
+				$this->connection
+			),
+			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
+		))->enter($request->headers());
 		return [
 			'themes/{id} [GET]' => function(): Application\View {
 				return new Endpoint\Theme\Get($this->connection);
@@ -67,6 +76,22 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Endpoint\Bulletpoint\Ratings\Post($request, $this->connection, $user),
 					new Http\ChosenRole($user, ['member'])
 				);
+			},
+			'tokens [POST]' => function() use ($request): Application\View {
+				return new Endpoint\Tokens\Post(
+					$request,
+					$this->connection,
+					$this->cipher
+				);
+			},
+			'tokens [DELETE]' => static function() use ($user): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Tokens\Delete(),
+					new Http\ChosenRole($user, ['member'])
+				);
+			},
+			'refresh_tokens [POST]' => static function() use ($request): Application\View {
+				return new Endpoint\RefreshTokens\Post($request);
 			},
 		];
 	}

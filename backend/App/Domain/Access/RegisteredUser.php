@@ -27,16 +27,16 @@ final class RegisteredUser implements User {
 			'SELECT * FROM users WHERE id = :id',
 			['id' => $this->id()]
 		))->row();
-		return (new ConstantUser($user['id'], $user))->properties();
+		return (new ConstantUser((string) $user['id'], $user))->properties();
 	}
 
 	/**
 	 * @throws \UnexpectedValueException
-	 * @return int
+	 * @return string
 	 */
-	public function id(): int {
+	public function id(): string {
 		if ($this->registered($this->id))
-			return $this->id;
+			return (string) $this->id;
 		throw new \UnexpectedValueException('The user has not been registered yet');
 	}
 

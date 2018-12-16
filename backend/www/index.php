@@ -9,6 +9,7 @@ use Klapuch\Output;
 use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri;
+use Klapuch\Encryption;
 
 $uri = new Uri\CachedUri(
 	new Uri\BaseUrl(
@@ -38,7 +39,8 @@ echo (new class(
 					),
 					$redis
 				),
-				$uri
+				$uri,
+				new Encryption\AES256CBC($configuration['KEYS']['password'])
 			)
 		),
 		$uri,
@@ -51,10 +53,7 @@ echo (new class(
 	/** @var \Klapuch\Routing\Routes */
 	private $routes;
 
-	public function __construct(
-		array $configuration,
-		Routing\Routes $routes
-	) {
+	public function __construct(array $configuration, Routing\Routes $routes) {
 		$this->configuration = $configuration;
 		$this->routes = $routes;
 	}

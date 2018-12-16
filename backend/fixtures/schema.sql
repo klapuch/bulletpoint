@@ -16,6 +16,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 -- schemas (globals)
 CREATE SCHEMA audit;
+CREATE SCHEMA access;
 
 -- constants
 CREATE SCHEMA constant;
@@ -129,6 +130,17 @@ CREATE TABLE users (
 	role roles NOT NULL DEFAULT 'member'::roles
 );
 
+CREATE FUNCTION users_trigger_row_ai() RETURNS trigger AS $$
+BEGIN
+	INSERT INTO access.verification_codes (user_id, code) VALUES (
+		new.id,
+		format('%s:%s', encode(gen_random_bytes(25), 'hex'), encode(digest(new.id::text, 'sha1'), 'hex'))
+	);
+
+	RETURN new;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
 CREATE FUNCTION users_trigger_row_biu() RETURNS trigger AS $$
 BEGIN
 	IF EXISTS(SELECT 1 FROM users WHERE email = new.email AND id IS DISTINCT FROM CASE WHEN TG_OP = 'INSERT' THEN NULL ELSE new.id END) THEN
@@ -143,6 +155,37 @@ CREATE TRIGGER users_row_biu_trigger
 	BEFORE INSERT OR UPDATE
 	ON users
 	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_biu();
+
+CREATE TRIGGER users_row_ai_trigger
+	AFTER INSERT
+	ON users
+	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_ai();
+
+
+CREATE TABLE access.forgotten_passwords (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	user_id integer NOT NULL,
+	reminder text NOT NULL UNIQUE,
+	used_at timestamp with time zone,
+	reminded_at timestamp with time zone NOT NULL,
+	expire_at timestamp with time zone NOT NULL,
+	CONSTRAINT forgotten_passwords_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT forgotten_passwords_reminder_exact_length CHECK (length(reminder) = 141),
+	CONSTRAINT forgotten_passwords_expire_at_future CHECK (expire_at >= NOW()),
+	CONSTRAINT forgotten_passwords_expire_at_greater_than_reminded_at CHECK (expire_at > reminded_at)
+);
+CREATE INDEX forgotten_passwords_user_id ON access.forgotten_passwords USING btree (user_id);
+
+
+CREATE TABLE access.verification_codes (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	user_id integer NOT NULL UNIQUE,
+	code text NOT NULL UNIQUE,
+	used_at timestamp with time zone,
+	CONSTRAINT verification_codes_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT verification_codes_code_exact_length CHECK (length(code) = 91)
+);
+CREATE INDEX verification_codes_user_id ON access.verification_codes USING btree (user_id);
 
 
 CREATE TABLE themes (

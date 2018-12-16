@@ -40,7 +40,7 @@ final class BulletpointsTest extends TestCase\Runtime {
 	public function testAddingNew(): void {
 		['id' => $theme] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
-		(new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser($user)))->add([
+		(new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser((string) $user)))->add([
 			'content' => 'TEST',
 			'source' => [
 				'link' => 'https://www.wikipedia.cz/test',

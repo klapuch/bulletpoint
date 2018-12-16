@@ -26,6 +26,12 @@ services:
       networks:
         - bulletpoint
 
+    redis-identity:
+      image: redis:5.0
+      container_name: bulletpoint-redis-identity
+      networks:
+        - bulletpoint
+
     php-fpm:
       build: docker/php-fpm
       working_dir: /var/www/bulletpoint

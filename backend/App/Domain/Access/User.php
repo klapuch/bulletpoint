@@ -6,9 +6,9 @@ namespace Bulletpoint\Domain\Access;
 interface User {
 	/**
 	 * @throws \UnexpectedValueException
-	 * @return int
+	 * @return string
 	 */
-	public function id(): int;
+	public function id(): string;
 
 	/**
 	 * @throws \UnexpectedValueException

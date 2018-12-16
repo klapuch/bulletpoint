@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f95b011c89d2798eb7953cec10a96875",
+    "content-hash": "bc8aadb0f0b8b305cfaec59ed6067a1e",
     "packages": [
         {
             "name": "hashids/hashids",
@@ -225,6 +225,54 @@
             "description": "Operations applicable to datasets",
             "homepage": "https://www.github.com/klapuch/Dataset",
             "time": "2018-07-08T21:18:55+00:00"
+        },
+        {
+            "name": "klapuch/encryption",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klapuch/Encryption.git",
+                "reference": "e47f3f756b2dc2b51734256bb04d5c0d76cc7cd3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klapuch/Encryption/zipball/e47f3f756b2dc2b51734256bb04d5c0d76cc7cd3",
+                "reference": "e47f3f756b2dc2b51734256bb04d5c0d76cc7cd3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "^1.0",
+                "ext-mbstring": "*",
+                "jakub-onderka/php-parallel-lint": "^0.9.2",
+                "nette/tester": "^1.7",
+                "phing/phing": "^2.16",
+                "phpstan/phpstan": "^0.7.0",
+                "sebastian/phpcpd": "^3.0",
+                "slevomat/coding-standard": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Klapuch\\Encryption\\": [
+                        "Core/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Dominik Klapuch",
+                    "email": "klapuchdominik@gmail.com",
+                    "homepage": "https://www.github.com/klapuch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "AES256",
+            "homepage": "https://github.com/klapuch/Encryption",
+            "time": "2017-09-13T18:57:34+00:00"
         },
         {
             "name": "klapuch/internal",

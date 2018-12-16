@@ -30,7 +30,8 @@
     "klapuch/internal": "dev-master",
     "klapuch/iterator": "dev-master",
     "klapuch/routing": "dev-master as 0.0.12",
-    "klapuch/dataset": "@dev"
+    "klapuch/dataset": "@dev",
+    "klapuch/encryption": "^2.1"
   },
   "require-dev": {
     "nette/tester": "^2.0",

@@ -4,18 +4,18 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain\Access;
 
 final class FakeUser implements User {
-	/** @var int|null */
+	/** @var string|null */
 	private $id;
 
 	/** @var mixed[]|null */
 	private $properties;
 
-	public function __construct(?int $id = null, ?array $properties = null) {
+	public function __construct(?string $id = null, ?array $properties = null) {
 		$this->id = $id;
 		$this->properties = $properties;
 	}
 
-	public function id(): int {
+	public function id(): string {
 		return $this->id;
 	}
 

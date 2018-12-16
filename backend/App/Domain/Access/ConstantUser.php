@@ -6,18 +6,18 @@ namespace Bulletpoint\Domain\Access;
 final class ConstantUser implements User {
 	private const SENSITIVE_COLUMNS = ['id', 'password'];
 
-	/** @var int */
+	/** @var string */
 	private $id;
 
 	/** @var mixed[] */
 	private $properties;
 
-	public function __construct(int $id, array $properties) {
+	public function __construct(string $id, array $properties) {
 		$this->id = $id;
 		$this->properties = $properties;
 	}
 
-	public function id(): int {
+	public function id(): string {
 		return $this->id;
 	}
 
