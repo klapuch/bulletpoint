@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import * as session from '../../../access/session';
 
 const RateButton = styled.span`
-  cursor: ${session.exists() ? 'pointer' : 'inheirt'};
+  cursor: pointer;
 `;
 
 type Props = {|
