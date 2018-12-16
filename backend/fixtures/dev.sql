@@ -1,4 +1,4 @@
-INSERT INTO users (email, password) VALUES ('klapuchdominik@gmail.com', 'heslo1');
+INSERT INTO users (email, password, role) VALUES ('klapuchdominik@gmail.com', 'heslo1', 'member');
 
 INSERT INTO "references" (url) VALUES ('https://www.wikipedia.com');
 INSERT INTO sources (link, type) VALUES ('https://www.wikipedia.com/php', 'web');

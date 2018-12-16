@@ -5,7 +5,9 @@ namespace Bulletpoint\Routing;
 
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Endpoint;
+use Bulletpoint\Http;
 use Bulletpoint\Request;
+use Bulletpoint\View\AuthenticatedView;
 use Klapuch\Application;
 use Klapuch\Routing;
 use Klapuch\Storage;
@@ -37,7 +39,10 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new Endpoint\Theme\Get($this->connection);
 			},
 			'themes [POST]' => function() use ($user, $request): Application\View {
-				return new Endpoint\Themes\Post($request, $this->connection, $user, $this->url);
+				return new AuthenticatedView(
+					new Endpoint\Themes\Post($request, $this->connection, $user, $this->url),
+					new Http\ChosenRole($user, ['member'])
+				);
 			},
 			'themes [GET]' => function(): Application\View {
 				return new Endpoint\Themes\Get($this->connection);
@@ -49,13 +54,19 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new Endpoint\Theme\Bulletpoints\Get($this->connection);
 			},
 			'themes/{theme_id}/bulletpoints [POST]' => function() use ($user, $request): Application\View {
-				return new Endpoint\Theme\Bulletpoints\Post($request, $this->connection, $user);
+				return new AuthenticatedView(
+					new Endpoint\Theme\Bulletpoints\Post($request, $this->connection, $user),
+					new Http\ChosenRole($user, ['member'])
+				);
 			},
 			'bulletpoints/{id} [GET]' => function(): Application\View {
 				return new Endpoint\Bulletpoint\Get($this->connection);
 			},
 			'bulletpoints/{bulletpoint_id}/ratings [POST]' => function() use ($request, $user): Application\View {
-				return new Endpoint\Bulletpoint\Ratings\Post($request, $this->connection, $user);
+				return new AuthenticatedView(
+					new Endpoint\Bulletpoint\Ratings\Post($request, $this->connection, $user),
+					new Http\ChosenRole($user, ['member'])
+				);
 			},
 		];
 	}
