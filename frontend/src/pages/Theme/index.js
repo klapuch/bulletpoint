@@ -11,6 +11,7 @@ import * as session from '../../access/session';
 import {
   allFetching as fetchingAllThemeBulletpoints,
   getByTheme as getThemeBulletpoints,
+  getById as getBulletpointById,
 } from '../../theme/bulletpoint/selects';
 import Loader from '../../ui/Loader';
 import Add from '../../bulletpoint/Add';
@@ -37,6 +38,7 @@ type Props = {|
   +fetching: boolean,
   +addBulletpoint: (number, PostedBulletpointType, (void) => (void)) => (void),
   +changeRating: (theme: number, bulletpoint: number, point: number, (void) => (void)) => (void),
+  +getBulletpointById: (number) => FetchedBulletpointType,
 |};
 class Theme extends React.Component<Props, State> {
   state = {
@@ -67,6 +69,9 @@ class Theme extends React.Component<Props, State> {
       point,
       () => this.setState((prevState) => {
         if (isEmpty(prevState.ratings[bulletpoint])) {
+          if (this.props.getBulletpointById(bulletpoint).rating.user === point) {
+            return prevState;
+          }
           return ({
             ratings: {
               ...prevState.ratings,
@@ -145,6 +150,7 @@ const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
   theme: getById(theme, state),
   bulletpoints: getThemeBulletpoints(theme, state),
   fetching: themeFetching(theme, state) || fetchingAllThemeBulletpoints(theme, state),
+  getBulletpointById: (bulletpoint: number) => getBulletpointById(theme, bulletpoint, state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchTheme: (theme: number) => dispatch(single(theme)),
