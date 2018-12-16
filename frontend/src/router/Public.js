@@ -10,12 +10,16 @@ import FlashMessage from '../ui/message/FlashMessage';
 type Props = {
   +component: any,
   +restrictive?: boolean,
+  +title?: () => ?Object,
 };
-const Public = ({ component: Component, restrictive = false, ...rest }: Props): Route => (
+const Public = ({
+  component: Component, restrictive = false, title = () => null, ...rest
+}: Props): Route => (
   <Route
     {...rest}
     render={props => (
       <>
+        {title()}
         <div id="wrap">
           <nav className="navbar navbar-default navbar-static-top">
             <div className="container">

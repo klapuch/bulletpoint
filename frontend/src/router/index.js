@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { Router, Switch } from 'react-router-dom';
+import Helmet from 'react-helmet';
 import Default from '../pages/Default';
 import Error404 from '../pages/Error/Error404';
 import Public from './Public';
@@ -10,17 +11,23 @@ import { default as CreateTheme } from '../pages/Theme/Create';
 import { default as SignIn } from '../pages/Sign/In';
 import { default as SignOut } from '../pages/Sign/Out';
 
+const Title = ({ children }: {| +children?: string |}) => (
+  <Helmet titleTemplate="%s | Bulletpoint" defaultTitle="Bulletpoint">
+    <title>{children}</title>
+  </Helmet>
+);
+
 type Props = {|
   +history: Object,
 |};
 export default ({ history }: Props) => (
   <Router history={history}>
     <Switch>
-      <Public exact path="/" component={Default} />
-      <Public restrictive path="/themes/create" component={CreateTheme} />
-      <Public path="/themes/:id" component={Theme} />
-      <Public path="/themes" component={Themes} />
-      <Public path="/sign/in" component={SignIn} />
+      <Public exact path="/" component={Default} title={() => <Title />} />
+      <Public restrictive path="/themes/create" component={CreateTheme} title={() => <Title>Nové téma</Title>} />
+      <Public path="/themes/:id" component={Theme} title={() => <Title />} />
+      <Public path="/themes" component={Themes} title={() => <Title>Nedávno přidaná témata</Title>} />
+      <Public path="/sign/in" component={SignIn} title={() => <Title>Přihlášení</Title>} />
       <Public path="/sign/out" component={SignOut} />
       <Public component={Error404} />
     </Switch>

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import Helmet from 'react-helmet';
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
@@ -99,6 +100,7 @@ class Theme extends React.Component<Props, State> {
     }
     return (
       <>
+        <Helmet><title>{theme.name}</title></Helmet>
         <div>
           <Title>{theme.name}</Title>
           <Reference url={theme.reference.url} />
