@@ -7,6 +7,7 @@ import { single } from '../../theme/endpoints';
 import { all, add } from '../../theme/bulletpoint/endpoints';
 import { rate } from '../../theme/bulletpoint/rating/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
+import * as session from '../../access/session';
 import {
   allFetching as fetchingAllThemeBulletpoints,
   getByTheme as getThemeBulletpoints,
@@ -131,7 +132,7 @@ class Theme extends React.Component<Props, State> {
                 );
               })}
             </ul>
-            <Add onSubmit={this.handleSubmit} />
+            {session.exists() ? <Add onSubmit={this.handleSubmit} /> : null}
           </div>
         </div>
         <br />

@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
+import * as session from '../../../access/session';
 
 const RateButton = styled.span`
-  cursor: pointer;
+  cursor: ${session.exists() ? 'pointer' : 'inheirt'};
 `;
 
 type Props = {|
@@ -15,7 +16,10 @@ type Props = {|
 const Button = ({
   children, onClick, rated, type,
 }: { ...Props, type: 'success'|'danger' }) => (
-  <RateButton className={['badge', `alert-${type}`, 'badge-guest', rated ? '' : 'opposite-rating'].join(' ')} onClick={onClick}>
+  <RateButton
+    className={['badge', `alert-${type}`, 'badge-guest', !session.exists() || rated ? '' : 'opposite-rating'].join(' ')}
+    onClick={session.exists() ? onClick : () => null}
+  >
     {children}
     <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />
   </RateButton>

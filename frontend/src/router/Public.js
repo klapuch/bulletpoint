@@ -43,9 +43,7 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
                       <li><Link to="/themes">Nedávno přidaná</Link></li>
                     </ul>
                   </li>
-                  <li>
-                    <Link title="Nové téma" to="/themes/create">Nové téma</Link>
-                  </li>
+                  {session.exists() ? <li><Link title="Nové téma" to="/themes/create">Nové téma</Link></li> : null}
                   {session.exists()
                     ? <li title="Odhlásit se"><Link to="/sign/out">Odhlásit se</Link></li>
                     : <li title="Přihlásit se"><Link to="/sign/in">Přihlásit se</Link></li>
@@ -55,8 +53,8 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
             </div>
           </nav>
           <div className="container">
-            {restrictive && session.exists()
-              ? <Public component={Error404} {...props} />
+            {restrictive && !session.exists()
+              ? <Error404 {...props} />
               : <Component {...props} />}
           </div>
         </div>

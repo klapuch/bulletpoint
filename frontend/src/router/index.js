@@ -17,7 +17,7 @@ export default ({ history }: Props) => (
   <Router history={history}>
     <Switch>
       <Public exact path="/" component={Default} />
-      <Public path="/themes/create" component={CreateTheme} />
+      <Public restrictive path="/themes/create" component={CreateTheme} />
       <Public path="/themes/:id" component={Theme} />
       <Public path="/themes" component={Themes} />
       <Public path="/sign/in" component={SignIn} />
