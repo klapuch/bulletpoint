@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
-import type { PostedCredentialsType } from '../endpoints';
+import classNames from 'classnames';
+import type { PostedCredentialsType, ErrorCredentialsType } from '../endpoints';
+import * as validation from '../validation';
 
 type EventType = {|
   +target: {|
@@ -13,13 +15,18 @@ type Props = {|
   +onSubmit: (PostedCredentialsType) => (void),
 |};
 type State = {|
-  credentials: PostedCredentialsType
+  credentials: PostedCredentialsType,
+  errors: ErrorCredentialsType,
 |};
 class Form extends React.Component<Props, State> {
   state = {
     credentials: {
       email: 'klapuchdominik@gmail.com',
       password: 'heslo123',
+    },
+    errors: {
+      email: null,
+      password: null,
     },
   };
 
@@ -34,20 +41,30 @@ class Form extends React.Component<Props, State> {
 
   onSubmit = (event: { ...EventType, preventDefault: () => (void) }) => {
     event.preventDefault();
-    this.props.onSubmit(this.state.credentials);
+    if (validation.anyErrors(this.state.credentials)) {
+      this.setState(prevState => ({
+        ...prevState,
+        errors: validation.errors(prevState.credentials),
+      }));
+    } else {
+      this.props.onSubmit(this.state.credentials);
+      this.setState(prevState => ({ ...prevState, errors: { email: null, password: null } }));
+    }
   };
 
   render() {
-    const { credentials: { email, password } } = this.state;
+    const { credentials, errors } = this.state;
     return (
       <form className="form-horizontal">
-        <div className="form-group">
+        <div className={classNames('form-group', errors.email && 'has-error')}>
           <label htmlFor="email">E-mail</label>
-          <input name="email" value={email} onChange={this.onChange} className="form-control" placeholder="E-mail" />
+          <input name="email" value={credentials.email} onChange={this.onChange} className="form-control" placeholder="E-mail" />
+          {errors.email && <span className="help-block">{validation.toMessage(errors, 'email')}</span>}
         </div>
-        <div className="form-group">
+        <div className={classNames('form-group', errors.password && 'has-error')}>
           <label htmlFor="password">Heslo</label>
-          <input type="password" value={password} name="password" onChange={this.onChange} className="form-control" placeholder="Heslo" />
+          <input type="password" value={credentials.password} name="password" onChange={this.onChange} className="form-control" placeholder="Heslo" />
+          {errors.password && <span className="help-block">{validation.toMessage(errors, 'password')}</span>}
         </div>
         <div className="form-group">
           <button type="button" onClick={this.onSubmit} name="enter" className="btn btn-success">

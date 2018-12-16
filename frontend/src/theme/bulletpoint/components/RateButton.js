@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
+import classNames from 'classnames';
 import * as session from '../../../access/session';
 
 const RateButton = styled.span`
@@ -17,7 +18,7 @@ const Button = ({
   children, onClick, rated, type,
 }: { ...Props, type: 'success'|'danger' }) => (
   <RateButton
-    className={['badge', `alert-${type}`, 'badge-guest', !session.exists() || rated ? '' : 'opposite-rating'].join(' ')}
+    className={classNames('badge', 'badge-guest', `alert-${type}`, !session.exists() || rated ? '' : 'opposite-rating')}
     onClick={session.exists() ? onClick : () => null}
   >
     {children}

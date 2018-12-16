@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
+import classNames from 'classnames';
 import Error404 from '../pages/Error/Error404';
 import * as session from '../access/session';
 import NavItem from './NavItem';
@@ -40,7 +41,7 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
                     path="/themes"
                     exact
                     children={({ match }) => ( // eslint-disable-line
-                      <li className={['dropdown', match ? 'active' : null].join(' ')}>
+                      <li className={classNames('dropdown', match && 'active')}>
                         <a href="#" className="dropdown-toggle" title="Témata" data-toggle="dropdown" role="button" aria-expanded="false">
                           Témata
                           <span className="caret" />
@@ -51,7 +52,7 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
                       </li>
                     )}
                   />
-                  {session.exists() ? <NavItem title="Nové téma" to="/themes/create">Nové téma</NavItem> : null}
+                  {session.exists() && <NavItem title="Nové téma" to="/themes/create">Nové téma</NavItem>}
                   {session.exists()
                     ? <NavItem title="Odhlásit se" to="/sign/out">Odhlásit se</NavItem>
                     : <NavItem title="Přihlásit se" to="/sign/in">Přihlásit se</NavItem>

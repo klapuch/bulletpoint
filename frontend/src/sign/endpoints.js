@@ -9,6 +9,11 @@ export type PostedCredentialsType = {|
   +password: string,
 |};
 
+export type ErrorCredentialsType = {|
+  +email: ?string,
+  +password: ?string,
+|};
+
 export const signIn = (
   credentials: PostedCredentialsType,
   next: (void) => void,

@@ -16,7 +16,7 @@ export default function NavItem({
       path={to}
       exact={exact}
       children={({ match }) => ( // eslint-disable-line
-        <li title={title} className={match ? 'active' : null}>
+        <li title={title} className={match && 'active'}>
           <Link to={to}>{children}</Link>
         </li>
       )}
