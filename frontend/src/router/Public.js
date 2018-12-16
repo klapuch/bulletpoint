@@ -4,6 +4,7 @@ import { Route, Link } from 'react-router-dom';
 import Error404 from '../pages/Error/Error404';
 import * as session from '../access/session';
 import NavItem from './NavItem';
+import FlashMessage from '../ui/FlashMessage';
 
 type Props = {
   +component: any,
@@ -60,6 +61,9 @@ const Public = ({ component: Component, restrictive = false, ...rest }: Props): 
             </div>
           </nav>
           <div className="container">
+            <div className="row">
+              <FlashMessage />
+            </div>
             {restrictive && !session.exists()
               ? <Error404 {...props} />
               : <Component {...props} />}
