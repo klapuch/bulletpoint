@@ -8,7 +8,7 @@ import { allByTag, allRecent } from '../../theme/endpoints';
 import { getAll, allFetching as themesFetching } from '../../theme/selects';
 import Loader from '../../ui/Loader';
 import Tags from '../../theme/components/Tags';
-import type { FetchedThemeType } from '../../theme/endpoints';
+import type { FetchedThemeType } from '../../theme/types';
 
 type Props = {|
   +params: {|

@@ -1,33 +1,11 @@
 // @flow
 import axios from 'axios';
 import {
-  requestedSingle,
-  receivedSingle,
-  requestedAll,
-  receivedAll,
+  receivedAll, receivedSingle, requestedAll, requestedSingle,
 } from './actions';
 import { fetchedSingle } from './selects';
 import * as response from '../api/response';
-import type { TagType } from '../tags/endpoints';
-
-export type FetchedThemeType = {|
-  +id: number,
-  +user_id: number,
-  +tags: Array<TagType>,
-  +name: string,
-  +created_at: string,
-  +reference: {|
-    +url: string,
-  |}
-|};
-
-export type PostedThemeType = {|
-  +tags: Array<number>,
-  +name: string,
-  +reference: {|
-    +url: string,
-  |}
-|};
+import type { PostedThemeType } from './types';
 
 export const single = (id: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedSingle(id, getState())) return;

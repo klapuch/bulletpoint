@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import qs from 'qs';
-import type { TagType } from '../../tags/endpoints';
+import type { TagType } from '../../tags/types';
 
 type TagProps = {|
   +children: string,

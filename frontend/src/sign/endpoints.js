@@ -3,16 +3,7 @@ import * as tokens from '../token/endpoints';
 import * as session from '../access/session';
 import { requestedSignIn, requestedSignOut } from './actions';
 import * as message from '../ui/message/actions';
-
-export type PostedCredentialsType = {|
-  +email: string,
-  +password: string,
-|};
-
-export type ErrorCredentialsType = {|
-  +email: ?string,
-  +password: ?string,
-|};
+import type { PostedCredentialsType } from './types';
 
 export const signIn = (
   credentials: PostedCredentialsType,

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import Form from '../../../sign/in/Form';
 import { signIn } from '../../../sign/endpoints';
-import type { PostedCredentialsType } from '../../../sign/endpoints';
+import type { PostedCredentialsType } from '../../../sign/types';
 
 type Props = {|
   +signIn: (PostedCredentialsType, () => (void)) => (void),

@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import Select from 'react-select';
-import type { PostedThemeType } from './endpoints';
-import type { TagType } from '../tags/endpoints';
+import type { PostedThemeType } from './types';
+import type { TagType } from '../tags/types';
 
 type TargetType = {|
   target: {|

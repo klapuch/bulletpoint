@@ -1,6 +1,6 @@
 // @flow
 import { isEmpty, first } from 'lodash';
-import type { FetchedBulletpointType } from './endpoints';
+import type { FetchedBulletpointType } from './types';
 
 export const fetchedAll = (theme: number, state: Object): boolean => (
   !isEmpty(state.themeBulletpoints.all[theme] ? state.themeBulletpoints.all[theme].payload : {})

@@ -1,36 +1,8 @@
 // @flow
 import axios from 'axios';
-import {
-  requestedAll,
-  receivedAll,
-  invalidatedAll,
-} from './actions';
+import { invalidatedAll, receivedAll, requestedAll } from './actions';
 import { fetchedAll } from './selects';
-
-export type FetchedBulletpointType = {|
-  +id: number,
-  +source: {|
-    +link: string,
-    +type: string,
-  |},
-  +user_id: number,
-  +rating: {|
-    +up: number,
-    +down: number,
-    +total: number,
-    +user: number,
-  |},
-  +content: string,
-  +theme_id: number,
-|};
-
-export type PostedBulletpointType = {|
-  +source: {|
-    +link: string,
-    +type: string,
-  |},
-  +content: string,
-|};
+import type { PostedBulletpointType } from './types';
 
 export const all = (theme: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedAll(theme, getState())) return;

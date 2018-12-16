@@ -19,8 +19,8 @@ import Tags from '../../theme/components/Tags';
 import Reference from '../../theme/components/Reference';
 import Source from '../../theme/components/Source';
 import { UpButton, DownButton } from '../../theme/bulletpoint/components/RateButton';
-import type { FetchedThemeType } from '../../theme/endpoints';
-import type { FetchedBulletpointType, PostedBulletpointType } from '../../theme/bulletpoint/endpoints';
+import type { FetchedThemeType } from '../../theme/types';
+import type { FetchedBulletpointType, PostedBulletpointType } from '../../theme/bulletpoint/types';
 
 const Title = styled.h1`
   display: inline-block;

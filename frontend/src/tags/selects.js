@@ -1,6 +1,6 @@
 // @flow
 import { isEmpty, values } from 'lodash';
-import type { TagType } from './endpoints';
+import type { TagType } from './types';
 
 export const fetchedAll = (state: Object): boolean => !isEmpty(state.tags.all.payload);
 export const allFetching = (state: Object): boolean => state.tags.all.fetching;

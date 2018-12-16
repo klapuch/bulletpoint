@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type { PostedCredentialsType, ErrorCredentialsType } from '../endpoints';
+import type { PostedCredentialsType, ErrorCredentialsType } from '../types';
 import * as validation from '../validation';
 
 type EventType = {|

@@ -4,7 +4,7 @@ import {
   REQUESTED_TAGS,
   INVALIDATED_TAGS,
 } from './actions';
-import type { TagType } from './endpoints';
+import type { TagType } from './types';
 
 type State = {|
   +all: {|

@@ -1,6 +1,6 @@
 // @flow
 
-import type { TagType } from './endpoints';
+import type { TagType } from './types';
 
 export const RECEIVED_TAGS = 'RECEIVED_TAGS';
 export const REQUESTED_TAGS = 'REQUESTED_TAGS';

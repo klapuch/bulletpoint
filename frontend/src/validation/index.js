@@ -3,7 +3,7 @@ import * as emailValidator from 'email-validator';
 import { flatten } from 'flat';
 import { trim } from 'lodash';
 
-export type Error = ?string;
+type Error = ?string;
 
 export const REQUIRED = 'REQUIRED';
 export const NOT_EMAIL = 'NOT_EMAIL';

@@ -6,8 +6,8 @@ import Add from '../../../theme/Add';
 import { getAll, allFetching as tagsFetching } from '../../../tags/selects';
 import { all } from '../../../tags/endpoints';
 import Loader from '../../../ui/Loader';
-import type { PostedThemeType } from '../../../theme/endpoints';
-import type { TagType } from '../../../tags/endpoints';
+import type { PostedThemeType } from '../../../theme/types';
+import type { TagType } from '../../../tags/types';
 
 type Props = {|
   +history: Object,

@@ -1,6 +1,6 @@
 // @flow
 
-import type { FetchedBulletpointType } from './endpoints';
+import type { FetchedBulletpointType } from './types';
 
 export const RECEIVED_THEME_BULLETPOINTS = 'RECEIVED_THEME_BULLETPOINTS';
 export const REQUESTED_THEME_BULLETPOINTS = 'REQUESTED_THEME_BULLETPOINTS';
