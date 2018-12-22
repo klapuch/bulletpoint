@@ -41,7 +41,7 @@ final class Get implements Application\View {
 			$themes = new Domain\PublicThemes(
 				new Domain\SearchedThemes(
 					new Domain\FakeThemes(),
-					$parameters['q'],
+					(string) $parameters['q'],
 					$this->connection
 				)
 			);
