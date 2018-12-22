@@ -32,24 +32,32 @@ const EmptyMessage = styled.div`
 `;
 
 type State = {|
-  discarded: false,
+  discarded: boolean,
 |};
 type Props = {|
+  +pathname: string,
   +content: string,
   +type: string,
   +discardMessage: () => (void),
 |};
 class FlashMessage extends React.Component<Props, State> {
+  state = {
+    discarded: false,
+  };
+
   componentWillReceiveProps(nextProps: Props): void {
+    this.setState({ discarded: nextProps.pathname === this.props.pathname });
     if (nextProps.type === RECEIVED_SUCCESS) {
       setTimeout(this.props.discardMessage, 2000);
+    } else if (nextProps.pathname !== this.props.pathname) {
+      this.props.discardMessage();
     }
   }
 
   render() {
     const { content, type } = this.props;
     if (content === null) {
-      return <EmptyMessage />;
+      return this.state.discarded ? <EmptyMessage /> : null;
     }
 
     switch (type) {

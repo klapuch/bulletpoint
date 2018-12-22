@@ -23,7 +23,7 @@ history.listen((location) => {
       data => session.start({ value: data.token, expiration: data.expiration }),
       () => {
         session.destroy();
-        history.push('sign/in', { state: { from: location } });
+        history.push('/sign/in', { state: { from: location } });
       },
     );
   }

@@ -67,7 +67,7 @@ const Public = ({
           </nav>
           <div className="container">
             <div className="row">
-              <FlashMessage />
+              <FlashMessage pathname={props.location.pathname} />
             </div>
             {restrictive && !session.exists()
               ? <Error404 {...props} />
