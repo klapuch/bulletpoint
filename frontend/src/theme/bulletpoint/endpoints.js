@@ -20,3 +20,14 @@ export const add = (
     .then(() => dispatch(invalidatedAll(theme)))
     .then(next);
 };
+
+export const edit = (
+  theme: number,
+  id: number,
+  bulletpoint: PostedBulletpointType,
+  next: (void) => (void),
+) => (dispatch: (mixed) => Object) => {
+  axios.put(`/bulletpoints/${id}`, bulletpoint)
+    .then(() => dispatch(invalidatedAll(theme)))
+    .then(next);
+};

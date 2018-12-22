@@ -16,7 +16,7 @@ type Props = {|
 
 const Button = ({
   children, onClick, rated, type,
-}: { ...Props, type: 'success'|'danger' }) => (
+}: { ...Props, type: 'success' | 'danger' }) => (
   <RateButton
     className={classNames('badge', 'badge-guest', `alert-${type}`, !session.exists() || rated ? '' : 'opposite-rating')}
     onClick={session.exists() ? onClick : () => null}

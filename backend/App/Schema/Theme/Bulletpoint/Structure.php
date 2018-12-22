@@ -14,6 +14,29 @@ final class Structure {
 		$this->connection = $connection;
 	}
 
+	public function put(): array {
+		return [
+			'$schema' => 'http://json-schema.org/draft-04/schema#',
+			'additionalProperties' => false,
+			'properties' => [
+				'content' => ['type' => 'string'],
+				'source' => [
+					'type' => 'object',
+					'properties' => [
+						'link' => ['type' => 'string'],
+						'type' => [
+							'type' => 'string',
+							'enum' => (new Schema\PostgresConstant('sources_type', $this->connection))->values(),
+						],
+					],
+					'required' => ['link', 'type'],
+				],
+			],
+			'required' => ['content', 'source'],
+			'type' => 'object',
+		];
+	}
+
 	public function get(): array {
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',

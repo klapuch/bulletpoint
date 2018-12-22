@@ -33,6 +33,12 @@ final class ExistingBulletpoint implements Bulletpoint {
 		return $this->origin->print($format);
 	}
 
+	public function edit(array $bulletpoint): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Bulletpoint %d does not exist', $this->id));
+		$this->origin->edit($bulletpoint);
+	}
+
 	private function exists(int $id): bool {
 		return (new Storage\TypedQuery(
 			$this->connection,

@@ -71,6 +71,12 @@ final class ApplicationRoutes implements Routing\Routes {
 			'bulletpoints/{id} [GET]' => function(): Application\View {
 				return new Endpoint\Bulletpoint\Get($this->connection);
 			},
+			'bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Bulletpoint\Put($request, $this->connection),
+					new Http\ChosenRole($user, ['member'])
+				);
+			},
 			'bulletpoints/{bulletpoint_id}/ratings [POST]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Bulletpoint\Ratings\Post($request, $this->connection, $user),

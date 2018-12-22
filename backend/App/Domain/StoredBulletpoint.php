@@ -56,4 +56,17 @@ final class StoredBulletpoint implements Bulletpoint {
 			]
 		);
 	}
+
+	public function edit(array $bulletpoint): void {
+		(new Storage\BuiltQuery(
+			$this->connection,
+			(new Sql\PreparedUpdate(
+				new Sql\AnsiUpdate('public_bulletpoints')
+			))->set([
+				'source_link' => $bulletpoint['source']['link'],
+				'source_type' => $bulletpoint['source']['type'],
+				'content' => $bulletpoint['content'],
+			])->where('id = :id', ['id' => $this->id])
+		))->execute();
+	}
 }

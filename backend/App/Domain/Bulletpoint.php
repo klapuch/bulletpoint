@@ -12,4 +12,9 @@ interface Bulletpoint {
 	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format;
+
+	/**
+	 * @param mixed[] $bulletpoint
+	 */
+	public function edit(array $bulletpoint): void;
 }

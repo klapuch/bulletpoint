@@ -379,10 +379,26 @@ BEGIN
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE FUNCTION public_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
+BEGIN
+    WITH updated_bulletpoint AS (
+		UPDATE bulletpoints SET content = new.content WHERE id = new.id
+        RETURNING *
+	)
+	UPDATE sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
+	RETURN new;
+END
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
 CREATE TRIGGER public_bulletpoints_trigger_row_ii
 	INSTEAD OF INSERT
 	ON public_bulletpoints
 	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_ii();
+
+CREATE TRIGGER public_bulletpoints_trigger_row_iu
+	INSTEAD OF UPDATE
+	ON public_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_iu();
 
 
 -- tables

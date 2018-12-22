@@ -51,11 +51,7 @@ final class Post implements Application\View {
 					))->create(
 						(new Constraint\StructuredJson(
 							new \SplFileInfo(self::SCHEMA)
-						))->apply(
-							(new Constraint\StructuredJson(
-								new \SplFileInfo(self::SCHEMA)
-							))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
-						)
+						))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
 					),
 				]
 			)
