@@ -17,8 +17,7 @@ import Loader from '../../ui/Loader';
 import Add from '../../bulletpoint/Add';
 import Tags from '../../theme/components/Tags';
 import Reference from '../../theme/components/Reference';
-import Source from '../../theme/components/Source';
-import { UpButton, DownButton } from '../../theme/bulletpoint/components/RateButton';
+import { default as AllBulletpoints } from '../../bulletpoint/All';
 import type { FetchedThemeType } from '../../theme/types';
 import type { FetchedBulletpointType, PostedBulletpointType } from '../../theme/bulletpoint/types';
 
@@ -74,32 +73,8 @@ class Theme extends React.Component<Props> {
         <Tags tags={theme.tags} />
         <div className="row">
           <div className="col-sm-8">
-            <h2 id="bulletpointy">Bulletpointy</h2>
-            <ul className="list-group">
-              {bulletpoints.map(bulletpoint => (
-                <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
-                  <DownButton
-                    rated={bulletpoint.rating.user === -1}
-                    onClick={() => this.handleRatingChange(bulletpoint.id, -1)}
-                  >
-                    {bulletpoint.rating.down}
-                  </DownButton>
-                  <UpButton
-                    rated={bulletpoint.rating.user === 1}
-                    onClick={() => this.handleRatingChange(bulletpoint.id, +1)}
-                  >
-                    {bulletpoint.rating.up}
-                  </UpButton>
-                  {bulletpoint.content}
-                  <br />
-                  <small>
-                    <cite>
-                      <Source type={bulletpoint.source.type} link={bulletpoint.source.link} />
-                    </cite>
-                  </small>
-                </li>
-              ))}
-            </ul>
+            <h2 id="bulletpoints">Bulletpointy</h2>
+            <AllBulletpoints bulletpoints={bulletpoints} onRatingChange={this.handleRatingChange} />
             {session.exists() ? <Add onSubmit={this.handleSubmit} /> : null}
           </div>
         </div>
