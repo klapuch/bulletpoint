@@ -67,9 +67,13 @@ final class GenerateJsonSchema implements Scheduling\Job {
 
 		$theme = new Schema\Theme\Structure();
 		$schemas->save($theme->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Themes/schema/post.json'));
+		$schemas->save($theme->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Themes/schema/get.json'));
+		$schemas->save($theme->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/schema/get.json'));
 
 		$themeBulletpoint = new Schema\Theme\Bulletpoint\Structure($this->connection);
 		$schemas->save($themeBulletpoint->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/Bulletpoints/schema/post.json'));
+		$schemas->save($themeBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Bulletpoint/schema/get.json'));
+		$schemas->save($themeBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/Bulletpoints/schema/get.json'));
 	}
 
 	public function name(): string {

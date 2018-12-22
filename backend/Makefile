@@ -78,9 +78,11 @@ move-schemas:       ## move JSON schemas
 	mkdir -p www/schema/refresh_token
 	mkdir -p www/schema/theme
 	mkdir -p www/schema/theme/bulletpoint
+	mkdir -p www/schema/bulletpoint
 
 	ln -sfn $(PWD)/App/Endpoint/Bulletpoint/Ratings/schema/post.json www/schema/bulletpoint/rating/post.json
 	ln -sfn $(PWD)/App/Endpoint/Tokens/schema/post.json www/schema/token/post.json
 	ln -sfn $(PWD)/App/Endpoint/RefreshTokens/schema/post.json www/schema/refresh_token/post.json
 	ln -sfn $(PWD)/App/Endpoint/Themes/schema/post.json www/schema/theme/post.json
 	ln -sfn $(PWD)/App/Endpoint/Theme/Bulletpoints/schema/post.json www/schema/theme/bulletpoint/post.json
+	ln -sfn $(PWD)/App/Endpoint/Bulletpoint/schema/get.json www/schema/bulletpoint/get.json

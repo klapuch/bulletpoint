@@ -146,7 +146,7 @@ DECLARE
 BEGIN
 	INSERT INTO theme_tags (tag_id, theme_id) VALUES (
 		samples.random_if_not_exists((SELECT samples.tags()), replacements, 'tag_id'),
-		samples.random_if_not_exists((SELECT samples.themes()), replacements, 'theme_id')
+		CASE WHEN replacements ? 'theme_id' THEN CAST(replacements -> 'theme_id' AS integer) ELSE (SELECT samples.themes()) END
 	)
 	RETURNING id INTO v_id;
 

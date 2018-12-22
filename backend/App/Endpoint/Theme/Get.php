@@ -10,6 +10,8 @@ use Klapuch\Output;
 use Klapuch\Storage;
 
 final class Get implements Application\View {
+	public const SCHEMA = __DIR__ . '/schema/get.json';
+
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
@@ -24,7 +26,7 @@ final class Get implements Application\View {
 		return new Response\JsonResponse(
 			new Response\PlainResponse(
 				(new Domain\ExistingTheme(
-					new Domain\StoredTheme($parameters['id'], $this->connection),
+					new Domain\PublicTheme(new Domain\StoredTheme($parameters['id'], $this->connection)),
 					$parameters['id'],
 					$this->connection
 				))->print(new Output\Json())

@@ -1,0 +1,69 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "source": {
+            "type": "object",
+            "properties": {
+                "link": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "head",
+                        "web"
+                    ]
+                }
+            },
+            "required": [
+                "link",
+                "type"
+            ]
+        },
+        "user_id": {
+            "type": "number"
+        },
+        "rating": {
+            "type": "object",
+            "properties": {
+                "up": {
+                    "type": "number"
+                },
+                "down": {
+                    "type": "number"
+                },
+                "total": {
+                    "type": "number"
+                },
+                "user": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "up",
+                "down",
+                "total",
+                "user"
+            ]
+        },
+        "content": {
+            "type": "string"
+        },
+        "theme_id": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "id",
+        "source",
+        "user_id",
+        "rating",
+        "content",
+        "theme_id"
+    ],
+    "type": "object"
+}

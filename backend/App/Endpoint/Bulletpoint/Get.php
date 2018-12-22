@@ -10,6 +10,8 @@ use Klapuch\Output;
 use Klapuch\Storage;
 
 final class Get implements Application\View {
+	public const SCHEMA = __DIR__ . '/schema/get.json';
+
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
