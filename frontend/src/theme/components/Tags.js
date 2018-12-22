@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
-import qs from 'qs';
 import type { TagType } from '../../tags/types';
 
 type TagProps = {|
@@ -9,7 +8,7 @@ type TagProps = {|
   +id: number,
 |};
 const Tag = ({ children, id }: TagProps) => (
-  <Link className="no-link" to={{ pathname: '/themes', search: qs.stringify({ tag: id }) }}>
+  <Link className="no-link" to={`/themes/tag/${id}`}>
     <span style={{ marginRight: 7 }} className="label label-default">{children}</span>
   </Link>
 );

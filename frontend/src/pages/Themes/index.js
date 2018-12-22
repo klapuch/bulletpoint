@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
-import qs from 'qs';
-import { first, mapValues } from 'lodash';
+import { isEmpty } from 'lodash';
 import { allByTag, allRecent } from '../../theme/endpoints';
-import { getAll, allFetching as themesFetching } from '../../theme/selects';
+import { getAll, allFetching as themesFetching, getCommonTag } from '../../theme/selects';
 import Loader from '../../ui/Loader';
 import Tags from '../../theme/components/Tags';
 import type { FetchedThemeType } from '../../theme/types';
@@ -14,34 +14,44 @@ type Props = {|
   +params: {|
     +tag: ?number,
   |},
+  +match: {|
+    +params: {|
+      +tag: ?string,
+    |},
+  |},
   +themes: Array<FetchedThemeType>,
   +fetching: boolean,
   +fetchThemes: (tag: ?number) => (void),
 |};
 class Themes extends React.Component<Props> {
   componentDidMount(): void {
-    const { tag } = this.props.params;
-    this.props.fetchThemes(tag);
+    const { match: { params: { tag } } } = this.props;
+    this.props.fetchThemes(isEmpty(tag) ? null : parseInt(tag, 10));
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { tag } = this.props.params;
-    if (prevProps.params.tag !== tag) {
-      this.props.fetchThemes(tag);
+    const { match: { params: { tag } } } = this.props;
+    if (prevProps.match.params.tag !== tag) {
+      this.props.fetchThemes(parseInt(tag, 10));
     }
   }
 
-  getRelatedTag = (themes: Array<FetchedThemeType>, tagId: ?number) => (
-    first(first(themes.map(theme => theme.tags)).filter(tag => tag.id === tagId))
-  );
-
-  getTitle = () => {
-    const { themes, params: { tag: tagId } } = this.props;
-    if (tagId === null) {
+  getHeader = () => {
+    const { themes, match: { params: { tag } } } = this.props;
+    if (isEmpty(tag)) {
       return 'Nedávno přidaná témata';
     }
-    const relatedTag = this.getRelatedTag(themes, tagId) || { name: null };
-    return <>Témata vybraná pro "<strong>{relatedTag.name}</strong>"</>;
+    const commonTag = getCommonTag(themes, parseInt(tag, 10)) || { name: '' };
+    return <>Témata vybraná pro "<strong>{commonTag.name}</strong>"</>;
+  };
+
+  getTitle = () => {
+    const { themes, match: { params: { tag } } } = this.props;
+    if (isEmpty(tag)) {
+      return 'Nedávno přidaná témata';
+    }
+    const commonTag = getCommonTag(themes, parseInt(tag, 10)) || { name: '' };
+    return `Témata vybraná pro ${commonTag.name}`;
   };
 
   render() {
@@ -51,7 +61,10 @@ class Themes extends React.Component<Props> {
     }
     return (
       <>
-        <h1>{this.getTitle()}</h1>
+        <Helmet>
+          <title>{this.getTitle()}</title>
+        </Helmet>
+        <h1>{this.getHeader()}</h1>
         <br />
         {themes.map(theme => (
           <React.Fragment key={theme.id}>
@@ -67,11 +80,7 @@ class Themes extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, { location: { search } }) => ({
-  params: mapValues(
-    { tag: null, ...qs.parse(search, { ignoreQueryPrefix: true }) },
-    (value, key) => (['tag'].includes(key) && value !== null ? parseInt(value, 10) : value),
-  ),
+const mapStateToProps = state => ({
   themes: getAll(state),
   fetching: themesFetching(state),
 });

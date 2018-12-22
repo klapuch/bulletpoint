@@ -1,5 +1,7 @@
 // @flow
-import { isEmpty } from 'lodash';
+import { first, isEmpty } from 'lodash';
+import memoizee from 'memoizee';
+import type { FetchedThemeType } from './types';
 
 export const fetchedSingle = (id: number, state: Object): boolean => (
   state.theme.single[id] ? !isEmpty(state.theme.single[id].payload) : false
@@ -16,3 +18,7 @@ export const singleFetching = (id: number, state: Object): boolean => (
 export const allFetching = (state: Object): boolean => state.theme.all.fetching;
 
 export const getAll = (state: Object): Array<Object> => state.theme.all.payload;
+
+export const getCommonTag = memoizee((themes: Array<FetchedThemeType>, tagId: ?number) => (
+  first(first(themes.map(theme => theme.tags)).filter(tag => tag.id === tagId))
+));

@@ -42,7 +42,7 @@ const Public = ({
               <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
                   <Route
-                    path="/themes"
+                    path="/themes/recent"
                     exact
                     children={({ match }) => ( // eslint-disable-line
                       <li className={classNames('dropdown', match && 'active')}>
@@ -51,7 +51,7 @@ const Public = ({
                           <span className="caret" />
                         </a>
                         <ul className="dropdown-menu" role="menu">
-                          <NavItem exact to="/themes">Nedávno přidaná</NavItem>
+                          <NavItem exact to="/themes/recent">Nedávno přidaná</NavItem>
                         </ul>
                       </li>
                     )}
