@@ -7,7 +7,6 @@ env:
   - DOCKER_COMPOSE_VERSION=1.17.1
 
 before_install:
-  - cd backend/
   - sudo apt-get update -qq
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 
@@ -25,9 +24,11 @@ install:
 before_script:
   - docker exec bulletpoint_php-fpm_1 make composer-install
   - docker exec bulletpoint-postgres test_import
+  - docker exec bulletpoint_node_1 yarn
 
 script:
   - docker exec -e "TRAVIS=true" bulletpoint_php-fpm_1 make ci
+  - docker exec -e "TRAVIS=true" bulletpoint_node_1 yarn run check
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
