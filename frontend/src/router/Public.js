@@ -74,7 +74,7 @@ const Public = ({
               : <Component {...props} />}
           </div>
         </div>
-        <div id="footer">
+        <div className="footer navbar-fixed-bottom">
           <div className="container">
             <p className="muted credit text-center">
               <a
