@@ -26,7 +26,7 @@ class In extends React.Component<Props, State> {
   };
 
   render() {
-    const { from } = this.props.location.state || { from: { pathname: '/themes' } };
+    const { from } = this.props.location.state || { from: { pathname: '/themes/recent' } };
     const { redirectToReferrer } = this.state;
     if (redirectToReferrer) {
       return <Redirect to={from} />;
