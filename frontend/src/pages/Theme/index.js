@@ -11,6 +11,7 @@ import * as session from '../../access/session';
 import {
   allFetching as fetchingAllThemeBulletpoints,
   getByTheme as getThemeBulletpoints,
+  getById as getBulletpointById,
 } from '../../theme/bulletpoint/selects';
 import Loader from '../../ui/Loader';
 import Add from '../../bulletpoint/Add';
@@ -34,6 +35,7 @@ type Props = {|
   +fetching: boolean,
   +addBulletpoint: (number, PostedBulletpointType, (void) => (void)) => (void),
   +changeRating: (theme: number, bulletpoint: number, point: number) => (void),
+  +getBulletpointById: (number) => FetchedBulletpointType,
 |};
 class Theme extends React.Component<Props> {
   componentDidMount(): void {
@@ -51,13 +53,10 @@ class Theme extends React.Component<Props> {
     this.props.fetchBulletpoints(id);
   };
 
-  handleRatingChange = (bulletpoint: number, point: number) => {
+  handleRatingChange = (bulletpointId: number, point: number) => {
     const { match: { params: { id } } } = this.props;
-    this.props.changeRating(
-      id,
-      bulletpoint,
-      point,
-    );
+    const bulletpoint = this.props.getBulletpointById(bulletpointId);
+    this.props.changeRating(id, bulletpointId, bulletpoint.rating.user === point ? 0 : point);
   };
 
   render() {
@@ -114,6 +113,7 @@ const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
   theme: getById(theme, state),
   bulletpoints: getThemeBulletpoints(theme, state),
   fetching: themeFetching(theme, state) || fetchingAllThemeBulletpoints(theme, state),
+  getBulletpointById: (bulletpoint: number) => getBulletpointById(theme, bulletpoint, state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchTheme: (theme: number) => dispatch(single(theme)),
