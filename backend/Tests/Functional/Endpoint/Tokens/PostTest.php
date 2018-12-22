@@ -26,7 +26,7 @@ final class PostTest extends TestCase\Runtime {
 		$response = (new Endpoint\Tokens\Post(
 			new Application\FakeRequest(
 				new Output\FakeFormat(
-					json_encode(['email' => 'foo@bar.cz', 'password' => '123'])
+					json_encode(['email' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
 				)
 			),
 			$this->connection,
@@ -42,7 +42,7 @@ final class PostTest extends TestCase\Runtime {
 		Assert::exception(function () {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
-					new Output\FakeFormat(json_encode(['foo' => 'bar']))
+					new Output\FakeFormat(json_encode(['foo' => 'bar'], JSON_THROW_ON_ERROR))
 				),
 				$this->connection,
 				new Encryption\FakeCipher(true)
@@ -55,7 +55,7 @@ final class PostTest extends TestCase\Runtime {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						json_encode(['email' => 'foo@baz.cz', 'password' => '123'])
+						json_encode(['email' => 'foo@baz.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
 					)
 				),
 				$this->connection,
@@ -71,7 +71,7 @@ final class PostTest extends TestCase\Runtime {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						json_encode(['email' => 'foo@bar.cz', 'password' => '123'])
+						json_encode(['email' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
 					)
 				),
 				$this->connection,
@@ -86,7 +86,7 @@ final class PostTest extends TestCase\Runtime {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						json_encode(['email' => 'foo@bar.cz', 'password' => '123'])
+						json_encode(['email' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
 					)
 				),
 				$this->connection,

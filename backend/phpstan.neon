@@ -6,9 +6,6 @@ parameters:
 		checkedExceptions:
 			- UnexpectedValueException
 	ignoreErrors:
-		# Wait for PHP 7.3 solution
-		- '~Parameter #1 \$json of function json_decode expects string, string\|false given\.~'
-
 		# Fakes, intentional fails
 		- '~Method Bulletpoint\\Domain\\Access\\FakeUser::id\(\) should return string but returns string\|null~'
 		- '~Method Bulletpoint\\Domain\\Access\\FakeUser::properties\(\) should return array but returns array\|null~'

@@ -60,7 +60,7 @@ final class StructuredJson implements Validation\Rule {
 	 * @return \stdClass
 	 */
 	private function forValidation($subject): \stdClass {
-		return (object) json_decode(json_encode($subject));
+		return (object) json_decode(json_encode($subject, JSON_THROW_ON_ERROR));
 	}
 
 	/**
@@ -68,6 +68,6 @@ final class StructuredJson implements Validation\Rule {
 	 * @return array
 	 */
 	private function forOutput($subject): array {
-		return json_decode(json_encode($subject), true);
+		return json_decode(json_encode($subject, JSON_THROW_ON_ERROR), true);
 	}
 }
