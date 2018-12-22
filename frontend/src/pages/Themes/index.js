@@ -2,12 +2,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import { allByTag, allRecent } from '../../theme/endpoints';
 import { getAll, allFetching as themesFetching, getCommonTag } from '../../theme/selects';
 import Loader from '../../ui/Loader';
-import Tags from '../../theme/components/Tags';
+import { default as AllThemes } from '../../theme/All';
 import type { FetchedThemeType } from '../../theme/types';
 
 type Props = {|
@@ -66,15 +65,7 @@ class Themes extends React.Component<Props> {
         </Helmet>
         <h1>{this.getHeader()}</h1>
         <br />
-        {themes.map(theme => (
-          <React.Fragment key={theme.id}>
-            <Link className="no-link" to={`/themes/${theme.id}`}>
-              <h2>{theme.name}</h2>
-            </Link>
-            <Tags tags={theme.tags} />
-            <hr />
-          </React.Fragment>
-        ))}
+        <AllThemes themes={themes} />
       </>
     );
   }

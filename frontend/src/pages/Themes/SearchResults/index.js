@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import qs from 'qs';
 import { isEmpty } from 'lodash';
-import { Link } from 'react-router-dom';
 import { allSearched } from '../../../theme/endpoints';
 import { getAll, allFetching as themesFetching } from '../../../theme/selects';
 import Loader from '../../../ui/Loader';
-import Tags from '../../../theme/components/Tags';
+import { default as AllThemes } from '../../../theme/All';
 import type { FetchedThemeType } from '../../../theme/types';
 
 type Props = {|
@@ -47,15 +46,7 @@ class Themes extends React.Component<Props> {
         </Helmet>
         <h1>{this.getHeader()}</h1>
         <br />
-        {isEmpty(themes) ? <h2>Žádné shody</h2> : themes.map(theme => (
-          <React.Fragment key={theme.id}>
-            <Link className="no-link" to={`/themes/${theme.id}`}>
-              <h2>{theme.name}</h2>
-            </Link>
-            <Tags tags={theme.tags} />
-            <hr />
-          </React.Fragment>
-        ))}
+        {isEmpty(themes) ? <h2>Žádné shody</h2> : <AllThemes themes={themes} />}
       </>
     );
   }
