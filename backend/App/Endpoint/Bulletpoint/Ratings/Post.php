@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Endpoint\Bulletpoint\Ratings;
 
+use Bulletpoint\Constraint;
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Response;
@@ -11,6 +12,8 @@ use Klapuch\Internal;
 use Klapuch\Storage;
 
 final class Post implements Application\View {
+	private const SCHEMA = __DIR__ . '/schema/post.json';
+
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
@@ -30,7 +33,9 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		['point' => $point] = (new Internal\DecodedJson($this->request->body()->serialization()))->values();
+		['point' => $point] = (new Constraint\StructuredJson(
+			new \SplFileInfo(self::SCHEMA)
+		))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values());
 		(new Domain\BulletpointRating(
 			$parameters['bulletpoint_id'],
 			$this->user,

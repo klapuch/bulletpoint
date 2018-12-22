@@ -34,6 +34,9 @@ phpcs:              ## phpcs
 phpcbf:             ## phpcbf
 	vendor/bin/phpcbf $(PHPCS_ARGS)
 
+generate-schemas:   ## generate JSON schemas
+	php App/Scheduling/index.php GenerateJsonSchema
+
 check-test-extensions:
 	@echo "Checking PHP test extensions..."
 	@if $(CHECK_TEST_EXTENSIONS) ; then exit 1 ; else echo "Test filenames are OK" ; fi
@@ -68,3 +71,16 @@ check-changed-conf: ## check changed configs
 
 composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative
+
+move-schemas:       ## move JSON schemas
+	mkdir -p www/schema/bulletpoint/rating
+	mkdir -p www/schema/token
+	mkdir -p www/schema/refresh_token
+	mkdir -p www/schema/theme
+	mkdir -p www/schema/theme/bulletpoint
+
+	ln -sfn $(PWD)/App/Endpoint/Bulletpoint/Ratings/schema/post.json www/schema/bulletpoint/rating/post.json
+	ln -sfn $(PWD)/App/Endpoint/Tokens/schema/post.json www/schema/token/post.json
+	ln -sfn $(PWD)/App/Endpoint/RefreshTokens/schema/post.json www/schema/refresh_token/post.json
+	ln -sfn $(PWD)/App/Endpoint/Themes/schema/post.json www/schema/theme/post.json
+	ln -sfn $(PWD)/App/Endpoint/Theme/Bulletpoints/schema/post.json www/schema/theme/bulletpoint/post.json

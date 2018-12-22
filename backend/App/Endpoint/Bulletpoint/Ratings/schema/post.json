@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "point": {
+            "type": "number",
+            "enum": [
+                -1,
+                0,
+                1
+            ]
+        }
+    },
+    "required": [
+        "point"
+    ],
+    "type": "object"
+}

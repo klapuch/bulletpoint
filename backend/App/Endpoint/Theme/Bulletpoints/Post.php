@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Endpoint\Theme\Bulletpoints;
 
+use Bulletpoint\Constraint;
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Response;
@@ -11,6 +12,8 @@ use Klapuch\Internal;
 use Klapuch\Storage;
 
 final class Post implements Application\View {
+	private const SCHEMA = __DIR__ . '/schema/post.json';
+
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
@@ -30,12 +33,15 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		$input = (new Internal\DecodedJson($this->request->body()->serialization()))->values();
 		(new Domain\ThemeBulletpoints(
 			$parameters['theme_id'],
 			$this->connection,
 			$this->user
-		))->add($input);
+		))->add(
+			(new Constraint\StructuredJson(
+				new \SplFileInfo(self::SCHEMA)
+			))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
+		);
 		return new Response\EmptyResponse();
 	}
 }

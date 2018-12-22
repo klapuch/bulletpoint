@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Endpoint\Themes;
 
+use Bulletpoint\Constraint;
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Http;
@@ -14,6 +15,8 @@ use Klapuch\Uri\RelativeUrl;
 use Klapuch\Uri\Uri;
 
 final class Post implements Application\View {
+	private const SCHEMA = __DIR__ . '/schema/post.json';
+
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
@@ -45,7 +48,15 @@ final class Post implements Application\View {
 					'id' => (new Domain\StoredThemes(
 						$this->user,
 						$this->connection
-					))->create((new Internal\DecodedJson($this->request->body()->serialization()))->values()),
+					))->create(
+						(new Constraint\StructuredJson(
+							new \SplFileInfo(self::SCHEMA)
+						))->apply(
+							(new Constraint\StructuredJson(
+								new \SplFileInfo(self::SCHEMA)
+							))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
+						)
+					),
 				]
 			)
 		);
