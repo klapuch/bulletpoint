@@ -58,7 +58,7 @@ services:
     node:
       build: docker/node
       working_dir: /var/www/bulletpoint/frontend
-      command: "yarn start"
+      command: "sh -c 'yarn && yarn start"
       volumes:
         - ./:/var/www/bulletpoint
       ports:
