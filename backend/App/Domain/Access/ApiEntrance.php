@@ -23,7 +23,7 @@ final class ApiEntrance implements Entrance {
 	}
 
 	private function authorized(array $headers): bool {
-		if (preg_match('~[\w-,]{22,256}~', $this->token($headers)) === 1) { // TODO: Regex ^$
+		if (preg_match('~^[\w\-,]{22,256}$~', $this->token($headers)) === 1) {
 			session_id($this->token($headers));
 			if (session_status() === PHP_SESSION_NONE)
 				session_start();
