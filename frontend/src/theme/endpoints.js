@@ -1,6 +1,7 @@
 // @flow
 import axios from 'axios';
 import {
+  invalidatedSingle,
   receivedAll, receivedSingle, requestedAll, requestedSingle,
 } from './actions';
 import { fetchedSingle } from './selects';
@@ -18,6 +19,16 @@ export const create = (theme: PostedThemeType, next: (number) => (void)) => {
   axios.post('/themes', theme)
     .then(response => response.headers)
     .then(headers => response.extractedLocationId(headers.location))
+    .then(next);
+};
+
+export const change = (
+  id: number,
+  theme: PostedThemeType,
+  next: () => (void),
+) => (dispatch: (mixed) => Object) => {
+  axios.put(`/themes/${id}`, theme)
+    .then(() => dispatch(invalidatedSingle(id)))
     .then(next);
 };
 

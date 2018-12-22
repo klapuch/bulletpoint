@@ -19,4 +19,8 @@ final class PublicTheme implements Theme {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}
+
+	public function change(array $theme): void {
+		$this->origin->change($theme);
+	}
 }

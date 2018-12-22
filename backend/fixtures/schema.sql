@@ -99,6 +99,10 @@ CREATE FUNCTION array_diff(anyarray, anyarray) RETURNS anyarray AS $BODY$
 	SELECT ARRAY(SELECT unnest($1) EXCEPT SELECT unnest($2));
 $BODY$ LANGUAGE sql IMMUTABLE;
 
+CREATE FUNCTION array_equals(anyarray, anyarray) RETURNS boolean AS $BODY$
+	SELECT $1 <@ $2 AND $1 @> $2;
+$BODY$ LANGUAGE sql IMMUTABLE;
+
 
 -- tables
 CREATE TABLE "references" (
@@ -199,9 +203,9 @@ CREATE TABLE themes (
 );
 
 CREATE TRIGGER themes_audit_trigger
-    AFTER UPDATE OR DELETE OR INSERT
-    ON themes
-    FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
+	AFTER UPDATE OR DELETE OR INSERT
+	ON themes
+	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
 
 
 CREATE TABLE theme_tags (
@@ -309,7 +313,7 @@ CREATE VIEW public_themes AS
 		SELECT theme_id, jsonb_agg(tags.*) AS tags
 		FROM theme_tags
 		JOIN tags ON tags.id = theme_tags.tag_id
-	    GROUP BY theme_id
+		GROUP BY theme_id
 	) AS tags ON tags.theme_id = themes.id;
 
 CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
@@ -330,10 +334,37 @@ BEGIN
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE FUNCTION public_themes_trigger_row_iu() RETURNS trigger AS $BODY$
+	DECLARE
+		v_theme themes;
+		v_current_tags integer[];
+	    v_new_tags integer[];
+BEGIN
+	UPDATE themes SET name = new.name WHERE id = new.id RETURNING * INTO v_theme;
+	UPDATE "references" SET url = new.reference_url WHERE id = v_theme.reference_id;
+
+	SELECT array_agg(tag_id) INTO v_current_tags FROM theme_tags WHERE theme_id = v_theme.id;
+	SELECT array_agg(r.tag::integer) INTO v_new_tags FROM jsonb_array_elements(new.tags) AS r(tag);
+
+	IF (array_equals(v_current_tags, v_new_tags) IS FALSE) THEN
+		DELETE FROM theme_tags WHERE theme_id = v_theme.id;
+		INSERT INTO theme_tags (theme_id, tag_id)
+		SELECT v_theme.id, r.tag FROM unnest(v_new_tags) AS r(tag);
+	END IF;
+
+	RETURN new;
+END
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
 CREATE TRIGGER public_themes_trigger_row_ii
 	INSTEAD OF INSERT
 	ON public_themes
 	FOR EACH ROW EXECUTE PROCEDURE public_themes_trigger_row_ii();
+
+CREATE TRIGGER public_themes_trigger_row_iu
+	INSTEAD OF UPDATE
+	ON public_themes
+	FOR EACH ROW EXECUTE PROCEDURE public_themes_trigger_row_iu();
 
 
 CREATE VIEW tagged_themes AS
@@ -381,9 +412,9 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION public_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
 BEGIN
-    WITH updated_bulletpoint AS (
+	WITH updated_bulletpoint AS (
 		UPDATE bulletpoints SET content = new.content WHERE id = new.id
-        RETURNING *
+		RETURNING *
 	)
 	UPDATE sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
 	RETURN new;

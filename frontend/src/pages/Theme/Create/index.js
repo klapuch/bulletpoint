@@ -2,7 +2,7 @@
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { create } from '../../../theme/endpoints';
-import Add from '../../../theme/Add';
+import Form from '../../../theme/Form';
 import { getAll, allFetching as tagsFetching } from '../../../tags/selects';
 import { all } from '../../../tags/endpoints';
 import Loader from '../../../ui/Loader';
@@ -34,7 +34,7 @@ class Create extends React.Component<Props> {
     return (
       <>
         <h1>Nové téma</h1>
-        <Add tags={tags} onSubmit={this.handleSubmit} />
+        <Form tags={tags} onSubmit={this.handleSubmit} />
       </>
     );
   }

@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
+import { isEmpty, zipObject } from 'lodash';
 import Select from 'react-select';
-import type { PostedThemeType } from './types';
+import type { FetchedThemeType, PostedThemeType } from './types';
 import type { TagType } from '../tags/types';
 
 type TargetType = {|
@@ -14,11 +15,12 @@ type TargetType = {|
 type Props = {|
   +onSubmit: (PostedThemeType) => (void),
   +tags: Array<TagType>,
+  +theme?: ?FetchedThemeType,
 |};
 type State = {|
   theme: PostedThemeType,
 |};
-class Add extends React.Component<Props, State> {
+class Form extends React.Component<Props, State> {
   state = {
     theme: {
       name: '',
@@ -29,7 +31,23 @@ class Add extends React.Component<Props, State> {
     },
   };
 
-  handleFormChange = ({ target: { name, value } }: TargetType) => {
+  componentDidMount(): void {
+    if (!isEmpty(this.props.theme)) {
+      // $FlowFixMe Checked via isEmpty
+      const { name, tags, reference } = this.props.theme;
+      this.setState({
+        theme: {
+          name,
+          tags: tags.map(tag => tag.id),
+          reference: {
+            url: reference.url,
+          },
+        },
+      });
+    }
+  }
+
+  handleChange = ({ target: { name, value } }: TargetType) => {
     let input = null;
     if (name === 'reference_url') {
       input = { reference: { ...this.state.theme.reference, url: value } };
@@ -37,7 +55,6 @@ class Add extends React.Component<Props, State> {
       input = { ...this.state.theme, [name]: value };
     }
     this.setState(prevState => ({
-      ...prevState,
       theme: {
         ...prevState.theme,
         ...input,
@@ -47,25 +64,21 @@ class Add extends React.Component<Props, State> {
 
   handleSelectChange = (selects: Array<Object>) => {
     this.setState(prevState => ({
-      ...prevState,
-      theme: {
-        ...prevState.theme,
-        tags: selects.map(select => select.value),
-      },
+      theme: { ...prevState.theme, tags: selects.map(select => select.value) },
     }));
   };
 
-  handleClick = () => {
-    this.props.onSubmit(this.state.theme);
-  };
+  handleSubmit = () => this.props.onSubmit(this.state.theme);
 
   render() {
     const { theme } = this.state;
+    const { tags } = this.props;
+    const options = zipObject(tags.map(tag => tag.id), tags);
     return (
       <form>
         <div className="form-group">
           <label htmlFor="name">Název</label>
-          <input type="text" className="form-control" id="name" name="name" value={theme.name} onChange={this.handleFormChange} />
+          <input type="text" className="form-control" id="name" name="name" value={theme.name} onChange={this.handleChange} />
         </div>
         <div className="form-group">
           <label htmlFor="tags">Tag</label>
@@ -73,20 +86,20 @@ class Add extends React.Component<Props, State> {
           <Select
             isMulti
             placeholder="Vyber..."
-            defaultValue={theme.tags}
+            value={theme.tags.map(tag => ({ value: tag, label: options[tag].name }))}
             onChange={this.handleSelectChange}
-            options={this.props.tags.map(tag => ({ value: tag.id, label: tag.name }))}
+            options={tags.map(tag => ({ value: tag.id, label: tag.name }))}
             styles={{ option: base => ({ ...base, color: '#000' }) }}
           />
         </div>
         <div className="form-group">
           <label htmlFor="reference_url">URL odkazu</label>
-          <input type="text" className="form-control" id="reference_url" name="reference_url" value={theme.reference.url} onChange={this.handleFormChange} />
+          <input type="text" className="form-control" id="reference_url" name="reference_url" value={theme.reference.url} onChange={this.handleChange} />
         </div>
-        <a href="#" className="btn btn-success" onClick={this.handleClick} role="button">Vytvořit téma</a>
+        <a href="#" className="btn btn-success" onClick={this.handleSubmit} role="button">Uložit</a>
       </form>
     );
   }
 }
 
-export default Add;
+export default Form;

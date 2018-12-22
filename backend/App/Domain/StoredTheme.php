@@ -46,4 +46,17 @@ final class StoredTheme implements Theme {
 			]
 		);
 	}
+
+	public function change(array $theme): void {
+		(new Storage\BuiltQuery(
+			$this->connection,
+			(new Sql\PreparedUpdate(
+				new Sql\AnsiUpdate('public_themes'),
+			))->set([
+				'name' => $theme['name'],
+				'tags' => json_encode($theme['tags']), // TODO: use array
+				'reference_url' => $theme['reference']['url'],
+			])->where('id = :id', ['id' => $this->id])
+		))->execute();
+	}
 }

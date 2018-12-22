@@ -6,10 +6,10 @@ export const RECEIVED_THEME = 'RECEIVED_THEME';
 export const RECEIVED_THEMES = 'RECEIVED_THEMES';
 export const REQUESTED_THEME = 'REQUESTED_THEME';
 export const REQUESTED_THEMES = 'REQUESTED_THEMES';
-export const INVALIDATED_THEME = 'INVALIDATED_THEME';
+export const RECEIVED_INVALIDATED_THEME = 'RECEIVED_INVALIDATED_THEME';
 
 export const invalidatedSingle = (id: number) => ({
-  type: INVALIDATED_THEME,
+  type: RECEIVED_INVALIDATED_THEME,
   id,
 });
 

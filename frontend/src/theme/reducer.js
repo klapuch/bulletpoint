@@ -4,7 +4,7 @@ import {
   REQUESTED_THEMES,
   RECEIVED_THEME,
   RECEIVED_THEMES,
-  INVALIDATED_THEME,
+  RECEIVED_INVALIDATED_THEME,
 } from './actions';
 
 type State = {|
@@ -61,7 +61,7 @@ export default (state: State = init, action: Object): State => {
           payload: [],
         },
       };
-    case INVALIDATED_THEME:
+    case RECEIVED_INVALIDATED_THEME:
       return {
         ...state,
         single: {

@@ -47,6 +47,12 @@ final class ApplicationRoutes implements Routing\Routes {
 			'themes/{id} [GET]' => function(): Application\View {
 				return new Endpoint\Theme\Get($this->connection);
 			},
+			'themes/{id} [PUT]' => function() use ($user, $request): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Theme\Put($request, $this->connection),
+					new Http\ChosenRole($user, ['member'])
+				);
+			},
 			'themes [POST]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Themes\Post($request, $this->connection, $user, $this->url),

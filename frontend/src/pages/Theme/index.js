@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import Helmet from 'react-helmet';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { single } from '../../theme/endpoints';
@@ -24,6 +25,11 @@ import type { FormTypes } from '../../bulletpoint/Form';
 
 const Title = styled.h1`
   display: inline-block;
+`;
+
+const EditButton = styled.span`
+  cursor: pointer;
+  padding: 5px;
 `;
 
 type State = {|
@@ -109,6 +115,13 @@ class Theme extends React.Component<Props, State> {
         <div>
           <Title>{theme.name}</Title>
           <Reference url={theme.reference.url} />
+          {
+            session.exists() && (
+            <Link to={`/themes/${theme.id}/change`}>
+              <EditButton className="glyphicon glyphicon-pencil" aria-hidden="true" />
+            </Link>
+            )
+          }
         </div>
         <Tags tags={theme.tags} />
         <div className="row">

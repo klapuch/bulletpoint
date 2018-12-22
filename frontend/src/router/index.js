@@ -9,6 +9,7 @@ import { default as Theme } from '../pages/Theme';
 import { default as Themes } from '../pages/Themes';
 import { default as ThemesSearchResults } from '../pages/Themes/SearchResults';
 import { default as CreateTheme } from '../pages/Theme/Create';
+import { default as ChangeTheme } from '../pages/Theme/Change';
 import { default as SignIn } from '../pages/Sign/In';
 import { default as SignOut } from '../pages/Sign/Out';
 
@@ -26,6 +27,7 @@ export default ({ history }: Props) => (
     <Switch>
       <Public exact path="/" component={Default} title={() => <Title />} />
       <Public restrictive path="/themes/create" component={CreateTheme} title={() => <Title>Nové téma</Title>} />
+      <Public restrictive path="/themes/:id/change" component={ChangeTheme} title={() => <Title />} />
       <Public path="/themes/tag/:tag" component={Themes} title={() => <Title />} />
       <Public path="/themes/search" component={ThemesSearchResults} title={() => <Title />} />
       <Public path="/themes/recent" component={Themes} title={() => <Title>Nedávno přidaná témata</Title>} />

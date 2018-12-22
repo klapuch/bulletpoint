@@ -12,4 +12,9 @@ interface Theme {
 	 * @return \Klapuch\Output\Format
 	 */
 	public function print(Output\Format $format): Output\Format;
+
+	/**
+	 * @param mixed[] $theme
+	 */
+	public function change(array $theme): void;
 }

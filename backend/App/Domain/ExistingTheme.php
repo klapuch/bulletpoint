@@ -33,6 +33,16 @@ final class ExistingTheme implements Theme {
 		return $this->origin->print($format);
 	}
 
+	/**
+	 * @throws \UnexpectedValueException
+	 * @param mixed[] $theme
+	 */
+	public function change(array $theme): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Theme %d does not exist', $this->id));
+		$this->origin->change($theme);
+	}
+
 	private function exists(int $id): bool {
 		return (new Storage\TypedQuery(
 			$this->connection,

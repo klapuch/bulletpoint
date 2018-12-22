@@ -61,7 +61,7 @@ final class StoredBulletpoint implements Bulletpoint {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PreparedUpdate(
-				new Sql\AnsiUpdate('public_bulletpoints')
+				new Sql\AnsiUpdate('public_bulletpoints'),
 			))->set([
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],

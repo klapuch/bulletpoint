@@ -41,9 +41,7 @@ final class Structure {
 			'properties' => [
 				'tags' => [
 					'type' => 'array',
-					'items' => [
-						'type' => 'number',
-					],
+					'items' => ['type' => 'number'],
 				],
 				'name' => ['type' => 'string'],
 				'reference' => [
@@ -55,5 +53,9 @@ final class Structure {
 			'required' => ['tags', 'name', 'reference'],
 			'type' => 'object',
 		];
+	}
+
+	public function put(): array {
+		return $this->post();
 	}
 }
