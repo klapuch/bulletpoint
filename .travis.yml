@@ -28,6 +28,7 @@ before_script:
 
 script:
   - docker exec -e "TRAVIS=true" bulletpoint_php-fpm_1 make ci
+  - docker exec -e "TRAVIS=true" bulletpoint_node_1 yarn run check
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

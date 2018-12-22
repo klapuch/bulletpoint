@@ -27,16 +27,16 @@ $connection = new Storage\CachedConnection(
 (new SelectedJob(
 	$argv[1],
 	new Bulletpoint\Scheduling\Task\CheckChangedConfiguration(
-		new \SplFileInfo(__DIR__ . '/../../docker/nginx'),
+		new \SplFileInfo(__DIR__ . '/../../../docker/nginx'),
 		new SerialJobs(
 			new Task\GenerateNginxRoutes(
 				new ValidIni(new \SplFileInfo(
 					__DIR__ . '/../Configuration/.routes.ini'
 				)),
-				new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
+				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf')
 			),
 			new Bulletpoint\Scheduling\Task\GenerateNginxConfiguration(
-				new \SplFileInfo(__DIR__ . '/../../docker/nginx/preflight.conf')
+				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf')
 			)
 		)
 	),
@@ -45,13 +45,13 @@ $connection = new Storage\CachedConnection(
 			new ValidIni(new \SplFileInfo(
 				__DIR__ . '/../Configuration/.routes.ini'
 			)),
-			new \SplFileInfo(__DIR__ . '/../../docker/nginx/routes.conf')
+			new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf')
 		),
 		$connection
 	),
 	new MarkedJob(
 		new Bulletpoint\Scheduling\Task\GenerateNginxConfiguration(
-			new \SplFileInfo(__DIR__ . '/../../docker/nginx/preflight.conf')
+			new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf')
 		),
 		$connection
 	)
