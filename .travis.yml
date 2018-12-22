@@ -26,8 +26,8 @@ before_script:
   - docker exec bulletpoint-postgres test_import
 
 script:
-  - docker exec -e "TRAVIS=true" bulletpoint_php-fpm_1 make ci
   - docker exec -e "TRAVIS=true" bulletpoint_node_1 yarn run check
+  - docker exec -e "TRAVIS=true" bulletpoint_php-fpm_1 make ci
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
