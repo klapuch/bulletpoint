@@ -9,6 +9,7 @@ use Bulletpoint\Fixtures;
 use Bulletpoint\Misc;
 use Bulletpoint\TestCase;
 use Klapuch\Dataset;
+use Klapuch\Output;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -53,6 +54,16 @@ final class ThemesTest extends TestCase\Runtime {
 		$themes = new Domain\TaggedThemes(new Domain\FakeThemes(), $tag1, $this->connection);
 		Assert::count(1, iterator_to_array($themes->all(new Dataset\EmptySelection())));
 		Assert::same(1, $themes->count(new Dataset\EmptySelection()));
+	}
+
+	public function testSearchingByName(): void {
+		['id' => $theme1] = (new Fixtures\SamplePostgresData($this->connection, 'themes', ['name' => 'php']))->try();
+		(new Fixtures\SamplePostgresData($this->connection, 'themes', ['super cool thing']))->try();
+		$themes = new Domain\SearchedThemes(new Domain\FakeThemes(), 'PH', $this->connection);
+		$all = iterator_to_array($themes->all(new Dataset\EmptySelection()));
+		Assert::count(1, $all);
+		Assert::same(1, $themes->count(new Dataset\EmptySelection()));
+		Assert::same($theme1, (new Misc\TestingFormat($all[0]->print(new Output\Json())))->raw()['id']);
 	}
 }
 

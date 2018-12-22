@@ -34,3 +34,7 @@ export const allByTag = (tag: ?number) => (dispatch: (mixed) => Object) => (
 export const allRecent = () => (dispatch: (mixed) => Object) => (
   dispatch(all({ sort: '-created_at' }))
 );
+
+export const allSearched = (keyword: string) => (dispatch: (mixed) => Object) => (
+  dispatch(all({ q: keyword }))
+);

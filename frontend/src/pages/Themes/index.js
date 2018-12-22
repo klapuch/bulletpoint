@@ -51,7 +51,7 @@ class Themes extends React.Component<Props> {
       return 'Nedávno přidaná témata';
     }
     const commonTag = getCommonTag(themes, parseInt(tag, 10)) || { name: '' };
-    return `Témata vybraná pro ${commonTag.name}`;
+    return `Témata vybraná pro "${commonTag.name}"`;
   };
 
   render() {
