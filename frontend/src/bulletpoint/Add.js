@@ -57,19 +57,18 @@ type State = {|
   |},
   bulletpoint: PostedBulletpointType,
 |};
+const initState = {
+  bulletpoint: {
+    content: '',
+    source: {
+      link: '',
+      type: 'web',
+    },
+  },
+  button: { state: 'default' },
+};
 class Add extends React.Component<Props, State> {
-  state = {
-    button: {
-      state: 'default',
-    },
-    bulletpoint: {
-      content: '',
-      source: {
-        link: '',
-        type: 'web',
-      },
-    },
-  };
+  state = initState;
 
   onChange = ({ target: { name, value } }: TargetType) => {
     let input = null;
@@ -94,21 +93,8 @@ class Add extends React.Component<Props, State> {
       this.setState(prevState => ({ ...prevState, button: { state: 'opened' } }));
     } else if (this.state.button.state === 'opened') {
       this.props.onSubmit(this.state.bulletpoint);
-      this.setToDefault();
+      this.setState(initState);
     }
-  };
-
-  setToDefault = () => {
-    this.setState({
-      bulletpoint: {
-        content: '',
-        source: {
-          link: '',
-          type: 'web',
-        },
-      },
-      button: { state: 'default' },
-    });
   };
 
   render() {
@@ -145,7 +131,7 @@ class Add extends React.Component<Props, State> {
         <SubmitButton onClick={this.onSubmit} state={button.state}>
           Přidat bulletpoint
         </SubmitButton>
-        <CancelButton onClick={this.setToDefault} state={button.state}>
+        <CancelButton onClick={() => this.setState(initState)} state={button.state}>
           Zrušit
         </CancelButton>
       </>

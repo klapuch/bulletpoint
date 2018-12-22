@@ -68,7 +68,7 @@ class Themes extends React.Component<Props> {
         <br />
         {themes.map(theme => (
           <React.Fragment key={theme.id}>
-            <Link className="no-link" to={`themes/${theme.id}`}>
+            <Link className="no-link" to={`/themes/${theme.id}`}>
               <h2>{theme.name}</h2>
             </Link>
             <Tags tags={theme.tags} />
