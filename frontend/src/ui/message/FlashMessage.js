@@ -47,7 +47,7 @@ class FlashMessage extends React.Component<Props, State> {
 
   componentWillReceiveProps(nextProps: Props): void {
     this.setState({
-      discarded: nextProps.pathname === this.props.pathname && nextProps.content !== null,
+      discarded: nextProps.pathname === this.props.pathname && this.props.content !== null,
     });
     if (nextProps.type === RECEIVED_SUCCESS) {
       setTimeout(this.props.discardMessage, 2000);
