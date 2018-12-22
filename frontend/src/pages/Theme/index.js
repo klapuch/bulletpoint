@@ -41,10 +41,11 @@ type Props = {|
   +changeRating: (theme: number, bulletpoint: number, point: number, (void) => (void)) => (void),
   +getBulletpointById: (number) => FetchedBulletpointType,
 |};
+const initState = {
+  ratings: {},
+};
 class Theme extends React.Component<Props, State> {
-  state = {
-    ratings: {},
-  };
+  state = initState;
 
   componentDidMount(): void {
     this.reload();
@@ -59,7 +60,7 @@ class Theme extends React.Component<Props, State> {
     const { match: { params: { id } } } = this.props;
     this.props.fetchTheme(id);
     this.props.fetchBulletpoints(id);
-    this.setState({ ratings: {} });
+    this.setState(initState);
   };
 
   handleRatingChange = (bulletpoint: number, point: number) => {
