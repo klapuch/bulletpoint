@@ -22,3 +22,4 @@ export type PostedBulletpointType = {|
   |},
   +content: string,
 |};
+export type PointType = 1 | 0 | -1;

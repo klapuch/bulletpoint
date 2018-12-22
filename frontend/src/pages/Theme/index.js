@@ -19,7 +19,7 @@ import Tags from '../../theme/components/Tags';
 import Reference from '../../theme/components/Reference';
 import { default as AllBulletpoints } from '../../bulletpoint/All';
 import type { FetchedThemeType } from '../../theme/types';
-import type { FetchedBulletpointType, PostedBulletpointType } from '../../theme/bulletpoint/types';
+import type { FetchedBulletpointType, PointType, PostedBulletpointType } from '../../theme/bulletpoint/types';
 
 const Title = styled.h1`
   display: inline-block;
@@ -33,7 +33,7 @@ type Props = {|
   +bulletpoints: Array<FetchedBulletpointType>,
   +fetching: boolean,
   +addBulletpoint: (number, PostedBulletpointType, (void) => (void)) => (void),
-  +changeRating: (theme: number, bulletpoint: number, point: number) => (void),
+  +changeRating: (theme: number, bulletpoint: number, point: PointType) => (void),
   +getBulletpointById: (number) => FetchedBulletpointType,
 |};
 class Theme extends React.Component<Props> {
@@ -52,7 +52,7 @@ class Theme extends React.Component<Props> {
     this.props.fetchBulletpoints(id);
   };
 
-  handleRatingChange = (bulletpointId: number, point: number) => {
+  handleRatingChange = (bulletpointId: number, point: PointType) => {
     const { match: { params: { id } } } = this.props;
     const bulletpoint = this.props.getBulletpointById(bulletpointId);
     this.props.changeRating(id, bulletpointId, bulletpoint.rating.user === point ? 0 : point);
@@ -101,7 +101,7 @@ const mapDispatchToProps = dispatch => ({
   changeRating: (
     theme: number,
     bulletpoint: number,
-    point: number,
+    point: PointType,
   ) => dispatch(rate(theme, bulletpoint, point)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Theme);

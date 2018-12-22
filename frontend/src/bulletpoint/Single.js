@@ -2,11 +2,11 @@
 import React from 'react';
 import { DownButton, UpButton } from '../theme/bulletpoint/components/RateButton';
 import Source from '../theme/components/Source';
-import type { FetchedBulletpointType } from '../theme/bulletpoint/types';
+import type { FetchedBulletpointType, PointType } from '../theme/bulletpoint/types';
 
 type Props = {|
   +bulletpoint: FetchedBulletpointType,
-  +onRatingChange: (id: number, point: number) => (void),
+  +onRatingChange: (id: number, point: PointType) => (void),
 |};
 const Single = ({ bulletpoint, onRatingChange }: Props) => (
   <>
@@ -18,7 +18,7 @@ const Single = ({ bulletpoint, onRatingChange }: Props) => (
     </DownButton>
     <UpButton
       rated={bulletpoint.rating.user === 1}
-      onClick={() => onRatingChange(bulletpoint.id, +1)}
+      onClick={() => onRatingChange(bulletpoint.id, 1)}
     >
       {bulletpoint.rating.up}
     </UpButton>

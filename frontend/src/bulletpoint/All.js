@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import type { FetchedBulletpointType } from '../theme/bulletpoint/types';
+import type { FetchedBulletpointType, PointType } from '../theme/bulletpoint/types';
 import Single from './Single';
 
 type Props = {|
   +bulletpoints: Array<FetchedBulletpointType>,
-  +onRatingChange: (id: number, point: number) => (void),
+  +onRatingChange: (id: number, point: PointType) => (void),
 |};
 const All = ({ bulletpoints, onRatingChange }: Props) => (
   <ul className="list-group">
