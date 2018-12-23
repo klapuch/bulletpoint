@@ -40,7 +40,7 @@ echo (new class(
 					$redis
 				),
 				$uri,
-				new Encryption\AES256CBC($configuration['KEYS']['password'])
+				new Encryption\PasswordHash()
 			)
 		),
 		$uri,

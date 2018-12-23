@@ -294,20 +294,20 @@
         },
         {
             "name": "klapuch/encryption",
-            "version": "2.1.1",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Encryption.git",
-                "reference": "e47f3f756b2dc2b51734256bb04d5c0d76cc7cd3"
+                "reference": "9a1f52b87626cbe18a0d2d2a4bd9be87c3abbd3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Encryption/zipball/e47f3f756b2dc2b51734256bb04d5c0d76cc7cd3",
-                "reference": "e47f3f756b2dc2b51734256bb04d5c0d76cc7cd3",
+                "url": "https://api.github.com/repos/klapuch/Encryption/zipball/9a1f52b87626cbe18a0d2d2a4bd9be87c3abbd3a",
+                "reference": "9a1f52b87626cbe18a0d2d2a4bd9be87c3abbd3a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=7.3"
             },
             "require-dev": {
                 "consistence/coding-standard": "^1.0",
@@ -338,7 +338,7 @@
             ],
             "description": "AES256",
             "homepage": "https://github.com/klapuch/Encryption",
-            "time": "2017-09-13T18:57:34+00:00"
+            "time": "2018-12-23T10:50:44+00:00"
         },
         {
             "name": "klapuch/internal",
