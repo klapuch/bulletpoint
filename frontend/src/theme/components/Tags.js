@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import getSlug from 'speakingurl';
 import { Link } from 'react-router-dom';
 import type { TagType } from '../../tags/types';
 
@@ -8,7 +9,7 @@ type TagProps = {|
   +id: number,
 |};
 const Tag = ({ children, id }: TagProps) => (
-  <Link className="no-link" to={`/themes/tag/${id}`}>
+  <Link className="no-link" to={`/themes/tag/${id}/${getSlug(children)}`}>
     <span style={{ marginRight: 7 }} className="label label-default">{children}</span>
   </Link>
 );

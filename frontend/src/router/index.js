@@ -28,10 +28,10 @@ export default ({ history }: Props) => (
       <Public exact path="/" component={Default} title={() => <Title />} />
       <Public restrictive path="/themes/create" component={CreateTheme} title={() => <Title>Nové téma</Title>} />
       <Public restrictive path="/themes/:id([0-9]+)/change" component={ChangeTheme} title={() => <Title />} />
-      <Public path="/themes/tag/:tag([0-9]+)" component={Themes} title={() => <Title />} />
+      <Public path="/themes/tag/:tag([0-9]+)/:slug?" component={Themes} title={() => <Title />} />
       <Public path="/themes/search" component={ThemesSearchResults} title={() => <Title />} />
       <Public path="/themes/recent" component={Themes} title={() => <Title>Nedávno přidaná témata</Title>} />
-      <Public path="/themes/:id([0-9]+)" component={Theme} title={() => <Title />} />
+      <Public path="/themes/:id([0-9]+)/:slug?" component={Theme} title={() => <Title />} />
       <Public path="/sign/in" component={SignIn} title={() => <Title>Přihlášení</Title>} />
       <Public path="/sign/out" component={SignOut} />
       <Public component={Error404} />

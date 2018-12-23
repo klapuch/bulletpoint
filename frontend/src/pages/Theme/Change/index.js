@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
+import getSlug from 'speakingurl';
 import { change, single } from '../../../theme/endpoints';
 import Form from '../../../theme/Form';
 import { getAll, allFetching as tagsFetching } from '../../../tags/selects';
@@ -30,7 +31,7 @@ class Create extends React.Component<Props> {
 
   handleSubmit = (theme: PostedThemeType) => {
     const { match: { params: { id } } } = this.props;
-    this.props.changeTheme(id, theme, () => this.props.history.push(`/themes/${id}`));
+    this.props.changeTheme(id, theme, () => this.props.history.push(`/themes/${id}/${getSlug(theme.name)}`));
   };
 
   getTitle = (name: string) => `Úprava tématu "${name}"`;

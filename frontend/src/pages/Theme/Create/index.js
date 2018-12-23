@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
+import getSlug from 'speakingurl';
 import { create } from '../../../theme/endpoints';
 import Form from '../../../theme/Form';
 import { getAll, allFetching as tagsFetching } from '../../../tags/selects';
@@ -22,7 +23,7 @@ class Create extends React.Component<Props> {
 
   handleSubmit = (theme: PostedThemeType) => {
     create(theme, (id: number) => {
-      this.props.history.push(`/themes/${id}`);
+      this.props.history.push(`/themes/${id}/${getSlug(theme.name)}`);
     });
   };
 
