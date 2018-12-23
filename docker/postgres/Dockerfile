@@ -6,7 +6,7 @@ COPY cron.ini /etc/supervisor.d/cron.ini
 
 ENV PGPASSWORD postgres
 
-COPY postgresql.conf /etc/postgresql.conf
+COPY postgresql.dev.conf /etc/postgresql.conf
 
 COPY .bash_aliases /root/.bash_aliases
 COPY .psqlrc /root/.psqlrc

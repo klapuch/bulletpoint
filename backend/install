@@ -1,0 +1,89 @@
+apt-get update
+apt-get install curl apt-transport-https ca-certificates vim gnupg software-properties-common make git sudo zip unzip
+curl https://nginx.org/keys/nginx_signing.key -O nginx_signing.key
+apt-key add nginx_signing.key
+rm nginx_signing.key
+
+vim /etc/apt/sources.list
+deb http://nginx.org/packages/debian/ stretch nginx
+deb-src http://nginx.org/packages/debian/ stretch nginx
+
+apt-get update
+apt-get install nginx
+
+wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+apt-get install php7.3-fpm php7.3-xsl php7.3-curl php7.3-mbstring php7.3-zip php7.3-pgsql
+apt-get install php-apcu php-redis php-igbinary
+
+
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RELEASE=$(lsb_release -cs)
+echo "deb http://apt.postgresql.org/pub/repos/apt/ ${RELEASE}"-pgdg main | tee /etc/apt/sources.list.d/pgdg.list
+apt install postgresql-11
+
+
+apt-get install redis-server
+service redis-server stop
+
+mv /etc/redis/redis.conf /etc/redis/redis-cache.conf
+cp /etc/redis/redis-cache.conf /etc/redis/redis-session.conf
+chown redis.redis /etc/redis/redis-session.conf
+
+pidfile /var/run/redis/redis-server-cache.pid
+port 6379
+dbfilename dump-cache.rdb
+maxmemory 500mb
+
+
+mv /etc/init.d/redis-server /etc/init.d/redis-server-cache
+cp /etc/init.d/redis-server-cache /etc/init.d/redis-server-session
+
+NAME=redis-server-cache
+DESC=redis-server-cache
+DAEMON_ARGS=/etc/redis/redis-cache.conf
+PIDFILE=$RUNDIR/redis-server-cache.pid
+
+
+mv /lib/systemd/system/redis-server.service /lib/systemd/system/redis-server-cache.service
+cp /lib/systemd/system/redis-server-cache.service /lib/systemd/system/redis-server-session.service
+
+ExecStart=/usr/bin/redis-server /etc/redis/redis-cache.conf
+PIDFile=/var/run/redis/redis-server-cache.pid
+Alias=redis.service-cache
+
+
+
+systemctl enable redis-server-cache.service
+systemctl enable redis-server-session.service
+
+service redis-server-cache restart
+service redis-server-session restart
+
+
+
+curl -sL https://deb.nodesource.com/setup_10.x | bash -
+apt-get install -y nodejs
+
+
+sudo -u postgres createuser bulletpoint --superuser --pwprompt
+sudo -u postgres createdb bulletpoint
+
+
+curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+
+
+adduser bulletpoint
+usermod -a -G sudo bulletpoint
+
+
+vim /etc/php/7.3/fpm/pool.d/www.conf
+user = bulletpoint
+group = bulletpoint
+listen.owner = bulletpoint
+listen.group = bulletpoint
+
+
+ssh-keygen -t rsa -b 4096
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa

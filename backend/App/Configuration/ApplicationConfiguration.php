@@ -9,9 +9,9 @@ use Klapuch\Configuration;
  * Configuration for whole application
  */
 final class ApplicationConfiguration implements Configuration\Source {
-	private const CONFIGURATION = __DIR__ . '/.config.ini',
-		SECRET_CONFIGURATION = __DIR__ . '/.secrets.ini',
-		ROUTES = __DIR__ . '/.routes.ini';
+	private const CONFIGURATION = __DIR__ . '/config.ini',
+		SECRET_CONFIGURATION = __DIR__ . '/secrets.ini',
+		ROUTES = __DIR__ . '/routes.ini';
 
 	public function read(): array {
 		return (new Configuration\CachedSource(
