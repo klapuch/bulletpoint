@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import SlugRedirect from '../../router/SlugRedirect';
 import { single } from '../../theme/endpoints';
 import { all, add, edit } from '../../theme/bulletpoint/endpoints';
 import { rate } from '../../theme/bulletpoint/rating/endpoints';
@@ -110,16 +111,16 @@ class Theme extends React.Component<Props, State> {
       return <Loader />;
     }
     return (
-      <>
+      <SlugRedirect {...this.props} name={theme.name}>
         <Helmet><title>{theme.name}</title></Helmet>
         <div>
           <Title>{theme.name}</Title>
           <Reference url={theme.reference.url} />
           {
             session.exists() && (
-            <Link to={`/themes/${theme.id}/change`}>
-              <EditButton className="glyphicon glyphicon-pencil" aria-hidden="true" />
-            </Link>
+              <Link to={`/themes/${theme.id}/change`}>
+                <EditButton className="glyphicon glyphicon-pencil" aria-hidden="true" />
+              </Link>
             )
           }
         </div>
@@ -133,18 +134,18 @@ class Theme extends React.Component<Props, State> {
               onEditClick={this.handleEditClick}
             />
             {session.exists() && (
-            <Form
-              bulletpoint={this.state.bulletpoint}
-              onAddClick={this.handleAddClick}
-              onCancelClick={this.handleCancelClick}
-              type={this.state.formType}
-              onSubmit={this.handleSubmit}
-            />
+              <Form
+                bulletpoint={this.state.bulletpoint}
+                onAddClick={this.handleAddClick}
+                onCancelClick={this.handleCancelClick}
+                type={this.state.formType}
+                onSubmit={this.handleSubmit}
+              />
             )}
           </div>
         </div>
         <br />
-      </>
+      </SlugRedirect>
     );
   }
 }

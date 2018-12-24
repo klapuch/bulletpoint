@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { isEmpty } from 'lodash';
+import SlugRedirect from '../../router/SlugRedirect';
 import { allByTag, allRecent } from '../../theme/endpoints';
 import { getAll, allFetching as themesFetching, getCommonTag } from '../../theme/selects';
 import Loader from '../../ui/Loader';
@@ -30,27 +31,34 @@ class Themes extends React.Component<Props> {
 
   componentDidUpdate(prevProps: Props) {
     const { match: { params: { tag } } } = this.props;
-    if (prevProps.match.params.tag !== tag) {
+    if (!isEmpty(tag) && prevProps.match.params.tag !== tag) {
       this.props.fetchThemes(parseInt(tag, 10));
     }
   }
 
   getHeader = () => {
-    const { themes, match: { params: { tag } } } = this.props;
+    const { match: { params: { tag } } } = this.props;
     if (isEmpty(tag)) {
       return 'Nedávno přidaná témata';
     }
-    const commonTag = getCommonTag(themes, parseInt(tag, 10)) || { name: '' };
-    return <>Témata vybraná pro "<strong>{commonTag.name}</strong>"</>;
+    return <>Témata vybraná pro "<strong>{this.getTag().name}</strong>"</>;
   };
 
   getTitle = () => {
-    const { themes, match: { params: { tag } } } = this.props;
+    const { match: { params: { tag } } } = this.props;
     if (isEmpty(tag)) {
       return 'Nedávno přidaná témata';
     }
-    const commonTag = getCommonTag(themes, parseInt(tag, 10)) || { name: '' };
-    return `Témata vybraná pro "${commonTag.name}"`;
+    return `Témata vybraná pro "${this.getTag().name}"`;
+  };
+
+  getTag = () => {
+    const { themes, match: { params: { tag } } } = this.props;
+    const initTag = { name: '' };
+    if (isEmpty(tag)) {
+      return initTag;
+    }
+    return getCommonTag(themes, parseInt(tag, 10)) || initTag;
   };
 
   render() {
@@ -59,14 +67,14 @@ class Themes extends React.Component<Props> {
       return <Loader />;
     }
     return (
-      <>
+      <SlugRedirect {...this.props} name={this.getTag().name}>
         <Helmet>
           <title>{this.getTitle()}</title>
         </Helmet>
         <h1>{this.getHeader()}</h1>
         <br />
         <AllThemes themes={themes} />
-      </>
+      </SlugRedirect>
     );
   }
 }
