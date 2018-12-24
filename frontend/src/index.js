@@ -29,8 +29,13 @@ history.listen((location) => {
   }
 });
 
+const reduxMiddleWares = [
+  thunk,
+  process.env.NODE_ENV === 'development' ? logger : null,
+].filter(Boolean);
+
 ReactDOM.render(
-  <Provider store={createStore(combineReducers, applyMiddleware(thunk, logger))}>
+  <Provider store={createStore(combineReducers, applyMiddleware(...reduxMiddleWares))}>
     <Router history={history} />
   </Provider>,
   document.getElementById('root'),

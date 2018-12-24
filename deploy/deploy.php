@@ -51,6 +51,12 @@ task('php:config:move', static function (): void {
 	run('cp {{release_path}}/docker/php-fpm/php.prod.ini /etc/php/7.3/fpm/php.ini');
 });
 
+task('react:build', static function (): void {
+	cd('{{release_path}}/frontend');
+	run('yarn install');
+	run('yarn run build');
+});
+
 desc('Deploy your project');
 task('deploy', [
 	'deploy:info',
@@ -61,6 +67,7 @@ task('deploy', [
 	'deploy:shared',
 	'deploy:writable',
 	'composer:install',
+	'react:build',
 	'deploy:clear_paths',
 	'passwords:put',
 	'nginx:config:move',

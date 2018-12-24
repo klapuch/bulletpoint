@@ -7,7 +7,7 @@ export default function withSettings(inherited: Object): Object {
   return merge(
     inherited,
     {
-      baseURL: 'https://api.bulletpoint.localhost',
+      baseURL: process.env.REACT_APP_API,
       maxRedirects: 0,
       timeout: 1000,
       headers: {
