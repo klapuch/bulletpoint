@@ -27,6 +27,9 @@ CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS 
 CREATE FUNCTION constant.theme_tags_limit() RETURNS integer AS $$SELECT 4;$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member', 'admin'];$$ LANGUAGE sql IMMUTABLE;
 
+-- types
+CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
+
 
 -- domains
 CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
@@ -34,9 +37,6 @@ CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_r
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 
 -- schema audit
-CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
-
-
 CREATE TABLE audit.history (
 	id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	"table" text NOT NULL,
