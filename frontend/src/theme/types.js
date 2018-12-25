@@ -18,3 +18,8 @@ export type PostedThemeType = {|
     +url: string,
   |}
 |};
+export type ErrorThemeType = {|
+  +tags: ?string,
+  +name: ?string,
+  +reference_url: ?string,
+|};

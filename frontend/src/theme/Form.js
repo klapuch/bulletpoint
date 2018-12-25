@@ -2,8 +2,10 @@
 import React from 'react';
 import { isEmpty, zipObject } from 'lodash';
 import Select from 'react-select';
-import type { FetchedThemeType, PostedThemeType } from './types';
+import classNames from 'classnames';
+import type { ErrorThemeType, FetchedThemeType, PostedThemeType } from './types';
 import type { TagType } from '../tags/types';
+import * as validation from './validation';
 
 type TargetType = {|
   target: {|
@@ -19,7 +21,13 @@ type Props = {|
 |};
 type State = {|
   theme: PostedThemeType,
+  errors: ErrorThemeType,
 |};
+const initStateErrors = {
+  name: null,
+  tags: null,
+  reference_url: null,
+};
 class Form extends React.Component<Props, State> {
   state = {
     theme: {
@@ -29,6 +37,7 @@ class Form extends React.Component<Props, State> {
         url: '',
       },
     },
+    errors: initStateErrors,
   };
 
   componentDidMount(): void {
@@ -68,19 +77,30 @@ class Form extends React.Component<Props, State> {
     }));
   };
 
-  handleSubmit = () => this.props.onSubmit(this.state.theme);
+  handleSubmit = () => {
+    if (validation.anyErrors(this.state.theme)) {
+      this.setState(prevState => ({
+        ...prevState,
+        errors: validation.errors(prevState.theme),
+      }));
+    } else {
+      this.props.onSubmit(this.state.theme);
+      this.setState(prevState => ({ ...prevState, errors: initStateErrors }));
+    }
+  };
 
   render() {
-    const { theme } = this.state;
+    const { theme, errors } = this.state;
     const { tags } = this.props;
     const options = zipObject(tags.map(tag => tag.id), tags);
     return (
       <form>
-        <div className="form-group">
+        <div className={classNames('form-group', errors.name && 'has-error')}>
           <label htmlFor="name">Název</label>
           <input type="text" className="form-control" id="name" name="name" value={theme.name} onChange={this.handleChange} />
+          {errors.name && <span className="help-block">{validation.toMessage(errors, 'name')}</span>}
         </div>
-        <div className="form-group">
+        <div className={classNames('form-group', errors.tags && 'has-error')}>
           <label htmlFor="tags">Tag</label>
           {/* $FlowFixMe Bad type from lib */}
           <Select
@@ -91,10 +111,12 @@ class Form extends React.Component<Props, State> {
             options={tags.map(tag => ({ value: tag.id, label: tag.name }))}
             styles={{ option: base => ({ ...base, color: '#000' }) }}
           />
+          {errors.tags && <span className="help-block">{validation.toMessage(errors, 'tags')}</span>}
         </div>
-        <div className="form-group">
+        <div className={classNames('form-group', errors.reference_url && 'has-error')}>
           <label htmlFor="reference_url">URL odkazu</label>
           <input type="text" className="form-control" id="reference_url" name="reference_url" value={theme.reference.url} onChange={this.handleChange} />
+          {errors.reference_url && <span className="help-block">{validation.toMessage(errors, 'reference_url')}</span>}
         </div>
         <a href="#" className="btn btn-success" onClick={this.handleSubmit} role="button">Uložit</a>
       </form>

@@ -18,16 +18,17 @@ type State = {|
   credentials: PostedCredentialsType,
   errors: ErrorCredentialsType,
 |};
+const initStateErrors = {
+  email: null,
+  password: null,
+};
 class Form extends React.Component<Props, State> {
   state = {
     credentials: {
       email: 'klapuchdominik@gmail.com',
       password: 'heslo123',
     },
-    errors: {
-      email: null,
-      password: null,
-    },
+    errors: initStateErrors,
   };
 
   onChange = ({ target: { name, value } }: EventType) => {
@@ -48,7 +49,7 @@ class Form extends React.Component<Props, State> {
       }));
     } else {
       this.props.onSubmit(this.state.credentials);
-      this.setState(prevState => ({ ...prevState, errors: { email: null, password: null } }));
+      this.setState(prevState => ({ ...prevState, errors: initStateErrors }));
     }
   };
 

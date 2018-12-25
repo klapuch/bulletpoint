@@ -1,9 +1,10 @@
 // @flow
+export type SourceType = 'head' | 'web';
 export type FetchedBulletpointType = {|
   +id: number,
   +source: {|
     +link: string,
-    +type: string,
+    +type: SourceType,
   |},
   +user_id: number,
   +rating: {|
@@ -18,8 +19,13 @@ export type FetchedBulletpointType = {|
 export type PostedBulletpointType = {|
   +source: {|
     +link: string,
-    +type: string,
+    +type: SourceType,
   |},
   +content: string,
+|};
+export type ErrorBulletpointType = {|
+  +source_link: ?string,
+  +source_type: ?string,
+  +content: ?string,
 |};
 export type PointType = 1 | 0 | -1;

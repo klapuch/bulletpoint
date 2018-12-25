@@ -2,7 +2,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import type { PostedBulletpointType } from '../theme/bulletpoint/types';
+import type { ErrorBulletpointType, PostedBulletpointType } from '../theme/bulletpoint/types';
+import * as validation from '../theme/bulletpoint/validation';
 
 export type FormTypes = 'default' | 'edit' | 'add';
 type TargetType = {|
@@ -59,6 +60,7 @@ type Props = {|
 |};
 type State = {|
   bulletpoint: PostedBulletpointType,
+  errors: ErrorBulletpointType,
 |};
 const initState = {
   bulletpoint: {
@@ -67,6 +69,11 @@ const initState = {
       link: '',
       type: 'web',
     },
+  },
+  errors: {
+    content: null,
+    source_link: null,
+    source_type: null,
   },
 };
 export default class extends React.Component<Props, State> {
@@ -88,6 +95,7 @@ export default class extends React.Component<Props, State> {
       input = { ...this.state.bulletpoint, [name]: value };
     }
     this.setState(prevState => ({
+      // $FlowFixMe goes from select
       bulletpoint: {
         ...prevState.bulletpoint,
         ...input,
@@ -96,9 +104,16 @@ export default class extends React.Component<Props, State> {
   };
 
   onSubmit = () => {
-    this.props.onAddClick();
-    this.props.onSubmit(this.state.bulletpoint);
-    this.setState(initState);
+    if (this.props.type !== 'default' && validation.anyErrors(this.state.bulletpoint)) {
+      this.setState(prevState => ({
+        ...prevState,
+        errors: validation.errors(prevState.bulletpoint),
+      }));
+    } else {
+      this.props.onAddClick();
+      this.props.onSubmit(this.state.bulletpoint);
+      this.setState(initState);
+    }
   };
 
   onCancelClick = () => {
@@ -107,14 +122,15 @@ export default class extends React.Component<Props, State> {
   };
 
   render() {
-    const { bulletpoint } = this.state;
+    const { bulletpoint, errors } = this.state;
     return (
       <>
         {this.props.type === 'default' ? null : (
           <form>
-            <div className="form-group">
+            <div className={classNames('form-group', errors.content && 'has-error')}>
               <label htmlFor="content">Obsah</label>
               <input type="text" className="form-control" id="content" name="content" value={bulletpoint.content} onChange={this.onChange} />
+              {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
             </div>
             <div className="form-group">
               <label htmlFor="source_type">Typ zdroje</label>
@@ -122,15 +138,14 @@ export default class extends React.Component<Props, State> {
                 <option value="web">Web</option>
                 <option value="head">Z vlastní hlavy</option>
               </select>
-              {
-                bulletpoint.source.type === 'web'
-                  ? <>
-                    <label htmlFor="source_link">Odkaz na zdroj</label>
-                    <input type="text" className="form-control" id="source_link" name="source_link" value={bulletpoint.source.link} onChange={this.onChange} />
-                  </>
-                  : null
-              }
             </div>
+            {bulletpoint.source.type === 'head' ? null : (
+              <div className={classNames('form-group', errors.source_link && 'has-error')}>
+                <label htmlFor="source_link">Odkaz na zdroj</label>
+                <input type="text" className="form-control" id="source_link" name="source_link" value={bulletpoint.source.link} onChange={this.onChange} />
+                {errors.source_link && <span className="help-block">{validation.toMessage(errors, 'source_link')}</span>}
+              </div>
+            )}
           </form>
         )}
         <ConfirmButton onClick={this.onSubmit} formType={this.props.type} />

@@ -195,13 +195,26 @@ CREATE INDEX verification_codes_user_id ON access.verification_codes USING btree
 
 CREATE TABLE themes (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	name text NOT NULL,
+	name character varying(255) NOT NULL,
 	reference_id integer NOT NULL,
 	user_id integer NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
 	CONSTRAINT themes_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id) ON DELETE SET NULL ON UPDATE RESTRICT,
 	CONSTRAINT themes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
+
+CREATE FUNCTION themes_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+	new.name = nullif(new.name, '');
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER themes_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON themes
+	FOR EACH ROW EXECUTE PROCEDURE themes_trigger_row_biu();
 
 CREATE TRIGGER themes_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
@@ -265,7 +278,7 @@ CREATE TABLE bulletpoints (
 	theme_id integer NOT NULL,
 	source_id integer NOT NULL,
 	user_id integer NOT NULL,
-	content text NOT NULL,
+	content character varying(255) NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
 	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT bulletpoint_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
