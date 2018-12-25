@@ -1,6 +1,6 @@
 #!/bin/bash
 disconnect;
-psql -U postgres -c "DROP DATABASE IF EXISTS bulletpoint";
-psql -U postgres -c "CREATE DATABASE bulletpoint";
-psql -U postgres bulletpoint < /var/www/bulletpoint/backend/fixtures/schema.sql;
-psql -U postgres bulletpoint < /var/www/bulletpoint/backend/fixtures/dev.sql;
+psql -U postgres -h localhost -c "DROP DATABASE IF EXISTS bulletpoint";
+psql -U postgres -h localhost -c "CREATE DATABASE bulletpoint";
+psql -U postgres -h localhost bulletpoint < /var/www/bulletpoint/backend/fixtures/schema.sql;
+psql -U postgres -h localhost bulletpoint < /var/www/bulletpoint/backend/fixtures/dev.sql;
