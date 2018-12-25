@@ -50,13 +50,13 @@ final class ApplicationRoutes implements Routing\Routes {
 			'themes/{id} [PUT]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Theme\Put($request, $this->connection),
-					new Http\ChosenRole($user, ['member'])
+					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
 			'themes [POST]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Themes\Post($request, $this->connection, $user, $this->url),
-					new Http\ChosenRole($user, ['member'])
+					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
 			'themes [GET]' => function(): Application\View {
@@ -71,7 +71,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'themes/{theme_id}/bulletpoints [POST]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Theme\Bulletpoints\Post($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['member'])
+					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
 			'bulletpoints/{id} [GET]' => function(): Application\View {
@@ -80,13 +80,13 @@ final class ApplicationRoutes implements Routing\Routes {
 			'bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Bulletpoint\Put($request, $this->connection),
-					new Http\ChosenRole($user, ['member'])
+					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
 			'bulletpoints/{bulletpoint_id}/ratings [POST]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Bulletpoint\Ratings\Post($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['member'])
+					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
 			'tokens [POST]' => function() use ($request): Application\View {
@@ -99,7 +99,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'tokens [DELETE]' => static function() use ($user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Tokens\Delete(),
-					new Http\ChosenRole($user, ['member'])
+					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
 			'refresh_tokens [POST]' => static function() use ($request): Application\View {
@@ -108,7 +108,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'users/me [GET]' => function() use ($user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Users\Me\Get($this->connection, $user),
-					new Http\ChosenRole($user, ['member'])
+					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
 		];
