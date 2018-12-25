@@ -8,6 +8,7 @@ type Error = ?string;
 
 export const REQUIRED = 'REQUIRED';
 export const NOT_EMAIL = 'NOT_EMAIL';
+export const NOT_USERNAME = 'NOT_USERNAME';
 export const NOT_URL = 'NOT_URL';
 export const MIN_6_CHARS = 'MIN_6_CHARS';
 export const MAX_CHARS = 'MAX_CHARS';
@@ -20,6 +21,12 @@ export const required = (value: ?mixed): Error => (
 export const email = (value: ?string): Error => {
   if (required(value)) return required(value);
   else if (!emailValidator.validate(value)) return NOT_EMAIL;
+  return null;
+};
+
+export const username = (value: string | null): Error => {
+  if (required(value)) return required(value);
+  else if (value !== null && !/^[a-zA-Z0-9_]{3,25}$/.test(value)) return NOT_USERNAME;
   return null;
 };
 

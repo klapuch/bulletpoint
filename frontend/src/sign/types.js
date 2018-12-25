@@ -1,9 +1,9 @@
 // @flow
 export type PostedCredentialsType = {|
-  +email: string,
+  +login: string,
   +password: string,
 |};
 export type ErrorCredentialsType = {|
-  +email: ?string,
+  +login: ?string,
   +password: ?string,
 |};

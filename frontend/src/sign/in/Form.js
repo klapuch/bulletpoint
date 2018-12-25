@@ -19,13 +19,13 @@ type State = {|
   errors: ErrorCredentialsType,
 |};
 const initStateErrors = {
-  email: null,
+  login: null,
   password: null,
 };
 class Form extends React.Component<Props, State> {
   state = {
     credentials: {
-      email: 'klapuchdominik@gmail.com',
+      login: 'klapuchdominik@gmail.com',
       password: 'heslo123',
     },
     errors: initStateErrors,
@@ -57,14 +57,14 @@ class Form extends React.Component<Props, State> {
     const { credentials, errors } = this.state;
     return (
       <form className="form-horizontal">
-        <div className={classNames('form-group', errors.email && 'has-error')}>
-          <label htmlFor="email">E-mail</label>
-          <input name="email" value={credentials.email} onChange={this.onChange} className="form-control" placeholder="E-mail" />
-          {errors.email && <span className="help-block">{validation.toMessage(errors, 'email')}</span>}
+        <div className={classNames('form-group', errors.login && 'has-error')}>
+          <label htmlFor="login">E-mail nebo uživatelské jméno</label>
+          <input name="login" value={credentials.login} onChange={this.onChange} className="form-control" />
+          {errors.login && <span className="help-block">{validation.toMessage(errors, 'login')}</span>}
         </div>
         <div className={classNames('form-group', errors.password && 'has-error')}>
           <label htmlFor="password">Heslo</label>
-          <input type="password" value={credentials.password} name="password" onChange={this.onChange} className="form-control" placeholder="Heslo" />
+          <input type="password" value={credentials.password} name="password" onChange={this.onChange} className="form-control" />
           {errors.password && <span className="help-block">{validation.toMessage(errors, 'password')}</span>}
         </div>
         <div className="form-group">

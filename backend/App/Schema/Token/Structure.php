@@ -9,10 +9,10 @@ final class Structure {
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
 			'properties' => [
-				'email' => ['type' => 'string'],
+				'login' => ['type' => 'string'],
 				'password' => ['type' => 'string'],
 			],
-			'required' => ['email', 'password'],
+			'required' => ['login', 'password'],
 			'type' => 'object',
 		];
 	}

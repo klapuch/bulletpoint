@@ -27,22 +27,29 @@ final class SecureEntrance implements Entrance {
 	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function enter(array $credentials): User {
-		['email' => $plainEmail, 'password' => $plainPassword] = array_map('strval', $credentials);
+		['login' => $login, 'password' => $plainPassword] = array_map('strval', $credentials);
 		$user = (new Storage\TypedQuery(
 			$this->connection,
-			'SELECT * FROM users WHERE email = ?',
-			[$plainEmail]
+			'SELECT * FROM users WHERE email = :login OR username = :login',
+			[$login]
 		))->row();
-		if (!$this->exists($user))
-			throw new \UnexpectedValueException(t('access.bad.email', $plainEmail));
-		elseif (!$this->cipher->decrypted($plainPassword, $user['password']))
+		if (!self::exists($user)) {
+			if (self::isEmail($login)) {
+				throw new \UnexpectedValueException(t('access.bad.email', $login));
+			}
+			throw new \UnexpectedValueException(t('access.bad.username', $login));
+		} elseif (!$this->cipher->decrypted($plainPassword, $user['password']))
 			throw new \UnexpectedValueException(t('access.bad.password'));
 		if ($this->cipher->deprecated($user['password']))
 			$this->rehash($plainPassword, $user['id']);
 		return new ConstantUser((string) $user['id'], $user);
 	}
 
-	private function exists(array $row): bool {
+	private static function isEmail(string $login): bool {
+		return strpos($login, '@') !== false;
+	}
+
+	private static function exists(array $row): bool {
 		return (bool) $row;
 	}
 

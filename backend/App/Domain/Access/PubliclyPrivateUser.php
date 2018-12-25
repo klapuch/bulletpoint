@@ -27,11 +27,12 @@ final class PubliclyPrivateUser implements User {
 	public function properties(): array {
 		$properties = (new Storage\TypedQuery(
 			$this->connection,
-			'SELECT role, email FROM users WHERE id = ?',
+			'SELECT role, email, username FROM users WHERE id = ?',
 			[$this->id()]
 		))->row();
 		return [
 			'email' => $properties['email'],
+			'username' => $properties['username'],
 			'role' => $properties['role'],
 		];
 	}

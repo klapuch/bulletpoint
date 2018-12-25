@@ -116,8 +116,9 @@ CREATE FUNCTION samples.users(replacements jsonb = '{}') RETURNS integer AS $BOD
 DECLARE
 	v_id users.id%type;
 BEGIN
-	INSERT INTO users (email, password, role) VALUES (
+	INSERT INTO users (email, username, password, role) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'email'),
+		samples.random_if_not_exists(substring(md5(random()::text), 1, 20), replacements, 'username'),
 		samples.random_if_not_exists(md5(random()::text), replacements, 'password'),
 		samples.random_if_not_exists(test_utils.random_array_pick(constant.roles()), replacements, 'role')::roles
 	)

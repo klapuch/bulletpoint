@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "additionalProperties": false,
     "properties": {
-        "email": {
+        "login": {
             "type": "string"
         },
         "password": {
@@ -10,7 +10,7 @@
         }
     },
     "required": [
-        "email",
+        "login",
         "password"
     ],
     "type": "object"

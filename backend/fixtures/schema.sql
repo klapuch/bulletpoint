@@ -35,6 +35,7 @@ CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
 CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
 CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_ratings_point_range() @> ARRAY[VALUE]);
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
+CREATE DOMAIN usernames AS citext CHECK (VALUE ~ '^[a-zA-Z0-9_]{3,25}$');
 
 -- schema audit
 CREATE TABLE audit.history (
@@ -130,6 +131,7 @@ CREATE TRIGGER tags_audit_trigger
 
 CREATE TABLE users (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	username usernames NOT NULL UNIQUE,
 	email citext NOT NULL UNIQUE,
 	password text NOT NULL,
 	role roles NOT NULL DEFAULT 'member'::roles
@@ -145,21 +147,6 @@ BEGIN
 	RETURN new;
 END;
 $$ LANGUAGE plpgsql VOLATILE;
-
-CREATE FUNCTION users_trigger_row_biu() RETURNS trigger AS $$
-BEGIN
-	IF EXISTS(SELECT 1 FROM users WHERE email = new.email AND id IS DISTINCT FROM CASE WHEN TG_OP = 'INSERT' THEN NULL ELSE new.id END) THEN
-		RAISE EXCEPTION USING MESSAGE = format('Email %s already exists', new.email);
-	END IF;
-
-	RETURN new;
-END;
-$$ LANGUAGE plpgsql VOLATILE;
-
-CREATE TRIGGER users_row_biu_trigger
-	BEFORE INSERT OR UPDATE
-	ON users
-	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_biu();
 
 CREATE TRIGGER users_row_ai_trigger
 	AFTER INSERT

@@ -1,4 +1,4 @@
-INSERT INTO users (email, password, role) VALUES ('klapuchdominik@gmail.com', '$argon2i$v=19$m=131072,t=4,p=4$ZEhjRjVaYzYuYkg2VUQwcQ$EuRHYiI+7NJoVtkcdbPTh4QUHxWw7FOncPphl18ZGq4', 'admin'); -- heslo123
+INSERT INTO users (username, email, password, role) VALUES ('klapuch', 'klapuchdominik@gmail.com', '$argon2i$v=19$m=131072,t=4,p=4$ZEhjRjVaYzYuYkg2VUQwcQ$EuRHYiI+7NJoVtkcdbPTh4QUHxWw7FOncPphl18ZGq4', 'admin'); -- heslo123
 UPDATE access.verification_codes SET used_at = now() WHERE user_id = 1;
 
 INSERT INTO "references" (url) VALUES ('https://wikipedia.org/wiki/PHP');

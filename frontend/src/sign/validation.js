@@ -5,10 +5,12 @@ import type { PostedCredentialsType, ErrorCredentialsType } from './types';
 
 const UNKNOWN = 'UNKNOWN';
 
-type FieldType = 'email'|'password';
+type FieldType = 'login'|'password';
 
 export const errors = memoize((credentials: PostedCredentialsType): ErrorCredentialsType => ({
-  email: validation.email(credentials.email),
+  login: credentials.login.includes('@')
+    ? validation.email(credentials.login)
+    : validation.username(credentials.login),
   password: validation.password(credentials.password),
 }));
 
@@ -17,10 +19,11 @@ export const anyErrors = (credentials: PostedCredentialsType): boolean => (
 );
 
 export const toMessage = (errors: ErrorCredentialsType, field: FieldType) => ({
-  email: {
-    REQUIRED: 'E-mail je povinný',
+  login: {
+    REQUIRED: 'Uživatelské jméno nebo email je povinný',
     NOT_EMAIL: 'E-mail není platný',
-    UNKNOWN: 'Email není platný',
+    NOT_USERNAME: 'Uživatelské jméno není platné',
+    UNKNOWN: 'Uživatelské jméno nebo email není platný',
   },
   password: {
     REQUIRED: 'Heslo je povinné',

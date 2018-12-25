@@ -26,7 +26,7 @@ final class PostTest extends TestCase\Runtime {
 		$response = (new Endpoint\Tokens\Post(
 			new Application\FakeRequest(
 				new Output\FakeFormat(
-					json_encode(['email' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
+					json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
 				)
 			),
 			$this->connection,
@@ -47,15 +47,15 @@ final class PostTest extends TestCase\Runtime {
 				$this->connection,
 				new Encryption\FakeCipher(true)
 			))->response([]);
-		}, \UnexpectedValueException::class, 'The property email is required');
+		}, \UnexpectedValueException::class, 'The property login is required');
 	}
 
-	public function test403OnUnknownEmail(): void {
+	public function test403OnUnknownLogin(): void {
 		Assert::exception(function () {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						json_encode(['email' => 'foo@baz.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
+						json_encode(['login' => 'foo@baz.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
 					)
 				),
 				$this->connection,
@@ -71,7 +71,7 @@ final class PostTest extends TestCase\Runtime {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						json_encode(['email' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
+						json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
 					)
 				),
 				$this->connection,
@@ -86,7 +86,7 @@ final class PostTest extends TestCase\Runtime {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						json_encode(['email' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
+						json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
 					)
 				),
 				$this->connection,
