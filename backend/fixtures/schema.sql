@@ -24,6 +24,7 @@ CREATE SCHEMA constant;
 CREATE FUNCTION constant.guest_id() RETURNS integer AS $$SELECT 0$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $$SELECT ARRAY[-1, 0, 1];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.theme_tags_limit() RETURNS integer AS $$SELECT 4;$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member'];$$ LANGUAGE sql IMMUTABLE;
 
 
@@ -216,6 +217,20 @@ CREATE TABLE theme_tags (
 	CONSTRAINT theme_tags_tag_id FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT theme_tags_theme_id_tag_id UNIQUE (theme_id, tag_id)
 );
+
+CREATE FUNCTION theme_tags_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+    IF ((SELECT count(*) >= constant.theme_tags_limit() FROM theme_tags WHERE theme_id = new.theme_id)) THEN
+		RAISE EXCEPTION USING MESSAGE = format('There can be only %s tags per theme', constant.theme_tags_limit());
+	END IF;
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER theme_tags_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON theme_tags
+	FOR EACH ROW EXECUTE PROCEDURE theme_tags_trigger_row_biu();
 
 
 CREATE TABLE sources (
