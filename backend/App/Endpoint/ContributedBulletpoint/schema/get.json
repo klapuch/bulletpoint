@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "source": {
+            "type": "object",
+            "properties": {
+                "link": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "head",
+                        "web"
+                    ]
+                }
+            },
+            "required": [
+                "link",
+                "type"
+            ]
+        },
+        "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+        },
+        "theme_id": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "id",
+        "source",
+        "content",
+        "theme_id"
+    ],
+    "type": "object"
+}

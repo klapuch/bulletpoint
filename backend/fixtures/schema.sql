@@ -300,6 +300,46 @@ CREATE TRIGGER sources_row_biu_trigger
 	ON sources
 	FOR EACH ROW EXECUTE PROCEDURE sources_trigger_row_biu();
 
+CREATE TABLE contributed_bulletpoints (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	theme_id integer NOT NULL,
+	source_id integer NOT NULL,
+	user_id integer NOT NULL,
+	content character varying(255) NOT NULL,
+	created_at timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT bulletpoints_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE FUNCTION contributed_bulletpoints_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+	new.content = nullif(new.content, '');
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE FUNCTION contributed_bulletpoints_trigger_row_ad() RETURNS trigger AS $BODY$
+	DECLARE
+		r contributed_bulletpoints;
+BEGIN
+	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
+	DELETE FROM sources WHERE id = r.source_id;
+
+	RETURN r;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER contributed_bulletpoints_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON contributed_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE contributed_bulletpoints_trigger_row_biu();
+
+CREATE TRIGGER contributed_bulletpoints_row_ad_trigger
+	AFTER DELETE
+	ON contributed_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE contributed_bulletpoints_trigger_row_ad();
+
 
 CREATE TABLE bulletpoints (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -309,7 +349,7 @@ CREATE TABLE bulletpoints (
 	content character varying(255) NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
 	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
-	CONSTRAINT bulletpoint_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
+	CONSTRAINT bulletpoints_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
 
 CREATE TRIGGER bulletpoints_audit_trigger
@@ -333,6 +373,17 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE FUNCTION bulletpoints_trigger_row_ad() RETURNS trigger AS $BODY$
+	DECLARE
+		r bulletpoints;
+BEGIN
+	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
+	DELETE FROM sources WHERE id = r.source_id;
+
+	RETURN r;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
 CREATE TRIGGER bulletpoints_row_ai_trigger
 	AFTER INSERT
 	ON bulletpoints
@@ -342,6 +393,11 @@ CREATE TRIGGER bulletpoints_row_biu_trigger
 	BEFORE INSERT OR UPDATE
 	ON bulletpoints
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_biu();
+
+CREATE TRIGGER bulletpoints_row_ad_trigger
+	AFTER DELETE
+	ON bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_ad();
 
 
 CREATE TABLE bulletpoint_reputations (
@@ -407,19 +463,20 @@ CREATE TRIGGER bulletpoint_ratings_row_aiud_trigger
 
 -- views
 CREATE VIEW public_themes AS
+	WITH json_tags AS (
+		SELECT theme_id, jsonb_agg(tags.*) AS tags
+		FROM theme_tags
+		JOIN tags ON tags.id = theme_tags.tag_id
+		GROUP BY theme_id
+	)
 	SELECT
-		themes.id, themes.name, tags.tags, themes.created_at,
+		themes.id, themes.name, json_tags.tags, themes.created_at,
 		"references".url AS reference_url,
 		users.id AS user_id
 	FROM themes
 	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id
-	LEFT JOIN (
-		SELECT theme_id, jsonb_agg(tags.*) AS tags
-		FROM theme_tags
-		JOIN tags ON tags.id = theme_tags.tag_id
-		GROUP BY theme_id
-	) AS tags ON tags.theme_id = themes.id;
+	LEFT JOIN json_tags ON json_tags.theme_id = themes.id;
 
 CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
 	DECLARE v_theme_id integer;
@@ -517,8 +574,7 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 CREATE FUNCTION public_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
 BEGIN
 	WITH updated_bulletpoint AS (
-		UPDATE bulletpoints SET content = new.content WHERE id = new.id
-		RETURNING *
+		UPDATE bulletpoints SET content = new.content WHERE id = new.id RETURNING *
 	)
 	UPDATE sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
 	RETURN new;
@@ -533,6 +589,24 @@ CREATE TRIGGER public_bulletpoints_trigger_row_ii
 CREATE TRIGGER public_bulletpoints_trigger_row_iu
 	INSTEAD OF UPDATE
 	ON public_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_iu();
+
+
+CREATE VIEW public_contributed_bulletpoints AS
+SELECT
+	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id,
+	sources.link AS source_link, sources.type AS source_type
+	FROM contributed_bulletpoints
+	LEFT JOIN sources ON sources.id = contributed_bulletpoints.source_id;
+
+CREATE TRIGGER public_contributed_bulletpoints_trigger_row_ii
+	INSTEAD OF INSERT
+	ON public_contributed_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_ii();
+
+CREATE TRIGGER public_contributed_bulletpoints_trigger_row_iu
+	INSTEAD OF UPDATE
+	ON public_contributed_bulletpoints
 	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_iu();
 
 

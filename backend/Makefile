@@ -3,7 +3,6 @@
 
 PHPCS_CACHE_DIR := /tmp/cache
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --cache=$(PHPCS_CACHE_DIR)/phpcs --tab-width=4 -sp App Tests
-PHPCPD_ARGS := App --exclude Endpoint/ --exclude Sql/ --exclude Task/ --names-exclude=CompleteDescription.php
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
 CHECK_TEST_EXTENSIONS := find Tests/Integration/ -name '*.php' | grep -v '\Test.php$$'
 
@@ -16,9 +15,6 @@ help:               ## help
 
 lint:               ## lint
 	vendor/bin/parallel-lint -e php,phpt App Tests
-
-phpcpd:             ## phpcpd
-	vendor/bin/phpcpd $(PHPCPD_ARGS)
 
 phpstan:            ## phpstan
 	vendor/bin/phpstan analyse -l max -c phpstan.neon App

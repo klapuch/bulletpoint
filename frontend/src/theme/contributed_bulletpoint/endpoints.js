@@ -1,13 +1,14 @@
 // @flow
 import axios from 'axios';
-import {invalidatedAll, receivedAll, receivedUpdateSingle, requestedAll, requestedUpdateSingle} from './actions';
+import { invalidatedAll, receivedAll, requestedAll } from './actions';
 import { fetchedAll } from './selects';
 import type { PostedBulletpointType } from './types';
+import {receivedUpdateSingle, requestedUpdateSingle} from "../bulletpoint/actions";
 
 export const all = (theme: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedAll(theme, getState())) return;
   dispatch(requestedAll(theme));
-  axios.get(`/themes/${theme}/bulletpoints`)
+  axios.get(`/themes/${theme}/contributed_bulletpoints`)
     .then(response => dispatch(receivedAll(theme, response.data)));
 };
 
@@ -16,7 +17,7 @@ export const add = (
   bulletpoint: PostedBulletpointType,
   next: (void) => (void),
 ) => (dispatch: (mixed) => Object) => {
-  axios.post(`/themes/${theme}/bulletpoints`, bulletpoint)
+  axios.post(`/themes/${theme}/contributed_bulletpoints`, bulletpoint)
     .then(() => dispatch(invalidatedAll(theme)))
     .then(next);
 };
@@ -27,7 +28,7 @@ export const edit = (
   bulletpoint: PostedBulletpointType,
   next: (void) => (void),
 ) => (dispatch: (mixed) => Object) => {
-  axios.put(`/bulletpoints/${id}`, bulletpoint)
+  axios.put(`/contributed_bulletpoints/${id}`, bulletpoint)
     .then(() => dispatch(invalidatedAll(theme)))
     .then(next);
 };
@@ -37,7 +38,7 @@ export const updateSingle = (
   bulletpoint: number,
 ) => (dispatch: (mixed) => Object) => {
   requestedUpdateSingle(theme, bulletpoint);
-  axios.get(`/bulletpoints/${bulletpoint}`)
+  axios.get(`/contributed_bulletpoints/${bulletpoint}`)
     .then(response => response.data)
     .then(payload => dispatch(receivedUpdateSingle(payload)));
 };

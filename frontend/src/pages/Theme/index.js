@@ -4,9 +4,11 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
 import SlugRedirect from '../../router/SlugRedirect';
 import { single } from '../../theme/endpoints';
-import { all, add, edit } from '../../theme/bulletpoint/endpoints';
+import { all as allBulletpoints, add, edit } from '../../theme/bulletpoint/endpoints';
+import { all as allContributedBulletpoints } from '../../theme/contributed_bulletpoint/endpoints';
 import { rate } from '../../theme/bulletpoint/rating/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
 import * as user from '../../user';
@@ -15,6 +17,11 @@ import {
   getByTheme as getThemeBulletpoints,
   getById as getBulletpointById,
 } from '../../theme/bulletpoint/selects';
+import {
+  allFetching as fetchingAllThemeContributedBulletpoints,
+  getByTheme as getThemeContributedBulletpoints,
+  getById as getContributedBulletpointById,
+} from '../../theme/contributed_bulletpoint/selects';
 import Loader from '../../ui/Loader';
 import Form from '../../bulletpoint/Form';
 import Tags from '../../theme/components/Tags';
@@ -81,6 +88,7 @@ class Theme extends React.Component<Props, State> {
     const { match: { params: { id } } } = this.props;
     this.props.fetchTheme(id);
     this.props.fetchBulletpoints(id);
+    this.props.fetchContributedBulletpoints(id);
   };
 
   handleRatingChange = (bulletpointId: number, point: PointType) => {
@@ -106,7 +114,7 @@ class Theme extends React.Component<Props, State> {
   handleCancelClick = () => this.setState(initState);
 
   render() {
-    const { theme, fetching, bulletpoints } = this.props;
+    const { theme, fetching, bulletpoints, contributedBulletpoints } = this.props;
     if (fetching) {
       return <Loader />;
     }
@@ -133,6 +141,16 @@ class Theme extends React.Component<Props, State> {
               onRatingChange={this.handleRatingChange}
               onEditClick={this.handleEditClick}
             />
+            {!isEmpty(contributedBulletpoints) && (
+              <>
+                <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
+                <AllBulletpoints
+                  bulletpoints={contributedBulletpoints}
+                  onRatingChange={() => {}}
+                  onEditClick={this.handleEditClick}
+                />
+              </>
+            )}
             {user.isAdmin() && (
               <Form
                 bulletpoint={this.state.bulletpoint}
@@ -153,8 +171,12 @@ class Theme extends React.Component<Props, State> {
 const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
   theme: getById(theme, state),
   bulletpoints: getThemeBulletpoints(theme, state),
-  fetching: themeFetching(theme, state) || fetchingAllThemeBulletpoints(theme, state),
+  contributedBulletpoints: getThemeContributedBulletpoints(theme, state),
+  fetching: themeFetching(theme, state)
+    || fetchingAllThemeBulletpoints(theme, state)
+    || fetchingAllThemeContributedBulletpoints(theme, state),
   getBulletpointById: (bulletpoint: number) => getBulletpointById(theme, bulletpoint, state),
+  getContributedBulletpointById: (bulletpoint: number) => getContributedBulletpointById(theme, bulletpoint, state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchTheme: (theme: number) => dispatch(single(theme)),
@@ -169,7 +191,8 @@ const mapDispatchToProps = dispatch => ({
     bulletpoint: PostedBulletpointType,
     next: (void) => (void),
   ) => dispatch(edit(theme, bulletpointId, bulletpoint, next)),
-  fetchBulletpoints: (theme: number) => dispatch(all(theme)),
+  fetchBulletpoints: (theme: number) => dispatch(allBulletpoints(theme)),
+  fetchContributedBulletpoints: (theme: number) => dispatch(allContributedBulletpoints(theme)),
   changeRating: (
     theme: number,
     bulletpoint: number,

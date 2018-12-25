@@ -50,13 +50,13 @@ final class ApplicationRoutes implements Routing\Routes {
 			'themes/{id} [PUT]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Theme\Put($request, $this->connection),
-					new Http\ChosenRole($user, ['member', 'admin'])
+					new Http\ChosenRole($user, ['admin'])
 				);
 			},
 			'themes [POST]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Themes\Post($request, $this->connection, $user, $this->url),
-					new Http\ChosenRole($user, ['member', 'admin'])
+					new Http\ChosenRole($user, ['admin'])
 				);
 			},
 			'themes [GET]' => function(): Application\View {
@@ -68,9 +68,18 @@ final class ApplicationRoutes implements Routing\Routes {
 			'themes/{theme_id}/bulletpoints [GET]' => function(): Application\View {
 				return new Endpoint\Theme\Bulletpoints\Get($this->connection);
 			},
+			'themes/{theme_id}/contributed_bulletpoints [GET]' => function() use ($user): Application\View {
+				return new Endpoint\Theme\ContributedBulletpoints\Get($this->connection, $user);
+			},
 			'themes/{theme_id}/bulletpoints [POST]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Theme\Bulletpoints\Post($request, $this->connection, $user),
+					new Http\ChosenRole($user, ['admin'])
+				);
+			},
+			'themes/{theme_id}/contributed_bulletpoints [POST]' => function() use ($user, $request): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Theme\ContributedBulletpoints\Post($request, $this->connection, $user),
 					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
@@ -80,6 +89,15 @@ final class ApplicationRoutes implements Routing\Routes {
 			'bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Bulletpoint\Put($request, $this->connection),
+					new Http\ChosenRole($user, ['admin'])
+				);
+			},
+			'contributed_bulletpoints/{id} [GET]' => function() use ($user): Application\View {
+				return new Endpoint\ContributedBulletpoint\Get($this->connection, $user);
+			},
+			'contributed_bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\ContributedBulletpoint\Put($request, $this->connection, $user),
 					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
