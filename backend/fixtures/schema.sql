@@ -34,13 +34,13 @@ CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_r
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 
 -- schema audit
-CREATE TYPE audit.operation AS ENUM ('INSERT', 'UPDATE', 'DELETE');
+CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
 
 
 CREATE TABLE audit.history (
 	id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	"table" text NOT NULL,
-	operation audit.operation NOT NULL,
+	operation operations NOT NULL,
 	changed_at timestamp with time zone NOT NULL DEFAULT now(),
 	user_id integer,
 	old jsonb,
@@ -167,6 +167,31 @@ CREATE TRIGGER users_row_ai_trigger
 	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_ai();
 
 
+CREATE TABLE user_tag_reputations (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	user_id integer NOT NULL,
+	tag_id integer NOT NULL,
+	reputation integer NOT NULL DEFAULT 0,
+	CONSTRAINT user_tag_reputations_reputation_positive CHECK (reputation >= 0),
+	CONSTRAINT user_tag_reputations_user_id_tag_id UNIQUE (user_id, tag_id),
+	CONSTRAINT user_log_reputations_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT user_log_reputations_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+
+CREATE FUNCTION update_user_tag_reputation(in_user_id integer, in_tag_id integer, in_point bulletpoint_ratings_point) RETURNS void AS $BODY$
+BEGIN
+	IF in_point = 1 THEN
+		INSERT INTO user_tag_reputations (user_id, tag_id, reputation) VALUES (in_user_id, in_tag_id, 1)
+		ON CONFLICT (user_id, tag_id) DO UPDATE SET reputation = EXCLUDED.reputation + 1;
+	ELSE
+		UPDATE user_tag_reputations SET reputation = greatest(reputation - 1, 0)
+		WHERE user_id = in_user_id AND tag_id = in_tag_id;
+	END IF;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+
 CREATE TABLE access.forgotten_passwords (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	user_id integer NOT NULL,
@@ -233,7 +258,7 @@ CREATE TABLE theme_tags (
 
 CREATE FUNCTION theme_tags_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
-    IF ((SELECT count(*) >= constant.theme_tags_limit() FROM theme_tags WHERE theme_id = new.theme_id)) THEN
+	IF ((SELECT count(*) >= constant.theme_tags_limit() FROM theme_tags WHERE theme_id = new.theme_id)) THEN
 		RAISE EXCEPTION USING MESSAGE = format('There can be only %s tags per theme', constant.theme_tags_limit());
 	END IF;
 	RETURN new;
@@ -327,6 +352,25 @@ CREATE TABLE bulletpoint_ratings (
 	CONSTRAINT bulletpoint_ratings_user_id_bulletpoint_id UNIQUE (user_id, bulletpoint_id)
 );
 
+CREATE FUNCTION bulletpoint_ratings_trigger_row_aiud() RETURNS trigger AS $$
+	DECLARE
+		r bulletpoint_ratings;
+BEGIN
+	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
+	PERFORM update_user_tag_reputation(bulletpoints.user_id, theme_tags.tag_id, r.point)
+	FROM bulletpoints
+	JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id
+	WHERE bulletpoints.id = r.bulletpoint_id;
+
+	RETURN r;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER bulletpoint_ratings_row_aiud_trigger
+	AFTER INSERT OR UPDATE OR DELETE
+	ON bulletpoint_ratings
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoint_ratings_trigger_row_aiud();
+
 
 -- views
 CREATE VIEW public_themes AS
@@ -366,7 +410,7 @@ CREATE FUNCTION public_themes_trigger_row_iu() RETURNS trigger AS $BODY$
 	DECLARE
 		v_theme themes;
 		v_current_tags integer[];
-	    v_new_tags integer[];
+		v_new_tags integer[];
 BEGIN
 	UPDATE themes SET name = new.name WHERE id = new.id RETURNING * INTO v_theme;
 	UPDATE "references" SET url = new.reference_url WHERE id = v_theme.reference_id;
@@ -421,7 +465,20 @@ CREATE VIEW public_bulletpoints AS
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
 	JOIN users ON users.id = bulletpoints.user_id
 	LEFT JOIN sources ON sources.id = bulletpoints.source_id
-	ORDER BY total_rating DESC, length(bulletpoints.content) ASC, created_at DESC, id DESC;
+	LEFT JOIN (
+		SELECT user_tag_reputations.reputation, bulletpoint_tags.id FROM (
+			SELECT bulletpoints.id, bulletpoints.user_id, array_agg(theme_tags.tag_id) AS tag_ids
+			FROM bulletpoints
+			JOIN themes ON themes.id = bulletpoints.theme_id
+			JOIN theme_tags ON theme_tags.theme_id = themes.id
+			GROUP BY bulletpoints.id
+		) AS bulletpoint_tags, LATERAL (
+			SELECT sum(reputation) AS reputation
+			FROM user_tag_reputations
+			WHERE user_id = bulletpoint_tags.user_id AND tag_id = ANY(bulletpoint_tags.tag_ids)
+		) AS user_tag_reputations
+	) AS bulletpoint_reputations ON bulletpoint_reputations.id = bulletpoints.id
+	ORDER BY total_rating DESC, bulletpoint_reputations.reputation DESC, length(bulletpoints.content) ASC, created_at DESC, id DESC;
 
 CREATE FUNCTION public_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
