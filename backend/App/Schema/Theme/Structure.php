@@ -3,7 +3,16 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Schema\Theme;
 
+use Klapuch\Storage;
+
 final class Structure {
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
+
+	public function __construct(Storage\Connection $connection) {
+		$this->connection = $connection;
+	}
+
 	public function get(): array {
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
@@ -21,7 +30,11 @@ final class Structure {
 						],
 					],
 				],
-				'name' => ['type' => 'string'],
+				'name' => [
+					'type' => 'string',
+					'minLength' => 1,
+					'maxLength' => 255,
+				],
 				'reference' => [
 					'type' => 'object',
 					'properties' => ['url' => ['type' => 'string']],
@@ -42,8 +55,14 @@ final class Structure {
 				'tags' => [
 					'type' => 'array',
 					'items' => ['type' => 'number'],
+					'minItems' => 1,
+					'maxItems' => (new Storage\NativeQuery($this->connection, 'SELECT constant.theme_tags_limit()'))->field(),
 				],
-				'name' => ['type' => 'string'],
+				'name' => [
+					'type' => 'string',
+					'minLength' => 1,
+					'maxLength' => 255,
+				],
 				'reference' => [
 					'type' => 'object',
 					'properties' => ['url' => ['type' => 'string']],

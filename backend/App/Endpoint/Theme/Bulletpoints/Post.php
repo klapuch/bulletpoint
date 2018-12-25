@@ -10,6 +10,7 @@ use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Internal;
 use Klapuch\Storage;
+use Klapuch\Validation;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -38,8 +39,9 @@ final class Post implements Application\View {
 			$this->connection,
 			$this->user
 		))->add(
-			(new Constraint\StructuredJson(
-				new \SplFileInfo(self::SCHEMA)
+			(new Validation\ChainedRule(
+				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+				new Constraint\BulletpointRule(),
 			))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
 		);
 		return new Response\EmptyResponse();

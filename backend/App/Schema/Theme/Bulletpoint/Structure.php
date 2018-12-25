@@ -46,7 +46,11 @@ final class Structure {
 					],
 					'required' => ['up', 'down', 'total', 'user'],
 				],
-				'content' => ['type' => 'string'],
+				'content' => [
+					'type' => 'string',
+					'minLength' => 1,
+					'maxLength' => 255,
+				],
 				'theme_id' => ['type' => 'number'],
 			],
 			'required' => ['id', 'source', 'user_id', 'rating', 'content', 'theme_id'],
@@ -59,7 +63,11 @@ final class Structure {
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
 			'properties' => [
-				'content' => ['type' => 'string'],
+				'content' => [
+					'type' => 'string',
+					'minLength' => 1,
+					'maxLength' => 255,
+				],
 				'source' => [
 					'type' => 'object',
 					'properties' => [

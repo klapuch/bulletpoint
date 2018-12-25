@@ -6,10 +6,14 @@
             "type": "array",
             "items": {
                 "type": "number"
-            }
+            },
+            "minItems": 1,
+            "maxItems": 4
         },
         "name": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
         },
         "reference": {
             "type": "object",

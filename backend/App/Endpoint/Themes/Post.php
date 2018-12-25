@@ -13,6 +13,7 @@ use Klapuch\Internal;
 use Klapuch\Storage;
 use Klapuch\Uri\RelativeUrl;
 use Klapuch\Uri\Uri;
+use Klapuch\Validation;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -49,8 +50,9 @@ final class Post implements Application\View {
 						$this->user,
 						$this->connection
 					))->create(
-						(new Constraint\StructuredJson(
-							new \SplFileInfo(self::SCHEMA)
+						(new Validation\ChainedRule(
+							new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
+							new Constraint\ThemeRule(),
 						))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
 					),
 				]
