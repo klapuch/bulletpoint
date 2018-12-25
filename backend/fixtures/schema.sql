@@ -25,7 +25,7 @@ CREATE FUNCTION constant.guest_id() RETURNS integer AS $$SELECT 0$$ LANGUAGE sql
 CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $$SELECT ARRAY[-1, 0, 1];$$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.theme_tags_limit() RETURNS integer AS $$SELECT 4;$$ LANGUAGE sql IMMUTABLE;
-CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member'];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member', 'admin'];$$ LANGUAGE sql IMMUTABLE;
 
 
 -- domains
