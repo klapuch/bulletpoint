@@ -178,6 +178,30 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE FUNCTION user_tag_reputations_trigger_row_aiud() RETURNS trigger AS $$
+	DECLARE
+		r user_tag_reputations;
+BEGIN
+	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
+
+	INSERT INTO bulletpoint_reputations (bulletpoint_id, reputation)
+		SELECT bulletpoints.id, sum(user_tag_reputations.reputation)
+		FROM user_tag_reputations
+		JOIN theme_tags ON user_tag_reputations.tag_id = theme_tags.tag_id
+		JOIN bulletpoints ON bulletpoints.theme_id = theme_tags.theme_id
+		WHERE bulletpoints.user_id = r.user_id
+		GROUP BY bulletpoints.id
+	ON CONFLICT (bulletpoint_id) DO UPDATE SET reputation = EXCLUDED.reputation;
+
+	RETURN r;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER user_tag_reputations_row_aiud_trigger
+	AFTER INSERT OR UPDATE OR DELETE
+	ON user_tag_reputations
+	FOR EACH ROW EXECUTE PROCEDURE user_tag_reputations_trigger_row_aiud();
+
 
 CREATE TABLE access.forgotten_passwords (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -328,6 +352,15 @@ CREATE TRIGGER bulletpoints_row_biu_trigger
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_biu();
 
 
+CREATE TABLE bulletpoint_reputations (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	bulletpoint_id integer NOT NULL UNIQUE,
+	reputation integer NOT NULL DEFAULT 0,
+	CONSTRAINT bulletpoint_reputations_reputation_positive CHECK (reputation >= 0),
+	CONSTRAINT bulletpoint_reputations_bulletpoint_id_fkey FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+
 CREATE TABLE bulletpoint_ratings (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	point bulletpoint_ratings_point NOT NULL,
@@ -344,6 +377,7 @@ CREATE FUNCTION bulletpoint_ratings_trigger_row_aiud() RETURNS trigger AS $$
 		r bulletpoint_ratings;
 BEGIN
 	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
+
 	PERFORM update_user_tag_reputation(bulletpoints.user_id, theme_tags.tag_id, r.point)
 	FROM bulletpoints
 	JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id
@@ -450,19 +484,7 @@ CREATE VIEW public_bulletpoints AS
 		FROM bulletpoint_ratings
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
 	LEFT JOIN sources ON sources.id = bulletpoints.source_id
-	LEFT JOIN (
-		SELECT user_tag_reputations.reputation, bulletpoint_tags.id FROM (
-			SELECT bulletpoints.id, bulletpoints.user_id, array_agg(theme_tags.tag_id) AS tag_ids
-			FROM bulletpoints
-			JOIN themes ON themes.id = bulletpoints.theme_id
-			JOIN theme_tags ON theme_tags.theme_id = themes.id
-			GROUP BY bulletpoints.id
-		) AS bulletpoint_tags, LATERAL (
-			SELECT sum(reputation) AS reputation
-			FROM user_tag_reputations
-			WHERE user_id = bulletpoint_tags.user_id AND tag_id = ANY(bulletpoint_tags.tag_ids)
-		) AS user_tag_reputations
-	) AS bulletpoint_reputations ON bulletpoint_reputations.id = bulletpoints.id
+	LEFT JOIN bulletpoint_reputations ON bulletpoint_reputations.bulletpoint_id = bulletpoints.id
 	ORDER BY total_rating DESC, bulletpoint_reputations.reputation DESC, length(bulletpoints.content) ASC, created_at DESC, id DESC;
 
 CREATE FUNCTION public_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
