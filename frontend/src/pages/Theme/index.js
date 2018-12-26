@@ -9,7 +9,7 @@ import { single } from '../../theme/endpoints';
 import { all, add, edit } from '../../theme/bulletpoint/endpoints';
 import { rate } from '../../theme/bulletpoint/rating/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
-import * as session from '../../access/session';
+import * as user from '../../user';
 import {
   allFetching as fetchingAllThemeBulletpoints,
   getByTheme as getThemeBulletpoints,
@@ -117,7 +117,7 @@ class Theme extends React.Component<Props, State> {
           <Title>{theme.name}</Title>
           <Reference url={theme.reference.url} />
           {
-            session.exists() && (
+            user.isAdmin() && (
               <Link to={`/themes/${theme.id}/change`}>
                 <EditButton className="glyphicon glyphicon-pencil" aria-hidden="true" />
               </Link>
@@ -133,7 +133,7 @@ class Theme extends React.Component<Props, State> {
               onRatingChange={this.handleRatingChange}
               onEditClick={this.handleEditClick}
             />
-            {session.exists() && (
+            {user.isAdmin() && (
               <Form
                 bulletpoint={this.state.bulletpoint}
                 onAddClick={this.handleAddClick}

@@ -11,21 +11,14 @@ import combineReducers from './reducers';
 import * as serviceWorker from './serviceWorker';
 import withSettings from './api/connection';
 import * as session from './access/session';
-import { refresh } from './token/endpoints';
+import { reSignIn } from './sign/endpoints';
 
 axios.defaults = withSettings(axios.defaults);
 
 const history = createBrowserHistory();
 history.listen((location) => {
   if (session.exists() && session.expired()) {
-    refresh(
-      session.getValue(),
-      data => session.start({ value: data.token, expiration: data.expiration }),
-      () => {
-        session.destroy();
-        history.push('/sign/in', { state: { from: location } });
-      },
-    );
+    reSignIn(session.getValue(), () => history.push('/sign/in', { state: { from: location } }));
   }
 });
 
