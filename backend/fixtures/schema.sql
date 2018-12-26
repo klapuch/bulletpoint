@@ -161,8 +161,8 @@ CREATE TABLE user_tag_reputations (
 	reputation integer NOT NULL DEFAULT 0,
 	CONSTRAINT user_tag_reputations_reputation_positive CHECK (reputation >= 0),
 	CONSTRAINT user_tag_reputations_user_id_tag_id UNIQUE (user_id, tag_id),
-	CONSTRAINT user_log_reputations_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT,
-	CONSTRAINT user_log_reputations_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE RESTRICT
+	CONSTRAINT user_tag_reputations_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT user_tag_reputations_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
