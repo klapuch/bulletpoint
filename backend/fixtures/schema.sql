@@ -165,7 +165,6 @@ CREATE TABLE user_tag_reputations (
 	CONSTRAINT user_tag_reputations_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-
 CREATE FUNCTION update_user_tag_reputation(in_user_id integer, in_tag_id integer, in_point bulletpoint_ratings_point) RETURNS void AS $BODY$
 BEGIN
 	IF in_point = 1 THEN
@@ -177,30 +176,6 @@ BEGIN
 	END IF;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
-
-CREATE FUNCTION user_tag_reputations_trigger_row_aiud() RETURNS trigger AS $$
-	DECLARE
-		r user_tag_reputations;
-BEGIN
-	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
-
-	INSERT INTO bulletpoint_reputations (bulletpoint_id, reputation)
-		SELECT bulletpoints.id, sum(user_tag_reputations.reputation)
-		FROM user_tag_reputations
-		JOIN theme_tags ON user_tag_reputations.tag_id = theme_tags.tag_id
-		JOIN bulletpoints ON bulletpoints.theme_id = theme_tags.theme_id
-		WHERE bulletpoints.user_id = r.user_id
-		GROUP BY bulletpoints.id
-	ON CONFLICT (bulletpoint_id) DO UPDATE SET reputation = EXCLUDED.reputation;
-
-	RETURN r;
-END;
-$$ LANGUAGE plpgsql VOLATILE;
-
-CREATE TRIGGER user_tag_reputations_row_aiud_trigger
-	AFTER INSERT OR UPDATE OR DELETE
-	ON user_tag_reputations
-	FOR EACH ROW EXECUTE PROCEDURE user_tag_reputations_trigger_row_aiud();
 
 
 CREATE TABLE access.forgotten_passwords (
@@ -276,10 +251,27 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE FUNCTION theme_tags_trigger_row_ad() RETURNS trigger AS $$
+BEGIN
+	PERFORM update_user_tag_reputation(bulletpoints.user_id, old.tag_id, -1::bulletpoint_ratings_point)
+	FROM bulletpoints
+	JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id;
+
+	PERFORM update_bulletpoint_reputation();
+
+	RETURN old;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
 CREATE TRIGGER theme_tags_row_biu_trigger
 	BEFORE INSERT OR UPDATE
 	ON theme_tags
 	FOR EACH ROW EXECUTE PROCEDURE theme_tags_trigger_row_biu();
+
+CREATE TRIGGER theme_tags_row_ad_trigger
+	AFTER DELETE
+	ON theme_tags
+	FOR EACH ROW EXECUTE PROCEDURE theme_tags_trigger_row_ad();
 
 
 CREATE TABLE sources (
@@ -360,6 +352,24 @@ CREATE TABLE bulletpoint_reputations (
 	CONSTRAINT bulletpoint_reputations_bulletpoint_id_fkey FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+CREATE FUNCTION update_bulletpoint_reputation() RETURNS void AS $BODY$
+BEGIN
+	INSERT INTO bulletpoint_reputations (bulletpoint_id, reputation)
+		SELECT bulletpoint_tags.id, user_tag_reputations.reputation FROM (
+			SELECT bulletpoints.id, bulletpoints.user_id, array_agg(theme_tags.tag_id) AS tag_ids
+			FROM bulletpoints
+			JOIN themes ON themes.id = bulletpoints.theme_id
+			JOIN theme_tags ON theme_tags.theme_id = themes.id
+			GROUP BY bulletpoints.id
+		) AS bulletpoint_tags, LATERAL (
+			SELECT sum(reputation) AS reputation
+			FROM user_tag_reputations
+			WHERE user_id = bulletpoint_tags.user_id AND tag_id = ANY(bulletpoint_tags.tag_ids)
+		) AS user_tag_reputations
+	ON CONFLICT (bulletpoint_id) DO UPDATE SET reputation = EXCLUDED.reputation;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
 
 CREATE TABLE bulletpoint_ratings (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -382,6 +392,8 @@ BEGIN
 	FROM bulletpoints
 	JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id
 	WHERE bulletpoints.id = r.bulletpoint_id;
+
+	PERFORM update_bulletpoint_reputation();
 
 	RETURN r;
 END;

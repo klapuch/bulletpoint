@@ -1,4 +1,0 @@
-CREATE FUNCTION tests.test() RETURNS void AS $BODY$
-BEGIN
-	PERFORM assert.same(1, 1);
-END $BODY$ LANGUAGE plpgsql VOLATILE;
