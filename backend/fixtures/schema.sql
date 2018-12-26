@@ -436,8 +436,8 @@ BEGIN
 	UPDATE themes SET name = new.name WHERE id = new.id RETURNING * INTO v_theme;
 	UPDATE "references" SET url = new.reference_url WHERE id = v_theme.reference_id;
 
-	SELECT array_agg(tag_id) INTO v_current_tags FROM theme_tags WHERE theme_id = v_theme.id;
-	SELECT array_agg(r.tag::integer) INTO v_new_tags FROM jsonb_array_elements(new.tags) AS r(tag);
+	v_current_tags = array_agg(tag_id) FROM theme_tags WHERE theme_id = v_theme.id;
+	v_new_tags = array_agg(r.tag::integer) FROM jsonb_array_elements(new.tags) AS r(tag);
 
 	IF (array_equals(v_current_tags, v_new_tags) IS FALSE) THEN
 		DELETE FROM theme_tags WHERE theme_id = v_theme.id;
