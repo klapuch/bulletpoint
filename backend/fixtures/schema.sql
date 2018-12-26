@@ -434,12 +434,11 @@ CREATE VIEW tagged_themes AS
 
 CREATE VIEW public_bulletpoints AS
 	SELECT
-		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id,
+		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id,
 		sources.link AS source_link, sources.type AS source_type,
 			bulletpoint_ratings.up AS up_rating,
 			abs(bulletpoint_ratings.down) AS down_rating,
 			(bulletpoint_ratings.up + bulletpoint_ratings.down) AS total_rating,
-		users.id AS user_id,
 		bulletpoint_ratings.user_rating
 	FROM bulletpoints
 	JOIN (
@@ -450,7 +449,6 @@ CREATE VIEW public_bulletpoints AS
 			CASE WHEN user_id = globals_get_user() THEN point ELSE 0 END AS user_rating
 		FROM bulletpoint_ratings
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
-	JOIN users ON users.id = bulletpoints.user_id
 	LEFT JOIN sources ON sources.id = bulletpoints.source_id
 	LEFT JOIN (
 		SELECT user_tag_reputations.reputation, bulletpoint_tags.id FROM (
