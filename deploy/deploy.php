@@ -45,6 +45,7 @@ task('nginx:config:move', static function (): void {
 	run('cp {{release_path}}/docker/nginx/preflight_headers.conf /etc/nginx/preflight_headers.conf');
 	run('cp {{release_path}}/docker/nginx/routes.conf /etc/nginx/routes.conf');
 	run('cp {{release_path}}/docker/nginx/security_headers.conf /etc/nginx/security_headers.conf');
+	run('cp {{release_path}}/docker/nginx/letsencrypt.conf /etc/nginx/letsencrypt.conf');
 });
 
 task('php:config:move', static function (): void {
