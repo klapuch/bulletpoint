@@ -3,20 +3,21 @@ import React from 'react';
 import styled from 'styled-components';
 import { DownButton, UpButton } from '../theme/bulletpoint/components/RateButton';
 import Source from '../theme/components/Source';
-import * as user from '../user';
 import type { FetchedBulletpointType, PointType } from '../theme/bulletpoint/types';
 
-const EditButton = styled.span`
+const ActionButton = styled.span`
   cursor: pointer;
   float: right;
+  padding-left: 5px;
 `;
 
 type Props = {|
   +bulletpoint: FetchedBulletpointType,
   +onRatingChange?: (id: number, point: PointType) => (void),
   +onEditClick?: (id: number) => (void),
+  +onDeleteClick?: (id: number) => (void),
 |};
-const Single = ({ bulletpoint, onRatingChange, onEditClick }: Props) => (
+const Single = ({ bulletpoint, onRatingChange, onEditClick, onDeleteClick }: Props) => (
   <>
     {onRatingChange && <DownButton
       rated={bulletpoint.rating.user === -1}
@@ -31,7 +32,8 @@ const Single = ({ bulletpoint, onRatingChange, onEditClick }: Props) => (
       {bulletpoint.rating.up}
     </UpButton>}
     {bulletpoint.content}
-    {(user.isLoggedIn() && onEditClick) && <EditButton className="glyphicon glyphicon-pencil" aria-hidden="true" onClick={() => onEditClick(bulletpoint.id)} />}
+    {onDeleteClick && <ActionButton className="text-danger glyphicon glyphicon-remove" aria-hidden="true" onClick={() => onDeleteClick(bulletpoint.id)} />}
+    {onEditClick && <ActionButton className="glyphicon glyphicon-pencil" aria-hidden="true" onClick={() => onEditClick(bulletpoint.id)} />}
     <br />
     <small>
       <cite>

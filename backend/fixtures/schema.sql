@@ -303,7 +303,7 @@ CREATE TRIGGER sources_row_biu_trigger
 CREATE TABLE contributed_bulletpoints (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	theme_id integer NOT NULL,
-	source_id integer NOT NULL,
+	source_id integer NOT NULL UNIQUE,
 	user_id integer NOT NULL,
 	content character varying(255) NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
@@ -344,7 +344,7 @@ CREATE TRIGGER contributed_bulletpoints_row_ad_trigger
 CREATE TABLE bulletpoints (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	theme_id integer NOT NULL,
-	source_id integer NOT NULL,
+	source_id integer NOT NULL UNIQUE,
 	user_id integer NOT NULL,
 	content character varying(255) NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
@@ -546,11 +546,16 @@ CREATE VIEW public_bulletpoints AS
 	FROM bulletpoints
 	JOIN (
 		SELECT
-			DISTINCT ON (bulletpoint_id) bulletpoint_id,
-			COALESCE(sum(point) FILTER (WHERE point = 1) OVER (PARTITION BY bulletpoint_id), 0) AS up,
-			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_id), 0) AS down,
-			CASE WHEN user_id = globals_get_user() THEN point ELSE 0 END AS user_rating
+			DISTINCT ON (bulletpoint_ratings.bulletpoint_id) bulletpoint_ratings.bulletpoint_id,
+			COALESCE(sum(point) FILTER (WHERE point = 1) OVER (PARTITION BY bulletpoint_ratings.bulletpoint_id), 0) AS up,
+			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_ratings.bulletpoint_id), 0) AS down,
+			COALESCE(user_bulletpoint_ratings.user_rating, 0) AS user_rating
 		FROM bulletpoint_ratings
+		LEFT JOIN (
+			SELECT bulletpoint_id, CASE WHEN user_id = globals_get_user() THEN point ELSE 0 END AS user_rating
+			FROM bulletpoint_ratings
+			WHERE user_id = globals_get_user()
+		) AS user_bulletpoint_ratings ON user_bulletpoint_ratings.bulletpoint_id = bulletpoint_ratings.bulletpoint_id
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
 	LEFT JOIN sources ON sources.id = bulletpoints.source_id
 	LEFT JOIN bulletpoint_reputations ON bulletpoint_reputations.bulletpoint_id = bulletpoints.id

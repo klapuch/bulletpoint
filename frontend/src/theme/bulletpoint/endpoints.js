@@ -21,6 +21,16 @@ export const add = (
     .then(next);
 };
 
+export const deleteOne = (
+  theme: number,
+  bulletpoint: number,
+  next: (void) => (void),
+) => (dispatch: (mixed) => Object) => {
+  axios.delete(`/bulletpoints/${bulletpoint}`)
+    .then(() => dispatch(invalidatedAll(theme)))
+    .then(next);
+};
+
 export const edit = (
   theme: number,
   id: number,

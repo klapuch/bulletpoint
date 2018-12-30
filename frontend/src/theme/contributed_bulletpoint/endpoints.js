@@ -33,6 +33,16 @@ export const edit = (
     .then(next);
 };
 
+export const deleteOne = (
+  theme: number,
+  bulletpoint: number,
+  next: (void) => (void),
+) => (dispatch: (mixed) => Object) => {
+  axios.delete(`/contributed_bulletpoints/${bulletpoint}`)
+    .then(() => dispatch(invalidatedAll(theme)))
+    .then(next);
+};
+
 export const updateSingle = (
   theme: number,
   bulletpoint: number,

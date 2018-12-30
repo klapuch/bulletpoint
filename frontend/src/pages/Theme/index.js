@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 import SlugRedirect from '../../router/SlugRedirect';
 import { single } from '../../theme/endpoints';
-import { all as allBulletpoints, add, edit } from '../../theme/bulletpoint/endpoints';
-import { all as allContributedBulletpoints, add as contributeBulletpoint } from '../../theme/contributed_bulletpoint/endpoints';
+import { all as allBulletpoints, add, edit, deleteOne } from '../../theme/bulletpoint/endpoints';
+import { all as allContributedBulletpoints, add as contributeBulletpoint, deleteOne as deleteContribution } from '../../theme/contributed_bulletpoint/endpoints';
 import { rate } from '../../theme/bulletpoint/rating/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
 import * as user from '../../user';
@@ -50,7 +50,12 @@ type Props = {|
     theme: number,
     bulletpointId: number,
     PostedBulletpointType,
-    (void) => (void),
+    next: (void) => (void),
+  ) => (void),
+  +deleteBulletpoint: (
+    theme: number,
+    bulletpointId: number,
+    next: (void) => (void),
   ) => (void),
   +bulletpoints: Array<FetchedBulletpointType>,
   +changeRating: (theme: number, bulletpoint: number, point: PointType) => (void),
@@ -96,6 +101,11 @@ class Theme extends React.Component<Props, State> {
     this.props.changeRating(id, bulletpointId, bulletpoint.rating.user === point ? 0 : point);
   };
 
+  handleDeleteClick = (bulletpointId: number) => {
+    const { match: { params: { id } } } = this.props;
+    this.props.deleteBulletpoint(id, bulletpointId, this.reload);
+  };
+
   handleEditClick = (bulletpointId: number) => {
     const bulletpoint = this.props.getBulletpointById(bulletpointId);
     this.setState({
@@ -138,12 +148,16 @@ class Theme extends React.Component<Props, State> {
             <AllBulletpoints
               bulletpoints={bulletpoints}
               onRatingChange={this.handleRatingChange}
-              onEditClick={this.handleEditClick}
+              onEditClick={user.isAdmin() ? this.handleEditClick : null}
+              onDeleteClick={user.isAdmin() ? this.handleDeleteClick : null}
             />
             {!isEmpty(contributedBulletpoints) && (
               <>
                 <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
-                <AllBulletpoints bulletpoints={contributedBulletpoints} />
+                <AllBulletpoints
+                  bulletpoints={contributedBulletpoints}
+                  onDeleteClick={this.handleDeleteClick}
+                />
               </>
             )}
             {user.isLoggedIn() && (
@@ -174,6 +188,11 @@ const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
 });
 const mapDispatchToProps = dispatch => ({
   fetchTheme: (theme: number) => dispatch(single(theme)),
+  deleteBulletpoint: (
+    theme: number,
+    bulletpoint: number,
+    next: (void) => (void),
+  ) => dispatch(user.isAdmin() ? deleteOne(theme, bulletpoint, next) : deleteContribution(theme, bulletpoint, next)),
   addBulletpoint: (
     theme: number,
     bulletpoint: PostedBulletpointType,

@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Bulletpoint\Endpoint\Theme\ContributedBulletpoints;
 
 use Bulletpoint\Constraint;
-use Bulletpoint\Domain\Contribution;
 use Bulletpoint\Domain\Access;
+use Bulletpoint\Domain\Contribution;
 use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Internal;
