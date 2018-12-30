@@ -46,10 +46,10 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 						)
 					);
 					return <<<CONF
-{$this->location($block['params'] ?? [], $block['location'])} {
-	{$directives}
-}
-CONF;
+					{$this->location($block['params'] ?? [], $block['location'])} {
+						{$directives}
+					}
+					CONF;
 				},
 				array_keys($source),
 				$source
@@ -66,10 +66,10 @@ CONF;
 	private function limitExcept(array $methods): string {
 		$except = implode(' ', array_unique(array_merge($methods, ['OPTIONS'])));
 		return <<<CONF
-	limit_except {$except} {
-		deny all;
-	}
-CONF;
+			limit_except {$except} {
+				deny all;
+			}
+		CONF;
 	}
 
 	private function routerParams(array $params): string {
@@ -85,8 +85,8 @@ CONF;
 			)
 		);
 		return <<<CONF
-	fastcgi_param ROUTE_PARAM_QUERY {$query};
-CONF;
+			fastcgi_param ROUTE_PARAM_QUERY {$query};
+		CONF;
 	}
 
 	private function location(array $params, string $sample): string {

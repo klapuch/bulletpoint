@@ -14,24 +14,20 @@ final class GenerateNginxConfiguration implements Scheduling\Job {
 	}
 
 	public function fulfill(): void {
-		$preflightHeaders = file_get_contents(
-			__DIR__ . '/../../../../docker/nginx/preflight_headers.conf'
-		);
-		$securityHeaders = file_get_contents(
-			__DIR__ . '/../../../../docker/nginx/security_headers.conf'
-		);
+		$preflightHeaders = file_get_contents(__DIR__ . '/../../../../docker/nginx/preflight_headers.conf');
+		$securityHeaders = file_get_contents(__DIR__ . '/../../../../docker/nginx/security_headers.conf');
 		file_put_contents(
 			$this->destination->getPathname(),
 			<<<CONF
-# Automatically generated, do not manually edit
-if (\$request_method = OPTIONS) {
-{$preflightHeaders}
-{$securityHeaders}
-	add_header Content-Type text/plain;
-	add_header Content-Length 0;
-	return 204;
-}
-CONF
+			# Automatically generated, do not manually edit
+			if (\$request_method = OPTIONS) {
+			{$preflightHeaders}
+			{$securityHeaders}
+				add_header Content-Type text/plain;
+				add_header Content-Length 0;
+				return 204;
+			}
+			CONF,
 		);
 	}
 
