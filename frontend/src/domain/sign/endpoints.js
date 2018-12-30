@@ -15,13 +15,13 @@ export const signIn = (
     login.token,
     (me: MeType) => Promise.resolve()
       .then(() => session.start({ expiration: login.expiration, value: login.token }, me))
-      .then(() => dispatch(message.receivedSuccess('Jsi přihlášen.'))),
+      .then(() => dispatch(message.receivedSuccess('Jsi přihlášen.')))
+      .then(next),
   );
 
   const onCreatedToken = data => Promise.resolve()
     .then(() => dispatch(requestedSignIn()))
-    .then(() => onReceivedUser(data))
-    .then(next);
+    .then(() => onReceivedUser(data));
 
   dispatch(tokens.create(credentials, onCreatedToken));
 };
