@@ -405,17 +405,12 @@ CREATE TABLE bulletpoint_reputations (
 CREATE FUNCTION update_bulletpoint_reputation() RETURNS void AS $BODY$
 BEGIN
 	INSERT INTO bulletpoint_reputations (bulletpoint_id, reputation)
-		SELECT bulletpoint_tags.id, user_tag_reputations.reputation FROM (
-			SELECT bulletpoints.id, bulletpoints.user_id, array_agg(theme_tags.tag_id) AS tag_ids
-			FROM bulletpoints
-			JOIN themes ON themes.id = bulletpoints.theme_id
-			JOIN theme_tags ON theme_tags.theme_id = themes.id
-			GROUP BY bulletpoints.id
-		) AS bulletpoint_tags, LATERAL (
-			SELECT sum(reputation) AS reputation
-			FROM user_tag_reputations
-			WHERE user_id = bulletpoint_tags.user_id AND tag_id = ANY(bulletpoint_tags.tag_ids)
-		) AS user_tag_reputations
+		SELECT bulletpoints.id, sum(user_tag_reputations.reputation) AS reputation
+		FROM bulletpoints
+		JOIN themes ON themes.id = bulletpoints.theme_id
+		JOIN theme_tags ON theme_tags.theme_id = themes.id
+		JOIN user_tag_reputations ON user_tag_reputations.user_id = bulletpoints.user_id AND user_tag_reputations.tag_id = theme_tags.tag_id
+		GROUP BY bulletpoints.id
 	ON CONFLICT (bulletpoint_id) DO UPDATE SET reputation = EXCLUDED.reputation;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
