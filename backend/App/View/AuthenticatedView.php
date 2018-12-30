@@ -27,7 +27,7 @@ final class AuthenticatedView implements Application\View {
 			return $this->origin->response($input);
 		return new class implements Application\Response {
 			public function body(): Output\Format {
-				return new Output\Json(['message' => 'You are not allowed to see the response.']);
+				return new Output\Json(['message' => t('response.not.allowed')]);
 			}
 
 			public function headers(): array {

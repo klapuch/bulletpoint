@@ -7,6 +7,7 @@ function t(string $identifier, string ...$params): string {
 		'access.bad.password' => ['cs' => 'Špatné heslo', 'en' => 'Wrong password'],
 		'theme.reference.url.not.valid' => ['cs' => 'Odkaz není platná URL', 'en' => 'URL of reference is not valid'],
 		'bulletpoint.source.link.not.valid' => ['cs' => 'Zdrojová URL není platná', 'en' => 'URL of source is not valid'],
+		'response.not.allowed' => ['cs' => 'Nedostatečné oprávnění.', 'en' => 'You are not allowed to see the response.'],
 	];
 	return vsprintf($translations[$identifier][PHP_SAPI === 'cli' ? 'en' : 'cs'], $params);
 }

@@ -48,6 +48,7 @@ final class Structure {
 	}
 
 	public function post(): array {
+		$get = $this->get();
 		return [
 			'$schema' => 'http://json-schema.org/draft-04/schema#',
 			'additionalProperties' => false,
@@ -58,16 +59,8 @@ final class Structure {
 					'minItems' => 1,
 					'maxItems' => (new Storage\NativeQuery($this->connection, 'SELECT constant.theme_tags_limit()'))->field(),
 				],
-				'name' => [
-					'type' => 'string',
-					'minLength' => 1,
-					'maxLength' => 255,
-				],
-				'reference' => [
-					'type' => 'object',
-					'properties' => ['url' => ['type' => 'string']],
-					'required' => ['url'],
-				],
+				'name' => $get['properties']['name'],
+				'reference' => $get['properties']['reference'],
 			],
 			'required' => ['tags', 'name', 'reference'],
 			'type' => 'object',
