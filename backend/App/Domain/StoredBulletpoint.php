@@ -69,4 +69,12 @@ final class StoredBulletpoint implements Bulletpoint {
 			])->where('id = :id', ['id' => $this->id])
 		))->execute();
 	}
+
+	public function delete(): void {
+		(new Storage\TypedQuery(
+			$this->connection,
+			'DELETE FROM bulletpoints WHERE id = :id',
+			['id' => $this->id]
+		))->execute();
+	}
 }

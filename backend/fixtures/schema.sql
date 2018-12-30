@@ -597,7 +597,8 @@ SELECT
 	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id,
 	sources.link AS source_link, sources.type AS source_type
 	FROM contributed_bulletpoints
-	LEFT JOIN sources ON sources.id = contributed_bulletpoints.source_id;
+	LEFT JOIN sources ON sources.id = contributed_bulletpoints.source_id
+	ORDER BY contributed_bulletpoints.created_at DESC, length(contributed_bulletpoints.content) ASC;
 
 CREATE FUNCTION public_contributed_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN

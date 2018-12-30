@@ -65,4 +65,12 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				->where('user_id = :user_id', ['user_id' => $this->user->id()])
 		))->execute();
 	}
+
+	public function delete(): void {
+		(new Storage\TypedQuery(
+			$this->connection,
+			'DELETE FROM contributed_bulletpoints WHERE id = :id AND user_id = :user_id',
+			['id' => $this->id, 'user_id' => $this->user->id()]
+		))->execute();
+	}
 }

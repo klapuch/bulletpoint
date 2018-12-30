@@ -52,4 +52,10 @@ final class ExistingBulletpoint implements Domain\Bulletpoint {
 			['id' => $id, 'user_id' => $this->user->id()]
 		))->field();
 	}
+
+	public function delete(): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Bulletpoint %d does not exist', $this->id));
+		$this->origin->delete();
+	}
 }

@@ -20,7 +20,6 @@ import {
 import {
   allFetching as fetchingAllThemeContributedBulletpoints,
   getByTheme as getThemeContributedBulletpoints,
-  getById as getContributedBulletpointById,
 } from '../../theme/contributed_bulletpoint/selects';
 import Loader from '../../ui/Loader';
 import Form from '../../bulletpoint/Form';
@@ -172,7 +171,6 @@ const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
     || fetchingAllThemeBulletpoints(theme, state)
     || fetchingAllThemeContributedBulletpoints(theme, state),
   getBulletpointById: (bulletpoint: number) => getBulletpointById(theme, bulletpoint, state),
-  getContributedBulletpointById: (bulletpoint: number) => getContributedBulletpointById(theme, bulletpoint, state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchTheme: (theme: number) => dispatch(single(theme)),

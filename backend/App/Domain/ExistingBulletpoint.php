@@ -46,4 +46,10 @@ final class ExistingBulletpoint implements Bulletpoint {
 			['id' => $id]
 		))->field();
 	}
+
+	public function delete(): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Bulletpoint %d does not exist', $this->id));
+		$this->origin->delete();
+	}
 }
