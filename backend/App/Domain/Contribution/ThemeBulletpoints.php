@@ -75,7 +75,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 			(new Sql\AnsiSelect(['count(*)']))
 				->from(['contributed_bulletpoints'])
 				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
-				->where('user_id = :user_id', ['user_id' => $this->user->id()])
+				->where('user_id = :user_id', ['user_id' => $this->user->id()]),
 		))->field();
 	}
 }

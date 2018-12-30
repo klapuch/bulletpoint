@@ -70,7 +70,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 		(new Storage\TypedQuery(
 			$this->connection,
 			'DELETE FROM contributed_bulletpoints WHERE id = :id AND user_id = :user_id',
-			['id' => $this->id, 'user_id' => $this->user->id()]
+			['id' => $this->id, 'user_id' => $this->user->id()],
 		))->execute();
 	}
 }

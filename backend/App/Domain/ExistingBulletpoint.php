@@ -39,17 +39,17 @@ final class ExistingBulletpoint implements Bulletpoint {
 		$this->origin->edit($bulletpoint);
 	}
 
+	public function delete(): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Bulletpoint %d does not exist', $this->id));
+		$this->origin->delete();
+	}
+
 	private function exists(int $id): bool {
 		return (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT EXISTS(SELECT 1 FROM bulletpoints WHERE id = :id)',
 			['id' => $id]
 		))->field();
-	}
-
-	public function delete(): void {
-		if (!$this->exists($this->id))
-			throw new \UnexpectedValueException(sprintf('Bulletpoint %d does not exist', $this->id));
-		$this->origin->delete();
 	}
 }

@@ -320,13 +320,10 @@ END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION contributed_bulletpoints_trigger_row_ad() RETURNS trigger AS $BODY$
-	DECLARE
-		r contributed_bulletpoints;
 BEGIN
-	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
-	DELETE FROM sources WHERE id = r.source_id;
+	DELETE FROM sources WHERE id = old.source_id;
 
-	RETURN r;
+	RETURN old;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
@@ -374,13 +371,10 @@ END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION bulletpoints_trigger_row_ad() RETURNS trigger AS $BODY$
-	DECLARE
-		r bulletpoints;
 BEGIN
-	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
-	DELETE FROM sources WHERE id = r.source_id;
+	DELETE FROM sources WHERE id = old.source_id;
 
-	RETURN r;
+	RETURN old;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
@@ -463,12 +457,6 @@ CREATE TRIGGER bulletpoint_ratings_row_aiud_trigger
 
 -- views
 CREATE VIEW public_themes AS
-	WITH json_tags AS (
-		SELECT theme_id, jsonb_agg(tags.*) AS tags
-		FROM theme_tags
-		JOIN tags ON tags.id = theme_tags.tag_id
-		GROUP BY theme_id
-	)
 	SELECT
 		themes.id, themes.name, json_tags.tags, themes.created_at,
 		"references".url AS reference_url,
@@ -476,7 +464,12 @@ CREATE VIEW public_themes AS
 	FROM themes
 	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id
-	LEFT JOIN json_tags ON json_tags.theme_id = themes.id;
+	LEFT JOIN (
+		SELECT theme_id, jsonb_agg(tags.*) AS tags
+		FROM theme_tags
+		JOIN tags ON tags.id = theme_tags.tag_id
+		GROUP BY theme_id
+	) AS json_tags ON json_tags.theme_id = themes.id;
 
 CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
 	DECLARE v_theme_id integer;
@@ -544,6 +537,7 @@ CREATE VIEW public_bulletpoints AS
 			(bulletpoint_ratings.up + bulletpoint_ratings.down) AS total_rating,
 		bulletpoint_ratings.user_rating
 	FROM bulletpoints
+	-- TODO: will by pre-counted
 	JOIN (
 		SELECT
 			DISTINCT ON (bulletpoint_ratings.bulletpoint_id) bulletpoint_ratings.bulletpoint_id,
