@@ -1,21 +1,27 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Domain;
+namespace Bulletpoint\Domain\Contribution;
 
+use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Klapuch\Output;
 use Klapuch\Sql;
 use Klapuch\Storage;
 
-final class StoredBulletpoint implements Bulletpoint {
+final class StoredBulletpoint implements Domain\Bulletpoint {
 	/** @var int */
 	private $id;
+
+	/** @var \Bulletpoint\Domain\Access\User */
+	private $user;
 
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	public function __construct(int $id, Storage\Connection $connection) {
+	public function __construct(int $id, Access\User $user, Storage\Connection $connection) {
 		$this->id = $id;
+		$this->user = $user;
 		$this->connection = $connection;
 	}
 
@@ -28,13 +34,9 @@ final class StoredBulletpoint implements Bulletpoint {
 				'source_link',
 				'source_type',
 				'content',
-				'total_rating',
-				'up_rating',
-				'down_rating',
-				'user_rating',
-				'user_id',
-			]))->from(['public_bulletpoints'])
+			]))->from(['public_contributed_bulletpoints'])
 				->where('id = :id', ['id' => $this->id])
+				->where('user_id = :user_id', ['user_id' => $this->id])
 		))->row();
 		return new Output\FilledFormat(
 			$format,
@@ -42,13 +44,6 @@ final class StoredBulletpoint implements Bulletpoint {
 				'id' => $row['id'],
 				'theme_id' => $row['theme_id'],
 				'content' => $row['content'],
-				'rating' => [
-					'up' => $row['up_rating'],
-					'down' => $row['down_rating'],
-					'total' => $row['total_rating'],
-					'user' => $row['user_rating'],
-				],
-				'user_id' => $row['user_id'],
 				'source' => [
 					'link' => $row['source_link'],
 					'type' => $row['source_type'],
@@ -61,20 +56,21 @@ final class StoredBulletpoint implements Bulletpoint {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PreparedUpdate(
-				new Sql\AnsiUpdate('public_bulletpoints'),
+				new Sql\AnsiUpdate('public_contributed_bulletpoints'),
 			))->set([
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],
 				'content' => $bulletpoint['content'],
 			])->where('id = :id', ['id' => $this->id])
+				->where('user_id = :user_id', ['user_id' => $this->user->id()])
 		))->execute();
 	}
 
 	public function delete(): void {
 		(new Storage\TypedQuery(
 			$this->connection,
-			'DELETE FROM bulletpoints WHERE id = :id',
-			['id' => $this->id]
+			'DELETE FROM contributed_bulletpoints WHERE id = :id AND user_id = :user_id',
+			['id' => $this->id, 'user_id' => $this->user->id()],
 		))->execute();
 	}
 }

@@ -17,4 +17,6 @@ interface Bulletpoint {
 	 * @param mixed[] $bulletpoint
 	 */
 	public function edit(array $bulletpoint): void;
+
+	public function delete(): void;
 }

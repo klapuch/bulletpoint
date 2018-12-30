@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import * as session from '../../../access/session';
+import * as user from '../../../user';
 
 const RateButton = styled.span`
   cursor: pointer;
@@ -18,8 +18,8 @@ const Button = ({
   children, onClick, rated, type,
 }: { ...Props, type: 'success' | 'danger' }) => (
   <RateButton
-    className={classNames('badge', 'badge-guest', `alert-${type}`, !session.exists() || rated ? '' : 'opposite-rating')}
-    onClick={session.exists() ? onClick : () => null}
+    className={classNames('badge', 'badge-guest', `alert-${type}`, !user.isLoggedIn() || rated ? '' : 'opposite-rating')}
+    onClick={user.isLoggedIn() ? onClick : () => null}
   >
     {children}
     <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />

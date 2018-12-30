@@ -1,6 +1,12 @@
 // @flow
 import axios from 'axios';
-import { invalidatedAll, receivedAll, requestedAll } from './actions';
+import {
+  invalidatedAll,
+  receivedAll,
+  receivedUpdateSingle,
+  requestedAll,
+  requestedUpdateSingle,
+} from './actions';
 import { fetchedAll } from './selects';
 import type { PostedBulletpointType } from './types';
 
@@ -21,6 +27,16 @@ export const add = (
     .then(next);
 };
 
+export const deleteOne = (
+  theme: number,
+  bulletpoint: number,
+  next: (void) => (void),
+) => (dispatch: (mixed) => Object) => {
+  axios.delete(`/bulletpoints/${bulletpoint}`)
+    .then(() => dispatch(invalidatedAll(theme)))
+    .then(next);
+};
+
 export const edit = (
   theme: number,
   id: number,
@@ -30,4 +46,14 @@ export const edit = (
   axios.put(`/bulletpoints/${id}`, bulletpoint)
     .then(() => dispatch(invalidatedAll(theme)))
     .then(next);
+};
+
+export const updateSingle = (
+  theme: number,
+  bulletpoint: number,
+) => (dispatch: (mixed) => Object) => {
+  requestedUpdateSingle(theme, bulletpoint);
+  axios.get(`/bulletpoints/${bulletpoint}`)
+    .then(response => response.data)
+    .then(payload => dispatch(receivedUpdateSingle(payload)));
 };

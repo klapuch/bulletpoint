@@ -3,7 +3,6 @@ import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import classNames from 'classnames';
 import Error404 from '../pages/Error/Error404';
-import * as session from '../access/session';
 import * as user from '../user';
 import NavItem from './NavItem';
 import FlashMessage from '../ui/message/FlashMessage';
@@ -58,7 +57,7 @@ const Public = ({
                     )}
                   />
                   {user.isAdmin() && <NavItem title="Nové téma" to="/themes/create">Nové téma</NavItem>}
-                  {session.exists()
+                  {user.isLoggedIn()
                     ? <NavItem title="Odhlásit se" to="/sign/out">Odhlásit se</NavItem>
                     : <NavItem title="Přihlásit se" to="/sign/in">Přihlásit se</NavItem>
                   }
@@ -70,7 +69,7 @@ const Public = ({
             <div className="row">
               <FlashMessage pathname={props.location.pathname} />
             </div>
-            {restrictive && !session.exists()
+            {restrictive && !user.isLoggedIn()
               ? <Error404 {...props} />
               : <Component {...props} />}
           </div>

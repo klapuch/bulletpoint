@@ -2,6 +2,7 @@
 import { combineReducers } from 'redux';
 import theme from '../theme/reducer';
 import themeBulletpoints from '../theme/bulletpoint/reducer';
+import themeContributedBulletpoints from '../theme/contributed_bulletpoint/reducer';
 import tags from '../tags/reducer';
 import message from '../ui/message/reducer';
 import { SIGN_IN, SIGN_OUT } from '../sign/actions';
@@ -9,6 +10,7 @@ import { SIGN_IN, SIGN_OUT } from '../sign/actions';
 const appReducer = combineReducers({
   theme,
   themeBulletpoints,
+  themeContributedBulletpoints,
   tags,
   message,
 });

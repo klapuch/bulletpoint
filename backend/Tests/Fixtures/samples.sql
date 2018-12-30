@@ -104,7 +104,23 @@ BEGIN
 		samples.random_if_not_exists((SELECT samples.themes()), replacements, 'theme_id'),
 		samples.random_if_not_exists((SELECT samples.sources()), replacements, 'source_id'),
 		samples.random_if_not_exists(md5(random()::text), replacements, 'content'),
-		samples.random_if_not_exists((SELECT samples.users()), replacements, 'user_id')
+		CASE WHEN replacements ? 'user_id' THEN CAST(replacements -> 'user_id' AS integer) ELSE (SELECT samples.users()) END
+	)
+	RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE FUNCTION samples.contributed_bulletpoints(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id bulletpoints.id%type;
+BEGIN
+	INSERT INTO contributed_bulletpoints (theme_id, source_id, content, user_id) VALUES (
+		samples.random_if_not_exists((SELECT samples.themes()), replacements, 'theme_id'),
+		samples.random_if_not_exists((SELECT samples.sources()), replacements, 'source_id'),
+		samples.random_if_not_exists(md5(random()::text), replacements, 'content'),
+		CASE WHEN replacements ? 'user_id' THEN CAST(replacements -> 'user_id' AS integer) ELSE (SELECT samples.users()) END
 	)
 	RETURNING id INTO v_id;
 

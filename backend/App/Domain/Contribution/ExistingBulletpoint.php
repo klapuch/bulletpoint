@@ -1,14 +1,19 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Domain;
+namespace Bulletpoint\Domain\Contribution;
 
+use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Klapuch\Output;
 use Klapuch\Storage;
 
-final class ExistingBulletpoint implements Bulletpoint {
+final class ExistingBulletpoint implements Domain\Bulletpoint {
 	/** @var int */
 	private $id;
+
+	/** @var \Bulletpoint\Domain\Access\User */
+	private $user;
 
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
@@ -16,8 +21,9 @@ final class ExistingBulletpoint implements Bulletpoint {
 	/** @var \Bulletpoint\Domain\Bulletpoint */
 	private $origin;
 
-	public function __construct(Bulletpoint $origin, int $id, Storage\Connection $connection) {
+	public function __construct(Domain\Bulletpoint $origin, Access\User $user, int $id, Storage\Connection $connection) {
 		$this->id = $id;
+		$this->user = $user;
 		$this->connection = $connection;
 		$this->origin = $origin;
 	}
@@ -48,8 +54,8 @@ final class ExistingBulletpoint implements Bulletpoint {
 	private function exists(int $id): bool {
 		return (new Storage\TypedQuery(
 			$this->connection,
-			'SELECT EXISTS(SELECT 1 FROM bulletpoints WHERE id = :id)',
-			['id' => $id]
+			'SELECT EXISTS(SELECT 1 FROM contributed_bulletpoints WHERE id = :id AND user_id = :user_id)',
+			['id' => $id, 'user_id' => $this->user->id()]
 		))->field();
 	}
 }

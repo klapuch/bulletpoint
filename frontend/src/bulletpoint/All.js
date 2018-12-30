@@ -5,10 +5,16 @@ import Single from './Single';
 
 type Props = {|
   +bulletpoints: Array<FetchedBulletpointType>,
-  +onRatingChange: (id: number, point: PointType) => (void),
-  +onEditClick: (number) => (void),
+  +onRatingChange?: (id: number, point: PointType) => (void),
+  +onEditClick?: (number) => (void),
+  +onDeleteClick?: (number) => (void),
 |};
-const All = ({ bulletpoints, onRatingChange, onEditClick }: Props) => (
+const All = ({
+  bulletpoints,
+  onRatingChange,
+  onEditClick,
+  onDeleteClick,
+}: Props) => (
   <ul className="list-group">
     {bulletpoints.map(bulletpoint => (
       <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
@@ -16,6 +22,7 @@ const All = ({ bulletpoints, onRatingChange, onEditClick }: Props) => (
           bulletpoint={bulletpoint}
           onRatingChange={onRatingChange}
           onEditClick={onEditClick}
+          onDeleteClick={onDeleteClick}
         />
       </li>
     ))}
