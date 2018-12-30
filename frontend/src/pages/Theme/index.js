@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 import * as bulletpoint from '../../domain/bulletpoint/endpoints';
@@ -11,10 +9,8 @@ import * as contributedBulletpoint from '../../domain/contributed_bulletpoint/en
 import * as contributedBulletpoints from '../../domain/contributed_bulletpoint/selects';
 import * as themes from '../../domain/theme/selects';
 import * as user from '../../domain/user';
-import All from '../../domain/tags/components/All';
 import Form from '../../domain/bulletpoint/components/Form';
 import Loader from '../../ui/Loader';
-import Reference from '../../domain/theme/components/Reference';
 import SlugRedirect from '../../router/SlugRedirect';
 import type { FetchedBulletpointType, PostedBulletpointType } from '../../domain/bulletpoint/types';
 import type { FetchedThemeType } from '../../domain/theme/types';
@@ -23,15 +19,7 @@ import type { PointType } from '../../domain/bulletpoint_rating/types';
 import { default as AllBulletpoints } from '../../domain/bulletpoint/components/All';
 import { rate } from '../../domain/bulletpoint_rating/endpoints';
 import { single } from '../../domain/theme/endpoints';
-
-const Title = styled.h1`
-  display: inline-block;
-`;
-
-const EditButton = styled.span`
-  cursor: pointer;
-  padding: 5px;
-`;
+import FullTitle from '../../domain/theme/components/FullTitle';
 
 type State = {|
   formType: FormTypes,
@@ -131,18 +119,7 @@ class Theme extends React.Component<Props, State> {
     return (
       <SlugRedirect {...this.props} name={theme.name}>
         <Helmet><title>{theme.name}</title></Helmet>
-        <div>
-          <Title>{theme.name}</Title>
-          <Reference url={theme.reference.url} />
-          {
-            user.isAdmin() && (
-              <Link to={`/themes/${theme.id}/change`}>
-                <EditButton className="glyphicon glyphicon-pencil" aria-hidden="true" />
-              </Link>
-            )
-          }
-        </div>
-        <All tags={theme.tags} />
+        <FullTitle theme={theme} />
         <div className="row">
           <div className="col-sm-8">
             <h2 id="bulletpoints">Bulletpointy</h2>
