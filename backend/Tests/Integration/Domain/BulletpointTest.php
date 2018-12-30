@@ -55,6 +55,16 @@ final class BulletpointTest extends TestCase\Runtime {
 		Assert::same('TEST OK!', $bulletpoint['content']);
 	}
 
+	public function testDeleting(): void {
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
+		(new Domain\ExistingBulletpoint(
+			new Domain\StoredBulletpoint($id, $this->connection),
+			$id,
+			$this->connection
+		))->delete();
+		Assert::same(0, (new Storage\TypedQuery($this->connection, 'SELECT count(*) FROM bulletpoints'))->field());
+	}
+
 	public function testThrowingOnUnknown(): void {
 		Assert::exception(function() {
 			(new Domain\ExistingBulletpoint(
@@ -69,6 +79,13 @@ final class BulletpointTest extends TestCase\Runtime {
 				1,
 				$this->connection
 			))->edit([]);
+		}, \UnexpectedValueException::class, 'Bulletpoint 1 does not exist');
+		Assert::exception(function() {
+			(new Domain\ExistingBulletpoint(
+				new Domain\StoredBulletpoint(1, $this->connection),
+				1,
+				$this->connection
+			))->delete();
 		}, \UnexpectedValueException::class, 'Bulletpoint 1 does not exist');
 	}
 }
