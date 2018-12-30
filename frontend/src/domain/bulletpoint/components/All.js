@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import type { FetchedBulletpointType, PointType } from '../theme/bulletpoint/types';
-import Single from './Single';
+import type { FetchedBulletpointType } from '../types';
+import type { PointType } from '../../bulletpoint_rating/types';
+import Bulletpoint from './Single';
 
 type Props = {|
   +bulletpoints: Array<FetchedBulletpointType>,
@@ -18,12 +19,13 @@ const All = ({
   <ul className="list-group">
     {bulletpoints.map(bulletpoint => (
       <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
-        <Single
-          bulletpoint={bulletpoint}
+        <Bulletpoint
           onRatingChange={onRatingChange}
           onEditClick={onEditClick}
           onDeleteClick={onDeleteClick}
-        />
+        >
+          {bulletpoint}
+        </Bulletpoint>
       </li>
     ))}
   </ul>

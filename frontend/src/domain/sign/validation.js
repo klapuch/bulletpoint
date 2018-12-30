@@ -1,6 +1,6 @@
 // @flow
 import memoize from 'memoizee';
-import * as validation from '../validation';
+import * as validation from '../../validation';
 import type { PostedCredentialsType, ErrorCredentialsType } from './types';
 
 const UNKNOWN = 'UNKNOWN';

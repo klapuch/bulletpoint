@@ -5,7 +5,7 @@ import {
   receivedAll, receivedSingle, requestedAll, requestedSingle,
 } from './actions';
 import { fetchedSingle } from './selects';
-import * as response from '../api/response';
+import * as response from '../../api/response';
 import type { PostedThemeType } from './types';
 
 export const single = (id: number) => (dispatch: (mixed) => Object, getState: () => Object) => {

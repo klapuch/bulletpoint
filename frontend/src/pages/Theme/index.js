@@ -5,35 +5,24 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
-import SlugRedirect from '../../router/SlugRedirect';
-import { single } from '../../theme/endpoints';
-import {
-  all as allBulletpoints,
-  add,
-  edit,
-  deleteOne,
-} from '../../theme/bulletpoint/endpoints';
-import { all as allContributedBulletpoints, add as contributeBulletpoint, deleteOne as deleteContribution } from '../../theme/contributed_bulletpoint/endpoints';
-import { rate } from '../../theme/bulletpoint/rating/endpoints';
-import { getById, singleFetching as themeFetching } from '../../theme/selects';
-import * as user from '../../user';
-import {
-  allFetching as fetchingAllThemeBulletpoints,
-  getByTheme as getThemeBulletpoints,
-  getById as getBulletpointById,
-} from '../../theme/bulletpoint/selects';
-import {
-  allFetching as fetchingAllThemeContributedBulletpoints,
-  getByTheme as getThemeContributedBulletpoints,
-} from '../../theme/contributed_bulletpoint/selects';
+import * as bulletpoint from '../../domain/bulletpoint/endpoints';
+import * as bulletpoints from '../../domain/bulletpoint/selects';
+import * as contributedBulletpoint from '../../domain/contributed_bulletpoint/endpoints';
+import * as contributedBulletpoints from '../../domain/contributed_bulletpoint/selects';
+import * as themes from '../../domain/theme/selects';
+import * as user from '../../domain/user';
+import All from '../../domain/tags/components/All';
+import Form from '../../domain/bulletpoint/components/Form';
 import Loader from '../../ui/Loader';
-import Form from '../../bulletpoint/Form';
-import Tags from '../../theme/components/Tags';
-import Reference from '../../theme/components/Reference';
-import { default as AllBulletpoints } from '../../bulletpoint/All';
-import type { FetchedThemeType } from '../../theme/types';
-import type { FetchedBulletpointType, PointType, PostedBulletpointType } from '../../theme/bulletpoint/types';
-import type { FormTypes } from '../../bulletpoint/Form';
+import Reference from '../../domain/theme/components/Reference';
+import SlugRedirect from '../../router/SlugRedirect';
+import type { FetchedBulletpointType, PostedBulletpointType } from '../../domain/bulletpoint/types';
+import type { FetchedThemeType } from '../../domain/theme/types';
+import type { FormTypes } from '../../domain/bulletpoint/components/Form';
+import type { PointType } from '../../domain/bulletpoint_rating/types';
+import { default as AllBulletpoints } from '../../domain/bulletpoint/components/All';
+import { rate } from '../../domain/bulletpoint_rating/endpoints';
+import { single } from '../../domain/theme/endpoints';
 
 const Title = styled.h1`
   display: inline-block;
@@ -153,7 +142,7 @@ class Theme extends React.Component<Props, State> {
             )
           }
         </div>
-        <Tags tags={theme.tags} />
+        <All tags={theme.tags} />
         <div className="row">
           <div className="col-sm-8">
             <h2 id="bulletpoints">Bulletpointy</h2>
@@ -190,46 +179,46 @@ class Theme extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
-  theme: getById(theme, state),
-  bulletpoints: getThemeBulletpoints(theme, state),
-  contributedBulletpoints: getThemeContributedBulletpoints(theme, state),
-  fetching: themeFetching(theme, state)
-    || fetchingAllThemeBulletpoints(theme, state)
-    || fetchingAllThemeContributedBulletpoints(theme, state),
-  getBulletpointById: (bulletpoint: number) => getBulletpointById(theme, bulletpoint, state),
+  theme: themes.getById(theme, state),
+  bulletpoints: bulletpoints.getByTheme(theme, state),
+  contributedBulletpoints: contributedBulletpoints.getByTheme(theme, state),
+  fetching: themes.singleFetching(theme, state)
+    || bulletpoints.allFetching(theme, state)
+    || contributedBulletpoints.allFetching(theme, state),
+  getBulletpointById: (bulletpoint: number) => bulletpoints.getById(theme, bulletpoint, state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchTheme: (theme: number) => dispatch(single(theme)),
   deleteBulletpoint: (
-    theme: number,
-    bulletpoint: number,
+    themeId: number,
+    bulletpointId: number,
     next: (void) => (void),
   ) => dispatch(
     user.isAdmin()
-      ? deleteOne(theme, bulletpoint, next)
-      : deleteContribution(theme, bulletpoint, next),
+      ? bulletpoint.deleteOne(themeId, bulletpointId, next)
+      : contributedBulletpoint.deleteOne(themeId, bulletpointId, next),
   ),
   addBulletpoint: (
-    theme: number,
-    bulletpoint: PostedBulletpointType,
+    themeId: number,
+    postedBulletpoint: PostedBulletpointType,
     next: (void) => (void),
   ) => dispatch(
     user.isAdmin()
-      ? add(theme, bulletpoint, next)
-      : contributeBulletpoint(theme, bulletpoint, next),
+      ? bulletpoint.add(themeId, postedBulletpoint, next)
+      : contributedBulletpoint.add(themeId, postedBulletpoint, next),
   ),
   editBulletpoint: (
-    theme: number,
+    themeId: number,
     bulletpointId: number,
-    bulletpoint: PostedBulletpointType,
+    postedBulletpoint: PostedBulletpointType,
     next: (void) => (void),
-  ) => dispatch(edit(theme, bulletpointId, bulletpoint, next)),
-  fetchBulletpoints: (theme: number) => dispatch(allBulletpoints(theme)),
-  fetchContributedBulletpoints: (theme: number) => dispatch(allContributedBulletpoints(theme)),
+  ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint, next)),
+  fetchBulletpoints: (theme: number) => dispatch(bulletpoint.all(theme)),
+  fetchContributedBulletpoints: (theme: number) => dispatch(contributedBulletpoint.all(theme)),
   changeRating: (
-    theme: number,
-    bulletpoint: number,
+    themeId: number,
+    bulletpointId: number,
     point: PointType,
-  ) => dispatch(rate(theme, bulletpoint, point)),
+  ) => rate(bulletpointId, point, () => dispatch(bulletpoint.updateSingle(themeId, bulletpointId))),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Theme);

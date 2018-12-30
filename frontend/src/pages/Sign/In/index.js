@@ -2,9 +2,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import Form from '../../../sign/in/Form';
-import { signIn } from '../../../sign/endpoints';
-import type { PostedCredentialsType } from '../../../sign/types';
+import Form from '../../../domain/sign/components/Form';
+import * as sign from '../../../domain/sign/endpoints';
+import type { PostedCredentialsType } from '../../../domain/sign/types';
 
 type Props = {|
   +signIn: (PostedCredentialsType, () => (void)) => (void),
@@ -46,6 +46,6 @@ const mapDispatchToProps = dispatch => ({
   signIn: (
     credentials: PostedCredentialsType,
     next: () => (void),
-  ) => dispatch(signIn(credentials, next)),
+  ) => dispatch(sign.signIn(credentials, next)),
 });
 export default connect(null, mapDispatchToProps)(In);

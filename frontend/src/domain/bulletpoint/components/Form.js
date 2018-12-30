@@ -2,9 +2,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import type { ErrorBulletpointType, PostedBulletpointType } from '../theme/bulletpoint/types';
-import * as validation from '../theme/bulletpoint/validation';
-import * as user from '../user';
+import type { ErrorBulletpointType, PostedBulletpointType } from '../types';
+import * as validation from '../validation';
+import * as user from '../../user';
 
 export type FormTypes = 'default' | 'edit' | 'add';
 type TargetType = {|

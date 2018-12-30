@@ -2,7 +2,7 @@
 import * as tokens from '../token/endpoints';
 import * as session from '../access/session';
 import { requestedSignIn, requestedSignOut } from './actions';
-import * as message from '../ui/message/actions';
+import * as message from '../../ui/message/actions';
 import type { PostedCredentialsType } from './types';
 import { fetchMe } from '../user/endpoints';
 import type { MeType } from '../user/types';

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
-import { signOut } from '../../../sign/endpoints';
+import * as sign from '../../../domain/sign/endpoints';
 
 type Props = {|
   +signOut: (() => (void)) => (void),
@@ -18,6 +18,6 @@ class Out extends React.PureComponent<Props> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  signOut: (next: () => (void)) => dispatch(signOut(next)),
+  signOut: (next: () => (void)) => dispatch(sign.signOut(next)),
 });
 export default connect(null, mapDispatchToProps)(Out);

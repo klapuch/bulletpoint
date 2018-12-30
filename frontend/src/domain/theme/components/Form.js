@@ -3,9 +3,9 @@ import React from 'react';
 import { isEmpty, zipObject } from 'lodash';
 import Select from 'react-select';
 import classNames from 'classnames';
-import type { ErrorThemeType, FetchedThemeType, PostedThemeType } from './types';
-import type { TagType } from '../tags/types';
-import * as validation from './validation';
+import type { ErrorThemeType, FetchedThemeType, PostedThemeType } from '../types';
+import type { TagType } from '../../tags/types';
+import * as validation from '../validation';
 
 type TargetType = {|
   target: {|

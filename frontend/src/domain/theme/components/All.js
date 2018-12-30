@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type { FetchedThemeType } from './types';
+import type { FetchedThemeType } from '../types';
 import Single from './Single';
 
 type Props = {|

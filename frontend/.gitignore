@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-!tags
+!src/domain/tags
 /lib
 
 # testing

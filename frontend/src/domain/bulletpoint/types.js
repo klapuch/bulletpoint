@@ -1,4 +1,6 @@
 // @flow
+import type { PointType } from '../bulletpoint_rating/types';
+
 export type SourceType = 'head' | 'web';
 export type FetchedBulletpointType = {|
   +id: number,
@@ -11,7 +13,7 @@ export type FetchedBulletpointType = {|
     +up: number,
     +down: number,
     +total: number,
-    +user: number,
+    +user: PointType,
   |},
   +content: string,
   +theme_id: number,
@@ -28,4 +30,3 @@ export type ErrorBulletpointType = {|
   +source_type: ?string,
   +content: ?string,
 |};
-export type PointType = 1 | 0 | -1;

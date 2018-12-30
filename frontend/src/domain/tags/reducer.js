@@ -2,7 +2,6 @@
 import {
   RECEIVED_TAGS,
   REQUESTED_TAGS,
-  INVALIDATED_TAGS,
 } from './actions';
 import type { TagType } from './types';
 
@@ -33,14 +32,6 @@ export default (state: State = init, action: Object): State => {
         ...state,
         all: {
           fetching: action.fetching,
-          payload: [],
-        },
-      };
-    case INVALIDATED_TAGS:
-      return {
-        ...state,
-        all: {
-          fetching: true,
           payload: [],
         },
       };

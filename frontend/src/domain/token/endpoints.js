@@ -1,13 +1,13 @@
 // @flow
 import axios from 'axios';
-import * as message from '../ui/message/actions';
+import * as message from '../../ui/message/actions';
 import type { PostedCredentialsType } from '../sign/types';
 
 export const create = (
-  Credentials: PostedCredentialsType,
+  credentials: PostedCredentialsType,
   next: (Object) => Promise<any>,
 ) => (dispatch: (mixed) => Object) => (
-  axios.post('/tokens', Credentials)
+  axios.post('/tokens', credentials)
     .then(response => response.data)
     .then(next)
     .catch(error => dispatch(message.receivedApiError(error)))

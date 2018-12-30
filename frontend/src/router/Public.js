@@ -3,7 +3,7 @@ import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import classNames from 'classnames';
 import Error404 from '../pages/Error/Error404';
-import * as user from '../user';
+import * as user from '../domain/user';
 import NavItem from './NavItem';
 import FlashMessage from '../ui/message/FlashMessage';
 

@@ -6,7 +6,7 @@ type ReferenceProps = {|
 |};
 const Reference = ({ url }: ReferenceProps) => {
   return (
-    <a href={url} title="Wikipedia">
+    <a href={url}>
       <span className="glyphicon glyphicon-link" aria-hidden="true" />
     </a>
   );

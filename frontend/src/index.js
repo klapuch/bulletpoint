@@ -10,8 +10,8 @@ import Router from './router';
 import combineReducers from './reducers';
 import * as serviceWorker from './serviceWorker';
 import withSettings from './api/connection';
-import * as session from './access/session';
-import { reSignIn } from './sign/endpoints';
+import * as session from './domain/access/session';
+import { reSignIn } from './domain/sign/endpoints';
 
 axios.defaults = withSettings(axios.defaults);
 

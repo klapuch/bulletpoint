@@ -3,12 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { isEmpty } from 'lodash';
-import SlugRedirect from '../../router/SlugRedirect';
-import { allByTag, allRecent } from '../../theme/endpoints';
-import { getAll, allFetching as themesFetching, getCommonTag } from '../../theme/selects';
+import * as theme from '../../domain/theme/endpoints';
+import * as themes from '../../domain/theme/selects';
 import Loader from '../../ui/Loader';
-import { default as AllThemes } from '../../theme/All';
-import type { FetchedThemeType } from '../../theme/types';
+import SlugRedirect from '../../router/SlugRedirect';
+import type { FetchedThemeType } from '../../domain/theme/types';
+import { default as AllThemes } from '../../domain/theme/components/All';
 
 type Props = {|
   +params: {|
@@ -53,12 +53,12 @@ class Themes extends React.Component<Props> {
   };
 
   getTag = () => {
-    const { themes, match: { params: { tag } } } = this.props;
+    const { match: { params: { tag } } } = this.props;
     const initTag = { name: '' };
     if (isEmpty(tag)) {
       return initTag;
     }
-    return getCommonTag(themes, parseInt(tag, 10)) || initTag;
+    return themes.getCommonTag(this.props.themes, parseInt(tag, 10)) || initTag;
   };
 
   render() {
@@ -80,10 +80,10 @@ class Themes extends React.Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  themes: getAll(state),
-  fetching: themesFetching(state),
+  themes: themes.getAll(state),
+  fetching: themes.allFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchThemes: (tag: ?number) => dispatch(tag === null ? allRecent() : allByTag(tag)),
+  fetchThemes: (tag: ?number) => dispatch(tag === null ? theme.allRecent() : theme.allByTag(tag)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Themes);

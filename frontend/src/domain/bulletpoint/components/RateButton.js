@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import * as user from '../../../user';
+import * as user from '../../user';
 
 const RateButton = styled.span`
   cursor: pointer;

@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import qs from 'qs';
 import { isEmpty } from 'lodash';
-import { allSearched } from '../../../theme/endpoints';
-import { getAll, allFetching as themesFetching } from '../../../theme/selects';
+import * as theme from '../../../domain/theme/endpoints';
+import * as themes from '../../../domain/theme/selects';
 import Loader from '../../../ui/Loader';
-import { default as AllThemes } from '../../../theme/All';
-import type { FetchedThemeType } from '../../../theme/types';
+import type { FetchedThemeType } from '../../../domain/theme/types';
+import { default as AllThemes } from '../../../domain/theme/components/All';
 
 type Props = {|
   +params: {|
@@ -54,10 +54,10 @@ class Themes extends React.Component<Props> {
 
 const mapStateToProps = (state, { location: { search } }) => ({
   params: { q: null, ...qs.parse(search, { ignoreQueryPrefix: true }) },
-  themes: getAll(state),
-  fetching: themesFetching(state),
+  themes: themes.getAll(state),
+  fetching: themes.allFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchThemes: (keyword: string) => dispatch(allSearched(keyword)),
+  fetchThemes: (keyword: string) => dispatch(theme.allSearched(keyword)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Themes);

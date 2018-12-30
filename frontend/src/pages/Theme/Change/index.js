@@ -3,14 +3,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import getSlug from 'speakingurl';
-import { change, single } from '../../../theme/endpoints';
-import Form from '../../../theme/Form';
-import { getAll, allFetching as tagsFetching } from '../../../tags/selects';
-import { all } from '../../../tags/endpoints';
+import * as tag from '../../../domain/tags/endpoints';
+import * as tags from '../../../domain/tags/selects';
+import * as theme from '../../../domain/theme/endpoints';
+import * as themes from '../../../domain/theme/selects';
+import Form from '../../../domain/theme/components/Form';
 import Loader from '../../../ui/Loader';
-import type { FetchedThemeType, PostedThemeType } from '../../../theme/types';
-import type { TagType } from '../../../tags/types';
-import { getById, singleFetching as themeFetching } from '../../../theme/selects';
+import type { FetchedThemeType, PostedThemeType } from '../../../domain/theme/types';
+import type { TagType } from '../../../domain/tags/types';
 
 type Props = {|
   +changeTheme: (number, PostedThemeType, () => (void)) => (void),
@@ -54,17 +54,17 @@ class Create extends React.Component<Props> {
 }
 
 const mapStateToProps = (state, { match: { params: { id } } }) => ({
-  tags: getAll(state),
-  theme: getById(id, state),
-  fetching: tagsFetching(state) || themeFetching(id, state),
+  tags: tags.getAll(state),
+  theme: themes.getById(id, state),
+  fetching: tags.allFetching(state) || themes.singleFetching(id, state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchTags: () => dispatch(all()),
-  fetchSingle: (id: number) => dispatch(single(id)),
+  fetchTags: () => dispatch(tag.all()),
+  fetchSingle: (id: number) => dispatch(theme.single(id)),
   changeTheme: (
     id: number,
-    theme: PostedThemeType,
+    postedTheme: PostedThemeType,
     next: () => (void),
-  ) => dispatch(change(id, theme, next)),
+  ) => dispatch(theme.change(id, postedTheme, next)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Create);

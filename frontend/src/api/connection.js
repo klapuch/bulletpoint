@@ -1,7 +1,7 @@
 // @flow
 import { merge, pickBy } from 'lodash';
 import qs from 'qs';
-import * as session from '../access/session';
+import * as session from '../domain/access/session';
 
 export default function withSettings(inherited: Object): Object {
   return merge(
