@@ -599,15 +599,40 @@ SELECT
 	FROM contributed_bulletpoints
 	LEFT JOIN sources ON sources.id = contributed_bulletpoints.source_id;
 
+CREATE FUNCTION public_contributed_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
+BEGIN
+	WITH inserted_source AS (
+		INSERT INTO sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
+	)
+	INSERT INTO contributed_bulletpoints (theme_id, source_id, content, user_id) VALUES (
+		new.theme_id,
+		(SELECT id FROM inserted_source),
+		new.content,
+		new.user_id
+	);
+	RETURN new;
+END
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE FUNCTION public_contributed_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
+BEGIN
+	WITH updated_bulletpoint AS (
+		UPDATE contributed_bulletpoints SET content = new.content WHERE id = new.id RETURNING *
+	)
+	UPDATE sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
+	RETURN new;
+END
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
 CREATE TRIGGER public_contributed_bulletpoints_trigger_row_ii
 	INSTEAD OF INSERT
 	ON public_contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_ii();
+	FOR EACH ROW EXECUTE PROCEDURE public_contributed_bulletpoints_trigger_row_ii();
 
 CREATE TRIGGER public_contributed_bulletpoints_trigger_row_iu
 	INSTEAD OF UPDATE
 	ON public_contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_iu();
+	FOR EACH ROW EXECUTE PROCEDURE public_contributed_bulletpoints_trigger_row_iu();
 
 
 -- tables

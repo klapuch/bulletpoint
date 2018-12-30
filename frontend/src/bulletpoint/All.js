@@ -5,8 +5,8 @@ import Single from './Single';
 
 type Props = {|
   +bulletpoints: Array<FetchedBulletpointType>,
-  +onRatingChange: (id: number, point: PointType) => (void),
-  +onEditClick: (number) => (void),
+  +onRatingChange?: (id: number, point: PointType) => (void),
+  +onEditClick?: (number) => (void),
 |};
 const All = ({ bulletpoints, onRatingChange, onEditClick }: Props) => (
   <ul className="list-group">

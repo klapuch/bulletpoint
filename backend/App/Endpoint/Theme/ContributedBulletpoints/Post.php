@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Endpoint\Theme\ContributedBulletpoints;
 
 use Bulletpoint\Constraint;
-use Bulletpoint\Domain;
+use Bulletpoint\Domain\Contribution;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Response;
 use Klapuch\Application;
@@ -34,7 +34,7 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Domain\ThemeBulletpoints(
+		(new Contribution\ThemeBulletpoints(
 			$parameters['theme_id'],
 			$this->connection,
 			$this->user

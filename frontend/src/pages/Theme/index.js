@@ -8,7 +8,7 @@ import { isEmpty } from 'lodash';
 import SlugRedirect from '../../router/SlugRedirect';
 import { single } from '../../theme/endpoints';
 import { all as allBulletpoints, add, edit } from '../../theme/bulletpoint/endpoints';
-import { all as allContributedBulletpoints } from '../../theme/contributed_bulletpoint/endpoints';
+import { all as allContributedBulletpoints, add as contributeBulletpoint } from '../../theme/contributed_bulletpoint/endpoints';
 import { rate } from '../../theme/bulletpoint/rating/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
 import * as user from '../../user';
@@ -144,14 +144,10 @@ class Theme extends React.Component<Props, State> {
             {!isEmpty(contributedBulletpoints) && (
               <>
                 <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
-                <AllBulletpoints
-                  bulletpoints={contributedBulletpoints}
-                  onRatingChange={() => {}}
-                  onEditClick={this.handleEditClick}
-                />
+                <AllBulletpoints bulletpoints={contributedBulletpoints} />
               </>
             )}
-            {user.isAdmin() && (
+            {user.isLoggedIn() && (
               <Form
                 bulletpoint={this.state.bulletpoint}
                 onAddClick={this.handleAddClick}
@@ -184,7 +180,7 @@ const mapDispatchToProps = dispatch => ({
     theme: number,
     bulletpoint: PostedBulletpointType,
     next: (void) => (void),
-  ) => dispatch(add(theme, bulletpoint, next)),
+  ) => dispatch(user.isAdmin() ? add(theme, bulletpoint, next) : contributeBulletpoint(theme, bulletpoint, next)),
   editBulletpoint: (
     theme: number,
     bulletpointId: number,

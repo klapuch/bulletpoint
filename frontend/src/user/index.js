@@ -2,16 +2,18 @@
 import * as session from '../access/session';
 import type { RoleType } from './types';
 
+export const isLoggedIn = (): bool => session.exists();
+
 export function getRole(): ?RoleType {
-  return session.exists() ? session.getMe().role : null;
+  return isLoggedIn() ? session.getMe().role : null;
 }
 
 export function getUsername(): ?string {
-  return session.exists() ? session.getMe().username : null;
+  return isLoggedIn() ? session.getMe().username : null;
 }
 
 export function getEmail(): ?string {
-  return session.exists() ? session.getMe().email : null;
+  return isLoggedIn() ? session.getMe().email : null;
 }
 
 export function isMember(): bool {

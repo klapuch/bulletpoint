@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import styled from 'styled-components';
 import type { ErrorBulletpointType, PostedBulletpointType } from '../theme/bulletpoint/types';
 import * as validation from '../theme/bulletpoint/validation';
+import * as user from '../user';
 
 export type FormTypes = 'default' | 'edit' | 'add';
 type TargetType = {|
@@ -32,9 +33,17 @@ const SubmitButton = ({ formType, onClick, children }: { children: string, ...Bu
 
 const ConfirmButton = ({ formType, onClick }: ButtonProps) => {
   if (formType === 'default') {
-    return <SubmitButton formType={formType} onClick={onClick}>Přidat bulletpoint</SubmitButton>;
+    return (
+      <SubmitButton formType={formType} onClick={onClick}>
+        {user.isAdmin() ? 'Přidat bulletpoint' : 'Navrhnout bulletpoint'}
+      </SubmitButton>
+    );
   } else if (formType === 'add') {
-    return <SubmitButton formType={formType} onClick={onClick}>Přidat</SubmitButton>;
+    return (
+      <SubmitButton formType={formType} onClick={onClick}>
+        {user.isAdmin() ? 'Přidat' : 'Navrhnout'}
+      </SubmitButton>
+    );
   } else if (formType === 'edit') {
     return <SubmitButton formType={formType} onClick={onClick}>Upravit</SubmitButton>;
   }

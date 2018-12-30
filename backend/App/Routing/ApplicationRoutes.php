@@ -98,7 +98,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'contributed_bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\ContributedBulletpoint\Put($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['member', 'admin'])
+					new Http\ChosenRole($user, ['member'])
 				);
 			},
 			'bulletpoints/{bulletpoint_id}/ratings [POST]' => function() use ($request, $user): Application\View {
