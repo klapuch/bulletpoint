@@ -202,12 +202,20 @@ const mapDispatchToProps = dispatch => ({
     theme: number,
     bulletpoint: number,
     next: (void) => (void),
-  ) => dispatch(user.isAdmin() ? deleteOne(theme, bulletpoint, next) : deleteContribution(theme, bulletpoint, next)),
+  ) => dispatch(
+    user.isAdmin()
+      ? deleteOne(theme, bulletpoint, next)
+      : deleteContribution(theme, bulletpoint, next),
+  ),
   addBulletpoint: (
     theme: number,
     bulletpoint: PostedBulletpointType,
     next: (void) => (void),
-  ) => dispatch(user.isAdmin() ? add(theme, bulletpoint, next) : contributeBulletpoint(theme, bulletpoint, next)),
+  ) => dispatch(
+    user.isAdmin()
+      ? add(theme, bulletpoint, next)
+      : contributeBulletpoint(theme, bulletpoint, next),
+  ),
   editBulletpoint: (
     theme: number,
     bulletpointId: number,
