@@ -22,17 +22,6 @@ export const add = (
     .then(next);
 };
 
-export const edit = (
-  theme: number,
-  id: number,
-  bulletpoint: PostedBulletpointType,
-  next: (void) => (void),
-) => (dispatch: (mixed) => Object) => {
-  axios.put(`/contributed_bulletpoints/${id}`, bulletpoint)
-    .then(() => dispatch(invalidatedAll(theme)))
-    .then(next);
-};
-
 export const deleteOne = (
   theme: number,
   bulletpoint: number,
@@ -41,14 +30,4 @@ export const deleteOne = (
   axios.delete(`/contributed_bulletpoints/${bulletpoint}`)
     .then(() => dispatch(invalidatedAll(theme)))
     .then(next);
-};
-
-export const updateSingle = (
-  theme: number,
-  bulletpoint: number,
-) => (dispatch: (mixed) => Object) => {
-  requestedUpdateSingle(theme, bulletpoint);
-  axios.get(`/contributed_bulletpoints/${bulletpoint}`)
-    .then(response => response.data)
-    .then(payload => dispatch(receivedUpdateSingle(payload)));
 };

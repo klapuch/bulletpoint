@@ -13,10 +13,3 @@ export const allFetching = (theme: number, state: Object): boolean => (
 export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpointType> => (
   state.themeContributedBulletpoints.all[theme] ? state.themeContributedBulletpoints.all[theme].payload : []
 );
-export const getById = (
-  theme: number,
-  bulletpoint: number,
-  state: Object,
-): FetchedBulletpointType|Object => (
-  first(getByTheme(theme, state).filter(single => single.id === bulletpoint))
-);
