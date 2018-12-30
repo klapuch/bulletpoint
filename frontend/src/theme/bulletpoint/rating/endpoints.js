@@ -1,6 +1,6 @@
 // @flow
 import axios from 'axios';
-import { updateSingle } from '../../../theme/bulletpoint/endpoints';
+import { updateSingle } from '../endpoints';
 import type { PointType } from '../types';
 
 export const rate = (

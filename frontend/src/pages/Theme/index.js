@@ -7,7 +7,12 @@ import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 import SlugRedirect from '../../router/SlugRedirect';
 import { single } from '../../theme/endpoints';
-import { all as allBulletpoints, add, edit, deleteOne } from '../../theme/bulletpoint/endpoints';
+import {
+  all as allBulletpoints,
+  add,
+  edit,
+  deleteOne,
+} from '../../theme/bulletpoint/endpoints';
 import { all as allContributedBulletpoints, add as contributeBulletpoint, deleteOne as deleteContribution } from '../../theme/contributed_bulletpoint/endpoints';
 import { rate } from '../../theme/bulletpoint/rating/endpoints';
 import { getById, singleFetching as themeFetching } from '../../theme/selects';
@@ -123,7 +128,12 @@ class Theme extends React.Component<Props, State> {
   handleCancelClick = () => this.setState(initState);
 
   render() {
-    const { theme, fetching, bulletpoints, contributedBulletpoints } = this.props;
+    const {
+      theme,
+      fetching,
+      bulletpoints,
+      contributedBulletpoints,
+    } = this.props;
     if (fetching) {
       return <Loader />;
     }

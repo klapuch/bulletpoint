@@ -17,20 +17,26 @@ type Props = {|
   +onEditClick?: (id: number) => (void),
   +onDeleteClick?: (id: number) => (void),
 |};
-const Single = ({ bulletpoint, onRatingChange, onEditClick, onDeleteClick }: Props) => (
+const Single = ({
+  bulletpoint, onRatingChange, onEditClick, onDeleteClick,
+}: Props) => (
   <>
-    {onRatingChange && <DownButton
+    {onRatingChange && (
+    <DownButton
       rated={bulletpoint.rating.user === -1}
       onClick={() => onRatingChange(bulletpoint.id, -1)}
     >
       {bulletpoint.rating.down}
-    </DownButton>}
-    {onRatingChange && <UpButton
+    </DownButton>
+    )}
+    {onRatingChange && (
+    <UpButton
       rated={bulletpoint.rating.user === 1}
       onClick={() => onRatingChange(bulletpoint.id, 1)}
     >
       {bulletpoint.rating.up}
-    </UpButton>}
+    </UpButton>
+    )}
     {bulletpoint.content}
     {onDeleteClick && <ActionButton className="text-danger glyphicon glyphicon-remove" aria-hidden="true" onClick={() => onDeleteClick(bulletpoint.id)} />}
     {onEditClick && <ActionButton className="glyphicon glyphicon-pencil" aria-hidden="true" onClick={() => onEditClick(bulletpoint.id)} />}

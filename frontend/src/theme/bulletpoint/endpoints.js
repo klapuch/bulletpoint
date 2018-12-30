@@ -1,6 +1,12 @@
 // @flow
 import axios from 'axios';
-import {invalidatedAll, receivedAll, receivedUpdateSingle, requestedAll, requestedUpdateSingle} from './actions';
+import {
+  invalidatedAll,
+  receivedAll,
+  receivedUpdateSingle,
+  requestedAll,
+  requestedUpdateSingle,
+} from './actions';
 import { fetchedAll } from './selects';
 import type { PostedBulletpointType } from './types';
 

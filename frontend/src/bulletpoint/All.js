@@ -9,7 +9,12 @@ type Props = {|
   +onEditClick?: (number) => (void),
   +onDeleteClick?: (number) => (void),
 |};
-const All = ({ bulletpoints, onRatingChange, onEditClick, onDeleteClick }: Props) => (
+const All = ({
+  bulletpoints,
+  onRatingChange,
+  onEditClick,
+  onDeleteClick,
+}: Props) => (
   <ul className="list-group">
     {bulletpoints.map(bulletpoint => (
       <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
