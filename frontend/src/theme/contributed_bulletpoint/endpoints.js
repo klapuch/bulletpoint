@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { invalidatedAll, receivedAll, requestedAll } from './actions';
 import { fetchedAll } from './selects';
-import type { PostedBulletpointType } from '../types';
+import type { PostedBulletpointType } from '../bulletpoint/types';
 
 export const all = (theme: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedAll(theme, getState())) return;

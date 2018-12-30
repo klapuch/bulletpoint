@@ -1,6 +1,6 @@
 // @flow
 
-import type { FetchedBulletpointType } from '../types';
+import type { FetchedBulletpointType } from '../bulletpoint/types';
 
 export const RECEIVED_THEME_CONTRIBUTED_BULLETPOINTS = 'RECEIVED_THEME_CONTRIBUTED_BULLETPOINTS';
 export const REQUESTED_THEME_CONTRIBUTED_BULLETPOINTS = 'REQUESTED_THEME_CONTRIBUTED_BULLETPOINTS';

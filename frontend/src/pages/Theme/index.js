@@ -63,8 +63,10 @@ type Props = {|
     next: (void) => (void),
   ) => (void),
   +bulletpoints: Array<FetchedBulletpointType>,
+  +contributedBulletpoints: Array<FetchedBulletpointType>,
   +changeRating: (theme: number, bulletpoint: number, point: PointType) => (void),
   +fetchBulletpoints: (number) => (void),
+  +fetchContributedBulletpoints: (number) => (void),
   +fetchTheme: (number) => (void),
   +fetching: boolean,
   +getBulletpointById: (number) => FetchedBulletpointType,
@@ -158,8 +160,8 @@ class Theme extends React.Component<Props, State> {
             <AllBulletpoints
               bulletpoints={bulletpoints}
               onRatingChange={this.handleRatingChange}
-              onEditClick={user.isAdmin() ? this.handleEditClick : null}
-              onDeleteClick={user.isAdmin() ? this.handleDeleteClick : null}
+              onEditClick={user.isAdmin() ? this.handleEditClick : undefined}
+              onDeleteClick={user.isAdmin() ? this.handleDeleteClick : undefined}
             />
             {!isEmpty(contributedBulletpoints) && (
               <>
