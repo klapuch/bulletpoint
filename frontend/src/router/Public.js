@@ -2,18 +2,16 @@
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import classNames from 'classnames';
-import Error404 from '../pages/Error/Error404';
 import * as user from '../domain/user';
 import NavItem from './NavItem';
 import FlashMessage from '../ui/message/FlashMessage';
 
 type Props = {
   +component: any,
-  +restrictive?: boolean,
   +title?: () => ?Object,
 };
 const Public = ({
-  component: Component, restrictive = false, title = () => null, ...rest
+  component: Component, title = () => null, ...rest
 }: Props): Route => (
   <Route
     {...rest}
@@ -69,9 +67,7 @@ const Public = ({
             <div className="row">
               <FlashMessage pathname={props.location.pathname} />
             </div>
-            {restrictive && !user.isLoggedIn()
-              ? <Error404 {...props} />
-              : <Component {...props} />}
+            {<Component {...props} />}
           </div>
         </div>
         <div className="footer navbar-fixed-bottom">

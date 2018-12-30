@@ -28,7 +28,7 @@ class In extends React.Component<Props, State> {
   render() {
     const { from } = this.props.location.state || { from: { pathname: '/' } };
     const { redirectToReferrer } = this.state;
-    if (redirectToReferrer) {
+    if (redirectToReferrer && typeof from !== 'undefined') {
       return <Redirect to={from} />;
     }
     return (
