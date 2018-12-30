@@ -27,7 +27,7 @@ export const start = (token: Token, me: MeType): void => {
   };
   window.document.cookie = serialize(VALUE_NAME, token.value, idOptions);
   window.document.cookie = serialize(TTL_NAME, 1, ttlOptions);
-  window.document.cookie = serialize(ME_NAME, JSON.stringify(me), meOptions);
+  window.document.cookie = serialize(ME_NAME, btoa(JSON.stringify(me)), meOptions);
 };
 
 export const destroy = (): void => {
@@ -52,7 +52,7 @@ export const getTtl = (): ?number => {
 
 export const getMe = (): MeType => {
   const cookie = parse(window.document.cookie);
-  return !cookie || !cookie[ME_NAME] ? { username: '', email: '', role: 'guest' } : JSON.parse(cookie[ME_NAME]);
+  return !cookie || !cookie[ME_NAME] ? { username: '', email: '', role: 'guest' } : JSON.parse(atob(cookie[ME_NAME]));
 };
 
 export const exists = (): boolean => getValue() !== null;
