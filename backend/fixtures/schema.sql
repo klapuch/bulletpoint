@@ -52,11 +52,7 @@ CREATE FUNCTION audit.trigger_table_audit() RETURNS trigger AS $BODY$
 DECLARE
 	r record;
 BEGIN
-	IF (TG_OP = 'DELETE') THEN
-		r = old;
-	ELSE
-		r = new;
-	END IF;
+	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
 
 	EXECUTE format(
 		'INSERT INTO audit.history ("table", operation, user_id, old, new) VALUES (%L, %L, %L, %L, %L)',
