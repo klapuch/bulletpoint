@@ -6,11 +6,10 @@ namespace Bulletpoint\Endpoint\Theme\ContributedBulletpoints;
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Domain\Contribution;
-use Bulletpoint\Response;
 use Klapuch\Application;
-use Klapuch\Internal;
 use Klapuch\Storage;
 use Klapuch\Validation;
+use Nette\Utils\Json;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -42,8 +41,8 @@ final class Post implements Application\View {
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
 				new Constraint\BulletpointRule(),
-			))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
+			))->apply(Json::decode($this->request->body()->serialization()))
 		);
-		return new Response\EmptyResponse();
+		return new Application\EmptyResponse();
 	}
 }

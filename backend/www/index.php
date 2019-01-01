@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Bulletpoint\Configuration;
+use Bulletpoint\Configuration\ApplicationConfiguration;
+use Bulletpoint\Routing\ApplicationRoutes;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\Routing;
@@ -20,15 +21,15 @@ $uri = new Uri\CachedUri(
 	)
 );
 
-$configuration = (new Configuration\ApplicationConfiguration())->read();
+$configuration = (new ApplicationConfiguration())->read();
 
 $redis = new Predis\Client($configuration['REDIS']['uri']);
 
 echo (new class(
 	$configuration,
 	new Routing\MatchingRoutes(
-		new Bulletpoint\Routing\NginxMatchedRoutes(
-			new Bulletpoint\Routing\ApplicationRoutes(
+		new Routing\NginxMatchedRoutes(
+			new ApplicationRoutes(
 				new Storage\CachedConnection(
 					new Storage\PDOConnection(
 						new Storage\SafePDO(
@@ -72,8 +73,8 @@ echo (new class(
 				$destination()->response(
 					(new Routing\TypedMask(
 						new Routing\CombinedMask(
-							new Bulletpoint\Routing\NginxMask(),
-							new Bulletpoint\Routing\CommonMask()
+							new Routing\NginxMask(),
+							new Routing\CommonMask()
 						)
 					))->parameters()
 				)

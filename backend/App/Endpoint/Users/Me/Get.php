@@ -23,7 +23,7 @@ final class Get implements Application\View {
 
 	public function response(array $parameters): Application\Response {
 		return new Response\JsonResponse(
-			new Response\PlainResponse(
+			new Application\PlainResponse(
 				new Output\Json(
 					(new Access\PubliclyPrivateUser(
 						$this->user,

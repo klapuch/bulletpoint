@@ -6,7 +6,6 @@ namespace Bulletpoint\Endpoint\Themes;
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
-use Bulletpoint\Misc;
 use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Dataset;
@@ -54,8 +53,8 @@ final class Get implements Application\View {
 			);
 		}
 		return new Response\JsonResponse(
-			new Response\PlainResponse(
-				(new Misc\JsonPrintedObjects(
+			new Application\PlainResponse(
+				(new Output\JsonPrintedObjects(
 					static function (Domain\Theme $theme, Output\Format $format): Output\Format {
 						return $theme->print($format);
 					},

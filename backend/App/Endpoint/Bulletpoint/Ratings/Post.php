@@ -6,10 +6,9 @@ namespace Bulletpoint\Endpoint\Bulletpoint\Ratings;
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
-use Bulletpoint\Response;
 use Klapuch\Application;
-use Klapuch\Internal;
 use Klapuch\Storage;
+use Nette\Utils\Json;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -35,12 +34,12 @@ final class Post implements Application\View {
 	public function response(array $parameters): Application\Response {
 		['point' => $point] = (new Constraint\StructuredJson(
 			new \SplFileInfo(self::SCHEMA)
-		))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values());
+		))->apply(Json::decode($this->request->body()->serialization()));
 		(new Domain\BulletpointRating(
 			$parameters['bulletpoint_id'],
 			$this->user,
 			$this->connection
 		))->rate($point);
-		return new Response\EmptyResponse();
+		return new Application\EmptyResponse();
 	}
 }

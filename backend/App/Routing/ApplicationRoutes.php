@@ -7,7 +7,6 @@ use Bulletpoint\Domain\Access;
 use Bulletpoint\Endpoint;
 use Bulletpoint\Http;
 use Bulletpoint\Misc;
-use Bulletpoint\Request\CachedRequest;
 use Bulletpoint\View\AuthenticatedView;
 use Klapuch\Application;
 use Klapuch\Encryption;
@@ -35,7 +34,7 @@ final class ApplicationRoutes implements Routing\Routes {
 	}
 
 	public function matches(): array {
-		$request = new CachedRequest(new Application\PlainRequest());
+		$request = new Application\CachedRequest(new Application\PlainRequest());
 		$user = (new Access\HarnessedEntrance(
 			new Access\PgEntrance(
 				new Access\ApiEntrance($this->connection),

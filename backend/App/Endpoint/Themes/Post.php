@@ -9,11 +9,11 @@ use Bulletpoint\Domain\Access;
 use Bulletpoint\Http;
 use Bulletpoint\Response;
 use Klapuch\Application;
-use Klapuch\Internal;
 use Klapuch\Storage;
 use Klapuch\Uri\RelativeUrl;
 use Klapuch\Uri\Uri;
 use Klapuch\Validation;
+use Nette\Utils\Json;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -42,7 +42,7 @@ final class Post implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		return new Response\CreatedResponse(
-			new Response\EmptyResponse(),
+			new Application\EmptyResponse(),
 			new Http\CreatedResourceUrl(
 				new RelativeUrl($this->url, 'themes/{id}'),
 				[
@@ -53,7 +53,7 @@ final class Post implements Application\View {
 						(new Validation\ChainedRule(
 							new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
 							new Constraint\ThemeRule(),
-						))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
+						))->apply(Json::decode($this->request->body()->serialization()))
 					),
 				]
 			)

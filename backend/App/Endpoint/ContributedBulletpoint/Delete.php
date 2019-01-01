@@ -5,7 +5,6 @@ namespace Bulletpoint\Endpoint\ContributedBulletpoint;
 
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Domain\Contribution;
-use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Storage;
 
@@ -26,6 +25,6 @@ final class Delete implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		(new Contribution\StoredBulletpoint($parameters['id'], $this->user, $this->connection))->delete();
-		return new Response\EmptyResponse();
+		return new Application\EmptyResponse();
 	}
 }

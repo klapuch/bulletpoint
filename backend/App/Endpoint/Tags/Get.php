@@ -19,7 +19,7 @@ final class Get implements Application\View {
 
 	public function response(array $parameters): Application\Response {
 		return new Response\JsonResponse(
-			new Response\PlainResponse(new Output\Json((new Schema\TableEnum('tags', $this->connection))->values()))
+			new Application\PlainResponse(new Output\Json((new Schema\TableEnum('tags', $this->connection))->values()))
 		);
 	}
 }

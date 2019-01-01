@@ -29,7 +29,7 @@ final class Get implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		return new Response\JsonResponse(
-			new Response\PlainResponse(
+			new Application\PlainResponse(
 				(new Contribution\ExistingBulletpoint(
 					new Contribution\StoredBulletpoint($parameters['id'], $this->user, $this->connection),
 					$this->user,

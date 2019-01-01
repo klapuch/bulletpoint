@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Endpoint;
 
-use Bulletpoint\Response;
 use Klapuch\Application;
 
 final class Preflight implements Application\View {
@@ -20,7 +19,7 @@ final class Preflight implements Application\View {
 
 	public function response(array $parameters): Application\Response {
 		if ($this->preflight($this->request->headers()))
-			return new Response\EmptyResponse();
+			return new Application\EmptyResponse();
 		return $this->origin->response($parameters);
 	}
 

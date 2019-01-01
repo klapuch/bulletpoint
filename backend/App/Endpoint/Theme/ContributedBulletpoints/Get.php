@@ -6,7 +6,6 @@ namespace Bulletpoint\Endpoint\Theme\ContributedBulletpoints;
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Domain\Contribution;
-use Bulletpoint\Misc;
 use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Output;
@@ -36,8 +35,8 @@ final class Get implements Application\View {
 			$this->user
 		);
 		return new Response\JsonResponse(
-			new Response\PlainResponse(
-				(new Misc\JsonPrintedObjects(
+			new Application\PlainResponse(
+				(new Output\JsonPrintedObjects(
 					static function (Domain\Bulletpoint $bulletpoint, Output\Format $format): Output\Format {
 						return $bulletpoint->print($format);
 					},

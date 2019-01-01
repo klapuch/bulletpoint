@@ -8,8 +8,8 @@ use Bulletpoint\Domain\Access;
 use Bulletpoint\Misc;
 use Bulletpoint\Response;
 use Klapuch\Application;
-use Klapuch\Internal;
 use Klapuch\Output;
+use Nette\Utils\Json;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
@@ -31,10 +31,10 @@ final class Post implements Application\View {
 		))->enter(
 			(new Constraint\StructuredJson(
 				new \SplFileInfo(self::SCHEMA)
-			))->apply((new Internal\DecodedJson($this->request->body()->serialization()))->values())
+			))->apply(Json::decode($this->request->body()->serialization()))
 		);
 		return new Response\JsonResponse(
-			new Response\PlainResponse(
+			new Application\PlainResponse(
 				new Output\Json(['token' => $seeker->id(), 'expiration' => $seeker->properties()['expiration']]),
 				[],
 				HTTP_CREATED

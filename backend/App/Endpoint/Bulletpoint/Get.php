@@ -24,7 +24,7 @@ final class Get implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		return new Response\JsonResponse(
-			new Response\PlainResponse(
+			new Application\PlainResponse(
 				(new Domain\ExistingBulletpoint(
 					new Domain\StoredBulletpoint($parameters['id'], $this->connection),
 					$parameters['id'],

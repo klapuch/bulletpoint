@@ -6,9 +6,9 @@ namespace Bulletpoint\Scheduling\Task;
 use Bulletpoint\Scheduling;
 use Bulletpoint\Schema;
 use Klapuch\Http;
-use Klapuch\Internal;
 use Klapuch\Storage;
 use Klapuch\Uri;
+use Nette\Utils\Json;
 
 final class GenerateJsonSchema implements Scheduling\Job {
 	/** @var \Klapuch\Storage\Connection */
@@ -34,9 +34,9 @@ final class GenerateJsonSchema implements Scheduling\Job {
 							'X-Csrf-Token: LsAV3irUxESTZz-djmy6u5czf122eyTgu3yvdi6MSOwQANDhsOHOQzBZrqPku09Z8KS8BIE406uNXXeAaSycv978wm81:EYgPsfAI3loDTk9UhNmva8lcEE5KwhHSUbD_zTktXHmaO7iA36crJ8eAB0rum1vjF3VeIaKiC4GIPRTtJG8ydDuUdt41',
 						],
 					],
-					(new Internal\EncodedJson(['json' => '', 'schema' => $schema]))->value()
+					Json::encode(['json' => '', 'schema' => $schema])
 				))->send();
-				$validation = (new Internal\DecodedJson($response->body()))->values();
+				$validation = Json::decode($response->body());
 				if ($validation['valid'] === false) {
 					throw new \Exception('JSON schema is not valid');
 				}
@@ -44,7 +44,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 
 			public function save(array $json, \SplFileInfo $file): void {
 				@mkdir($file->getPath(), 0777, true); // @ directory may exists
-				$schema = (new Internal\EncodedJson($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES))->value();
+				$schema = Json::encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 				try {
 					$this->validate($schema);
 				} catch (\UnexpectedValueException $e) {
