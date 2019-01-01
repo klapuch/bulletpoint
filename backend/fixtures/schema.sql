@@ -447,12 +447,14 @@ CREATE TRIGGER bulletpoint_ratings_row_aiud_trigger
 
 
 -- views
-CREATE VIEW public_themes AS
+CREATE SCHEMA web;
+
+CREATE VIEW web.themes AS
 	SELECT
 		themes.id, themes.name, json_tags.tags, themes.created_at,
 		"references".url AS reference_url,
 		users.id AS user_id
-	FROM themes
+	FROM public.themes
 	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id
 	LEFT JOIN (
@@ -462,17 +464,17 @@ CREATE VIEW public_themes AS
 		GROUP BY theme_id
 	) AS json_tags ON json_tags.theme_id = themes.id;
 
-CREATE FUNCTION public_themes_trigger_row_ii() RETURNS trigger AS $BODY$
+CREATE FUNCTION web.themes_trigger_row_ii() RETURNS trigger AS $BODY$
 	DECLARE v_theme_id integer;
 BEGIN
 	WITH inserted_reference AS (
-		INSERT INTO "references" (url) VALUES (new.reference_url)
+		INSERT INTO public."references" (url) VALUES (new.reference_url)
 		RETURNING id
 	)
-	INSERT INTO themes (name, reference_id, user_id) VALUES (new.name, (SELECT id FROM inserted_reference), new.user_id)
+	INSERT INTO public.themes (name, reference_id, user_id) VALUES (new.name, (SELECT id FROM inserted_reference), new.user_id)
 	RETURNING id INTO v_theme_id;
 
-	INSERT INTO theme_tags (theme_id, tag_id)
+	INSERT INTO public.theme_tags (theme_id, tag_id)
 	SELECT v_theme_id, r.tag::integer FROM jsonb_array_elements(new.tags) AS r(tag);
 
 	new.id = v_theme_id;
@@ -480,21 +482,21 @@ BEGIN
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE FUNCTION public_themes_trigger_row_iu() RETURNS trigger AS $BODY$
+CREATE FUNCTION web.themes_trigger_row_iu() RETURNS trigger AS $BODY$
 	DECLARE
-		v_theme themes;
+		v_theme public.themes;
 		v_current_tags integer[];
 		v_new_tags integer[];
 BEGIN
-	UPDATE themes SET name = new.name WHERE id = new.id RETURNING * INTO v_theme;
-	UPDATE "references" SET url = new.reference_url WHERE id = v_theme.reference_id;
+	UPDATE public.themes SET name = new.name WHERE id = new.id RETURNING * INTO v_theme;
+	UPDATE public."references" SET url = new.reference_url WHERE id = v_theme.reference_id;
 
-	v_current_tags = array_agg(tag_id) FROM theme_tags WHERE theme_id = v_theme.id;
+	v_current_tags = array_agg(tag_id) FROM public.theme_tags WHERE theme_id = v_theme.id;
 	v_new_tags = array_agg(r.tag::integer) FROM jsonb_array_elements(new.tags) AS r(tag);
 
 	IF (array_equals(v_current_tags, v_new_tags) IS FALSE) THEN
-		DELETE FROM theme_tags WHERE theme_id = v_theme.id;
-		INSERT INTO theme_tags (theme_id, tag_id)
+		DELETE FROM public.theme_tags WHERE theme_id = v_theme.id;
+		INSERT INTO public.theme_tags (theme_id, tag_id)
 		SELECT v_theme.id, r.tag FROM unnest(v_new_tags) AS r(tag);
 	END IF;
 
@@ -502,24 +504,24 @@ BEGIN
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE TRIGGER public_themes_trigger_row_ii
+CREATE TRIGGER themes_trigger_row_ii
 	INSTEAD OF INSERT
-	ON public_themes
-	FOR EACH ROW EXECUTE PROCEDURE public_themes_trigger_row_ii();
+	ON web.themes
+	FOR EACH ROW EXECUTE PROCEDURE web.themes_trigger_row_ii();
 
-CREATE TRIGGER public_themes_trigger_row_iu
+CREATE TRIGGER themes_trigger_row_iu
 	INSTEAD OF UPDATE
-	ON public_themes
-	FOR EACH ROW EXECUTE PROCEDURE public_themes_trigger_row_iu();
+	ON web.themes
+	FOR EACH ROW EXECUTE PROCEDURE web.themes_trigger_row_iu();
 
 
-CREATE VIEW tagged_themes AS
-	SELECT tag_id, public_themes.*
-	FROM public_themes
-	JOIN theme_tags ON theme_tags.theme_id = public_themes.id;
+CREATE VIEW web.tagged_themes AS
+	SELECT tag_id, themes.*
+	FROM web.themes
+	JOIN theme_tags ON theme_tags.theme_id = themes.id;
 
 
-CREATE VIEW public_bulletpoints AS
+CREATE VIEW web.bulletpoints AS
 	SELECT
 		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id,
 		sources.link AS source_link, sources.type AS source_type,
@@ -527,75 +529,76 @@ CREATE VIEW public_bulletpoints AS
 			abs(bulletpoint_ratings.down) AS down_rating,
 			(bulletpoint_ratings.up + bulletpoint_ratings.down) AS total_rating,
 		bulletpoint_ratings.user_rating
-	FROM bulletpoints
-	-- TODO: will by pre-counted
+	FROM public.bulletpoints
+	-- TODO: will be pre-counted
 	JOIN (
 		SELECT
 			DISTINCT ON (bulletpoint_ratings.bulletpoint_id) bulletpoint_ratings.bulletpoint_id,
 			COALESCE(sum(point) FILTER (WHERE point = 1) OVER (PARTITION BY bulletpoint_ratings.bulletpoint_id), 0) AS up,
 			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_ratings.bulletpoint_id), 0) AS down,
 			COALESCE(user_bulletpoint_ratings.user_rating, 0) AS user_rating
-		FROM bulletpoint_ratings
+		FROM public.bulletpoint_ratings
 		LEFT JOIN (
 			SELECT bulletpoint_id, CASE WHEN user_id = globals_get_user() THEN point ELSE 0 END AS user_rating
-			FROM bulletpoint_ratings
+			FROM public.bulletpoint_ratings
 			WHERE user_id = globals_get_user()
 		) AS user_bulletpoint_ratings ON user_bulletpoint_ratings.bulletpoint_id = bulletpoint_ratings.bulletpoint_id
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
-	LEFT JOIN sources ON sources.id = bulletpoints.source_id
-	LEFT JOIN bulletpoint_reputations ON bulletpoint_reputations.bulletpoint_id = bulletpoints.id
+	LEFT JOIN public.sources ON sources.id = bulletpoints.source_id
+	LEFT JOIN public.bulletpoint_reputations ON bulletpoint_reputations.bulletpoint_id = bulletpoints.id
 	ORDER BY total_rating DESC, bulletpoint_reputations.reputation DESC, length(bulletpoints.content) ASC, created_at DESC, id DESC;
 
-CREATE FUNCTION public_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
+CREATE FUNCTION web.bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
 	WITH inserted_source AS (
-		INSERT INTO sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
+		INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
 	)
-	INSERT INTO bulletpoints (theme_id, source_id, content, user_id) VALUES (
+	INSERT INTO public.bulletpoints (theme_id, source_id, content, user_id) VALUES (
 		new.theme_id,
 		(SELECT id FROM inserted_source),
 		new.content,
 		new.user_id
 	);
+
 	RETURN new;
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE FUNCTION public_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
+CREATE FUNCTION web.bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
 BEGIN
 	WITH updated_bulletpoint AS (
-		UPDATE bulletpoints SET content = new.content WHERE id = new.id RETURNING *
+		UPDATE public.bulletpoints SET content = new.content WHERE id = new.id RETURNING *
 	)
-	UPDATE sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
+	UPDATE public.sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
 	RETURN new;
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE TRIGGER public_bulletpoints_trigger_row_ii
+CREATE TRIGGER bulletpoints_trigger_row_ii
 	INSTEAD OF INSERT
-	ON public_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_ii();
+	ON web.bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii();
 
-CREATE TRIGGER public_bulletpoints_trigger_row_iu
+CREATE TRIGGER bulletpoints_trigger_row_iu
 	INSTEAD OF UPDATE
-	ON public_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_iu();
+	ON web.bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_iu();
 
 
-CREATE VIEW public_contributed_bulletpoints AS
+CREATE VIEW web.contributed_bulletpoints AS
 SELECT
 	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id,
 	sources.link AS source_link, sources.type AS source_type
-	FROM contributed_bulletpoints
-	LEFT JOIN sources ON sources.id = contributed_bulletpoints.source_id
+	FROM public.contributed_bulletpoints
+	LEFT JOIN public.sources ON sources.id = contributed_bulletpoints.source_id
 	ORDER BY contributed_bulletpoints.created_at DESC, length(contributed_bulletpoints.content) ASC;
 
-CREATE FUNCTION public_contributed_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
+CREATE FUNCTION web.contributed_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
 	WITH inserted_source AS (
-		INSERT INTO sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
+		INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
 	)
-	INSERT INTO contributed_bulletpoints (theme_id, source_id, content, user_id) VALUES (
+	INSERT INTO public.contributed_bulletpoints (theme_id, source_id, content, user_id) VALUES (
 		new.theme_id,
 		(SELECT id FROM inserted_source),
 		new.content,
@@ -605,25 +608,25 @@ BEGIN
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE FUNCTION public_contributed_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
+CREATE FUNCTION web.contributed_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
 BEGIN
 	WITH updated_bulletpoint AS (
-		UPDATE contributed_bulletpoints SET content = new.content WHERE id = new.id RETURNING *
+		UPDATE public.contributed_bulletpoints SET content = new.content WHERE id = new.id RETURNING *
 	)
-	UPDATE sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
+	UPDATE public.sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
 	RETURN new;
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE TRIGGER public_contributed_bulletpoints_trigger_row_ii
+CREATE TRIGGER contributed_bulletpoints_trigger_row_ii
 	INSTEAD OF INSERT
-	ON public_contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE public_contributed_bulletpoints_trigger_row_ii();
+	ON web.contributed_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE web.contributed_bulletpoints_trigger_row_ii();
 
-CREATE TRIGGER public_contributed_bulletpoints_trigger_row_iu
+CREATE TRIGGER contributed_bulletpoints_trigger_row_iu
 	INSTEAD OF UPDATE
-	ON public_contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE public_contributed_bulletpoints_trigger_row_iu();
+	ON web.contributed_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE web.contributed_bulletpoints_trigger_row_iu();
 
 
 -- tables

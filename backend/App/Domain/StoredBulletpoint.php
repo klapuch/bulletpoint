@@ -33,7 +33,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'down_rating',
 				'user_rating',
 				'user_id',
-			]))->from(['public_bulletpoints'])
+			]))->from(['web.bulletpoints'])
 				->where('id = :id', ['id' => $this->id])
 		))->row();
 		return new Output\FilledFormat(
@@ -61,7 +61,7 @@ final class StoredBulletpoint implements Bulletpoint {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PreparedUpdate(
-				new Sql\AnsiUpdate('public_bulletpoints'),
+				new Sql\AnsiUpdate('web.bulletpoints'),
 			))->set([
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],

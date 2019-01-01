@@ -23,7 +23,7 @@ final class StoredThemes implements Themes {
 		return (new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PgInsertInto(
-				'public_themes',
+				'web.themes',
 				[
 					'name' => ':name',
 					'tags' => ':tags',
@@ -51,7 +51,7 @@ final class StoredThemes implements Themes {
 					'reference_url',
 					'user_id',
 					'created_at',
-				]))->from(['public_themes']),
+				]))->from(['web.themes']),
 				$selection
 			)
 		))->rows();
@@ -67,7 +67,7 @@ final class StoredThemes implements Themes {
 		return (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Sql\AnsiSelect(['count(*)']))->from(['public_themes']),
+				(new Sql\AnsiSelect(['count(*)']))->from(['web.themes']),
 				$selection
 			)
 		))->field();

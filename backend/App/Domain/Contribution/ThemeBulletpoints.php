@@ -33,7 +33,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 				'theme_id',
 				'source_link',
 				'source_type',
-			]))->from(['public_contributed_bulletpoints'])
+			]))->from(['web.contributed_bulletpoints'])
 				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
 				->where('user_id = :user_id', ['user_id' => $this->user->id()])
 		))->rows();
@@ -50,7 +50,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PgInsertInto(
-				'public_contributed_bulletpoints',
+				'web.contributed_bulletpoints',
 				[
 					'content' => ':content',
 					'theme_id' => ':theme_id',

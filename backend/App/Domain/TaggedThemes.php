@@ -38,7 +38,7 @@ final class TaggedThemes implements Themes {
 					'reference_url',
 					'user_id',
 					'created_at',
-				]))->from(['tagged_themes'])
+				]))->from(['web.tagged_themes'])
 					->where('tag_id = :tag_id', ['tag_id' => $this->tag]),
 				$selection
 			)
@@ -56,7 +56,7 @@ final class TaggedThemes implements Themes {
 			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['count(*)']))
-					->from(['tagged_themes'])
+					->from(['web.tagged_themes'])
 					->where('tag_id = :tag_id', ['tag_id' => $this->tag]),
 				$selection
 			)

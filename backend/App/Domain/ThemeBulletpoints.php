@@ -36,7 +36,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 				'down_rating',
 				'user_rating',
 				'user_id',
-			]))->from(['public_bulletpoints'])
+			]))->from(['web.bulletpoints'])
 				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
 		))->rows();
 		foreach ($bulletpoints as $bulletpoint) {
@@ -51,7 +51,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PgInsertInto(
-				'public_bulletpoints',
+				'web.bulletpoints',
 				[
 					'content' => ':content',
 					'theme_id' => ':theme_id',

@@ -51,7 +51,7 @@ final class ThemeTest extends TestCase\Runtime {
 				'url' => 'https://www.wikipedia.cz/test',
 			],
 		]);
-		$theme = (new Storage\TypedQuery($this->connection, 'SELECT * FROM public_themes WHERE id = ?', [$id]))->row();
+		$theme = (new Storage\TypedQuery($this->connection, 'SELECT * FROM web.themes WHERE id = ?', [$id]))->row();
 		Assert::same('TEST OK!', $theme['name']);
 		Assert::same([1, 3], array_column($theme['tags'], 'id'));
 	}

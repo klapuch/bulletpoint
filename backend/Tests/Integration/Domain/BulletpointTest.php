@@ -50,7 +50,7 @@ final class BulletpointTest extends TestCase\Runtime {
 			],
 			'content' => 'TEST OK!',
 		]);
-		$bulletpoint = (new Storage\TypedQuery($this->connection, 'SELECT * FROM public_bulletpoints WHERE id = ?', [$id]))->row();
+		$bulletpoint = (new Storage\TypedQuery($this->connection, 'SELECT * FROM web.bulletpoints WHERE id = ?', [$id]))->row();
 		Assert::same($id, $bulletpoint['id']);
 		Assert::same('TEST OK!', $bulletpoint['content']);
 	}

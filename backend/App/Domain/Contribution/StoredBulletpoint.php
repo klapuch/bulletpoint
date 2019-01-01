@@ -34,7 +34,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'source_link',
 				'source_type',
 				'content',
-			]))->from(['public_contributed_bulletpoints'])
+			]))->from(['web.contributed_bulletpoints'])
 				->where('id = :id', ['id' => $this->id])
 				->where('user_id = :user_id', ['user_id' => $this->id])
 		))->row();
@@ -56,7 +56,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PreparedUpdate(
-				new Sql\AnsiUpdate('public_contributed_bulletpoints'),
+				new Sql\AnsiUpdate('web.contributed_bulletpoints'),
 			))->set([
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],

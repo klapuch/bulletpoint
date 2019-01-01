@@ -29,7 +29,7 @@ final class StoredTheme implements Theme {
 				'reference_url',
 				'user_id',
 				'created_at',
-			]))->from(['public_themes'])
+			]))->from(['web.themes'])
 				->where('id = :id', ['id' => $this->id])
 		))->row();
 		return new Output\FilledFormat(
@@ -51,7 +51,7 @@ final class StoredTheme implements Theme {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PreparedUpdate(
-				new Sql\AnsiUpdate('public_themes'),
+				new Sql\AnsiUpdate('web.themes'),
 			))->set([
 				'name' => $theme['name'],
 				'tags' => json_encode($theme['tags']), // TODO: use array

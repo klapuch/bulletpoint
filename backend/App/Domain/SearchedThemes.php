@@ -38,7 +38,7 @@ final class SearchedThemes implements Themes {
 					'reference_url',
 					'user_id',
 					'created_at',
-				]))->from(['public_themes'])
+				]))->from(['web.themes'])
 					->where('name ILIKE :keyword', ['keyword' => sprintf('%%%s%%', $this->keyword)]),
 				$selection
 			)
@@ -56,7 +56,7 @@ final class SearchedThemes implements Themes {
 			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['count(*)']))
-					->from(['public_themes'])
+					->from(['web.themes'])
 					->where('name ILIKE :keyword', ['keyword' => sprintf('%%%s%%', $this->keyword)]),
 				$selection
 			)
