@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { isEmpty, zipObject } from 'lodash';
+// $FlowFixMe temporary - https://github.com/facebook/flow/issues/869
 import Select from 'react-select';
 import classNames from 'classnames';
 import type { ErrorThemeType, FetchedThemeType, PostedThemeType } from '../types';
