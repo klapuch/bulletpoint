@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
+use Bulletpoint\Domain;
 use Klapuch\Dataset;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -31,17 +32,18 @@ final class SearchedThemes implements Themes {
 		$themes = (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Sql\AnsiSelect([
-					'themes.id',
-					'themes.name',
-					'themes.alternative_names',
-					'themes.tags',
-					'themes.reference_url',
-					'themes.user_id',
-					'themes.created_at',
-				]))->from(['web.themes'])
-					->join('LEFT', 'theme_alternative_names', 'theme_alternative_names.theme_id = themes.id')
-					->where('themes.name ILIKE :keyword OR theme_alternative_names.name ILIKE :keyword', ['keyword' => sprintf('%%%s%%', $this->keyword)]),
+				new Domain\Sql\SearchedThemes(
+					new Sql\AnsiSelect([
+						'themes.id',
+						'themes.name',
+						'themes.alternative_names',
+						'themes.tags',
+						'themes.reference_url',
+						'themes.user_id',
+						'themes.created_at',
+					]),
+					$this->keyword,
+				),
 				$selection
 			)
 		))->rows();
@@ -57,10 +59,10 @@ final class SearchedThemes implements Themes {
 		return (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Sql\AnsiSelect(['count(*)']))
-					->from(['web.themes'])
-					->join('LEFT', 'theme_alternative_names', 'theme_alternative_names.theme_id = web.themes.id')
-					->where('themes.name ILIKE :keyword OR theme_alternative_names.name ILIKE :keyword', ['keyword' => sprintf('%%%s%%', $this->keyword)]),
+				new Domain\Sql\SearchedThemes(
+					new Sql\AnsiSelect(['count(*)']),
+					$this->keyword,
+				),
 				$selection
 			)
 		))->field();
