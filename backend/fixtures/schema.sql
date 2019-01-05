@@ -531,14 +531,14 @@ BEGIN
 	v_current_tags = array_agg(tag_id) FROM public.theme_tags WHERE theme_id = v_theme.id;
 	v_new_tags = array_agg(r.tag::integer) FROM jsonb_array_elements(new.tags) AS r(tag);
 
-	v_current_alternative_names = array_agg(name) FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
-	v_new_alternative_names = array_agg(r.alternative_name) FROM jsonb_array_elements_text(new.alternative_names) AS r(alternative_name);
-
 	IF (NOT array_equals(v_current_tags, v_new_tags)) THEN
 		DELETE FROM public.theme_tags WHERE theme_id = v_theme.id;
 		INSERT INTO public.theme_tags (theme_id, tag_id)
 		SELECT v_theme.id, r.tag FROM unnest(v_new_tags) AS r(tag);
 	END IF;
+
+	v_current_alternative_names = array_agg(name) FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
+	v_new_alternative_names = array_agg(r.alternative_name) FROM jsonb_array_elements_text(new.alternative_names) AS r(alternative_name);
 
 	IF (NOT array_equals(v_current_alternative_names, v_new_alternative_names)) THEN
 		DELETE FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
