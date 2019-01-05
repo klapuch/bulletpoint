@@ -165,7 +165,7 @@ CREATE FUNCTION update_user_tag_reputation(in_user_id integer, in_tag_id integer
 BEGIN
 	IF in_point = 1 THEN
 		INSERT INTO user_tag_reputations (user_id, tag_id, reputation) VALUES (in_user_id, in_tag_id, 1)
-		ON CONFLICT (user_id, tag_id) DO UPDATE SET reputation = EXCLUDED.reputation + 1;
+		ON CONFLICT (user_id, tag_id) DO UPDATE SET reputation = user_tag_reputations.reputation + 1;
 	ELSE
 		UPDATE user_tag_reputations SET reputation = greatest(reputation - 1, 0)
 		WHERE user_id = in_user_id AND tag_id = in_tag_id;
