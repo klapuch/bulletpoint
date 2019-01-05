@@ -25,11 +25,18 @@
                 "link",
                 "type"
             ]
+        },
+        "referenced_theme_id": {
+            "type": [
+                "number",
+                "null"
+            ]
         }
     },
     "required": [
         "content",
-        "source"
+        "source",
+        "referenced_theme_id"
     ],
     "type": "object"
 }

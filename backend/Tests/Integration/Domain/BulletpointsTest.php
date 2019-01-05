@@ -46,6 +46,7 @@ final class BulletpointsTest extends TestCase\Runtime {
 				'link' => 'https://www.wikipedia.cz/test',
 				'type' => 'web',
 			],
+			'referenced_theme_id' => null,
 		]);
 		(new Misc\TableCount($this->connection, 'bulletpoints', 1))->assert();
 		(new Misc\TableCount($this->connection, 'sources', 1))->assert();

@@ -52,6 +52,7 @@ final class Structure {
 					'maxLength' => 255,
 				],
 				'theme_id' => ['type' => 'number'],
+				'referenced_theme_id' => ['type' => ['number', 'null']],
 			],
 			'required' => ['id', 'source', 'user_id', 'rating', 'content', 'theme_id'],
 			'type' => 'object',
@@ -66,8 +67,9 @@ final class Structure {
 			'properties' => [
 				'content' => $get['properties']['content'],
 				'source' => $get['properties']['source'],
+				'referenced_theme_id' => $get['properties']['referenced_theme_id'],
 			],
-			'required' => ['content', 'source'],
+			'required' => ['content', 'source', 'referenced_theme_id'],
 			'type' => 'object',
 		];
 	}

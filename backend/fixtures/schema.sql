@@ -325,12 +325,15 @@ CREATE TRIGGER sources_row_biu_trigger
 CREATE TABLE contributed_bulletpoints (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	theme_id integer NOT NULL,
+	referenced_theme_id integer,
 	source_id integer NOT NULL UNIQUE,
 	user_id integer NOT NULL,
 	content character varying(255) NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
-	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
-	CONSTRAINT bulletpoints_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT
+	CONSTRAINT contributed_bulletpoints_not_same_themes CHECK (theme_id != referenced_theme_id),
+	CONSTRAINT contributed_bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT contributed_bulletpoints_referenced_theme_id FOREIGN KEY (referenced_theme_id) REFERENCES themes(id) ON DELETE SET NULL ON UPDATE RESTRICT,
+	CONSTRAINT contributed_bulletpoints_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 CREATE FUNCTION contributed_bulletpoints_trigger_row_biu() RETURNS trigger AS $BODY$
@@ -363,11 +366,14 @@ CREATE TRIGGER contributed_bulletpoints_row_ad_trigger
 CREATE TABLE bulletpoints (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	theme_id integer NOT NULL,
+	referenced_theme_id integer,
 	source_id integer NOT NULL UNIQUE,
 	user_id integer NOT NULL,
 	content character varying(255) NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT bulletpoints_not_same_themes CHECK (theme_id != referenced_theme_id),
 	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT bulletpoints_referenced_theme_id FOREIGN KEY (referenced_theme_id) REFERENCES themes(id) ON DELETE SET NULL ON UPDATE RESTRICT,
 	CONSTRAINT bulletpoints_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
 
@@ -569,7 +575,7 @@ CREATE VIEW web.tagged_themes AS
 
 CREATE VIEW web.bulletpoints AS
 	SELECT
-		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id,
+		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id, bulletpoints.referenced_theme_id,
 		sources.link AS source_link, sources.type AS source_type,
 			bulletpoint_ratings.up AS up_rating,
 			abs(bulletpoint_ratings.down) AS down_rating,
@@ -599,8 +605,9 @@ BEGIN
 	WITH inserted_source AS (
 		INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
 	)
-	INSERT INTO public.bulletpoints (theme_id, source_id, content, user_id) VALUES (
+	INSERT INTO public.bulletpoints (theme_id, referenced_theme_id, source_id, content, user_id) VALUES (
 		new.theme_id,
+		new.referenced_theme_id,
 		(SELECT id FROM inserted_source),
 		new.content,
 		new.user_id
@@ -613,7 +620,9 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 CREATE FUNCTION web.bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
 BEGIN
 	WITH updated_bulletpoint AS (
-		UPDATE public.bulletpoints SET content = new.content WHERE id = new.id RETURNING *
+		UPDATE public.bulletpoints SET content = new.content, referenced_theme_id = new.referenced_theme_id
+		WHERE id = new.id
+		RETURNING *
 	)
 	UPDATE public.sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
 	RETURN new;
@@ -633,7 +642,7 @@ CREATE TRIGGER bulletpoints_trigger_row_iu
 
 CREATE VIEW web.contributed_bulletpoints AS
 SELECT
-	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id,
+	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id, contributed_bulletpoints.referenced_theme_id,
 	sources.link AS source_link, sources.type AS source_type
 	FROM public.contributed_bulletpoints
 	LEFT JOIN public.sources ON sources.id = contributed_bulletpoints.source_id
@@ -644,8 +653,9 @@ BEGIN
 	WITH inserted_source AS (
 		INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
 	)
-	INSERT INTO public.contributed_bulletpoints (theme_id, source_id, content, user_id) VALUES (
+	INSERT INTO public.contributed_bulletpoints (theme_id, referenced_theme_id, source_id, content, user_id) VALUES (
 		new.theme_id,
+		new.referenced_theme_id,
 		(SELECT id FROM inserted_source),
 		new.content,
 		new.user_id
@@ -657,7 +667,9 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 CREATE FUNCTION web.contributed_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
 BEGIN
 	WITH updated_bulletpoint AS (
-		UPDATE public.contributed_bulletpoints SET content = new.content WHERE id = new.id RETURNING *
+		UPDATE public.contributed_bulletpoints SET content = new.content, referenced_theme_id = new.referenced_theme_id
+		WHERE id = new.id
+		RETURNING *
 	)
 	UPDATE public.sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
 	RETURN new;

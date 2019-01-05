@@ -15,11 +15,11 @@ export const add = (
   theme: number,
   bulletpoint: PostedBulletpointType,
   next: (void) => (void),
-) => (dispatch: (mixed) => Object) => {
+) => (dispatch: (mixed) => Object) => (
   axios.post(`/themes/${theme}/contributed_bulletpoints`, bulletpoint)
     .then(() => dispatch(invalidatedAll(theme)))
-    .then(next);
-};
+    .then(next)
+);
 
 export const deleteOne = (
   theme: number,

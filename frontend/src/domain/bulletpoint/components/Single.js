@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
+import getSlug from 'speakingurl';
 import styled from 'styled-components';
 import { DownButton, UpButton } from './RateButton';
 import Source from '../../theme/components/Source';
@@ -11,6 +13,18 @@ const ActionButton = styled.span`
   float: right;
   padding-left: 5px;
 `;
+
+const withLink = (bulletpoint: FetchedBulletpointType) => {
+  if (bulletpoint.referenced_theme_id === null) {
+    return bulletpoint.content;
+  }
+  const { referenced_theme: referencedTheme } = bulletpoint;
+  return (
+    <Link to={`/themes/${referencedTheme.id}/${getSlug(referencedTheme.name)}`}>
+      {bulletpoint.content}
+    </Link>
+  );
+};
 
 type Props = {|
   +children: FetchedBulletpointType,
@@ -38,7 +52,7 @@ const Single = ({
       {children.rating.up}
     </UpButton>
     )}
-    {children.content}
+    {withLink(children)}
     {onDeleteClick && <ActionButton className="text-danger glyphicon glyphicon-remove" aria-hidden="true" onClick={() => onDeleteClick(children.id)} />}
     {onEditClick && <ActionButton className="glyphicon glyphicon-pencil" aria-hidden="true" onClick={() => onEditClick(children.id)} />}
     <br />

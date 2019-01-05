@@ -49,6 +49,7 @@ final class BulletpointTest extends TestCase\Runtime {
 				'type' => 'web',
 			],
 			'content' => 'TEST OK!',
+			'referenced_theme_id' => null,
 		]);
 		$bulletpoint = (new Storage\TypedQuery($this->connection, 'SELECT * FROM web.bulletpoints WHERE id = ?', [$id]))->row();
 		Assert::same($id, $bulletpoint['id']);
