@@ -27,6 +27,7 @@ final class ThemesTest extends TestCase\Runtime {
 		(new Domain\StoredThemes(new Access\FakeUser((string) $user), $this->connection))->create([
 			'name' => 'TEST',
 			'tags' => [$tag1, $tag2],
+			'alternative_names' => ['ABC'],
 			'reference' => [
 				'url' => 'https://www.wikipedia.cz/test',
 			],

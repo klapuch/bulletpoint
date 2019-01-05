@@ -35,6 +35,14 @@ final class Structure {
 					'minLength' => 1,
 					'maxLength' => 255,
 				],
+				'alternative_names' => [
+					'type' => 'array',
+					'items' => [
+						'type' => 'string',
+						'minLength' => 1,
+						'maxLength' => 255,
+					],
+				],
 				'reference' => [
 					'type' => 'object',
 					'properties' => ['url' => ['type' => 'string']],
@@ -60,6 +68,7 @@ final class Structure {
 					'maxItems' => (new Storage\NativeQuery($this->connection, 'SELECT constant.theme_tags_limit()'))->field(),
 				],
 				'name' => $get['properties']['name'],
+				'alternative_names' => $get['properties']['alternative_names'],
 				'reference' => $get['properties']['reference'],
 			],
 			'required' => ['tags', 'name', 'reference'],

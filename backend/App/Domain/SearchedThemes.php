@@ -32,14 +32,16 @@ final class SearchedThemes implements Themes {
 			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect([
-					'id',
-					'name',
-					'tags',
-					'reference_url',
-					'user_id',
-					'created_at',
+					'themes.id',
+					'themes.name',
+					'themes.alternative_names',
+					'themes.tags',
+					'themes.reference_url',
+					'themes.user_id',
+					'themes.created_at',
 				]))->from(['web.themes'])
-					->where('name ILIKE :keyword', ['keyword' => sprintf('%%%s%%', $this->keyword)]),
+					->join('LEFT', 'theme_alternative_names', 'theme_alternative_names.theme_id = themes.id')
+					->where('themes.name ILIKE :keyword OR theme_alternative_names.name ILIKE :keyword', ['keyword' => sprintf('%%%s%%', $this->keyword)]),
 				$selection
 			)
 		))->rows();
@@ -57,7 +59,8 @@ final class SearchedThemes implements Themes {
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['count(*)']))
 					->from(['web.themes'])
-					->where('name ILIKE :keyword', ['keyword' => sprintf('%%%s%%', $this->keyword)]),
+					->join('LEFT', 'theme_alternative_names', 'theme_alternative_names.theme_id = web.themes.id')
+					->where('themes.name ILIKE :keyword OR theme_alternative_names.name ILIKE :keyword', ['keyword' => sprintf('%%%s%%', $this->keyword)]),
 				$selection
 			)
 		))->field();

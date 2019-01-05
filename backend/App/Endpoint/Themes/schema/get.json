@@ -27,6 +27,14 @@
             "minLength": 1,
             "maxLength": 255
         },
+        "alternative_names": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+            }
+        },
         "reference": {
             "type": "object",
             "properties": {

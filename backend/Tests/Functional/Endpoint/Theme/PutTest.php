@@ -26,6 +26,7 @@ final class PutTest extends TestCase\Runtime {
 			new Application\FakeRequest(new Output\Json([
 				'name' => 'TEST OK!',
 				'tags' => [$tag1, $tag2],
+				'alternative_names' => ['ABC'],
 				'reference' => [
 					'url' => 'https://www.wikipedia.com',
 				],

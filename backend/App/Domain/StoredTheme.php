@@ -25,6 +25,7 @@ final class StoredTheme implements Theme {
 			(new Sql\AnsiSelect([
 				'id',
 				'name',
+				'alternative_names',
 				'tags',
 				'reference_url',
 				'user_id',
@@ -37,6 +38,7 @@ final class StoredTheme implements Theme {
 			[
 				'id' => $row['id'],
 				'name' => $row['name'],
+				'alternative_names' => $row['alternative_names'],
 				'tags' => $row['tags'],
 				'user_id' => $row['user_id'],
 				'created_at' => $row['created_at'],
@@ -54,6 +56,7 @@ final class StoredTheme implements Theme {
 				new Sql\AnsiUpdate('web.themes'),
 			))->set([
 				'name' => $theme['name'],
+				'alternative_names' => json_encode($theme['alternative_names']),
 				'tags' => json_encode($theme['tags']), // TODO: use array
 				'reference_url' => $theme['reference']['url'],
 			])->where('id = :id', ['id' => $this->id])

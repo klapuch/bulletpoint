@@ -229,6 +229,32 @@ CREATE TRIGGER themes_audit_trigger
 	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
 
 
+CREATE TABLE theme_alternative_names (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	name character varying(255) NOT NULL,
+	theme_id integer NOT NULL,
+	CONSTRAINT theme_alternative_names_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE FUNCTION theme_alternative_names_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+	new.name = nullif(new.name, '');
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER theme_alternative_names_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON theme_alternative_names
+	FOR EACH ROW EXECUTE PROCEDURE theme_alternative_names_trigger_row_biu();
+
+CREATE TRIGGER theme_alternative_names_audit_trigger
+	AFTER UPDATE OR DELETE OR INSERT
+	ON theme_alternative_names
+	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
+
+
 CREATE TABLE theme_tags (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	theme_id integer NOT NULL,
@@ -453,7 +479,8 @@ CREATE VIEW web.themes AS
 	SELECT
 		themes.id, themes.name, json_tags.tags, themes.created_at,
 		"references".url AS reference_url,
-		users.id AS user_id
+		users.id AS user_id,
+		COALESCE(json_theme_alternative_names.alternative_names, '[]') AS alternative_names
 	FROM public.themes
 	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id
@@ -462,7 +489,12 @@ CREATE VIEW web.themes AS
 		FROM theme_tags
 		JOIN tags ON tags.id = theme_tags.tag_id
 		GROUP BY theme_id
-	) AS json_tags ON json_tags.theme_id = themes.id;
+	) AS json_tags ON json_tags.theme_id = themes.id
+	LEFT JOIN (
+		SELECT theme_id, jsonb_agg(name) AS alternative_names
+		FROM theme_alternative_names
+		GROUP BY theme_id
+	) AS json_theme_alternative_names ON json_theme_alternative_names.theme_id = themes.id;
 
 CREATE FUNCTION web.themes_trigger_row_ii() RETURNS trigger AS $BODY$
 	DECLARE v_theme_id integer;
@@ -477,6 +509,9 @@ BEGIN
 	INSERT INTO public.theme_tags (theme_id, tag_id)
 	SELECT v_theme_id, r.tag::integer FROM jsonb_array_elements(new.tags) AS r(tag);
 
+	INSERT INTO public.theme_alternative_names (theme_id, name)
+	SELECT v_theme_id, r.alternative_name FROM jsonb_array_elements_text(new.alternative_names) AS r(alternative_name);
+
 	new.id = v_theme_id;
 	RETURN new;
 END
@@ -487,6 +522,8 @@ CREATE FUNCTION web.themes_trigger_row_iu() RETURNS trigger AS $BODY$
 		v_theme public.themes;
 		v_current_tags integer[];
 		v_new_tags integer[];
+		v_current_alternative_names text[];
+		v_new_alternative_names text[];
 BEGIN
 	UPDATE public.themes SET name = new.name WHERE id = new.id RETURNING * INTO v_theme;
 	UPDATE public."references" SET url = new.reference_url WHERE id = v_theme.reference_id;
@@ -494,10 +531,19 @@ BEGIN
 	v_current_tags = array_agg(tag_id) FROM public.theme_tags WHERE theme_id = v_theme.id;
 	v_new_tags = array_agg(r.tag::integer) FROM jsonb_array_elements(new.tags) AS r(tag);
 
-	IF (array_equals(v_current_tags, v_new_tags) IS FALSE) THEN
+	v_current_alternative_names = array_agg(name) FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
+	v_new_alternative_names = array_agg(r.alternative_name) FROM jsonb_array_elements_text(new.alternative_names) AS r(alternative_name);
+
+	IF (NOT array_equals(v_current_tags, v_new_tags)) THEN
 		DELETE FROM public.theme_tags WHERE theme_id = v_theme.id;
 		INSERT INTO public.theme_tags (theme_id, tag_id)
 		SELECT v_theme.id, r.tag FROM unnest(v_new_tags) AS r(tag);
+	END IF;
+
+	IF (NOT array_equals(v_current_alternative_names, v_new_alternative_names)) THEN
+		DELETE FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
+		INSERT INTO public.theme_alternative_names (theme_id, name)
+		SELECT v_theme.id, r.alternative_name FROM unnest(v_new_alternative_names) AS r(alternative_name);
 	END IF;
 
 	RETURN new;

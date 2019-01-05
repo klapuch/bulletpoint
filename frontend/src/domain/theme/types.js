@@ -5,6 +5,7 @@ export type FetchedThemeType = {|
   +id: number,
   +user_id: number,
   +tags: Array<TagType>,
+  +alternative_names: Array<string>,
   +name: string,
   +created_at: string,
   +reference: {|
@@ -13,6 +14,7 @@ export type FetchedThemeType = {|
 |};
 export type PostedThemeType = {|
   +tags: Array<number>,
+  +alternative_names: Array<string>,
   +name: string,
   +reference: {|
     +url: string,

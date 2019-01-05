@@ -36,15 +36,15 @@ final class GenerateJsonSchema implements Scheduling\Job {
 					],
 					Json::encode(['json' => '', 'schema' => $schema])
 				))->send();
-				$validation = Json::decode($response->body());
-				if ($validation['valid'] === false) {
+				$validation = Json::decode($response->body(), Json::FORCE_ARRAY);
+				if (!$validation['valid']) {
 					throw new \Exception('JSON schema is not valid');
 				}
 			}
 
 			public function save(array $json, \SplFileInfo $file): void {
 				@mkdir($file->getPath(), 0777, true); // @ directory may exists
-				$schema = Json::encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+				$schema = Json::encode($json, Json::PRETTY);
 				try {
 					$this->validate($schema);
 				} catch (\UnexpectedValueException $e) {

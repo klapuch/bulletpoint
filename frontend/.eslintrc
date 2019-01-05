@@ -15,6 +15,7 @@
     "import/prefer-default-export": 0, // Multiple exports because of Redux state and tests
     "arrow-body-style": 0,
     "no-shadow": 0, // Shadowing is a nice language feature. Naming is hard.
+    "camelcase": 0, // API calls are snake_case
     "react/jsx-filename-extension": 0, // No, JSX belongs to .js files
     "react/require-default-props": 0, // Does not work with API - first call is undefined
     "react/no-array-index-key": 0, // TODO: not always unique

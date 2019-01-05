@@ -32,6 +32,11 @@ const FullTitle = ({ theme }: Props) => (
         )
       }
     </div>
+    <div>
+      <small>
+        {theme.alternative_names.join(', ')}
+      </small>
+    </div>
     <AllTags tags={theme.tags} />
   </>
 );

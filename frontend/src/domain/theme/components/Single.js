@@ -3,19 +3,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import getSlug from 'speakingurl';
 import AllTags from '../../tags/components/All';
-import type { TagType } from '../../tags/types';
+import type { FetchedThemeType } from '../types';
 
 type Props = {|
-  +id: number,
-  +children: string,
-  +tags: Array<TagType>,
+  +children: FetchedThemeType,
 |};
-const Single = ({ id, children, tags }: Props) => (
+const Single = ({ children: theme }: Props) => (
   <>
-    <Link className="no-link" to={`/themes/${id}/${getSlug(children)}`}>
-      <h2>{children}</h2>
+    <Link className="no-link" to={`/themes/${theme.id}/${getSlug(theme.name)}`}>
+      <h2>{theme.name}</h2>
     </Link>
-    <AllTags tags={tags} />
+    <div>
+      <small>
+        {theme.alternative_names.join(', ')}
+      </small>
+    </div>
+    <AllTags tags={theme.tags} />
   </>
 );
 

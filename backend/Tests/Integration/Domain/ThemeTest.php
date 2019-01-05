@@ -47,6 +47,7 @@ final class ThemeTest extends TestCase\Runtime {
 		))->change([
 			'name' => 'TEST OK!',
 			'tags' => [$tag1, $tag3],
+			'alternative_names' => ['ABC'],
 			'reference' => [
 				'url' => 'https://www.wikipedia.cz/test',
 			],

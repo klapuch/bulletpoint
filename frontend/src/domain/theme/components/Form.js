@@ -33,6 +33,7 @@ class Form extends React.Component<Props, State> {
   state = {
     theme: {
       name: '',
+      alternative_names: [],
       tags: [],
       reference: {
         url: '',
@@ -43,12 +44,15 @@ class Form extends React.Component<Props, State> {
 
   componentDidMount(): void {
     if (!isEmpty(this.props.theme)) {
-      // $FlowFixMe Checked via isEmpty
-      const { name, tags, reference } = this.props.theme;
+      const {
+        // $FlowFixMe Checked via isEmpty
+        name, tags, reference, alternative_names,
+      } = this.props.theme;
       this.setState({
         theme: {
           name,
           tags: tags.map(tag => tag.id),
+          alternative_names,
           reference: {
             url: reference.url,
           },
@@ -61,6 +65,8 @@ class Form extends React.Component<Props, State> {
     let input = null;
     if (name === 'reference_url') {
       input = { reference: { ...this.state.theme.reference, url: value } };
+    } else if (name === 'alternative_names') {
+      input = { alternative_names: value.split(',') };
     } else {
       input = { ...this.state.theme, [name]: value };
     }
@@ -100,6 +106,10 @@ class Form extends React.Component<Props, State> {
           <label htmlFor="name">Název</label>
           <input type="text" className="form-control" id="name" name="name" value={theme.name} onChange={this.handleChange} />
           {errors.name && <span className="help-block">{validation.toMessage(errors, 'name')}</span>}
+        </div>
+        <div className="form-group">
+          <label htmlFor="name">Alternativní názvy</label>
+          <input type="text" className="form-control" id="alternative_names" name="alternative_names" value={theme.alternative_names.join(',')} onChange={this.handleChange} />
         </div>
         <div className={classNames('form-group', errors.tags && 'has-error')}>
           <label htmlFor="tags">Tag</label>

@@ -26,12 +26,14 @@ final class StoredThemes implements Themes {
 				'web.themes',
 				[
 					'name' => ':name',
+					'alternative_names' => ':alternative_names',
 					'tags' => ':tags',
 					'reference_url' => ':reference_url',
 					'user_id' => ':user_id',
 				],
 				[
 					'name' => $theme['name'],
+					'alternative_names' => json_encode($theme['alternative_names']),
 					'tags' => json_encode($theme['tags']), // TODO: use array
 					'user_id' => $this->user->id(),
 					'reference_url' => $theme['reference']['url'],
@@ -47,6 +49,7 @@ final class StoredThemes implements Themes {
 				(new Sql\AnsiSelect([
 					'id',
 					'name',
+					'alternative_names',
 					'tags',
 					'reference_url',
 					'user_id',

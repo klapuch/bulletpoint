@@ -16,6 +16,8 @@ INSERT INTO tags (name) VALUES ('IT');
 INSERT INTO themes (name, reference_id, user_id) VALUES ('PHP', 1, 1);
 INSERT INTO themes (name, reference_id, user_id) VALUES ('OOP', 2, 1);
 
+INSERT INTO theme_alternative_names (name, theme_id) VALUES ('Objektově orientované programování', 2);
+
 INSERT INTO theme_tags (theme_id, tag_id) VALUES (1, 1), (1, 2);
 INSERT INTO theme_tags (theme_id, tag_id) VALUES (2, 1);
 
