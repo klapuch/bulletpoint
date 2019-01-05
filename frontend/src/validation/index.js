@@ -31,8 +31,12 @@ export const username = (value: string | null): Error => {
 };
 
 export const url = (value: ?string): Error => {
-  if (required(value)) return required(value);
-  else if (!urlValidator.isWebUri(value)) return NOT_URL;
+  if (required(value)) {
+    return required(value);
+    // $FlowFixMe check is made via required
+  } else if (!urlValidator.isWebUri(value) && !urlValidator.isWebUri(encodeURI(value))) {
+    return NOT_URL;
+  }
   return null;
 };
 

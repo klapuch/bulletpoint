@@ -10,7 +10,7 @@ const Source = ({ type, link }: SourceProps) => {
     return (
       <>
         <span style={{ marginRight: 4 }} className="glyphicon glyphicon-globe" aria-hidden="true" />
-        <a href={link}>{link}</a>
+        <a href={link}>{decodeURI(link)}</a>
       </>
     );
   }
