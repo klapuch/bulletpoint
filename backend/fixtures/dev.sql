@@ -25,7 +25,7 @@ INSERT INTO theme_tags (theme_id, tag_id) VALUES (2, 1);
 INSERT INTO bulletpoints (theme_id, source_id, user_id, content) VALUES (1, 1, 1, 'Strmá křivka učení');
 INSERT INTO bulletpoints (theme_id, source_id, user_id, content) VALUES (1, 2, 1, 'Datové typy');
 INSERT INTO bulletpoints (theme_id, source_id, user_id, content) VALUES (1, 5, 1, 'Objektově orientovaný');
---
--- INSERT INTO bulletpoints (theme_id, source_id, user_id, content) VALUES (2, 4, 1, 'Zapouzdření');
+
+INSERT INTO bulletpoints (theme_id, source_id, user_id, content) VALUES (2, 4, 1, 'Zapouzdření');
 
 INSERT INTO contributed_bulletpoints (theme_id, source_id, user_id, content) VALUES (1, 3, 2, 'Test');
