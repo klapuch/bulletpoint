@@ -21,18 +21,27 @@ type Props = {|
   |},
   +themes: Array<FetchedThemeType>,
   +fetching: boolean,
-  +fetchThemes: (tag: ?number) => (void),
+  +fetchRecentThemes: () => (void),
+  +fetchTaggedThemes: (tag: number) => (void),
 |};
 class Themes extends React.Component<Props> {
   componentDidMount(): void {
     const { match: { params: { tag } } } = this.props;
-    this.props.fetchThemes(isEmpty(tag) ? null : parseInt(tag, 10));
+    if (isEmpty(tag)) {
+      this.props.fetchRecentThemes();
+    } else {
+      this.props.fetchTaggedThemes(parseInt(tag, 10));
+    }
   }
 
   componentDidUpdate(prevProps: Props) {
     const { match: { params: { tag } } } = this.props;
-    if (!isEmpty(tag) && prevProps.match.params.tag !== tag) {
-      this.props.fetchThemes(parseInt(tag, 10));
+    if (prevProps.match.params.tag !== tag) {
+      if (isEmpty(tag)) {
+        this.props.fetchRecentThemes();
+      } else {
+        this.props.fetchTaggedThemes(parseInt(tag, 10));
+      }
     }
   }
 
@@ -41,7 +50,7 @@ class Themes extends React.Component<Props> {
     if (isEmpty(tag)) {
       return 'Nedávno přidaná témata';
     }
-    return <>Témata vybraná pro "<strong>{this.getTag().name}</strong>"</>;
+    return <>Témata vybraná pro "<strong>{this.getTag()}</strong>"</>;
   };
 
   getTitle = () => {
@@ -49,16 +58,15 @@ class Themes extends React.Component<Props> {
     if (isEmpty(tag)) {
       return 'Nedávno přidaná témata';
     }
-    return `Témata vybraná pro "${this.getTag().name}"`;
+    return `Témata vybraná pro "${this.getTag()}"`;
   };
 
   getTag = () => {
     const { match: { params: { tag } } } = this.props;
-    const initTag = { name: '' };
     if (isEmpty(tag)) {
-      return initTag;
+      return '';
     }
-    return themes.getCommonTag(this.props.themes, parseInt(tag, 10)) || initTag;
+    return themes.getCommonTag(this.props.themes, parseInt(tag, 10));
   };
 
   render() {
@@ -67,7 +75,7 @@ class Themes extends React.Component<Props> {
       return <Loader />;
     }
     return (
-      <SlugRedirect {...this.props} name={this.getTag().name}>
+      <SlugRedirect {...this.props} name={this.getTag()}>
         <Helmet>
           <title>{this.getTitle()}</title>
         </Helmet>
@@ -84,6 +92,7 @@ const mapStateToProps = state => ({
   fetching: themes.allFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchThemes: (tag: ?number) => dispatch(tag === null ? theme.allRecent() : theme.allByTag(tag)),
+  fetchRecentThemes: () => dispatch(theme.allRecent()),
+  fetchTaggedThemes: (tag: number) => dispatch(theme.allByTag(tag)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Themes);
