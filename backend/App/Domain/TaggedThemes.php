@@ -34,6 +34,7 @@ final class TaggedThemes implements Themes {
 				(new Sql\AnsiSelect([
 					'id',
 					'name',
+					'alternative_names',
 					'tags',
 					'reference_url',
 					'user_id',
