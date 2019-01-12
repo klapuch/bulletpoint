@@ -3,6 +3,13 @@ import { isEmpty, first } from 'lodash';
 import * as themes from '../theme/selects';
 import type { FetchedBulletpointType } from './types';
 
+export const withReferencedTheme = (bulletpoint: FetchedBulletpointType, state: Object): FetchedBulletpointType => {
+  if (bulletpoint.referenced_theme_id !== null) {
+    bulletpoint.referenced_theme = themes.getById(bulletpoint.referenced_theme_id, state);
+  }
+  return bulletpoint;
+};
+
 export const fetchedAll = (theme: number, state: Object): boolean => (
   !isEmpty(state.themeBulletpoints.all[theme] ? state.themeBulletpoints.all[theme].payload : {})
 );
@@ -32,10 +39,3 @@ export const getById = (
 ): FetchedBulletpointType|Object => (
   withReferencedTheme(first(getByTheme(theme, state).filter(single => single.id === bulletpoint)))
 );
-
-const withReferencedTheme = (bulletpoint: FetchedBulletpointType, state: Object): FetchedBulletpointType => {
-  if (bulletpoint.referenced_theme_id !== null) {
-    bulletpoint.referenced_theme = themes.getById(bulletpoint.referenced_theme_id, state);
-  }
-  return bulletpoint;
-};

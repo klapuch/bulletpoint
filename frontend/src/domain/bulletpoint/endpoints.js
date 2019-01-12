@@ -7,13 +7,10 @@ import {
   receivedUpdateSingle,
   requestedAll,
   requestedUpdateSingle,
-  requestedExtendSingle,
-  receivedExtendSingle,
 } from './actions';
 import * as theme from '../theme/endpoints';
-import * as themes from '../theme/selects';
 import * as bulletpoints from './selects';
-import type { FetchedBulletpointType, PostedBulletpointType } from './types';
+import type { PostedBulletpointType } from './types';
 
 export const all = (theme: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (bulletpoints.fetchedAll(theme, getState())) {
@@ -26,18 +23,18 @@ export const all = (theme: number) => (dispatch: (mixed) => Object, getState: ()
 
 export const allWithReferencedThemes = (
   themeId: number,
-) => (dispatch: (mixed) => Object, getState: () => Object) => {
+) => (dispatch: (mixed) => Object, getState: () => Object) => (
   dispatch(all(themeId))
     .then(() => bulletpoints.getByTheme(themeId, getState()))
-    .then(themeBulletpoints => {
+    .then(themeBulletpoints => (
       forEach(
         themeBulletpoints.filter(themeBulletpoint => themeBulletpoint.referenced_theme_id !== null),
         themeBulletpoint => (
           dispatch(theme.single(themeBulletpoint.referenced_theme_id))
         ),
       )
-    })
-};
+    ))
+);
 
 export const add = (
   theme: number,

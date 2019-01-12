@@ -8,14 +8,13 @@ import { fetchedSingle } from './selects';
 import * as response from '../../api/response';
 import type { PostedThemeType } from './types';
 
-export const single = (id: number, next = () => {}) => (dispatch: (mixed) => Object, getState: () => Object) => {
+export const single = (id: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedSingle(id, getState())) {
     return Promise.resolve();
   }
   dispatch(requestedSingle(id));
   return axios.get(`/themes/${id}`)
-    .then(response => dispatch(receivedSingle(id, response.data)))
-    .then(next)
+    .then(response => dispatch(receivedSingle(id, response.data)));
 };
 
 export const create = (theme: PostedThemeType, next: (number) => (void)) => {

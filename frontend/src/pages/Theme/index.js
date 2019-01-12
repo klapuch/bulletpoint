@@ -142,14 +142,14 @@ class Theme extends React.Component<Props, State> {
               <>
                 <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
                 <AllBulletpoints
-                  bulletpoints={contributedBulletpoints.map(b => ({ ...b, referenced_theme: this.props.getReferencedTheme(b) }))}
+                  bulletpoints={contributedBulletpoints}
                   onDeleteClick={this.handleDeleteClick}
                 />
               </>
             )}
             {user.isLoggedIn() && (
               <Form
-                bulletpoint={{ ...this.state.bulletpoint, referencedTheme: this.props.getReferencedTheme(this.state.bulletpoint) }}
+                bulletpoint={this.state.bulletpoint}
                 onAddClick={this.handleAddClick}
                 onCancelClick={this.handleCancelClick}
                 type={this.state.formType}
@@ -166,16 +166,11 @@ class Theme extends React.Component<Props, State> {
 
 const mapStateToProps = (state, { match: { params: { id: themeId } } }) => ({
   theme: themes.getById(themeId, state),
-  getReferencedTheme: (bulletpoint: ?FetchedBulletpointType) => {
-    if (bulletpoint !== null && bulletpoint.referenced_theme_id !== null) {
-      return themes.getById(bulletpoint.referenced_theme_id, state);
-    }
-    return null;
-  },
   bulletpoints: bulletpoints.getByTheme(themeId, state),
   contributedBulletpoints: contributedBulletpoints.getByTheme(themeId, state),
   fetching: themes.singleFetching(themeId, state)
     || bulletpoints.referencedThemesFetching(themeId, state)
+    || contributedBulletpoints.referencedThemesFetching(themeId, state)
     || bulletpoints.allFetching(themeId, state)
     || contributedBulletpoints.allFetching(themeId, state),
   getBulletpointById: (id: number) => bulletpoints.getById(themeId, id, state),
