@@ -1,7 +1,7 @@
 // @flow
 import { isEmpty } from 'lodash';
 import type { FetchedBulletpointType } from '../bulletpoint/types';
-import * as themes from "../theme/selects";
+import * as themes from '../theme/selects';
 import * as bulletpoints from '../bulletpoint/selects';
 
 export const fetchedAll = (theme: number, state: Object): boolean => (
@@ -17,8 +17,12 @@ export const allFetching = (theme: number, state: Object): boolean => (
     : false
 );
 export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpointType> => {
-  if (state.themeContributedBulletpoints.all[theme] && state.themeContributedBulletpoints.all[theme].payload) {
-    state.themeContributedBulletpoints.all[theme].payload.map((bulletpoint) => bulletpoints.withReferencedTheme(bulletpoint, state));
+  if (
+    state.themeContributedBulletpoints.all[theme]
+    && state.themeContributedBulletpoints.all[theme].payload
+  ) {
+    state.themeContributedBulletpoints.all[theme].payload
+      .map(bulletpoint => bulletpoints.withReferencedTheme(bulletpoint, state));
   }
   return [];
 };
