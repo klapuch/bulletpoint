@@ -21,7 +21,7 @@ export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpoi
     state.themeContributedBulletpoints.all[theme]
     && state.themeContributedBulletpoints.all[theme].payload
   ) {
-    state.themeContributedBulletpoints.all[theme].payload
+    return state.themeContributedBulletpoints.all[theme].payload
       .map(bulletpoint => bulletpoints.withReferencedTheme(bulletpoint, state));
   }
   return [];
