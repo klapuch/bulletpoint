@@ -169,7 +169,6 @@ const mapStateToProps = (state, { match: { params: { id: themeId } } }) => ({
   bulletpoints: bulletpoints.getByTheme(themeId, state),
   contributedBulletpoints: contributedBulletpoints.getByTheme(themeId, state),
   fetching: themes.singleFetching(themeId, state)
-    || contributedBulletpoints.referencedThemesFetching(themeId, state)
     || bulletpoints.allFetching(themeId, state)
     || contributedBulletpoints.allFetching(themeId, state),
   getBulletpointById: (id: number) => bulletpoints.getById(themeId, id, state),

@@ -4,18 +4,6 @@ import type { FetchedBulletpointType } from '../bulletpoint/types';
 import * as themes from '../theme/selects';
 import * as bulletpoints from '../bulletpoint/selects';
 
-export const fetchedAll = (theme: number, state: Object): boolean => (
-  !isEmpty(
-    state.themeContributedBulletpoints.all[theme]
-      ? state.themeContributedBulletpoints.all[theme].payload
-      : {},
-  )
-);
-export const allFetching = (theme: number, state: Object): boolean => (
-  state.themeContributedBulletpoints.all[theme]
-    ? state.themeContributedBulletpoints.all[theme].fetching
-    : false
-);
 export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpointType> => {
   if (
     state.themeContributedBulletpoints.all[theme]
@@ -26,7 +14,7 @@ export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpoi
   }
   return [];
 };
-export const referencedThemesFetching = (theme: number, state: Object): boolean => {
+const referencedThemesFetching = (theme: number, state: Object): boolean => {
   return getByTheme(theme, state)
     .map(bulletpoint => bulletpoint.referenced_theme_id)
     .filter(referencedThemeId => referencedThemeId !== null)
@@ -35,3 +23,16 @@ export const referencedThemesFetching = (theme: number, state: Object): boolean 
     .filter(isFetching => isFetching === true)
     .length > 0;
 };
+export const fetchedAll = (theme: number, state: Object): boolean => (
+  !isEmpty(
+    state.themeContributedBulletpoints.all[theme]
+      ? state.themeContributedBulletpoints.all[theme].payload
+      : {},
+  )
+);
+export const allFetching = (theme: number, state: Object): boolean => (
+  state.themeContributedBulletpoints.all[theme]
+    ? state.themeContributedBulletpoints.all[theme].fetching
+      || referencedThemesFetching(theme, state)
+    : referencedThemesFetching(theme, state)
+);
