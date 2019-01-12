@@ -12,19 +12,15 @@ import * as theme from '../theme/endpoints';
 import * as bulletpoints from './selects';
 import type { PostedBulletpointType } from './types';
 
-export const all = (theme: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (bulletpoints.fetchedAll(theme, getState())) {
+export const all = (
+  themeId: number,
+) => (dispatch: (mixed) => Object, getState: () => Object) => {
+  if (bulletpoints.fetchedAll(themeId, getState())) {
     return Promise.resolve();
   }
-  dispatch(requestedAll(theme));
-  return axios.get(`/themes/${theme}/bulletpoints`)
-    .then(response => dispatch(receivedAll(theme, response.data)));
-};
-
-export const allWithReferencedThemes = (
-  themeId: number,
-) => (dispatch: (mixed) => Object, getState: () => Object) => (
-  dispatch(all(themeId))
+  dispatch(requestedAll(themeId));
+  return axios.get(`/themes/${themeId}/bulletpoints`)
+    .then(response => dispatch(receivedAll(themeId, response.data)))
     .then(() => bulletpoints.getByTheme(themeId, getState()))
     .then(themeBulletpoints => (
       forEach(
@@ -34,7 +30,7 @@ export const allWithReferencedThemes = (
         ),
       )
     ))
-);
+};
 
 export const add = (
   theme: number,
