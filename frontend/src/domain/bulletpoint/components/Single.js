@@ -18,7 +18,7 @@ const withLink = (bulletpoint: FetchedBulletpointType) => {
   if (bulletpoint.referenced_theme_id === null) {
     return bulletpoint.content;
   }
-  const { referenced_theme: referencedTheme } = bulletpoint;
+  const referencedTheme = bulletpoint.referenced_theme || { id: '', name: null };
   return (
     <Link to={`/themes/${referencedTheme.id}/${getSlug(referencedTheme.name)}`}>
       {bulletpoint.content}

@@ -30,6 +30,7 @@ export const referencedThemesFetching = (theme: number, state: Object): boolean 
   return getByTheme(theme, state)
     .map(bulletpoint => bulletpoint.referenced_theme_id)
     .filter(referencedThemeId => referencedThemeId !== null)
+    // $FlowFixMe no null
     .map(referencedThemeId => themes.singleFetching(referencedThemeId, state))
     .filter(isFetching => isFetching === true)
     .length > 0;
