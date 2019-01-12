@@ -51,6 +51,12 @@ final class ExistingBulletpoint implements Domain\Bulletpoint {
 		$this->origin->delete();
 	}
 
+	public function rate(int $point): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Bulletpoint %d does not exist', $this->id));
+		$this->origin->rate($point);
+	}
+
 	private function exists(int $id): bool {
 		return (new Storage\TypedQuery(
 			$this->connection,

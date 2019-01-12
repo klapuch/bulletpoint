@@ -112,6 +112,21 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
+CREATE FUNCTION samples.bulletpoint_ratings(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id bulletpoint_ratings.id%type;
+BEGIN
+	INSERT INTO bulletpoint_ratings (bulletpoint_id, user_id, point) VALUES (
+		samples.random_if_not_exists((SELECT samples.bulletpoints()), replacements, 'bulletpoint_id'),
+		samples.random_if_not_exists((SELECT samples.users()), replacements, 'user_id'),
+		samples.random_if_not_exists(0, replacements, 'point')
+	)
+	RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$ LANGUAGE plpgsql;
+
 CREATE FUNCTION samples.contributed_bulletpoints(replacements jsonb = '{}') RETURNS integer AS $BODY$
 DECLARE
 	v_id bulletpoints.id%type;

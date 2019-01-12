@@ -43,7 +43,8 @@ final class ThemeBulletpoints implements Bulletpoints {
 		foreach ($bulletpoints as $bulletpoint) {
 			yield new StoredBulletpoint(
 				$bulletpoint['id'],
-				new Storage\MemoryConnection($this->connection, $bulletpoint)
+				new Storage\MemoryConnection($this->connection, $bulletpoint),
+				$this->user
 			);
 		}
 	}

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Endpoint\Bulletpoint;
 
 use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Klapuch\Application;
 use Klapuch\Storage;
 
@@ -19,7 +20,7 @@ final class Delete implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Domain\StoredBulletpoint($parameters['id'], $this->connection))->delete();
+		(new Domain\StoredBulletpoint($parameters['id'], $this->connection, new Access\FakeUser()))->delete();
 		return new Application\EmptyResponse();
 	}
 }

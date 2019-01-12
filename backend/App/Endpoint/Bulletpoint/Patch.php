@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Endpoint\Bulletpoint\Ratings;
+namespace Bulletpoint\Endpoint\Bulletpoint;
 
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain;
@@ -10,14 +10,14 @@ use Klapuch\Application;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 
-final class Post implements Application\View {
-	private const SCHEMA = __DIR__ . '/schema/post.json';
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+final class Patch implements Application\View {
+	public const SCHEMA = __DIR__ . '/schema/patch.json';
 
 	/** @var \Klapuch\Application\Request */
 	private $request;
+
+	/** @var \Klapuch\Storage\Connection */
+	private $connection;
 
 	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
@@ -32,14 +32,17 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		['point' => $point] = (new Constraint\StructuredJson(
-			new \SplFileInfo(self::SCHEMA)
-		))->apply(Json::decode($this->request->body()->serialization()));
-		(new Domain\BulletpointRating(
-			$parameters['bulletpoint_id'],
-			$this->user,
+		$bulletpoint = new Domain\ExistingBulletpoint(
+			new Domain\StoredBulletpoint($parameters['id'], $this->connection, $this->user),
+			$parameters['id'],
 			$this->connection
-		))->rate($point);
+		);
+		$payload = (new Constraint\StructuredJson(
+			new \SplFileInfo(self::SCHEMA),
+		))->apply(Json::decode($this->request->body()->serialization()));
+		if (isset($payload['rating']['user'])) {
+			$bulletpoint->rate($payload['rating']['user']);
+		}
 		return new Application\EmptyResponse();
 	}
 }

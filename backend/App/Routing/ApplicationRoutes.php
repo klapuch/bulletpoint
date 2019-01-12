@@ -94,6 +94,12 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($user, ['admin'])
 				);
 			},
+			'bulletpoints/{id} [PATCH]' => function() use ($request, $user): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Bulletpoint\Patch($request, $this->connection, $user),
+					new Http\ChosenRole($user, ['admin', 'member'])
+				);
+			},
 			'contributed_bulletpoints/{id} [GET]' => function() use ($user): Application\View {
 				return new Endpoint\ContributedBulletpoint\Get($this->connection, $user);
 			},
@@ -104,12 +110,6 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new AuthenticatedView(
 					new Endpoint\ContributedBulletpoint\Put($request, $this->connection, $user),
 					new Http\ChosenRole($user, ['member'])
-				);
-			},
-			'bulletpoints/{bulletpoint_id}/ratings [POST]' => function() use ($request, $user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Bulletpoint\Ratings\Post($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['member', 'admin'])
 				);
 			},
 			'tokens [POST]' => function() use ($request): Application\View {

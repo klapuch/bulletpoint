@@ -14,6 +14,25 @@ final class Structure {
 		$this->connection = $connection;
 	}
 
+	public function patch(): array {
+		$get = $this->get();
+		return [
+			'$schema' => 'http://json-schema.org/draft-04/schema#',
+			'additionalProperties' => false,
+			'properties' => [
+				'rating' => [
+					'type' => 'object',
+					'properties' => [
+						'user' => $get['properties']['rating']['properties']['user'],
+					],
+					'required' => ['user'],
+				],
+			],
+			'type' => 'object',
+			'required' => ['rating'],
+		];
+	}
+
 	public function put(): array {
 		return $this->post();
 	}
@@ -42,7 +61,10 @@ final class Structure {
 						'up' => ['type' => 'number'],
 						'down' => ['type' => 'number'],
 						'total' => ['type' => 'number'],
-						'user' => ['type' => 'number'],
+						'user' => [
+							'type' => 'number',
+							'enum' => (new Schema\PostgresConstant('bulletpoint_ratings_point_range', $this->connection))->values(),
+						],
 					],
 					'required' => ['up', 'down', 'total', 'user'],
 				],
