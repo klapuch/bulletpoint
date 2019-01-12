@@ -9,9 +9,11 @@ import * as response from '../../api/response';
 import type { PostedThemeType } from './types';
 
 export const single = (id: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (fetchedSingle(id, getState())) return;
+  if (fetchedSingle(id, getState())) {
+    return Promise.resolve();
+  }
   dispatch(requestedSingle(id));
-  axios.get(`/themes/${id}`)
+  return axios.get(`/themes/${id}`)
     .then(response => dispatch(receivedSingle(id, response.data)));
 };
 
@@ -48,4 +50,10 @@ export const allRecent = () => (dispatch: (mixed) => Object) => (
 
 export const allSearched = (keyword: string) => (dispatch: (mixed) => Object) => (
   dispatch(all({ q: keyword }))
+);
+
+export const allReactSelectSearches = (keyword: string): Promise<any> => (
+  axios.get('/themes', { q: keyword })
+    .then(response => response.data)
+    .then(themes => themes.map(theme => ({ label: theme.name, value: theme.id })))
 );

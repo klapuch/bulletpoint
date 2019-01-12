@@ -26,10 +26,9 @@ export const receivedAll = (theme: number, bulletpoints: Array<FetchedBulletpoin
   fetching: false,
 });
 
-export const requestedUpdateSingle = (theme: number, bulletpoint: number) => ({
+export const requestedUpdateSingle = (theme: number) => ({
   type: REQUESTED_THEME_BULLETPOINT_UPDATE,
   theme,
-  bulletpoint,
   fetching: true,
 });
 

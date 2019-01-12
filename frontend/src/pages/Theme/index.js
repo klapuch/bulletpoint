@@ -27,13 +27,13 @@ type State = {|
   bulletpoint: ?PostedBulletpointType,
 |};
 type Props = {|
-  +addBulletpoint: (theme: number, PostedBulletpointType, (void) => (void)) => (void),
+  +addBulletpoint: (theme: number, PostedBulletpointType, (void) => (void)) => (Promise<any>),
   +editBulletpoint: (
     theme: number,
     bulletpointId: number,
     PostedBulletpointType,
     next: (void) => (void),
-  ) => (void),
+  ) => (Promise<any>),
   +deleteBulletpoint: (
     theme: number,
     bulletpointId: number,
@@ -62,13 +62,21 @@ class Theme extends React.Component<Props, State> {
     this.reload();
   }
 
+  componentDidUpdate(prevProps: Props) {
+    const { match: { params: { id } } } = this.props;
+    if (prevProps.match.params.id !== id) {
+      this.reload();
+    }
+  }
+
   handleSubmit = (bulletpoint: PostedBulletpointType) => {
     const { match: { params: { id } } } = this.props;
     if (this.state.formType === 'add') {
-      this.props.addBulletpoint(id, bulletpoint, this.reload);
+      return this.props.addBulletpoint(id, bulletpoint, this.reload);
     } else if (this.state.formType === 'edit' && this.state.bulletpointId !== null) {
-      this.props.editBulletpoint(id, this.state.bulletpointId, bulletpoint, this.reload);
+      return this.props.editBulletpoint(id, this.state.bulletpointId, bulletpoint, this.reload);
     }
+    return Promise.resolve();
   };
 
   reload = () => {
@@ -96,6 +104,7 @@ class Theme extends React.Component<Props, State> {
       formType: 'edit',
       bulletpointId,
       bulletpoint: {
+        referenced_theme_id: bulletpoint.referenced_theme_id,
         content: bulletpoint.content,
         source: bulletpoint.source,
       },
@@ -155,17 +164,17 @@ class Theme extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state, { match: { params: { id: theme } } }) => ({
-  theme: themes.getById(theme, state),
-  bulletpoints: bulletpoints.getByTheme(theme, state),
-  contributedBulletpoints: contributedBulletpoints.getByTheme(theme, state),
-  fetching: themes.singleFetching(theme, state)
-    || bulletpoints.allFetching(theme, state)
-    || contributedBulletpoints.allFetching(theme, state),
-  getBulletpointById: (bulletpoint: number) => bulletpoints.getById(theme, bulletpoint, state),
+const mapStateToProps = (state, { match: { params: { id: themeId } } }) => ({
+  theme: themes.getById(themeId, state),
+  bulletpoints: bulletpoints.getByTheme(themeId, state),
+  contributedBulletpoints: contributedBulletpoints.getByTheme(themeId, state),
+  fetching: themes.singleFetching(themeId, state)
+    || bulletpoints.allFetching(themeId, state)
+    || contributedBulletpoints.allFetching(themeId, state),
+  getBulletpointById: (id: number) => bulletpoints.getById(themeId, id, state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchTheme: (theme: number) => dispatch(single(theme)),
+  fetchTheme: (id: number) => dispatch(single(id)),
   deleteBulletpoint: (
     themeId: number,
     bulletpointId: number,

@@ -25,6 +25,7 @@ final class StoredBulletpoint implements Bulletpoint {
 			(new Sql\AnsiSelect([
 				'id',
 				'theme_id',
+				'referenced_theme_id',
 				'source_link',
 				'source_type',
 				'content',
@@ -41,6 +42,7 @@ final class StoredBulletpoint implements Bulletpoint {
 			[
 				'id' => $row['id'],
 				'theme_id' => $row['theme_id'],
+				'referenced_theme_id' => $row['referenced_theme_id'],
 				'content' => $row['content'],
 				'rating' => [
 					'up' => $row['up_rating'],
@@ -63,6 +65,7 @@ final class StoredBulletpoint implements Bulletpoint {
 			(new Sql\PreparedUpdate(
 				new Sql\AnsiUpdate('web.bulletpoints'),
 			))->set([
+				'referenced_theme_id' => $bulletpoint['referenced_theme_id'],
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],
 				'content' => $bulletpoint['content'],

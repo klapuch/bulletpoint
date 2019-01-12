@@ -1,5 +1,6 @@
 // @flow
 import type { PointType } from '../bulletpoint_rating/types';
+import type { FetchedThemeType } from '../theme/types';
 
 export type SourceType = 'head' | 'web';
 export type FetchedBulletpointType = {|
@@ -17,6 +18,8 @@ export type FetchedBulletpointType = {|
   |},
   +content: string,
   +theme_id: number,
+  +referenced_theme_id: number | null,
+  referenced_theme: FetchedThemeType | null,
 |};
 export type PostedBulletpointType = {|
   +source: {|
@@ -24,6 +27,8 @@ export type PostedBulletpointType = {|
     +type: SourceType,
   |},
   +content: string,
+  +referenced_theme_id: number | null,
+  +referenced_theme?: FetchedThemeType | null,
 |};
 export type ErrorBulletpointType = {|
   +source_link: ?string,

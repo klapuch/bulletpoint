@@ -25,6 +25,7 @@ final class PutTest extends TestCase\Runtime {
 		$response = (new Endpoint\ContributedBulletpoint\Put(
 			new Application\FakeRequest(new Output\Json([
 				'content' => 'TEST OK!',
+				'referenced_theme_id' => null,
 				'source' => [
 					'link' => 'https://www.wikipedia.com',
 					'type' => 'web',

@@ -1,7 +1,10 @@
 // @flow
 import React from 'react';
+// $FlowFixMe ok
+import AsyncSelect from 'react-select/lib/Async';
 import classNames from 'classnames';
 import styled from 'styled-components';
+import { allReactSelectSearches } from '../../theme/endpoints';
 import type { ErrorBulletpointType, PostedBulletpointType } from '../types';
 import * as validation from '../validation';
 import * as user from '../../user';
@@ -62,18 +65,24 @@ const CancelButton = ({ formType, onClick, children }: { children: string, ...Bu
 
 type Props = {|
   +bulletpoint: ?PostedBulletpointType,
-  +onSubmit: (PostedBulletpointType) => (void),
+  +onSubmit: (PostedBulletpointType) => (Promise<any>),
   +onAddClick: () => (void),
   +onCancelClick: () => (void),
   +type: FormTypes,
 |};
 type State = {|
+  referenced_theme: {
+    id: ?number,
+    name: ?string,
+  } | null,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};
 const initState = {
+  referenced_theme: null,
   bulletpoint: {
     content: '',
+    referenced_theme_id: null,
     source: {
       link: '',
       type: 'web',
@@ -112,16 +121,33 @@ export default class extends React.Component<Props, State> {
     }));
   };
 
+  handleSelectChange = (select: ?Object) => {
+    const option = select || { value: null, label: null };
+    this.setState(prevState => ({
+      referenced_theme: {
+        id: option.value,
+        name: option.label,
+      },
+      bulletpoint: {
+        ...prevState.bulletpoint,
+        referenced_theme_id: option.value,
+      },
+    }));
+  };
+
   onSubmit = () => {
-    if (this.props.type !== 'default' && validation.anyErrors(this.state.bulletpoint)) {
+    const { bulletpoint } = this.state;
+    if (this.props.type !== 'default' && validation.anyErrors(bulletpoint)) {
       this.setState(prevState => ({
         ...prevState,
         errors: validation.errors(prevState.bulletpoint),
       }));
     } else {
       this.props.onAddClick();
-      this.props.onSubmit(this.state.bulletpoint);
-      this.setState(initState);
+      this.props.onSubmit({
+        ...bulletpoint,
+        referenced_theme_id: bulletpoint.referenced_theme_id,
+      }).then(() => this.setState(initState));
     }
   };
 
@@ -132,6 +158,7 @@ export default class extends React.Component<Props, State> {
 
   render() {
     const { bulletpoint, errors } = this.state;
+    const referencedTheme = this.state.referenced_theme || { id: '', name: '' };
     return (
       <>
         {this.props.type === 'default' ? null : (
@@ -140,6 +167,15 @@ export default class extends React.Component<Props, State> {
               <label htmlFor="content">Obsah</label>
               <input type="text" className="form-control" id="content" name="content" value={bulletpoint.content} onChange={this.onChange} />
               {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="referenced_theme_id">Odkazující se téma</label>
+              <AsyncSelect
+                isClearable
+                value={{ value: referencedTheme.id, label: referencedTheme.name }}
+                onChange={this.handleSelectChange}
+                loadOptions={allReactSelectSearches}
+              />
             </div>
             <div className="form-group">
               <label htmlFor="source_type">Typ zdroje</label>

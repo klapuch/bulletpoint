@@ -31,6 +31,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 				'id',
 				'content',
 				'theme_id',
+				'referenced_theme_id',
 				'source_link',
 				'source_type',
 			]))->from(['web.contributed_bulletpoints'])
@@ -54,6 +55,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 				[
 					'content' => ':content',
 					'theme_id' => ':theme_id',
+					'referenced_theme_id' => ':referenced_theme_id',
 					'source_type' => ':source_type',
 					'source_link' => ':source_link',
 					'user_id' => ':user_id',
@@ -61,6 +63,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 				[
 					'content' => $bulletpoint['content'],
 					'theme_id' => $this->theme,
+					'referenced_theme_id' => $bulletpoint['referenced_theme_id'],
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
 					'user_id' => $this->user->id(),

@@ -57,6 +57,12 @@
         },
         "theme_id": {
             "type": "number"
+        },
+        "referenced_theme_id": {
+            "type": [
+                "number",
+                "null"
+            ]
         }
     },
     "required": [
