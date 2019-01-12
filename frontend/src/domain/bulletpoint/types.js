@@ -1,7 +1,7 @@
 // @flow
-import type { PointType } from '../bulletpoint_rating/types';
 import type { FetchedThemeType } from '../theme/types';
 
+export type PointType = 1 | 0 | -1;
 export type SourceType = 'head' | 'web';
 export type FetchedBulletpointType = {|
   +id: number,

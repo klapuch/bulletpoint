@@ -12,12 +12,10 @@ import * as user from '../../domain/user';
 import Form from '../../domain/bulletpoint/components/Form';
 import Loader from '../../ui/Loader';
 import SlugRedirect from '../../router/SlugRedirect';
-import type { FetchedBulletpointType, PostedBulletpointType } from '../../domain/bulletpoint/types';
+import type { FetchedBulletpointType, PostedBulletpointType, PointType } from '../../domain/bulletpoint/types';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import type { FormTypes } from '../../domain/bulletpoint/components/Form';
-import type { PointType } from '../../domain/bulletpoint_rating/types';
 import { default as AllBulletpoints } from '../../domain/bulletpoint/components/All';
-import { rate } from '../../domain/bulletpoint_rating/endpoints';
 import { single } from '../../domain/theme/endpoints';
 import FullTitle from '../../domain/theme/components/FullTitle';
 
@@ -205,6 +203,10 @@ const mapDispatchToProps = dispatch => ({
     themeId: number,
     bulletpointId: number,
     point: PointType,
-  ) => rate(bulletpointId, point, () => dispatch(bulletpoint.updateSingle(themeId, bulletpointId))),
+  ) => bulletpoint.rate(
+    bulletpointId,
+    point,
+    () => dispatch(bulletpoint.updateSingle(themeId, bulletpointId)),
+  ),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Theme);

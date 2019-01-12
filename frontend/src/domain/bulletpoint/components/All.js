@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
-import type { FetchedBulletpointType } from '../types';
-import type { PointType } from '../../bulletpoint_rating/types';
+import type { FetchedBulletpointType, PointType } from '../types';
 import Bulletpoint from './Single';
 
 type Props = {|
