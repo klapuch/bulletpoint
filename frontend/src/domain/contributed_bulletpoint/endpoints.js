@@ -1,11 +1,11 @@
 // @flow
 import axios from 'axios';
+import { forEach } from 'lodash';
 import { invalidatedAll, receivedAll, requestedAll } from './actions';
 import { fetchedAll } from './selects';
 import type { PostedBulletpointType } from '../bulletpoint/types';
-import * as bulletpoints from "../bulletpoint/selects";
-import { forEach } from "lodash";
-import * as theme from "../theme/endpoints";
+import * as bulletpoints from '../bulletpoint/selects';
+import * as theme from '../theme/endpoints';
 
 export const all = (themeId: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedAll(themeId, getState())) {
