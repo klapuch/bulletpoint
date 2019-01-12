@@ -296,6 +296,16 @@ CREATE TRIGGER theme_tags_row_ad_trigger
 	FOR EACH ROW EXECUTE PROCEDURE theme_tags_trigger_row_ad();
 
 
+CREATE TABLE favorite_themes (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	theme_id integer NOT NULL,
+	user_id integer NOT NULL,
+	CONSTRAINT favorite_themes_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT favorite_themes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT favorite_themes_theme_id_user_id UNIQUE (theme_id, user_id)
+);
+
+
 CREATE TABLE sources (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	link text NULL,
@@ -486,7 +496,8 @@ CREATE VIEW web.themes AS
 		themes.id, themes.name, json_tags.tags, themes.created_at,
 		"references".url AS reference_url,
 		users.id AS user_id,
-		COALESCE(json_theme_alternative_names.alternative_names, '[]') AS alternative_names
+		COALESCE(json_theme_alternative_names.alternative_names, '[]') AS alternative_names,
+		favorite_themes.id IS NOT NULL AS is_favorite
 	FROM public.themes
 	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id
@@ -500,7 +511,8 @@ CREATE VIEW web.themes AS
 		SELECT theme_id, jsonb_agg(name) AS alternative_names
 		FROM theme_alternative_names
 		GROUP BY theme_id
-	) AS json_theme_alternative_names ON json_theme_alternative_names.theme_id = themes.id;
+	) AS json_theme_alternative_names ON json_theme_alternative_names.theme_id = themes.id
+	LEFT JOIN favorite_themes ON favorite_themes.theme_id = themes.id AND favorite_themes.user_id = globals_get_user();
 
 CREATE FUNCTION web.themes_trigger_row_ii() RETURNS trigger AS $BODY$
 	DECLARE v_theme_id integer;

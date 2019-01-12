@@ -41,6 +41,7 @@ final class SearchedThemes implements Themes {
 						'themes.reference_url',
 						'themes.user_id',
 						'themes.created_at',
+						'themes.is_favorite',
 					]),
 					$this->keyword,
 				),

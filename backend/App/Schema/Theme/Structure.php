@@ -20,6 +20,7 @@ final class Structure {
 			'properties' => [
 				'id' => ['type' => 'number'],
 				'user_id' => ['type' => 'number'],
+				'is_favorite' => ['type' => 'boolean'],
 				'tags' => [
 					'type' => 'array',
 					'items' => [
@@ -50,7 +51,7 @@ final class Structure {
 				],
 				'created_at' => ['type' => 'string', 'format' => 'date-time'],
 			],
-			'required' => ['tags', 'name', 'reference'],
+			'required' => ['tags', 'name', 'reference', 'is_favorite'],
 			'type' => 'object',
 		];
 	}
