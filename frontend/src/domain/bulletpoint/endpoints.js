@@ -29,7 +29,7 @@ export const all = (
           dispatch(theme.single(themeBulletpoint.referenced_theme_id))
         ),
       )
-    ))
+    ));
 };
 
 export const add = (
