@@ -30,7 +30,7 @@ final class StoredTheme implements Theme {
 				'reference_url',
 				'user_id',
 				'created_at',
-				'is_favorite',
+				'is_starred',
 			]))->from(['web.themes'])
 				->where('id = :id', ['id' => $this->id])
 		))->row();
@@ -42,7 +42,7 @@ final class StoredTheme implements Theme {
 				'alternative_names' => $row['alternative_names'],
 				'tags' => $row['tags'],
 				'user_id' => $row['user_id'],
-				'is_favorite' => $row['is_favorite'],
+				'is_starred' => $row['is_starred'],
 				'created_at' => $row['created_at'],
 				'reference' => [
 					'url' => $row['reference_url'],
