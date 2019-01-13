@@ -30,7 +30,7 @@ final class Structure {
 			],
 			'type' => 'object',
 			'anyOf' => [
-				['required' => ['user']],
+				['required' => ['rating']],
 			],
 		];
 	}

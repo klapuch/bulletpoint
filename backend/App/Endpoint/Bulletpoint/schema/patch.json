@@ -23,7 +23,7 @@
     "anyOf": [
         {
             "required": [
-                "user"
+                "rating"
             ]
         }
     ]
