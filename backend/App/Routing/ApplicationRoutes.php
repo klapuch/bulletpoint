@@ -52,6 +52,12 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($user, ['admin'])
 				);
 			},
+			'themes/{id} [PATCH]' => function() use ($user, $request): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Theme\Patch($request, $this->connection, $user),
+					new Http\ChosenRole($user, ['admin', 'member'])
+				);
+			},
 			'themes [POST]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Themes\Post($request, $this->connection, $user, $this->url),
