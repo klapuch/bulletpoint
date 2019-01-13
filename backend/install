@@ -92,11 +92,15 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
 
 
-sudo crontab -e
-# Let's encrypt (once a week - sunday at 22:00)
-0 22 * * 0   /usr/bin/dehydrated -c && /usr/sbin/service nginx reload
-
 mkdir /backup
 sudo crontab -e
+
+# Let's encrypt (once a week - sunday at 22:00)
+0 22 * * 0 /usr/bin/dehydrated -c && /usr/sbin/service nginx reload
+
+
 # postgres backup (every day at 01:00)
-0 1 * * *   PGPASSWORD=bulletpoint pg_dump --file=/backup/$(date +"%Y%m%d_%H%M%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint
+0 1 * * * PGPASSWORD=bulletpoint /usr/bin/pg_dump --file=/backup/postgres_$(/bin/date +"\%Y\%m\%d_\%H\%M\%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint
+
+# application cron (every minute)
+* * * * * (cd /var/www/bulletpoint/current/backend && make cron)
