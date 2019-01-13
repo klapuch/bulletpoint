@@ -2,12 +2,12 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "additionalProperties": false,
     "properties": {
-        "is_favorite": {
+        "is_starred": {
             "type": "boolean"
         }
     },
     "required": [
-        "is_favorite"
+        "is_starred"
     ],
     "type": "object"
 }

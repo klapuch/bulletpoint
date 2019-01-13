@@ -300,6 +300,7 @@ CREATE TABLE starred_themes (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	theme_id integer NOT NULL,
 	user_id integer NOT NULL,
+	starred_at timestamptz NOT NULL DEFAULT now(),
 	CONSTRAINT starred_themes_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT starred_themes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT starred_themes_theme_id_user_id UNIQUE (theme_id, user_id)

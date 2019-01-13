@@ -62,7 +62,8 @@ final class StoredThemes implements Themes {
 		foreach ($themes as $theme) {
 			yield new StoredTheme(
 				$theme['id'],
-				new Storage\MemoryConnection($this->connection, $theme)
+				new Storage\MemoryConnection($this->connection, $theme),
+				$this->user
 			);
 		}
 	}

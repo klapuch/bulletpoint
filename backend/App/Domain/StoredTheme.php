@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
+use Bulletpoint\Domain\Access;
 use Klapuch\Output;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -14,9 +15,13 @@ final class StoredTheme implements Theme {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	public function __construct(int $id, Storage\Connection $connection) {
+	/** @var Access\User */
+	private $user;
+
+	public function __construct(int $id, Storage\Connection $connection, Access\User $user) {
 		$this->id = $id;
 		$this->connection = $connection;
+		$this->user = $user;
 	}
 
 	public function print(Output\Format $format): Output\Format {
@@ -62,6 +67,25 @@ final class StoredTheme implements Theme {
 				'tags' => json_encode($theme['tags']), // TODO: use array
 				'reference_url' => $theme['reference']['url'],
 			])->where('id = :id', ['id' => $this->id])
+		))->execute();
+	}
+
+	public function star(): void {
+		(new Storage\BuiltQuery(
+			$this->connection,
+			(new Sql\PgInsertInto(
+				'starred_themes',
+				['user_id' => ':user_id', 'theme_id' => ':theme_id'],
+				['user_id' => $this->user->id(), 'theme_id' => $this->id]
+			))->onConflict(['user_id', 'theme_id'])->doNothing()
+		))->execute();
+	}
+
+	public function unstar(): void {
+		(new Storage\TypedQuery(
+			$this->connection,
+			'DELETE FROM starred_themes WHERE theme_id = :theme_id AND user_id = :user_id',
+			['theme_id' => $this->id, 'user_id' => $this->user->id()]
 		))->execute();
 	}
 }

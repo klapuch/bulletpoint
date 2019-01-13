@@ -17,4 +17,14 @@ interface Theme {
 	 * @param mixed[] $theme
 	 */
 	public function change(array $theme): void;
+
+	/**
+	 * @throws \UnexpectedValueException
+	 */
+	public function star(): void;
+
+	/**
+	 * @throws \UnexpectedValueException
+	 */
+	public function unstar(): void;
 }

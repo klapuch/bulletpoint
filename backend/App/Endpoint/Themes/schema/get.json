@@ -8,7 +8,7 @@
         "user_id": {
             "type": "number"
         },
-        "is_favorite": {
+        "is_starred": {
             "type": "boolean"
         },
         "tags": {
@@ -58,7 +58,7 @@
         "tags",
         "name",
         "reference",
-        "is_favorite"
+        "is_starred"
     ],
     "type": "object"
 }

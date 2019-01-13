@@ -69,6 +69,20 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
+CREATE FUNCTION samples.starred_themes(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id starred_themes.id%type;
+BEGIN
+	INSERT INTO starred_themes (user_id, theme_id) VALUES (
+		samples.random_if_not_exists((SELECT samples.users()), replacements, 'user_id'),
+		samples.random_if_not_exists((SELECT samples.themes()), replacements, 'theme_id')
+	)
+	RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$ LANGUAGE plpgsql;
+
 CREATE FUNCTION samples.sources(replacements jsonb = '{}') RETURNS integer AS $BODY$
 DECLARE
 	v_id sources.id%type;

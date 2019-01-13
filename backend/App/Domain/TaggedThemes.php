@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
+use Bulletpoint\Domain\Access;
 use Klapuch\Dataset;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -47,7 +48,8 @@ final class TaggedThemes implements Themes {
 		foreach ($themes as $theme) {
 			yield new StoredTheme(
 				$theme['id'],
-				new Storage\MemoryConnection($this->connection, $theme)
+				new Storage\MemoryConnection($this->connection, $theme),
+				new Access\FakeUser()
 			);
 		}
 	}
