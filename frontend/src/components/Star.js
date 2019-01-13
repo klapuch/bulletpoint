@@ -18,7 +18,7 @@ type Props = {|
 type State = {|
   active: boolean,
 |};
-export default class Star extends React.PureComponent<Props, State> {
+export default class Star extends React.Component<Props, State> {
   state = {
     active: false,
   };
@@ -28,9 +28,7 @@ export default class Star extends React.PureComponent<Props, State> {
   }
 
   mark = () => {
-    if (this.props.active) {
-      this.setState({ active: true });
-    } else {
+    if (!this.props.active) {
       this.setState((prevState: State) => ({ active: !prevState.active }));
     }
   };
@@ -43,7 +41,9 @@ export default class Star extends React.PureComponent<Props, State> {
     return (
       <Resized
         onFocus={this.mark}
+        onMouseOver={this.mark}
         onBlur={this.mark}
+        onMouseOut={this.mark}
         onClick={() => this.props.onClick(!this.props.active)}
         className={classNames('glyphicon', active ? 'glyphicon-star' : 'glyphicon-star-empty')}
         aria-hidden="true"
