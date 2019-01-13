@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82fc553a2aaf1e35d34d82f0fbc21f29",
+    "content-hash": "252112cc3d3ed84f72a85e545b559619",
     "packages": [
         {
             "name": "justinrainbow/json-schema",
@@ -469,6 +469,59 @@
             "description": "HTTP routing",
             "homepage": "https://www.github.com/klapuch/Routing",
             "time": "2019-01-01T14:34:18+00:00"
+        },
+        {
+            "name": "klapuch/scheduling",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klapuch/Scheduling.git",
+                "reference": "926ed8098b302cf53fbe801bc47c01d52c194cb5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klapuch/Scheduling/zipball/926ed8098b302cf53fbe801bc47c01d52c194cb5",
+                "reference": "926ed8098b302cf53fbe801bc47c01d52c194cb5",
+                "shasum": ""
+            },
+            "require": {
+                "klapuch/storage": "^0.0.1",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "^3.0",
+                "jakub-onderka/php-parallel-lint": "^1.0.0",
+                "nette/tester": "^2.0",
+                "phpstan/phpstan": "^0.10.1",
+                "phpstan/phpstan-strict-rules": "*",
+                "slevomat/coding-standard": "^4.8.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Klapuch\\Scheduling\\": [
+                        "Core/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Dominik Klapuch",
+                    "email": "klapuchdominik@gmail.com",
+                    "homepage": "https://www.github.com/klapuch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Scheduling for running taks",
+            "homepage": "https://github.com/klapuch/Scheduling",
+            "keywords": [
+                "cron",
+                "job",
+                "scheduling",
+                "task"
+            ],
+            "time": "2019-01-13T22:10:53+00:00"
         },
         {
             "name": "klapuch/sql",
@@ -1711,16 +1764,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.1.1",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "8aae5b59b83bb4d0dbf07b0a835f2680a658f610"
+                "reference": "594bcae1fc0bccd3993d2f0d61a018e26ac2865a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8aae5b59b83bb4d0dbf07b0a835f2680a658f610",
-                "reference": "8aae5b59b83bb4d0dbf07b0a835f2680a658f610",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/594bcae1fc0bccd3993d2f0d61a018e26ac2865a",
+                "reference": "594bcae1fc0bccd3993d2f0d61a018e26ac2865a",
                 "shasum": ""
             },
             "require": {
@@ -1736,7 +1789,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "4.2-dev"
                 }
             },
             "autoload": {
@@ -1758,7 +1811,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2018-12-26T11:32:39+00:00"
+            "time": "2019-01-12T16:31:37+00:00"
         },
         {
             "name": "ocramius/package-versions",

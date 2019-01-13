@@ -5,9 +5,9 @@ namespace Bulletpoint\Scheduling;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use Bulletpoint;
 use Bulletpoint\Configuration;
 use Klapuch\Configuration\ValidIni;
+use Klapuch\Scheduling;
 use Klapuch\Storage;
 use Predis;
 use Tracy;
@@ -28,31 +28,31 @@ $connection = new Storage\CachedConnection(
 $logger = new Tracy\Logger(__DIR__ . '/../../logs');
 
 try {
-	(new SelectedJob(
+	(new Scheduling\SelectedJob(
 		$argv[1],
-		new MarkedJob(new Task\Cron($connection), $connection),
-		new Bulletpoint\Scheduling\Task\CheckChangedConfiguration(
+		new Scheduling\MarkedJob(new Task\Cron($connection), $connection),
+		new Task\CheckChangedConfiguration(
 			new \SplFileInfo(__DIR__ . '/../../../docker/nginx'),
-			new SerialJobs(
+			new Scheduling\SerialJobs(
 				new Task\GenerateNginxRoutes(
 					new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/routes.ini')),
 					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf')
 				),
-				new Bulletpoint\Scheduling\Task\GenerateNginxConfiguration(
+				new Task\GenerateNginxConfiguration(
 					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf')
 				)
 			)
 		),
-		new MarkedJob(
+		new Scheduling\MarkedJob(
 			new Task\GenerateNginxRoutes(
 				new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/routes.ini')),
 				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf')
 			),
 			$connection
 		),
-		new MarkedJob(new Task\GenerateJsonSchema($connection), $connection),
-		new MarkedJob(
-			new Bulletpoint\Scheduling\Task\GenerateNginxConfiguration(
+		new Scheduling\MarkedJob(new Task\GenerateJsonSchema($connection), $connection),
+		new Scheduling\MarkedJob(
+			new Task\GenerateNginxConfiguration(
 				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf')
 			),
 			$connection

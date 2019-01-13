@@ -3,14 +3,14 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
-use Bulletpoint\Scheduling;
 use Klapuch\Iterator;
+use Klapuch\Scheduling;
 
 final class CheckChangedConfiguration implements Scheduling\Job {
 	/** @var \SplFileInfo */
 	private $destination;
 
-	/** @var \Bulletpoint\Scheduling\Job */
+	/** @var \Klapuch\Scheduling\Job */
 	private $dependency;
 
 	public function __construct(\SplFileInfo $destination, Scheduling\Job $dependency) {

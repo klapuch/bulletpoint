@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
-use Bulletpoint\Scheduling;
 use Klapuch\Configuration;
+use Klapuch\Scheduling;
 
 final class GenerateNginxRoutes implements Scheduling\Job {
 	/** @var \Klapuch\Configuration\Source */

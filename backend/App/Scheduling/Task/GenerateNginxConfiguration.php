@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
-use Bulletpoint\Scheduling;
+use Klapuch\Scheduling;
 
 final class GenerateNginxConfiguration implements Scheduling\Job {
 	/** @var \SplFileInfo */

@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
-use Bulletpoint\Scheduling;
 use Bulletpoint\Schema;
 use Klapuch\Http;
+use Klapuch\Scheduling;
 use Klapuch\Storage;
 use Klapuch\Uri;
 use Nette\Utils\Json;
