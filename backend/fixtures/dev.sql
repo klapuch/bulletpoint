@@ -33,3 +33,4 @@ INSERT INTO bulletpoints (theme_id, source_id, user_id, content) VALUES (2, 4, 1
 INSERT INTO contributed_bulletpoints (theme_id, source_id, user_id, content) VALUES (1, 3, 2, 'Test');
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY bulletpoint_reputations;
+REFRESH MATERIALIZED VIEW CONCURRENTLY starred_themes;

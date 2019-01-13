@@ -304,6 +304,11 @@ CREATE TABLE user_starred_themes (
 	CONSTRAINT user_starred_themes_theme_id_user_id UNIQUE (theme_id, user_id)
 );
 
+CREATE MATERIALIZED VIEW starred_themes AS
+	SELECT theme_id, count(*) AS stars
+	FROM user_starred_themes
+	GROUP BY theme_id;
+CREATE UNIQUE INDEX starred_themes_theme_id_uidx ON starred_themes(theme_id);
 
 CREATE TABLE sources (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -438,7 +443,7 @@ CREATE MATERIALIZED VIEW bulletpoint_reputations AS
 	JOIN theme_tags ON theme_tags.theme_id = themes.id
 	JOIN user_tag_reputations ON user_tag_reputations.user_id = bulletpoints.user_id AND user_tag_reputations.tag_id = theme_tags.tag_id
 	GROUP BY bulletpoints.id;
-CREATE UNIQUE INDEX bulletpoint_reputations_id_uidx ON bulletpoint_reputations(bulletpoint_id);
+CREATE UNIQUE INDEX bulletpoint_reputations_bulletpoint_id_uidx ON bulletpoint_reputations(bulletpoint_id);
 
 
 CREATE TABLE bulletpoint_ratings (

@@ -24,7 +24,18 @@ final class Cron implements Scheduling\Job {
 					),
 					$this->connection,
 				),
-				'PT10M',
+				'PT1H',
+				$this->connection,
+			),
+			new Scheduling\RepeatedJob(
+				new Scheduling\MarkedJob(
+					new RefreshMaterializedView(
+						$this->connection,
+						'starred_themes',
+					),
+					$this->connection,
+				),
+				'PT1H',
 				$this->connection,
 			),
 		))->fulfill();
