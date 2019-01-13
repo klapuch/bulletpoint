@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Endpoint\Bulletpoint;
 
 use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Output;
@@ -26,7 +27,7 @@ final class Get implements Application\View {
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
 				(new Domain\ExistingBulletpoint(
-					new Domain\StoredBulletpoint($parameters['id'], $this->connection),
+					new Domain\StoredBulletpoint($parameters['id'], $this->connection, new Access\FakeUser()),
 					$parameters['id'],
 					$this->connection
 				))->print(new Output\Json())

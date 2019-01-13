@@ -5,8 +5,7 @@ import getSlug from 'speakingurl';
 import styled from 'styled-components';
 import { DownButton, UpButton } from './RateButton';
 import Source from '../../theme/components/Source';
-import type { FetchedBulletpointType } from '../types';
-import type { PointType } from '../../bulletpoint_rating/types';
+import type { FetchedBulletpointType, PointType } from '../types';
 
 const ActionButton = styled.span`
   cursor: pointer;

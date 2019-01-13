@@ -40,7 +40,12 @@
                     "type": "number"
                 },
                 "user": {
-                    "type": "number"
+                    "type": "number",
+                    "enum": [
+                        -1,
+                        0,
+                        1
+                    ]
                 }
             },
             "required": [

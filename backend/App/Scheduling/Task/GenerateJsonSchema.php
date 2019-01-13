@@ -76,6 +76,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 		$schemas->save($themeBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Bulletpoint/schema/get.json'));
 		$schemas->save($themeBulletpoint->put(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Bulletpoint/schema/put.json'));
 		$schemas->save($themeBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/Bulletpoints/schema/get.json'));
+		$schemas->save($themeBulletpoint->patch(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Bulletpoint/schema/patch.json'));
 
 		$themeContributedBulletpoint = new Schema\Theme\ContributedBulletpoint\Structure($this->connection);
 		$schemas->save($themeContributedBulletpoint->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/ContributedBulletpoints/schema/post.json'));

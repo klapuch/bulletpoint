@@ -19,4 +19,10 @@ interface Bulletpoint {
 	public function edit(array $bulletpoint): void;
 
 	public function delete(): void;
+
+	/**
+	 * @throws \UnexpectedValueException
+	 * @param int $point
+	 */
+	public function rate(int $point): void;
 }

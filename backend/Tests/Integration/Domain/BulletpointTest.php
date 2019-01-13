@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Integration\Domain;
 
 use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Bulletpoint\Fixtures;
 use Bulletpoint\Misc;
 use Bulletpoint\TestCase;
@@ -26,7 +27,8 @@ final class BulletpointTest extends TestCase\Runtime {
 			(new Domain\ExistingBulletpoint(
 				new Domain\StoredBulletpoint(
 					$id,
-					$this->connection
+					$this->connection,
+					new Access\FakeUser()
 				),
 				$id,
 				$this->connection
@@ -40,7 +42,7 @@ final class BulletpointTest extends TestCase\Runtime {
 	public function testEditing(): void {
 		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
 		(new Domain\ExistingBulletpoint(
-			new Domain\StoredBulletpoint($id, $this->connection),
+			new Domain\StoredBulletpoint($id, $this->connection, new Access\FakeUser()),
 			$id,
 			$this->connection
 		))->edit([
@@ -59,7 +61,7 @@ final class BulletpointTest extends TestCase\Runtime {
 	public function testDeleting(): void {
 		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
 		(new Domain\ExistingBulletpoint(
-			new Domain\StoredBulletpoint($id, $this->connection),
+			new Domain\StoredBulletpoint($id, $this->connection, new Access\FakeUser()),
 			$id,
 			$this->connection
 		))->delete();
@@ -69,24 +71,31 @@ final class BulletpointTest extends TestCase\Runtime {
 	public function testThrowingOnUnknown(): void {
 		Assert::exception(function() {
 			(new Domain\ExistingBulletpoint(
-				new Domain\StoredBulletpoint(1, $this->connection),
+				new Domain\StoredBulletpoint(1, $this->connection, new Access\FakeUser()),
 				1,
 				$this->connection
 			))->print(new Output\Json());
 		}, \UnexpectedValueException::class, 'Bulletpoint 1 does not exist');
 		Assert::exception(function() {
 			(new Domain\ExistingBulletpoint(
-				new Domain\StoredBulletpoint(1, $this->connection),
+				new Domain\StoredBulletpoint(1, $this->connection, new Access\FakeUser()),
 				1,
 				$this->connection
 			))->edit([]);
 		}, \UnexpectedValueException::class, 'Bulletpoint 1 does not exist');
 		Assert::exception(function() {
 			(new Domain\ExistingBulletpoint(
-				new Domain\StoredBulletpoint(1, $this->connection),
+				new Domain\StoredBulletpoint(1, $this->connection, new Access\FakeUser()),
 				1,
 				$this->connection
 			))->delete();
+		}, \UnexpectedValueException::class, 'Bulletpoint 1 does not exist');
+		Assert::exception(function() {
+			(new Domain\ExistingBulletpoint(
+				new Domain\StoredBulletpoint(1, $this->connection, new Access\FakeUser()),
+				1,
+				$this->connection
+			))->rate(1);
 		}, \UnexpectedValueException::class, 'Bulletpoint 1 does not exist');
 	}
 }

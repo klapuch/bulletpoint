@@ -10,7 +10,16 @@ import {
 } from './actions';
 import * as theme from '../theme/endpoints';
 import * as bulletpoints from './selects';
-import type { PostedBulletpointType } from './types';
+import type { PostedBulletpointType, PointType } from './types';
+
+export const rate = (
+  bulletpoint: number,
+  point: PointType,
+  next: () => (void),
+) => (
+  axios.patch(`/bulletpoints/${bulletpoint}`, { rating: { user: point } })
+    .then(next)
+);
 
 export const all = (
   themeId: number,

@@ -75,4 +75,8 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 			['id' => $this->id, 'user_id' => $this->user->id()],
 		))->execute();
 	}
+
+	public function rate(int $point): void {
+		throw new \UnexpectedValueException('Rating for contributed bulletpoint is not allowed');
+	}
 }

@@ -14,9 +14,13 @@ final class StoredBulletpoint implements Bulletpoint {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	public function __construct(int $id, Storage\Connection $connection) {
+	/** @var \Bulletpoint\Domain\Access\User */
+	private $user;
+
+	public function __construct(int $id, Storage\Connection $connection, Access\User $user) {
 		$this->id = $id;
 		$this->connection = $connection;
+		$this->user = $user;
 	}
 
 	public function print(Output\Format $format): Output\Format {
@@ -78,6 +82,18 @@ final class StoredBulletpoint implements Bulletpoint {
 			$this->connection,
 			'DELETE FROM bulletpoints WHERE id = :id',
 			['id' => $this->id]
+		))->execute();
+	}
+
+	public function rate(int $point): void {
+		(new Storage\BuiltQuery(
+			$this->connection,
+			(new Sql\PgInsertInto(
+				'bulletpoint_ratings',
+				['point' => ':point', 'user_id' => ':user_id', 'bulletpoint_id' => ':bulletpoint_id'],
+				['point' => $point, 'user_id' => $this->user->id(), 'bulletpoint_id' => $this->id]
+			))->onConflict(['user_id', 'bulletpoint_id'])
+				->doUpdate(['point' => 'EXCLUDED.point'])
 		))->execute();
 	}
 }
