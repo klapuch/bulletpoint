@@ -31,7 +31,7 @@ export default class Star extends React.PureComponent<Props, State> {
     if (this.props.active) {
       this.setState({ active: true });
     } else {
-      this.setState({ active: !this.state.active });
+      this.setState((prevState: State) => ({ active: !prevState.active }));
     }
   };
 
@@ -42,8 +42,8 @@ export default class Star extends React.PureComponent<Props, State> {
     const { active } = this.state;
     return (
       <Resized
-        onMouseOver={this.mark}
-        onMouseOut={this.mark}
+        onFocus={this.mark}
+        onBlur={this.mark}
         onClick={() => this.props.onClick(!this.props.active)}
         className={classNames('glyphicon', active ? 'glyphicon-star' : 'glyphicon-star-empty')}
         aria-hidden="true"

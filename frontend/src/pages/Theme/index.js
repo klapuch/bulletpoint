@@ -88,8 +88,13 @@ class Theme extends React.Component<Props, State> {
 
   handleBulletpointRatingChange = (bulletpointId: number, point: PointType) => {
     const { match: { params: { id } } } = this.props;
-    const bulletpoint = this.props.getBulletpointById(bulletpointId);
-    this.props.changeBulletpointRating(id, bulletpointId, bulletpoint.rating.user === point ? 0 : point);
+    this.props.changeBulletpointRating(
+      id,
+      bulletpointId,
+      this.props.getBulletpointById(bulletpointId).rating.user === point
+        ? 0
+        : point,
+    );
   };
 
   handleStarClick = (isStarred: boolean) => {
