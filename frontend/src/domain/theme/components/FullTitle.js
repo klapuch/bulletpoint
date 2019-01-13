@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import type { FetchedThemeType } from '../types';
 import Reference from './Reference';
 import AllTags from '../../tags/components/All';
+import Star from '../../../components/Star';
 import * as user from '../../user';
 
 const Title = styled.h1`
@@ -18,10 +19,12 @@ const EditButton = styled.span`
 
 type Props = {|
   +theme: FetchedThemeType,
+  +onStarClick: (boolean) => (void),
 |};
-const FullTitle = ({ theme }: Props) => (
+const FullTitle = ({ theme, onStarClick }: Props) => (
   <>
     <div>
+      <Star active={theme.is_starred} onClick={onStarClick} />
       <Title>{theme.name}</Title>
       <Reference url={theme.reference.url} />
       {

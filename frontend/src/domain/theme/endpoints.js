@@ -2,7 +2,12 @@
 import axios from 'axios';
 import {
   invalidatedSingle,
-  receivedAll, receivedSingle, requestedAll, requestedSingle,
+  receivedAll,
+  receivedSingle,
+  requestedAll,
+  requestedSingle,
+  receivedUpdateSingle,
+  requestedUpdateSingle,
 } from './actions';
 import { fetchedSingle } from './selects';
 import * as response from '../../api/response';
@@ -17,12 +22,26 @@ export const single = (id: number) => (dispatch: (mixed) => Object, getState: ()
     .then(response => dispatch(receivedSingle(id, response.data)));
 };
 
+export const updateSingle = (
+  themeId: number,
+) => (dispatch: (mixed) => Object) => {
+  requestedUpdateSingle(themeId);
+  axios.get(`/themes/${themeId}`)
+    .then(response => response.data)
+    .then(payload => dispatch(receivedUpdateSingle(payload)));
+};
+
 export const create = (theme: PostedThemeType, next: (number) => (void)) => {
   axios.post('/themes', theme)
     .then(response => response.headers)
     .then(headers => response.extractedLocationId(headers.location))
     .then(next);
 };
+
+export const starOrUnstar = (themeId: number, isStarred: boolean, next: (number) => (void)) => (
+  axios.patch(`/themes/${themeId}`, { is_starred: isStarred })
+    .then(next)
+);
 
 export const change = (
   id: number,

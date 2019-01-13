@@ -43,6 +43,18 @@ final class ExistingTheme implements Theme {
 		$this->origin->change($theme);
 	}
 
+	public function star(): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Theme %d does not exist', $this->id));
+		$this->origin->star();
+	}
+
+	public function unstar(): void {
+		if (!$this->exists($this->id))
+			throw new \UnexpectedValueException(sprintf('Theme %d does not exist', $this->id));
+		$this->origin->unstar();
+	}
+
 	private function exists(int $id): bool {
 		return (new Storage\TypedQuery(
 			$this->connection,

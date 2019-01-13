@@ -20,6 +20,7 @@ final class Structure {
 			'properties' => [
 				'id' => ['type' => 'number'],
 				'user_id' => ['type' => 'number'],
+				'is_starred' => ['type' => 'boolean'],
 				'tags' => [
 					'type' => 'array',
 					'items' => [
@@ -50,7 +51,7 @@ final class Structure {
 				],
 				'created_at' => ['type' => 'string', 'format' => 'date-time'],
 			],
-			'required' => ['tags', 'name', 'reference'],
+			'required' => ['tags', 'name', 'reference', 'is_starred'],
 			'type' => 'object',
 		];
 	}
@@ -78,5 +79,20 @@ final class Structure {
 
 	public function put(): array {
 		return $this->post();
+	}
+
+	public function patch(): array {
+		$get = $this->get();
+		return [
+			'$schema' => 'http://json-schema.org/draft-04/schema#',
+			'additionalProperties' => false,
+			'properties' => [
+				'is_starred' => $get['properties']['is_starred'],
+			],
+			'anyOf' => [
+				['required' => ['is_starred']],
+			],
+			'type' => 'object',
+		];
 	}
 }

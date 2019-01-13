@@ -5,6 +5,7 @@ namespace Bulletpoint\Endpoint\Theme;
 
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain;
+use Bulletpoint\Domain\Access;
 use Klapuch\Application;
 use Klapuch\Storage;
 use Klapuch\Validation;
@@ -29,7 +30,7 @@ final class Put implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		(new Domain\ExistingTheme(
-			new Domain\StoredTheme($parameters['id'], $this->connection),
+			new Domain\StoredTheme($parameters['id'], $this->connection, new Access\FakeUser()),
 			$parameters['id'],
 			$this->connection
 		))->change(

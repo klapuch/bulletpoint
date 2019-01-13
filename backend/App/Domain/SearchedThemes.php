@@ -41,6 +41,7 @@ final class SearchedThemes implements Themes {
 						'themes.reference_url',
 						'themes.user_id',
 						'themes.created_at',
+						'themes.is_starred',
 					]),
 					$this->keyword,
 				),
@@ -50,7 +51,8 @@ final class SearchedThemes implements Themes {
 		foreach ($themes as $theme) {
 			yield new StoredTheme(
 				$theme['id'],
-				new Storage\MemoryConnection($this->connection, $theme)
+				new Storage\MemoryConnection($this->connection, $theme),
+				new Access\FakeUser()
 			);
 		}
 	}

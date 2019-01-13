@@ -47,7 +47,8 @@ final class TaggedThemes implements Themes {
 		foreach ($themes as $theme) {
 			yield new StoredTheme(
 				$theme['id'],
-				new Storage\MemoryConnection($this->connection, $theme)
+				new Storage\MemoryConnection($this->connection, $theme),
+				new Access\FakeUser()
 			);
 		}
 	}

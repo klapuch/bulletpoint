@@ -23,4 +23,12 @@ final class PublicTheme implements Theme {
 	public function change(array $theme): void {
 		$this->origin->change($theme);
 	}
+
+	public function star(): void {
+		$this->origin->star();
+	}
+
+	public function unstar(): void {
+		$this->origin->unstar();
+	}
 }
