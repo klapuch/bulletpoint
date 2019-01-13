@@ -80,4 +80,17 @@ final class Structure {
 	public function put(): array {
 		return $this->post();
 	}
+
+	public function patch(): array {
+		$get = $this->get();
+		return [
+			'$schema' => 'http://json-schema.org/draft-04/schema#',
+			'additionalProperties' => false,
+			'properties' => [
+				'is_favorite' => $get['properties']['is_favorite'],
+			],
+			'required' => ['is_favorite'],
+			'type' => 'object',
+		];
+	}
 }
