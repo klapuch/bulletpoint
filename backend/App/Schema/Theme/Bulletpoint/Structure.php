@@ -29,7 +29,9 @@ final class Structure {
 				],
 			],
 			'type' => 'object',
-			'required' => ['rating'],
+			'anyOf' => [
+				['required' => ['user']],
+			],
 		];
 	}
 

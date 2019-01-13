@@ -6,8 +6,12 @@
             "type": "boolean"
         }
     },
-    "required": [
-        "is_starred"
+    "anyOf": [
+        {
+            "required": [
+                "is_starred"
+            ]
+        }
     ],
     "type": "object"
 }

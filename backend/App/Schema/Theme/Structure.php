@@ -89,7 +89,9 @@ final class Structure {
 			'properties' => [
 				'is_starred' => $get['properties']['is_starred'],
 			],
-			'required' => ['is_starred'],
+			'anyOf' => [
+				['required' => ['is_starred']],
+			],
 			'type' => 'object',
 		];
 	}
