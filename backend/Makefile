@@ -65,6 +65,9 @@ generate-nginx-conf:## generate nginx configs
 check-changed-conf: ## check changed configs
 	php App/Scheduling/index.php CheckChangedConfiguration
 
+cron:               ## run cron tasks
+	php App/Scheduling/index.php Cron
+
 composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative
 

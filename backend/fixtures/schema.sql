@@ -279,8 +279,6 @@ BEGIN
 	FROM bulletpoints
 	JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id;
 
-	PERFORM update_bulletpoint_reputation();
-
 	RETURN old;
 END;
 $$ LANGUAGE plpgsql VOLATILE;
@@ -433,26 +431,14 @@ CREATE TRIGGER bulletpoints_row_ad_trigger
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_ad();
 
 
-CREATE TABLE bulletpoint_reputations (
-	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	bulletpoint_id integer NOT NULL UNIQUE,
-	reputation integer NOT NULL DEFAULT 0,
-	CONSTRAINT bulletpoint_reputations_reputation_positive CHECK (reputation >= 0),
-	CONSTRAINT bulletpoint_reputations_bulletpoint_id_fkey FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT
-);
-
-CREATE FUNCTION update_bulletpoint_reputation() RETURNS void AS $BODY$
-BEGIN
-	INSERT INTO bulletpoint_reputations (bulletpoint_id, reputation)
-		SELECT bulletpoints.id, sum(user_tag_reputations.reputation) AS reputation
-		FROM bulletpoints
-		JOIN themes ON themes.id = bulletpoints.theme_id
-		JOIN theme_tags ON theme_tags.theme_id = themes.id
-		JOIN user_tag_reputations ON user_tag_reputations.user_id = bulletpoints.user_id AND user_tag_reputations.tag_id = theme_tags.tag_id
-		GROUP BY bulletpoints.id
-	ON CONFLICT (bulletpoint_id) DO UPDATE SET reputation = EXCLUDED.reputation;
-END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
+CREATE MATERIALIZED VIEW bulletpoint_reputations AS
+	SELECT bulletpoints.id AS bulletpoint_id, sum(user_tag_reputations.reputation) AS reputation
+	FROM bulletpoints
+	JOIN themes ON themes.id = bulletpoints.theme_id
+	JOIN theme_tags ON theme_tags.theme_id = themes.id
+	JOIN user_tag_reputations ON user_tag_reputations.user_id = bulletpoints.user_id AND user_tag_reputations.tag_id = theme_tags.tag_id
+	GROUP BY bulletpoints.id;
+CREATE UNIQUE INDEX bulletpoint_reputations_id_uidx ON bulletpoint_reputations(bulletpoint_id);
 
 
 CREATE TABLE bulletpoint_ratings (
@@ -476,8 +462,6 @@ BEGIN
 	FROM bulletpoints
 	JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id
 	WHERE bulletpoints.id = r.bulletpoint_id;
-
-	PERFORM update_bulletpoint_reputation();
 
 	RETURN r;
 END;
