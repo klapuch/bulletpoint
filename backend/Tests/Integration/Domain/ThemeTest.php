@@ -66,13 +66,13 @@ final class ThemeTest extends TestCase\Runtime {
 			$id,
 			$this->connection
 		);
-		Assert::false((new Storage\TypedQuery($this->connection, 'SELECT EXISTS(SELECT id FROM starred_themes WHERE theme_id = ? AND user_id = ?)', [$id, $userId]))->field());
+		Assert::false((new Storage\TypedQuery($this->connection, 'SELECT EXISTS(SELECT id FROM user_starred_themes WHERE theme_id = ? AND user_id = ?)', [$id, $userId]))->field());
 		$theme->star();
-		Assert::true((new Storage\TypedQuery($this->connection, 'SELECT EXISTS(SELECT id FROM starred_themes WHERE theme_id = ? AND user_id = ?)', [$id, $userId]))->field());
+		Assert::true((new Storage\TypedQuery($this->connection, 'SELECT EXISTS(SELECT id FROM user_starred_themes WHERE theme_id = ? AND user_id = ?)', [$id, $userId]))->field());
 		Assert::noError([$theme, 'star']);
-		Assert::true((new Storage\TypedQuery($this->connection, 'SELECT EXISTS(SELECT id FROM starred_themes WHERE theme_id = ? AND user_id = ?)', [$id, $userId]))->field());
+		Assert::true((new Storage\TypedQuery($this->connection, 'SELECT EXISTS(SELECT id FROM user_starred_themes WHERE theme_id = ? AND user_id = ?)', [$id, $userId]))->field());
 		$theme->unstar();
-		Assert::false((new Storage\TypedQuery($this->connection, 'SELECT EXISTS(SELECT id FROM starred_themes WHERE theme_id = ? AND user_id = ?)', [$id, $userId]))->field());
+		Assert::false((new Storage\TypedQuery($this->connection, 'SELECT EXISTS(SELECT id FROM user_starred_themes WHERE theme_id = ? AND user_id = ?)', [$id, $userId]))->field());
 		Assert::noError([$theme, 'unstar']);
 	}
 

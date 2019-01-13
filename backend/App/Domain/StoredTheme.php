@@ -73,7 +73,7 @@ final class StoredTheme implements Theme {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PgInsertInto(
-				'starred_themes',
+				'user_starred_themes',
 				['user_id' => ':user_id', 'theme_id' => ':theme_id'],
 				['user_id' => $this->user->id(), 'theme_id' => $this->id]
 			))->onConflict(['user_id', 'theme_id'])->doNothing()
@@ -83,7 +83,7 @@ final class StoredTheme implements Theme {
 	public function unstar(): void {
 		(new Storage\TypedQuery(
 			$this->connection,
-			'DELETE FROM starred_themes WHERE theme_id = :theme_id AND user_id = :user_id',
+			'DELETE FROM user_starred_themes WHERE theme_id = :theme_id AND user_id = :user_id',
 			['theme_id' => $this->id, 'user_id' => $this->user->id()]
 		))->execute();
 	}
