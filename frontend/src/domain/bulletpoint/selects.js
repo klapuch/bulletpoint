@@ -41,5 +41,5 @@ export const getById = (
   bulletpoint: number,
   state: Object,
 ): FetchedBulletpointType|Object => (
-  withReferencedTheme(first(getByTheme(theme, state).filter(single => single.id === bulletpoint)))
+  withReferencedTheme(first(getByTheme(theme, state).filter(single => single.id === bulletpoint)), state)
 );
