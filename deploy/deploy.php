@@ -50,6 +50,7 @@ task('nginx:config:move', static function (): void {
 
 task('php:config:move', static function (): void {
 	run('cp {{release_path}}/docker/php-fpm/php.prod.ini /etc/php/7.3/fpm/php.ini');
+	run('cp {{release_path}}/docker/php-fpm/php.prod.ini /etc/php/7.3/cli/php.ini');
 });
 
 task('react:build', static function (): void {
