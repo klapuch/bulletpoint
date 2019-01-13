@@ -24,6 +24,11 @@ export const create = (theme: PostedThemeType, next: (number) => (void)) => {
     .then(next);
 };
 
+export const starOrUnstar = (themeId: number, isStarred: boolean, next: (number) => (void)) => (
+  axios.patch(`/themes/${themeId}`, { is_starred: isStarred })
+    .then(next)
+);
+
 export const change = (
   id: number,
   theme: PostedThemeType,

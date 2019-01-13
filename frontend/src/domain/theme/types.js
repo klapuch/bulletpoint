@@ -4,6 +4,7 @@ import type { TagType } from '../tags/types';
 export type FetchedThemeType = {|
   +id: number,
   +user_id: number,
+  +is_starred: boolean,
   +tags: Array<TagType>,
   +alternative_names: Array<string>,
   +name: string,

@@ -8,6 +8,7 @@ import * as bulletpoints from '../../domain/bulletpoint/selects';
 import * as contributedBulletpoint from '../../domain/contributed_bulletpoint/endpoints';
 import * as contributedBulletpoints from '../../domain/contributed_bulletpoint/selects';
 import * as themes from '../../domain/theme/selects';
+import * as theme from '../../domain/theme/endpoints';
 import * as user from '../../domain/user';
 import Form from '../../domain/bulletpoint/components/Form';
 import Loader from '../../ui/Loader';
@@ -16,7 +17,6 @@ import type { FetchedBulletpointType, PostedBulletpointType, PointType } from '.
 import type { FetchedThemeType } from '../../domain/theme/types';
 import type { FormTypes } from '../../domain/bulletpoint/components/Form';
 import { default as AllBulletpoints } from '../../domain/bulletpoint/components/All';
-import { single } from '../../domain/theme/endpoints';
 import FullTitle from '../../domain/theme/components/FullTitle';
 
 type State = {|
@@ -25,21 +25,21 @@ type State = {|
   bulletpoint: ?PostedBulletpointType,
 |};
 type Props = {|
-  +addBulletpoint: (theme: number, PostedBulletpointType, (void) => (void)) => (Promise<any>),
+  +addBulletpoint: (themeId: number, PostedBulletpointType, (void) => (void)) => (Promise<any>),
   +editBulletpoint: (
-    theme: number,
+    themeId: number,
     bulletpointId: number,
     PostedBulletpointType,
     next: (void) => (void),
   ) => (Promise<any>),
   +deleteBulletpoint: (
-    theme: number,
+    themeId: number,
     bulletpointId: number,
     next: (void) => (void),
   ) => (void),
   +bulletpoints: Array<FetchedBulletpointType>,
   +contributedBulletpoints: Array<FetchedBulletpointType>,
-  +changeRating: (theme: number, bulletpoint: number, point: PointType) => (void),
+  +changeBulletpointRating: (themeId: number, bulletpoint: number, point: PointType) => (void),
   +fetchBulletpoints: (number) => (void),
   +fetchContributedBulletpoints: (number) => (void),
   +fetchTheme: (number) => (void),
@@ -85,10 +85,15 @@ class Theme extends React.Component<Props, State> {
     this.props.fetchContributedBulletpoints(id);
   };
 
-  handleRatingChange = (bulletpointId: number, point: PointType) => {
+  handleBulletpointRatingChange = (bulletpointId: number, point: PointType) => {
     const { match: { params: { id } } } = this.props;
     const bulletpoint = this.props.getBulletpointById(bulletpointId);
-    this.props.changeRating(id, bulletpointId, bulletpoint.rating.user === point ? 0 : point);
+    this.props.changeBulletpointRating(id, bulletpointId, bulletpoint.rating.user === point ? 0 : point);
+  };
+
+  handleStarClick = (isStarred: boolean) => {
+    const { match: { params: { id } } } = this.props;
+    theme.starOrUnstar(id, isStarred, this.reload);
   };
 
   handleDeleteClick = (bulletpointId: number) => {
@@ -114,33 +119,27 @@ class Theme extends React.Component<Props, State> {
   handleCancelClick = () => this.setState(initState);
 
   render() {
-    const {
-      theme,
-      fetching,
-      bulletpoints,
-      contributedBulletpoints,
-    } = this.props;
-    if (fetching) {
+    if (this.props.fetching) {
       return <Loader />;
     }
     return (
-      <SlugRedirect {...this.props} name={theme.name}>
-        <Helmet><title>{theme.name}</title></Helmet>
-        <FullTitle theme={theme} />
+      <SlugRedirect {...this.props} name={this.props.theme.name}>
+        <Helmet><title>{this.props.theme.name}</title></Helmet>
+        <FullTitle theme={this.props.theme} onStarClick={this.handleStarClick} />
         <div className="row">
           <div className="col-sm-8">
             <h2 id="bulletpoints">Bulletpointy</h2>
             <AllBulletpoints
-              bulletpoints={bulletpoints}
-              onRatingChange={this.handleRatingChange}
+              bulletpoints={this.props.bulletpoints}
+              onRatingChange={this.handleBulletpointRatingChange}
               onEditClick={user.isAdmin() ? this.handleEditClick : undefined}
               onDeleteClick={user.isAdmin() ? this.handleDeleteClick : undefined}
             />
-            {!isEmpty(contributedBulletpoints) && (
+            {!isEmpty(this.props.contributedBulletpoints) && (
               <>
                 <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
                 <AllBulletpoints
-                  bulletpoints={contributedBulletpoints}
+                  bulletpoints={this.props.contributedBulletpoints}
                   onDeleteClick={this.handleDeleteClick}
                 />
               </>
@@ -172,7 +171,7 @@ const mapStateToProps = (state, { match: { params: { id: themeId } } }) => ({
   getBulletpointById: (id: number) => bulletpoints.getById(themeId, id, state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchTheme: (id: number) => dispatch(single(id)),
+  fetchTheme: (id: number) => dispatch(theme.single(id)),
   deleteBulletpoint: (
     themeId: number,
     bulletpointId: number,
@@ -197,9 +196,9 @@ const mapDispatchToProps = dispatch => ({
     postedBulletpoint: PostedBulletpointType,
     next: (void) => (void),
   ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint, next)),
-  fetchBulletpoints: (theme: number) => dispatch(bulletpoint.all(theme)),
-  fetchContributedBulletpoints: (theme: number) => dispatch(contributedBulletpoint.all(theme)),
-  changeRating: (
+  fetchBulletpoints: (themeId: number) => dispatch(bulletpoint.all(themeId)),
+  fetchContributedBulletpoints: (themeId: number) => dispatch(contributedBulletpoint.all(themeId)),
+  changeBulletpointRating: (
     themeId: number,
     bulletpointId: number,
     point: PointType,
