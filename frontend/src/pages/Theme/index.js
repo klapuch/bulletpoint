@@ -40,6 +40,7 @@ type Props = {|
   +bulletpoints: Array<FetchedBulletpointType>,
   +contributedBulletpoints: Array<FetchedBulletpointType>,
   +changeBulletpointRating: (themeId: number, bulletpoint: number, point: PointType) => (void),
+  +starOrUnstar: (themeId: number, isStarred: boolean) => (void),
   +fetchBulletpoints: (number) => (void),
   +fetchContributedBulletpoints: (number) => (void),
   +fetchTheme: (number) => (void),
@@ -93,7 +94,7 @@ class Theme extends React.Component<Props, State> {
 
   handleStarClick = (isStarred: boolean) => {
     const { match: { params: { id } } } = this.props;
-    theme.starOrUnstar(id, isStarred, this.reload);
+    this.props.starOrUnstar(id, isStarred);
   };
 
   handleDeleteClick = (bulletpointId: number) => {
@@ -197,6 +198,10 @@ const mapDispatchToProps = dispatch => ({
     next: (void) => (void),
   ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint, next)),
   fetchBulletpoints: (themeId: number) => dispatch(bulletpoint.all(themeId)),
+  starOrUnstar: (
+    themeId: number,
+    isStarred: boolean,
+  ) => theme.starOrUnstar(themeId, isStarred, () => dispatch(theme.updateSingle(themeId))),
   fetchContributedBulletpoints: (themeId: number) => dispatch(contributedBulletpoint.all(themeId)),
   changeBulletpointRating: (
     themeId: number,

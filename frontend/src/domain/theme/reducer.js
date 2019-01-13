@@ -5,6 +5,8 @@ import {
   RECEIVED_THEME,
   RECEIVED_THEMES,
   RECEIVED_INVALIDATED_THEME,
+  RECEIVED_THEME_UPDATE,
+  REQUESTED_THEME_UPDATE,
 } from './actions';
 
 type State = {|
@@ -59,6 +61,27 @@ export default (state: State = init, action: Object): State => {
         all: {
           fetching: action.fetching,
           payload: [],
+        },
+      };
+    case RECEIVED_THEME_UPDATE:
+      return {
+        ...state,
+        single: {
+          ...state.single,
+          [action.theme]: {
+            payload: action.replacement,
+            fetching: action.fetching,
+          },
+        },
+      };
+    case REQUESTED_THEME_UPDATE:
+      return {
+        ...state,
+        single: {
+          ...state.single,
+          [action.theme]: {
+            fetching: action.fetching,
+          },
         },
       };
     case RECEIVED_INVALIDATED_THEME:

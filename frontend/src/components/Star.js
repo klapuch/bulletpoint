@@ -44,7 +44,7 @@ export default class Star extends React.PureComponent<Props, State> {
       <Resized
         onMouseOver={this.mark}
         onMouseOut={this.mark}
-        onClick={() => this.props.onClick(active)}
+        onClick={() => this.props.onClick(!this.props.active)}
         className={classNames('glyphicon', active ? 'glyphicon-star' : 'glyphicon-star-empty')}
         aria-hidden="true"
       />
