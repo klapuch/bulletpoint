@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain;
 
 use Bulletpoint\Domain;
-use Bulletpoint\Domain\Access;
 use Klapuch\Dataset;
 use Klapuch\Sql;
 use Klapuch\Storage;

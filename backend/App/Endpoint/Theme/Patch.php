@@ -19,7 +19,7 @@ final class Patch implements Application\View {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var Access\User */
+	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
 	public function __construct(Application\Request $request, Storage\Connection $connection, Access\User $user) {

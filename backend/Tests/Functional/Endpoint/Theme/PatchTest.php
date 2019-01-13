@@ -37,7 +37,7 @@ final class PatchTest extends TestCase\Runtime {
 			new Application\FakeRequest(new Output\Json(['is_starred' => false])),
 			$this->connection,
 			new Access\FakeUser((string) $userId),
-			))->response(['id' => $id]);
+		))->response(['id' => $id]);
 		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}
 }

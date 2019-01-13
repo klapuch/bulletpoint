@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
-use Bulletpoint\Domain\Access;
 use Klapuch\Output;
 use Klapuch\Sql;
 use Klapuch\Storage;
@@ -15,7 +14,7 @@ final class StoredTheme implements Theme {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var Access\User */
+	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
 	public function __construct(int $id, Storage\Connection $connection, Access\User $user) {

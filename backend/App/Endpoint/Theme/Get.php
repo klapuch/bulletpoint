@@ -32,7 +32,8 @@ final class Get implements Application\View {
 							$parameters['id'],
 							$this->connection,
 							new Access\FakeUser(),
-						)),
+						)
+					),
 					$parameters['id'],
 					$this->connection
 				))->print(new Output\Json())
