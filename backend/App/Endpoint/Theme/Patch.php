@@ -41,11 +41,10 @@ final class Patch implements Application\View {
 			$this->connection
 		);
 		if (isset($payload['is_starred'])) {
-			if ($payload['is_starred'] === true) {
+			if ($payload['is_starred'] === true)
 				$theme->star();
-			} else {
+			else
 				$theme->unstar();
-			}
 		}
 		return new Application\EmptyResponse();
 	}
