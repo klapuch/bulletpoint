@@ -71,8 +71,9 @@ export const allSearched = (keyword: string) => (dispatch: (mixed) => Object) =>
   dispatch(all({ q: keyword }))
 );
 
-export const allReactSelectSearches = (keyword: string): Promise<any> => (
+export const allReactSelectSearches = (keyword: string, except: Array<number>): Promise<any> => (
   axios.get('/themes', { q: keyword })
     .then(response => response.data)
+    .then(themes => themes.filter(theme => !except.includes(theme.id)))
     .then(themes => themes.map(theme => ({ label: theme.name, value: theme.id })))
 );

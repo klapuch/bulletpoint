@@ -152,6 +152,7 @@ class Theme extends React.Component<Props, State> {
             )}
             {user.isLoggedIn() && (
               <Form
+                themeId={parseInt(this.props.match.params.id, 10)}
                 bulletpoint={this.state.bulletpoint}
                 onAddClick={this.handleAddClick}
                 onCancelClick={this.handleCancelClick}

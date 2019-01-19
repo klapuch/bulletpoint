@@ -69,6 +69,7 @@ type Props = {|
   +onAddClick: () => (void),
   +onCancelClick: () => (void),
   +type: FormTypes,
+  +themeId: number,
 |};
 type State = {|
   referenced_theme: {
@@ -174,7 +175,7 @@ export default class extends React.Component<Props, State> {
                 isClearable
                 value={{ value: referencedTheme.id, label: referencedTheme.name }}
                 onChange={this.handleSelectChange}
-                loadOptions={allReactSelectSearches}
+                loadOptions={keyword => allReactSelectSearches(keyword, [this.props.themeId])}
               />
             </div>
             <div className="form-group">
