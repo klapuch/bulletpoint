@@ -28,7 +28,7 @@ install:
 before_script:
   - docker exec bulletpoint_php-fpm_1 make composer-install
   - docker exec bulletpoint-postgres test_import
-  - docker exec bulletpoint_node_1 yarn
+  - docker exec bulletpoint_node_1 yarn cache clean && yarn install
 
 script:
   - docker exec -e "TRAVIS=true" bulletpoint_php-fpm_1 make ci
