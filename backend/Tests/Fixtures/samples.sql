@@ -83,6 +83,20 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
+CREATE FUNCTION samples.theme_alternative_names(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id theme_alternative_names.id%type;
+BEGIN
+	INSERT INTO theme_alternative_names (name, theme_id) VALUES (
+		samples.random_if_not_exists(md5(random()::text), replacements, 'name'),
+		samples.random_if_not_exists((SELECT samples.themes()), replacements, 'theme_id')
+	)
+	RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$ LANGUAGE plpgsql;
+
 CREATE FUNCTION samples.sources(replacements jsonb = '{}') RETURNS integer AS $BODY$
 DECLARE
 	v_id sources.id%type;

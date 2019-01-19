@@ -66,6 +66,16 @@ final class ThemesTest extends TestCase\Runtime {
 		Assert::same(1, $themes->count(new Dataset\EmptySelection()));
 		Assert::same($theme1, (new Misc\TestingFormat($all[0]->print(new Output\Json())))->raw()['id']);
 	}
+
+	public function testSearchingWithUniqueResults(): void {
+		['id' => $theme1] = (new Fixtures\SamplePostgresData($this->connection, 'themes', ['name' => 'PostgreSQL']))->try();
+		(new Fixtures\SamplePostgresData($this->connection, 'theme_alternative_names', ['theme_id' => $theme1, 'name' => 'PG']))->try();
+		(new Fixtures\SamplePostgresData($this->connection, 'theme_alternative_names', ['theme_id' => $theme1, 'name' => 'postgres']))->try();
+		$themes = new Domain\SearchedThemes(new Domain\FakeThemes(), 'p', $this->connection);
+		$all = iterator_to_array($themes->all(new Dataset\EmptySelection()));
+		Assert::count(1, $all);
+		Assert::same(1, $themes->count(new Dataset\EmptySelection()));
+	}
 }
 
 (new ThemesTest())->run();

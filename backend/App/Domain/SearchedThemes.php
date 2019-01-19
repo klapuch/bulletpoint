@@ -34,7 +34,7 @@ final class SearchedThemes implements Themes {
 			new Dataset\SelectiveStatement(
 				new Domain\Sql\SearchedThemes(
 					new Sql\AnsiSelect([
-						'themes.id',
+						'DISTINCT ON (themes.id) themes.id',
 						'themes.name',
 						'themes.alternative_names',
 						'themes.tags',
@@ -62,7 +62,7 @@ final class SearchedThemes implements Themes {
 			$this->connection,
 			new Dataset\SelectiveStatement(
 				new Domain\Sql\SearchedThemes(
-					new Sql\AnsiSelect(['count(*)']),
+					new Sql\AnsiSelect(['count(DISTINCT themes.id)']),
 					$this->keyword,
 				),
 				$selection
