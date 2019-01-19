@@ -176,6 +176,7 @@ export default class extends React.Component<Props, State> {
                 value={{ value: referencedTheme.id, label: referencedTheme.name }}
                 onChange={this.handleSelectChange}
                 loadOptions={keyword => allReactSelectSearches(keyword, [this.props.themeId])}
+                styles={{ option: base => ({ ...base, color: '#000' }) }}
               />
             </div>
             <div className="form-group">
