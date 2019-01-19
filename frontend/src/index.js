@@ -14,14 +14,25 @@ import combineReducers from './reducers';
 import * as serviceWorker from './serviceWorker';
 import withSettings from './api/connection';
 import * as session from './domain/access/session';
+import * as user from './domain/user/endpoints';
 import { reSignIn } from './domain/sign/endpoints';
 
 axios.defaults = withSettings(axios.defaults);
 
 const history = createBrowserHistory();
 history.listen((location) => {
-  if (session.exists() && session.expired()) {
-    reSignIn(session.getValue(), () => history.push('/sign/in', { state: { from: location } }));
+  if (session.exists()) {
+    const token = session.getValue();
+    user.fetchMe(token, me => session.updateCredentials(me))
+      .then(() => {
+        if (session.expired()) {
+          reSignIn(token, () => history.push('/sign/in', { state: { from: location } }));
+        }
+      })
+      .catch(() => {
+        session.destroy();
+        history.push('/sign/in', { state: { from: location } });
+      });
   }
 });
 

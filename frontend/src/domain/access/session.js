@@ -13,21 +13,19 @@ type Token = {|
   +expiration: number,
 |};
 
+const COOKIE_OPTIONS = {
+  path: '/',
+  sameSite: 'lax',
+};
+
 export const start = (token: Token, me: MeType): void => {
-  const idOptions = {
-    path: '/',
-    sameSite: 'lax',
-  };
   const ttlOptions = {
-    ...idOptions,
+    ...COOKIE_OPTIONS,
     maxAge: (token.expiration - THRESHOLD) * (DECREASED_BY / 100),
   };
-  const meOptions = {
-    ...idOptions,
-  };
-  window.document.cookie = serialize(VALUE_NAME, token.value, idOptions);
+  window.document.cookie = serialize(VALUE_NAME, token.value, COOKIE_OPTIONS);
   window.document.cookie = serialize(TTL_NAME, 1, ttlOptions);
-  window.document.cookie = serialize(ME_NAME, btoa(JSON.stringify(me)), meOptions);
+  window.document.cookie = serialize(ME_NAME, btoa(JSON.stringify(me)), COOKIE_OPTIONS);
 };
 
 export const destroy = (): void => {
@@ -38,6 +36,10 @@ export const destroy = (): void => {
   window.document.cookie = serialize(VALUE_NAME, '', options);
   window.document.cookie = serialize(TTL_NAME, '', options);
   window.document.cookie = serialize(ME_NAME, '', options);
+};
+
+export const updateCredentials = (me: MeType): void => {
+  window.document.cookie = serialize(ME_NAME, btoa(JSON.stringify(me)), COOKIE_OPTIONS);
 };
 
 export const getValue = (): ?string => {
