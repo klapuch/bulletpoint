@@ -11,7 +11,7 @@ use Nette\Utils;
  */
 final class UrlRule implements Validation\Rule {
 	/**
-	 * @param string $subject
+	 * @param string|mixed $subject
 	 * @return bool
 	 */
 	public function satisfied($subject): bool {
@@ -19,7 +19,7 @@ final class UrlRule implements Validation\Rule {
 	}
 
 	/**
-	 * @param string $subject
+	 * @param string|mixed $subject
 	 * @throws \UnexpectedValueException
 	 * @return string
 	 */

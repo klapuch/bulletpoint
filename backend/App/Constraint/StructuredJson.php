@@ -27,7 +27,7 @@ final class StructuredJson implements Validation\Rule {
 	}
 
 	/**
-	 * @param array|\stdClass $subject
+	 * @param mixed $subject
 	 * @throws \UnexpectedValueException
 	 * @return array
 	 */

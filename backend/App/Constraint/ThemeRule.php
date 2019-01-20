@@ -10,7 +10,7 @@ use Klapuch\Validation;
  */
 final class ThemeRule implements Validation\Rule {
 	/**
-	 * @param mixed[] $subject
+	 * @param mixed $subject
 	 * @return bool
 	 */
 	public function satisfied($subject): bool {
@@ -18,7 +18,7 @@ final class ThemeRule implements Validation\Rule {
 	}
 
 	/**
-	 * @param mixed[] $subject
+	 * @param mixed $subject
 	 * @throws \UnexpectedValueException
 	 * @return array
 	 */

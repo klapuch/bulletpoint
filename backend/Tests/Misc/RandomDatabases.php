@@ -47,10 +47,10 @@ final class RandomDatabases implements Databases {
 				/** @var mixed|null */
 				private $cache;
 
-				public function getProfile(): void {
+				public function getProfile(): Predis\Profile\ProfileInterface {
 				}
 
-				public function getOptions(): void {
+				public function getOptions(): Predis\Configuration\OptionsInterface {
 				}
 
 				public function connect(): void {
@@ -59,14 +59,14 @@ final class RandomDatabases implements Databases {
 				public function disconnect(): void {
 				}
 
-				public function getConnection(): void {
+				public function getConnection(): Predis\Connection\ConnectionInterface {
 				}
 
 				/**
 				 * @param string $method
 				 * @param mixed[] $arguments
 				 */
-				public function createCommand($method, $arguments = []): void {
+				public function createCommand($method, $arguments = []): Predis\Command\CommandInterface {
 				}
 
 				public function executeCommand(Predis\Command\CommandInterface $command): void {
