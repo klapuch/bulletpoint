@@ -124,11 +124,11 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
-CREATE FUNCTION samples.bulletpoints(replacements jsonb = '{}') RETURNS integer AS $BODY$
+CREATE FUNCTION samples.public_bulletpoints(replacements jsonb = '{}') RETURNS integer AS $BODY$
 DECLARE
-	v_id bulletpoints.id%type;
+	v_id public_bulletpoints.id%type;
 BEGIN
-	INSERT INTO bulletpoints (theme_id, source_id, content, user_id) VALUES (
+	INSERT INTO public_bulletpoints (theme_id, source_id, content, user_id) VALUES (
 		samples.random_if_not_exists((SELECT samples.themes()), replacements, 'theme_id'),
 		samples.random_if_not_exists((SELECT samples.sources()), replacements, 'source_id'),
 		samples.random_if_not_exists(md5(random()::text), replacements, 'content'),
@@ -145,7 +145,7 @@ DECLARE
 	v_id bulletpoint_ratings.id%type;
 BEGIN
 	INSERT INTO bulletpoint_ratings (bulletpoint_id, user_id, point) VALUES (
-		samples.random_if_not_exists((SELECT samples.bulletpoints()), replacements, 'bulletpoint_id'),
+		samples.random_if_not_exists((SELECT samples.public_bulletpoints()), replacements, 'bulletpoint_id'),
 		samples.random_if_not_exists((SELECT samples.users()), replacements, 'user_id'),
 		samples.random_if_not_exists(0, replacements, 'point')
 	)

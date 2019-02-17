@@ -21,7 +21,7 @@ final class PatchTest extends TestCase\Runtime {
 
 	public function testSuccessfulResponse(): void {
 		['id' => $userId] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
-		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints'))->try();
 		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoint_ratings', ['user_id' => $userId, 'bulletpoint_id' => $id]))->try();
 		$response = (new Endpoint\Bulletpoint\Patch(
 			new Application\FakeRequest(new Output\Json([

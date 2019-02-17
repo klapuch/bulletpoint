@@ -76,7 +76,10 @@ final class Structure {
 					'maxLength' => 255,
 				],
 				'theme_id' => ['type' => 'number'],
-				'referenced_theme_id' => ['type' => ['number', 'null']],
+				'referenced_theme_id' => [
+					'type' => 'array',
+					'items' => ['type' => 'number'],
+				],
 			],
 			'required' => ['id', 'source', 'user_id', 'rating', 'content', 'theme_id'],
 			'type' => 'object',

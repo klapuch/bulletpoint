@@ -336,58 +336,19 @@ CREATE TRIGGER sources_row_biu_trigger
 	ON sources
 	FOR EACH ROW EXECUTE PROCEDURE sources_trigger_row_biu();
 
-CREATE TABLE contributed_bulletpoints (
-	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	theme_id integer NOT NULL,
-	referenced_theme_id integer,
-	source_id integer NOT NULL UNIQUE,
-	user_id integer NOT NULL,
-	content character varying(255) NOT NULL,
-	created_at timestamptz NOT NULL DEFAULT now(),
-	CONSTRAINT contributed_bulletpoints_not_same_themes CHECK (theme_id != referenced_theme_id),
-	CONSTRAINT contributed_bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
-	CONSTRAINT contributed_bulletpoints_referenced_theme_id FOREIGN KEY (referenced_theme_id) REFERENCES themes(id) ON DELETE SET NULL ON UPDATE RESTRICT,
-	CONSTRAINT contributed_bulletpoints_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT
-);
-
-CREATE FUNCTION contributed_bulletpoints_trigger_row_biu() RETURNS trigger AS $BODY$
-BEGIN
-	new.content = nullif(new.content, '');
-
-	RETURN new;
-END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
-
-CREATE FUNCTION contributed_bulletpoints_trigger_row_ad() RETURNS trigger AS $BODY$
-BEGIN
-	DELETE FROM sources WHERE id = old.source_id;
-
-	RETURN old;
-END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
-
-CREATE TRIGGER contributed_bulletpoints_row_biu_trigger
-	BEFORE INSERT OR UPDATE
-	ON contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE contributed_bulletpoints_trigger_row_biu();
-
-CREATE TRIGGER contributed_bulletpoints_row_ad_trigger
-	AFTER DELETE
-	ON contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE contributed_bulletpoints_trigger_row_ad();
-
+CREATE FUNCTION number_of_references(text) RETURNS integer AS $BODY$
+	SELECT count(*)::integer FROM regexp_matches($1, '\[\[.+?\]\]', 'g');
+$BODY$ LANGUAGE sql IMMUTABLE;
 
 CREATE TABLE bulletpoints (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	theme_id integer NOT NULL,
-	referenced_theme_id integer,
 	source_id integer NOT NULL UNIQUE,
 	user_id integer NOT NULL,
 	content character varying(255) NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
-	CONSTRAINT bulletpoints_not_same_themes CHECK (theme_id != referenced_theme_id),
+	is_contribution boolean NOT NULL,
 	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
-	CONSTRAINT bulletpoints_referenced_theme_id FOREIGN KEY (referenced_theme_id) REFERENCES themes(id) ON DELETE SET NULL ON UPDATE RESTRICT,
 	CONSTRAINT bulletpoints_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
 
@@ -435,10 +396,97 @@ CREATE TRIGGER bulletpoints_row_ad_trigger
 	ON bulletpoints
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_ad();
 
+CREATE VIEW contributed_bulletpoints AS
+	SELECT * FROM bulletpoints WHERE is_contribution = TRUE;
+
+CREATE FUNCTION contributed_bulletpoints_trigger_row_iiu() RETURNS trigger AS $BODY$
+BEGIN
+	new.is_contribution = TRUE;
+	IF TG_OP = 'INSERT' THEN
+		INSERT INTO bulletpoints (theme_id, source_id, user_id, content, created_at, is_contribution) VALUES (
+			new.theme_id,
+			new.source_id,
+			new.user_id,
+			new.content,
+			COALESCE(new.created_at, now()),
+			new.is_contribution
+		) RETURNING * INTO new;
+	ELSIF TG_OP = 'UPDATE' THEN
+		UPDATE bulletpoints SET theme_id = new.theme_id, source_id = new.source_id, user_id = new.user_id, content = new.content, created_at = new.created_at, is_contribution = new.is_contribution
+		WHERE id = new.id
+		RETURNING * INTO new;
+	END IF;
+
+	RETURN new;
+END
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER contributed_bulletpoints_trigger_row_iiu
+	INSTEAD OF INSERT OR UPDATE
+	ON contributed_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE contributed_bulletpoints_trigger_row_iiu();
+
+CREATE VIEW public_bulletpoints AS
+	SELECT * FROM bulletpoints WHERE is_contribution = FALSE;
+
+CREATE FUNCTION public_bulletpoints_trigger_row_iiu() RETURNS trigger AS $BODY$
+BEGIN
+	new.is_contribution = FALSE;
+	IF TG_OP = 'INSERT' THEN
+		INSERT INTO bulletpoints (theme_id, source_id, user_id, content, created_at, is_contribution) VALUES (
+			new.theme_id,
+			new.source_id,
+			new.user_id,
+			new.content,
+			COALESCE(new.created_at, now()),
+			new.is_contribution
+		) RETURNING * INTO new;
+	ELSIF TG_OP = 'UPDATE' THEN
+		UPDATE bulletpoints SET theme_id = new.theme_id, source_id = new.source_id, user_id = new.user_id, content = new.content, created_at = new.created_at, is_contribution = new.is_contribution
+		WHERE id = new.id
+		RETURNING * INTO new;
+	END IF;
+
+	RETURN new;
+END
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER public_bulletpoints_trigger_row_iiu
+	INSTEAD OF INSERT OR UPDATE
+	ON public_bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_iiu();
+
+CREATE TABLE bulletpoint_referenced_themes (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	theme_id integer NOT NULL,
+	bulletpoint_id integer NOT NULL,
+	CONSTRAINT bulletpoint_referenced_themes_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT bulletpoint_referenced_themes_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE FUNCTION bulletpoint_referenced_themes_trigger_row_biu() RETURNS trigger AS $$
+DECLARE
+	r bulletpoint_referenced_themes;
+BEGIN
+	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
+
+	IF ((SELECT theme_id = r.theme_id FROM bulletpoints WHERE id = r.bulletpoint_id)) THEN
+		RAISE EXCEPTION 'Referenced theme must differ from the assigned.';
+	END IF;
+
+	RETURN r;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER bulletpoint_referenced_themes_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON bulletpoint_referenced_themes
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoint_referenced_themes_trigger_row_biu();
+
 
 CREATE MATERIALIZED VIEW bulletpoint_reputations AS
 	SELECT bulletpoints.id AS bulletpoint_id, sum(user_tag_reputations.reputation) AS reputation
-	FROM bulletpoints
+	FROM public_bulletpoints AS bulletpoints
 	JOIN themes ON themes.id = bulletpoints.theme_id
 	JOIN theme_tags ON theme_tags.theme_id = themes.id
 	JOIN user_tag_reputations ON user_tag_reputations.user_id = bulletpoints.user_id AND user_tag_reputations.tag_id = theme_tags.tag_id
@@ -464,7 +512,7 @@ BEGIN
 	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
 
 	PERFORM update_user_tag_reputation(bulletpoints.user_id, theme_tags.tag_id, r.point)
-	FROM bulletpoints
+	FROM public_bulletpoints AS bulletpoints
 	JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id
 	WHERE bulletpoints.id = r.bulletpoint_id;
 
@@ -577,13 +625,14 @@ CREATE VIEW web.tagged_themes AS
 
 CREATE VIEW web.bulletpoints AS
 	SELECT
-		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id, bulletpoints.referenced_theme_id,
+		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id,
 		sources.link AS source_link, sources.type AS source_type,
 			bulletpoint_ratings.up AS up_rating,
 			abs(bulletpoint_ratings.down) AS down_rating,
 			(bulletpoint_ratings.up + bulletpoint_ratings.down) AS total_rating,
-		bulletpoint_ratings.user_rating
-	FROM public.bulletpoints
+		bulletpoint_ratings.user_rating,
+		COALESCE(bulletpoint_referenced_themes.referenced_theme_id, '[]') AS referenced_theme_id
+	FROM public.public_bulletpoints AS bulletpoints
 	-- TODO: will be pre-counted
 	JOIN (
 		SELECT
@@ -600,33 +649,59 @@ CREATE VIEW web.bulletpoints AS
 	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
 	LEFT JOIN public.sources ON sources.id = bulletpoints.source_id
 	LEFT JOIN public.bulletpoint_reputations ON bulletpoint_reputations.bulletpoint_id = bulletpoints.id
+	LEFT JOIN (
+		SELECT bulletpoint_id, jsonb_agg(public.bulletpoint_referenced_themes.theme_id) AS referenced_theme_id
+		FROM public.bulletpoint_referenced_themes
+		GROUP BY bulletpoint_id
+	) AS bulletpoint_referenced_themes ON bulletpoint_referenced_themes.bulletpoint_id = bulletpoints.id
 	ORDER BY total_rating DESC, bulletpoint_reputations.reputation DESC, length(bulletpoints.content) ASC, created_at DESC, id DESC;
 
 CREATE FUNCTION web.bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
+	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
+		RAISE EXCEPTION 'Number of referenced themes in text is not matching with passed ID list.';
+	END IF;
+
 	WITH inserted_source AS (
 		INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
+	), inserted_bulletpoint AS (
+		INSERT INTO public.public_bulletpoints (theme_id, source_id, content, user_id) VALUES (
+			new.theme_id,
+			(SELECT id FROM inserted_source),
+			new.content,
+			new.user_id
+		)
+		RETURNING id
 	)
-	INSERT INTO public.bulletpoints (theme_id, referenced_theme_id, source_id, content, user_id) VALUES (
-		new.theme_id,
-		new.referenced_theme_id,
-		(SELECT id FROM inserted_source),
-		new.content,
-		new.user_id
-	);
+	INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
+	SELECT r.theme_id::integer, (SELECT id FROM inserted_bulletpoint) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
 
 	RETURN new;
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION web.bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
+DECLARE
+	v_current_referenced_themes int[];
+	v_new_referenced_themes int[];
 BEGIN
+	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
+		RAISE EXCEPTION 'Number of referenced themes in text is not matching with passed ID list.';
+	END IF;
+
 	WITH updated_bulletpoint AS (
-		UPDATE public.bulletpoints SET content = new.content, referenced_theme_id = new.referenced_theme_id
+		UPDATE public.public_bulletpoints SET content = new.content
 		WHERE id = new.id
 		RETURNING *
 	)
 	UPDATE public.sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
+
+	IF (NOT array_equals(v_current_referenced_themes, v_new_referenced_themes)) THEN
+		DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
+		INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
+		SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
+	END IF;
+
 	RETURN new;
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
@@ -644,36 +719,63 @@ CREATE TRIGGER bulletpoints_trigger_row_iu
 
 CREATE VIEW web.contributed_bulletpoints AS
 SELECT
-	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id, contributed_bulletpoints.referenced_theme_id,
-	sources.link AS source_link, sources.type AS source_type
+	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id,
+	sources.link AS source_link, sources.type AS source_type,
+	COALESCE(bulletpoint_referenced_themes.referenced_theme_id, '[]') AS referenced_theme_id
 	FROM public.contributed_bulletpoints
 	LEFT JOIN public.sources ON sources.id = contributed_bulletpoints.source_id
+	LEFT JOIN (
+		SELECT bulletpoint_id, jsonb_agg(public.bulletpoint_referenced_themes.theme_id) AS referenced_theme_id
+		FROM public.bulletpoint_referenced_themes
+		GROUP BY bulletpoint_id
+	) AS bulletpoint_referenced_themes ON bulletpoint_referenced_themes.bulletpoint_id = contributed_bulletpoints.id
 	ORDER BY contributed_bulletpoints.created_at DESC, length(contributed_bulletpoints.content) ASC;
 
 CREATE FUNCTION web.contributed_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
+	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
+		RAISE EXCEPTION 'Number of referenced themes in text is not matching with passed ID list.';
+	END IF;
+
 	WITH inserted_source AS (
 		INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
+	), inserted_bulletpoint AS (
+		INSERT INTO public.contributed_bulletpoints (theme_id, source_id, content, user_id) VALUES (
+			new.theme_id,
+			(SELECT id FROM inserted_source),
+			new.content,
+			new.user_id
+		)
 	)
-	INSERT INTO public.contributed_bulletpoints (theme_id, referenced_theme_id, source_id, content, user_id) VALUES (
-		new.theme_id,
-		new.referenced_theme_id,
-		(SELECT id FROM inserted_source),
-		new.content,
-		new.user_id
-	);
+	INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
+	SELECT r.theme_id::integer, (SELECT id FROM inserted_bulletpoint) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
+
 	RETURN new;
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION web.contributed_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
+DECLARE
+	v_current_referenced_themes int[];
+	v_new_referenced_themes int[];
 BEGIN
+	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
+		RAISE EXCEPTION 'Number of referenced themes in text is not matching with passed ID list.';
+	END IF;
+
 	WITH updated_bulletpoint AS (
-		UPDATE public.contributed_bulletpoints SET content = new.content, referenced_theme_id = new.referenced_theme_id
+		UPDATE public.contributed_bulletpoints SET content = new.content
 		WHERE id = new.id
 		RETURNING *
 	)
 	UPDATE public.sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
+
+	IF (NOT array_equals(v_current_referenced_themes, v_new_referenced_themes)) THEN
+		DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
+		INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
+		SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
+	END IF;
+
 	RETURN new;
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;

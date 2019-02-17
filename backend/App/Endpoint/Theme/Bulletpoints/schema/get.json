@@ -64,10 +64,10 @@
             "type": "number"
         },
         "referenced_theme_id": {
-            "type": [
-                "number",
-                "null"
-            ]
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
         }
     },
     "required": [
