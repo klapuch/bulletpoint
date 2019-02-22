@@ -20,10 +20,10 @@ final class ApplicationConfiguration implements Configuration\Source {
 				new Configuration\ValidIni(new \SplFileInfo(self::SECRET_CONFIGURATION)),
 				new Configuration\NamedSource(
 					'ROUTES',
-					new Configuration\ValidIni(new \SplFileInfo(self::ROUTES))
-				)
+					new Configuration\ValidIni(new \SplFileInfo(self::ROUTES)),
+				),
 			),
-			$this->key()
+			$this->key(),
 		))->read();
 	}
 
@@ -38,8 +38,8 @@ final class ApplicationConfiguration implements Configuration\Source {
 				static function(string $key, string $location): string {
 					return $key . filemtime($location);
 				},
-				''
-			)
+				'',
+			),
 		);
 	}
 }

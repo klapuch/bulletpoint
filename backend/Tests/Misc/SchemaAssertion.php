@@ -31,11 +31,11 @@ final class SchemaAssertion implements Assertion {
 			$validator = new JsonSchema\Validator();
 			$validator->validate(
 				$this->values,
-				['$ref' => 'file://' . $this->schema->getRealPath()]
+				['$ref' => 'file://' . $this->schema->getRealPath()],
 			);
 			Assert::true(
 				$validator->isValid(),
-				sprintf('%s: %s', current($validator->getErrors())['message'], current($validator->getErrors())['property'])
+				sprintf('%s: %s', current($validator->getErrors())['message'], current($validator->getErrors())['property']),
 			);
 		}
 	}

@@ -49,8 +49,6 @@
 
 		<exclude name="SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint.DisallowedMixedTypeHint"/> <!-- will accept in time -->
 		<exclude name="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax"/> <!-- will accept in time -->
-
-		<exclude name="SlevomatCodingStandard.Functions.TrailingCommaInCall.MissingTrailingComma"/> <!-- will accept -->
 	</rule>
 
 	<rule ref="Squiz.WhiteSpace.FunctionSpacing.After"> <!-- Override rule from Consistence -->

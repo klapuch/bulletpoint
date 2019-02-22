@@ -34,7 +34,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 							'X-Csrf-Token: LsAV3irUxESTZz-djmy6u5czf122eyTgu3yvdi6MSOwQANDhsOHOQzBZrqPku09Z8KS8BIE406uNXXeAaSycv978wm81:EYgPsfAI3loDTk9UhNmva8lcEE5KwhHSUbD_zTktXHmaO7iA36crJ8eAB0rum1vjF3VeIaKiC4GIPRTtJG8ydDuUdt41',
 						],
 					],
-					Json::encode(['json' => '', 'schema' => $schema])
+					Json::encode(['json' => '', 'schema' => $schema]),
 				))->send();
 				$validation = Json::decode($response->body(), Json::FORCE_ARRAY);
 				if (!$validation['valid']) {
@@ -95,7 +95,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 			new \RecursiveIteratorIterator(
 				new \RecursiveDirectoryIterator(__DIR__ . '/../../Endpoint', \RecursiveDirectoryIterator::SKIP_DOTS),
 				\RecursiveIteratorIterator::SELF_FIRST,
-				\RecursiveIteratorIterator::CATCH_GET_CHILD
+				\RecursiveIteratorIterator::CATCH_GET_CHILD,
 			),
 			static function (\SplFileInfo $file): bool {
 				return $file->isDir() && (
@@ -104,7 +104,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 					|| file_exists(sprintf('%s/put.json', $file->getPathname()))
 					|| file_exists(sprintf('%s/patch.json', $file->getPathname()))
 				);
-			}
+			},
 		) as $directory) {
 			/** @var \SplFileInfo $directory */
 			array_map('unlink', glob(sprintf('%s/*.json', $directory->getPathname())));

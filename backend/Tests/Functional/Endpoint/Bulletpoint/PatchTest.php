@@ -30,7 +30,7 @@ final class PatchTest extends TestCase\Runtime {
 				],
 			])),
 			$this->connection,
-			new Access\FakeUser((string) $userId)
+			new Access\FakeUser((string) $userId),
 		))->response(['id' => $id]);
 		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}

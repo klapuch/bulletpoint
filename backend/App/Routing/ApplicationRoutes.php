@@ -38,9 +38,9 @@ final class ApplicationRoutes implements Routing\Routes {
 		$user = (new Access\HarnessedEntrance(
 			new Access\PgEntrance(
 				new Access\ApiEntrance($this->connection),
-				$this->connection
+				$this->connection,
 			),
-			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS)
+			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS),
 		))->enter($request->headers());
 		return [
 			'themes/{id} [GET]' => function(): Application\View {
@@ -49,19 +49,19 @@ final class ApplicationRoutes implements Routing\Routes {
 			'themes/{id} [PUT]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Theme\Put($request, $this->connection),
-					new Http\ChosenRole($user, ['admin'])
+					new Http\ChosenRole($user, ['admin']),
 				);
 			},
 			'themes/{id} [PATCH]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Theme\Patch($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['admin', 'member'])
+					new Http\ChosenRole($user, ['admin', 'member']),
 				);
 			},
 			'themes [POST]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Themes\Post($request, $this->connection, $user, $this->url),
-					new Http\ChosenRole($user, ['admin'])
+					new Http\ChosenRole($user, ['admin']),
 				);
 			},
 			'themes [GET]' => function(): Application\View {
@@ -79,13 +79,13 @@ final class ApplicationRoutes implements Routing\Routes {
 			'themes/{theme_id}/bulletpoints [POST]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Theme\Bulletpoints\Post($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['admin'])
+					new Http\ChosenRole($user, ['admin']),
 				);
 			},
 			'themes/{theme_id}/contributed_bulletpoints [POST]' => function() use ($user, $request): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Theme\ContributedBulletpoints\Post($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['member', 'admin'])
+					new Http\ChosenRole($user, ['member', 'admin']),
 				);
 			},
 			'bulletpoints/{id} [GET]' => function(): Application\View {
@@ -97,13 +97,13 @@ final class ApplicationRoutes implements Routing\Routes {
 			'bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Bulletpoint\Put($request, $this->connection),
-					new Http\ChosenRole($user, ['admin'])
+					new Http\ChosenRole($user, ['admin']),
 				);
 			},
 			'bulletpoints/{id} [PATCH]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Bulletpoint\Patch($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['admin', 'member'])
+					new Http\ChosenRole($user, ['admin', 'member']),
 				);
 			},
 			'contributed_bulletpoints/{id} [GET]' => function() use ($user): Application\View {
@@ -115,20 +115,20 @@ final class ApplicationRoutes implements Routing\Routes {
 			'contributed_bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\ContributedBulletpoint\Put($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['member'])
+					new Http\ChosenRole($user, ['member']),
 				);
 			},
 			'tokens [POST]' => function() use ($request): Application\View {
 				return new Endpoint\Tokens\Post(
 					$request,
 					$this->connection,
-					$this->cipher
+					$this->cipher,
 				);
 			},
 			'tokens [DELETE]' => static function() use ($user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Tokens\Delete(),
-					new Http\ChosenRole($user, ['member', 'admin'])
+					new Http\ChosenRole($user, ['member', 'admin']),
 				);
 			},
 			'refresh_tokens [POST]' => static function() use ($request): Application\View {
@@ -137,7 +137,7 @@ final class ApplicationRoutes implements Routing\Routes {
 			'users/me [GET]' => function() use ($user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Users\Me\Get($this->connection, $user),
-					new Http\ChosenRole($user, ['member', 'admin'])
+					new Http\ChosenRole($user, ['member', 'admin']),
 				);
 			},
 		];

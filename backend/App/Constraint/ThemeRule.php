@@ -28,11 +28,11 @@ final class ThemeRule implements Validation\Rule {
 				'reference' => [
 					'url' => (new Validation\FriendlyRule(
 						new UrlRule(),
-						t('theme.reference.url.not.valid')
+						t('theme.reference.url.not.valid'),
 					))->apply($subject['reference']['url']),
 				],
 			],
-			$subject
+			$subject,
 		);
 	}
 }

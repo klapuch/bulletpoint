@@ -42,7 +42,7 @@ final class Put implements Application\View {
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
 				new Constraint\BulletpointRule(),
-			))->apply(Json::decode($this->request->body()->serialization()))
+			))->apply(Json::decode($this->request->body()->serialization())),
 		);
 		return new Application\EmptyResponse();
 	}

@@ -28,7 +28,7 @@ final class BulletpointsTest extends TestCase\Runtime {
 			static function (Domain\Bulletpoint $bulletpoint): array {
 				return (new Misc\TestingFormat($bulletpoint->print(new Output\Json())))->raw();
 			},
-			iterator_to_array((new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser()))->all())
+			iterator_to_array((new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser()))->all()),
 		);
 		Assert::count(2, $bulletpoints);
 		Assert::same($id2, $bulletpoints[0]['id']);

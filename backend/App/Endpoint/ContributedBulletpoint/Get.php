@@ -35,8 +35,8 @@ final class Get implements Application\View {
 					$this->user,
 					$parameters['id'],
 					$this->connection,
-				))->print(new Output\Json())
-			)
+				))->print(new Output\Json()),
+			),
 		);
 	}
 }

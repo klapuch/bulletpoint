@@ -38,13 +38,13 @@ final class ThemeBulletpoints implements Bulletpoints {
 				'user_rating',
 				'user_id',
 			]))->from(['web.bulletpoints'])
-				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
+				->where('theme_id = :theme_id', ['theme_id' => $this->theme]),
 		))->rows();
 		foreach ($bulletpoints as $bulletpoint) {
 			yield new StoredBulletpoint(
 				$bulletpoint['id'],
 				new Storage\MemoryConnection($this->connection, $bulletpoint),
-				$this->user
+				$this->user,
 			);
 		}
 	}
@@ -69,8 +69,8 @@ final class ThemeBulletpoints implements Bulletpoints {
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
 					'user_id' => $this->user->id(),
-				]
-			))
+				],
+			)),
 		))->execute();
 	}
 
@@ -79,7 +79,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 			$this->connection,
 			(new Sql\AnsiSelect(['count(*)']))
 				->from(['bulletpoints'])
-				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
+				->where('theme_id = :theme_id', ['theme_id' => $this->theme]),
 		))->field();
 	}
 }

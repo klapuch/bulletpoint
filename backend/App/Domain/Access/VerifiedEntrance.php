@@ -38,7 +38,7 @@ final class VerifiedEntrance implements Entrance {
 			'SELECT EXISTS(
     			SELECT 1 FROM access.verification_codes WHERE user_id = ? AND used_at IS NOT NULL
     		)',
-			[$user->id()]
+			[$user->id()],
 		))->field();
 	}
 

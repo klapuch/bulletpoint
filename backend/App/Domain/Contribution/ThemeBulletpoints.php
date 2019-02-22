@@ -36,13 +36,13 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 				'source_type',
 			]))->from(['web.contributed_bulletpoints'])
 				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
-				->where('user_id = :user_id', ['user_id' => $this->user->id()])
+				->where('user_id = :user_id', ['user_id' => $this->user->id()]),
 		))->rows();
 		foreach ($bulletpoints as $bulletpoint) {
 			yield new StoredBulletpoint(
 				$bulletpoint['id'],
 				$this->user,
-				new Storage\MemoryConnection($this->connection, $bulletpoint)
+				new Storage\MemoryConnection($this->connection, $bulletpoint),
 			);
 		}
 	}
@@ -67,8 +67,8 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
 					'user_id' => $this->user->id(),
-				]
-			))
+				],
+			)),
 		))->execute();
 	}
 

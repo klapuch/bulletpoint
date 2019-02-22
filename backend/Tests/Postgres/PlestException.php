@@ -21,7 +21,7 @@ final class PlestException extends \PDOException
 				$error['message'],
 				$statement['message'],
 				$function['name'],
-				$file->getPathname()
+				$file->getPathname(),
 			);
 		}
 		return sprintf("%s\r\n\r\nFILE: %s\r\n\r\n", $message, $file->getPathname());

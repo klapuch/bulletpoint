@@ -32,7 +32,7 @@ final class Get implements Application\View {
 		$bulletpoints = new Contribution\ThemeBulletpoints(
 			$parameters['theme_id'],
 			$this->connection,
-			$this->user
+			$this->user,
 		);
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
@@ -40,10 +40,10 @@ final class Get implements Application\View {
 					static function (Domain\Bulletpoint $bulletpoint, Output\Format $format): Output\Format {
 						return $bulletpoint->print($format);
 					},
-					...iterator_to_array($bulletpoints->all())
+					...iterator_to_array($bulletpoints->all()),
 				)),
-				['X-Total-Count' => $bulletpoints->count()]
-			)
+				['X-Total-Count' => $bulletpoints->count()],
+			),
 		);
 	}
 }

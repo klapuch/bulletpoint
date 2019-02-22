@@ -29,9 +29,9 @@ final class Get implements Application\View {
 				(new Domain\ExistingBulletpoint(
 					new Domain\StoredBulletpoint($parameters['id'], $this->connection, new Access\FakeUser()),
 					$parameters['id'],
-					$this->connection
-				))->print(new Output\Json())
-			)
+					$this->connection,
+				))->print(new Output\Json()),
+			),
 		);
 	}
 }

@@ -37,7 +37,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'content',
 			]))->from(['web.contributed_bulletpoints'])
 				->where('id = :id', ['id' => $this->id])
-				->where('user_id = :user_id', ['user_id' => $this->id])
+				->where('user_id = :user_id', ['user_id' => $this->id]),
 		))->row();
 		return new Output\FilledFormat(
 			$format,
@@ -50,7 +50,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 					'link' => $row['source_link'],
 					'type' => $row['source_type'],
 				],
-			]
+			],
 		);
 	}
 
@@ -64,7 +64,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],
 			])->where('id = :id', ['id' => $this->id])
-				->where('user_id = :user_id', ['user_id' => $this->user->id()])
+				->where('user_id = :user_id', ['user_id' => $this->user->id()]),
 		))->execute();
 	}
 

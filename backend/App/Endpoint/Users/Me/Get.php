@@ -27,10 +27,10 @@ final class Get implements Application\View {
 				new Output\Json(
 					(new Access\PubliclyPrivateUser(
 						$this->user,
-						$this->connection
-					))->properties()
-				)
-			)
+						$this->connection,
+					))->properties(),
+				),
+			),
 		);
 	}
 }

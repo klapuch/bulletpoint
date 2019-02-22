@@ -19,8 +19,8 @@ trait Page {
 		$this->configuration = (new Configuration\CombinedSource(
 			new Bulletpoint\Configuration\ApplicationConfiguration(),
 			new Configuration\ValidIni(
-				new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini')
-			)
+				new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini'),
+			),
 		))->read();
 		$this->databaseSetUp();
 	}

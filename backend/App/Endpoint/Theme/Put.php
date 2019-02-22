@@ -32,12 +32,12 @@ final class Put implements Application\View {
 		(new Domain\ExistingTheme(
 			new Domain\StoredTheme($parameters['id'], $this->connection, new Access\FakeUser()),
 			$parameters['id'],
-			$this->connection
+			$this->connection,
 		))->change(
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
-				new Constraint\ThemeRule()
-			))->apply(Json::decode($this->request->body()->serialization()))
+				new Constraint\ThemeRule(),
+			))->apply(Json::decode($this->request->body()->serialization())),
 		);
 		return new Application\EmptyResponse();
 	}

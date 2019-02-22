@@ -36,12 +36,12 @@ final class Post implements Application\View {
 		(new Contribution\ThemeBulletpoints(
 			$parameters['theme_id'],
 			$this->connection,
-			$this->user
+			$this->user,
 		))->add(
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
 				new Constraint\BulletpointRule(),
-			))->apply(Json::decode($this->request->body()->serialization()))
+			))->apply(Json::decode($this->request->body()->serialization())),
 		);
 		return new Application\EmptyResponse();
 	}

@@ -31,9 +31,9 @@ final class AllowedSort extends Dataset\Sort {
 				'Following sorts are not allowed: "%s"',
 				implode(
 					', ',
-					$this->diff($this->origin->sort(), $this->allowedSorts)
-				)
-			)
+					$this->diff($this->origin->sort(), $this->allowedSorts),
+				),
+			),
 		);
 	}
 

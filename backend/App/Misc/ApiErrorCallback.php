@@ -27,7 +27,7 @@ final class ApiErrorCallback implements Callback {
 			throw new \UnexpectedValueException(
 				$ex->getMessage(),
 				$this->code,
-				$ex
+				$ex,
 			);
 		}
 	}

@@ -56,7 +56,7 @@ final class Test extends TestCase\Runtime {
 				preg_match_all(
 					'~^CREATE FUNCTION (?P<functions>tests\.\w+)\(\)~mi',
 					(string) file_get_contents($file->getPathname()),
-					$matches
+					$matches,
 				);
 				return $matches['functions'];
 			}
@@ -73,10 +73,10 @@ final class Test extends TestCase\Runtime {
 				return new \RegexIterator(
 					new \RecursiveIteratorIterator(
 						new \RecursiveDirectoryIterator(
-							$source->getPathname()
-						)
+							$source->getPathname(),
+						),
 					),
-					self::PATTERN
+					self::PATTERN,
 				);
 			}
 		})->assert();

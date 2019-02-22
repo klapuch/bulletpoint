@@ -25,7 +25,7 @@ final class ConstantUser implements User {
 		return array_diff_ukey(
 			$this->properties,
 			array_flip(self::SENSITIVE_COLUMNS),
-			'strcasecmp'
+			'strcasecmp',
 		);
 	}
 }

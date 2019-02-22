@@ -32,12 +32,12 @@ final class Put implements Application\View {
 		(new Domain\ExistingBulletpoint(
 			new Domain\StoredBulletpoint($parameters['id'], $this->connection, new Access\FakeUser()),
 			$parameters['id'],
-			$this->connection
+			$this->connection,
 		))->edit(
 			(new Validation\ChainedRule(
 				new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
 				new Constraint\BulletpointRule(),
-			))->apply(Json::decode($this->request->body()->serialization()))
+			))->apply(Json::decode($this->request->body()->serialization())),
 		);
 		return new Application\EmptyResponse();
 	}

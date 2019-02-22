@@ -28,7 +28,7 @@ final class PubliclyPrivateUser implements User {
 		return (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT role, email, username FROM users WHERE id = ?',
-			[$this->id()]
+			[$this->id()],
 		))->row();
 	}
 }

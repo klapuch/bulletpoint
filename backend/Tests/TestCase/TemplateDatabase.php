@@ -16,7 +16,7 @@ trait TemplateDatabase {
 	protected function setUp(): void {
 		parent::setUp();
 		$credentials = (new Configuration\ValidIni(
-			new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini')
+			new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini'),
 		))->read();
 		$this->databases = new Misc\RandomDatabases($credentials['DATABASE']);
 		$this->connection = $this->databases->create();

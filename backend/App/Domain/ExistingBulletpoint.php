@@ -55,7 +55,7 @@ final class ExistingBulletpoint implements Bulletpoint {
 		return (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT EXISTS(SELECT 1 FROM bulletpoints WHERE id = :id)',
-			['id' => $id]
+			['id' => $id],
 		))->field();
 	}
 }

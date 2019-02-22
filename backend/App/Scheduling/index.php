@@ -19,10 +19,10 @@ $connection = new Storage\CachedConnection(
 		new Storage\SafePDO(
 			$configuration['DATABASE']['dsn'],
 			$configuration['DATABASE']['user'],
-			$configuration['DATABASE']['password']
-		)
+			$configuration['DATABASE']['password'],
+		),
 	),
-	new Predis\Client($configuration['REDIS']['uri'])
+	new Predis\Client($configuration['REDIS']['uri']),
 );
 
 $logger = new Tracy\Logger(__DIR__ . '/../../logs');
@@ -36,27 +36,27 @@ try {
 			new Scheduling\SerialJobs(
 				new Task\GenerateNginxRoutes(
 					new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/routes.ini')),
-					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf')
+					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf'),
 				),
 				new Task\GenerateNginxConfiguration(
-					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf')
-				)
-			)
+					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf'),
+				),
+			),
 		),
 		new Scheduling\MarkedJob(
 			new Task\GenerateNginxRoutes(
 				new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/routes.ini')),
-				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf')
+				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf'),
 			),
-			$connection
+			$connection,
 		),
 		new Scheduling\MarkedJob(new Task\GenerateJsonSchema($connection), $connection),
 		new Scheduling\MarkedJob(
 			new Task\GenerateNginxConfiguration(
-				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf')
+				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf'),
 			),
-			$connection
-		)
+			$connection,
+		),
 	))->fulfill();
 } catch(\Throwable $e) {
 	$logger->log($e);

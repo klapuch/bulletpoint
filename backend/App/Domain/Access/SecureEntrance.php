@@ -31,7 +31,7 @@ final class SecureEntrance implements Entrance {
 		$user = (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT * FROM users WHERE email = :login OR username = :login',
-			[$login]
+			[$login],
 		))->row();
 		if (!self::exists($user)) {
 			if (self::isEmail($login)) {
@@ -57,7 +57,7 @@ final class SecureEntrance implements Entrance {
 		(new Storage\TypedQuery(
 			$this->connection,
 			'UPDATE users SET password = ? WHERE id = ?',
-			[$this->cipher->encryption($password), $id]
+			[$this->cipher->encryption($password), $id],
 		))->execute();
 	}
 

@@ -45,22 +45,22 @@ final class Post implements Application\View {
 					$this->connection,
 					new Access\SecureEntrance(
 						$this->connection,
-						$this->cipher
-					)
-				)
+						$this->cipher,
+					),
+				),
 			),
-			new Misc\ApiErrorCallback(HTTP_FORBIDDEN)
+			new Misc\ApiErrorCallback(HTTP_FORBIDDEN),
 		))->enter(
 			(new Constraint\StructuredJson(
-				new \SplFileInfo(self::SCHEMA)
-			))->apply(Json::decode($this->request->body()->serialization()))
+				new \SplFileInfo(self::SCHEMA),
+			))->apply(Json::decode($this->request->body()->serialization())),
 		);
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
 				new Output\Json(['token' => $user->id(), 'expiration' => $user->properties()['expiration']]),
 				[],
-				HTTP_CREATED
-			)
+				HTTP_CREATED,
+			),
 		);
 	}
 }

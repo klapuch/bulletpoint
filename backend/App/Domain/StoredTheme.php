@@ -36,7 +36,7 @@ final class StoredTheme implements Theme {
 				'created_at',
 				'is_starred',
 			]))->from(['web.themes'])
-				->where('id = :id', ['id' => $this->id])
+				->where('id = :id', ['id' => $this->id]),
 		))->row();
 		return new Output\FilledFormat(
 			$format,
@@ -51,7 +51,7 @@ final class StoredTheme implements Theme {
 				'reference' => [
 					'url' => $row['reference_url'],
 				],
-			]
+			],
 		);
 	}
 
@@ -65,7 +65,7 @@ final class StoredTheme implements Theme {
 				'alternative_names' => json_encode($theme['alternative_names']),
 				'tags' => json_encode($theme['tags']), // TODO: use array
 				'reference_url' => $theme['reference']['url'],
-			])->where('id = :id', ['id' => $this->id])
+			])->where('id = :id', ['id' => $this->id]),
 		))->execute();
 	}
 
@@ -75,8 +75,8 @@ final class StoredTheme implements Theme {
 			(new Sql\PgInsertInto(
 				'user_starred_themes',
 				['user_id' => ':user_id', 'theme_id' => ':theme_id'],
-				['user_id' => $this->user->id(), 'theme_id' => $this->id]
-			))->onConflict(['user_id', 'theme_id'])->doNothing()
+				['user_id' => $this->user->id(), 'theme_id' => $this->id],
+			))->onConflict(['user_id', 'theme_id'])->doNothing(),
 		))->execute();
 	}
 
@@ -84,7 +84,7 @@ final class StoredTheme implements Theme {
 		(new Storage\TypedQuery(
 			$this->connection,
 			'DELETE FROM user_starred_themes WHERE theme_id = :theme_id AND user_id = :user_id',
-			['theme_id' => $this->id, 'user_id' => $this->user->id()]
+			['theme_id' => $this->id, 'user_id' => $this->user->id()],
 		))->execute();
 	}
 }

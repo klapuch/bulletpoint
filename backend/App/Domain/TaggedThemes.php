@@ -41,14 +41,14 @@ final class TaggedThemes implements Themes {
 					'created_at',
 				]))->from(['web.tagged_themes'])
 					->where('tag_id = :tag_id', ['tag_id' => $this->tag]),
-				$selection
-			)
+				$selection,
+			),
 		))->rows();
 		foreach ($themes as $theme) {
 			yield new StoredTheme(
 				$theme['id'],
 				new Storage\MemoryConnection($this->connection, $theme),
-				new Access\FakeUser()
+				new Access\FakeUser(),
 			);
 		}
 	}
@@ -60,8 +60,8 @@ final class TaggedThemes implements Themes {
 				(new Sql\AnsiSelect(['count(*)']))
 					->from(['web.tagged_themes'])
 					->where('tag_id = :tag_id', ['tag_id' => $this->tag]),
-				$selection
-			)
+				$selection,
+			),
 		))->field();
 	}
 }

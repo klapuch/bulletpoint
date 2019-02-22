@@ -33,23 +33,23 @@ final class Get implements Application\View {
 				new Domain\TaggedThemes(
 					new Domain\FakeThemes(),
 					$parameters['tag_id'],
-					$this->connection
-				)
+					$this->connection,
+				),
 			);
 		} elseif (isset($parameters['q'])) {
 			$themes = new Domain\PublicThemes(
 				new Domain\SearchedThemes(
 					new Domain\FakeThemes(),
 					(string) $parameters['q'],
-					$this->connection
-				)
+					$this->connection,
+				),
 			);
 		} else {
 			$themes = new Domain\PublicThemes(
 				new Domain\StoredThemes(
 					new Access\FakeUser(),
-					$this->connection
-				)
+					$this->connection,
+				),
 			);
 		}
 		return new Response\JsonResponse(
@@ -63,15 +63,15 @@ final class Get implements Application\View {
 							new Dataset\CombinedSelection(
 								new Constraint\AllowedSort(
 									new Dataset\RestSort($parameters['sort']),
-									self::SORTS
+									self::SORTS,
 								),
-								new Dataset\EmptySelection()
-							)
-						)
-					)
+								new Dataset\EmptySelection(),
+							),
+						),
+					),
 				)),
-				['X-Total-Count' => $themes->count(new Dataset\EmptySelection())]
-			)
+				['X-Total-Count' => $themes->count(new Dataset\EmptySelection())],
+			),
 		);
 	}
 }

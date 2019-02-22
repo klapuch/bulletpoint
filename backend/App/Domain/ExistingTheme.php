@@ -59,7 +59,7 @@ final class ExistingTheme implements Theme {
 		return (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT EXISTS(SELECT 1 FROM themes WHERE id = :id)',
-			['id' => $id]
+			['id' => $id],
 		))->field();
 	}
 }

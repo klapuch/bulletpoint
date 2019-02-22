@@ -27,8 +27,8 @@ final class ThemeTest extends TestCase\Runtime {
 			(new Domain\ExistingTheme(
 				new Domain\StoredTheme($id, $this->connection, new Access\FakeUser()),
 				$id,
-				$this->connection
-			))->print(new Output\Json())
+				$this->connection,
+			))->print(new Output\Json()),
 		))->raw();
 		Assert::same($id, $theme['id']);
 		Assert::same('TEST', $theme['name']);
@@ -44,7 +44,7 @@ final class ThemeTest extends TestCase\Runtime {
 		(new Domain\ExistingTheme(
 			new Domain\StoredTheme($id, $this->connection, new Access\FakeUser()),
 			$id,
-			$this->connection
+			$this->connection,
 		))->change([
 			'name' => 'TEST OK!',
 			'tags' => [$tag1, $tag3],
@@ -64,7 +64,7 @@ final class ThemeTest extends TestCase\Runtime {
 		$theme = new Domain\ExistingTheme(
 			new Domain\StoredTheme($id, $this->connection, new Access\FakeUser((string) $userId)),
 			$id,
-			$this->connection
+			$this->connection,
 		);
 		Assert::false((new Storage\TypedQuery($this->connection, 'SELECT EXISTS(SELECT id FROM user_starred_themes WHERE theme_id = ? AND user_id = ?)', [$id, $userId]))->field());
 		$theme->star();
@@ -81,28 +81,28 @@ final class ThemeTest extends TestCase\Runtime {
 			(new Domain\ExistingTheme(
 				new Domain\StoredTheme(1, $this->connection, new Access\FakeUser()),
 				1,
-				$this->connection
+				$this->connection,
 			))->print(new Output\Json());
 		}, \UnexpectedValueException::class, 'Theme 1 does not exist');
 		Assert::exception(function () {
 			(new Domain\ExistingTheme(
 				new Domain\StoredTheme(1, $this->connection, new Access\FakeUser()),
 				1,
-				$this->connection
+				$this->connection,
 			))->change([]);
 		}, \UnexpectedValueException::class, 'Theme 1 does not exist');
 		Assert::exception(function () {
 			(new Domain\ExistingTheme(
 				new Domain\StoredTheme(1, $this->connection, new Access\FakeUser()),
 				1,
-				$this->connection
+				$this->connection,
 			))->star();
 		}, \UnexpectedValueException::class, 'Theme 1 does not exist');
 		Assert::exception(function () {
 			(new Domain\ExistingTheme(
 				new Domain\StoredTheme(1, $this->connection, new Access\FakeUser()),
 				1,
-				$this->connection
+				$this->connection,
 			))->unstar();
 		}, \UnexpectedValueException::class, 'Theme 1 does not exist');
 	}

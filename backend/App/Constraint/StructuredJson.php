@@ -43,7 +43,7 @@ final class StructuredJson implements Validation\Rule {
 		$validator = new JsonSchema\Validator();
 		$validator->validate(
 			$json,
-			['$ref' => 'file://' . $this->schema->getRealPath()]
+			['$ref' => 'file://' . $this->schema->getRealPath()],
 		);
 		return $validator;
 	}

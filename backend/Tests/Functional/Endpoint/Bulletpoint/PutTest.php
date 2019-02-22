@@ -29,7 +29,7 @@ final class PutTest extends TestCase\Runtime {
 					'type' => 'web',
 				],
 			])),
-			$this->connection
+			$this->connection,
 		))->response(['id' => $id]);
 		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}

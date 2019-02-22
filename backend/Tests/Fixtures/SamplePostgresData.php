@@ -25,7 +25,7 @@ final class SamplePostgresData implements Sample {
 		return (new Storage\NativeQuery(
 			$this->connection,
 			sprintf('SELECT samples.%s(?) AS id', $this->sample),
-			[json_encode($this->data, JSON_FORCE_OBJECT)]
+			[json_encode($this->data, JSON_FORCE_OBJECT)],
 		))->row();
 	}
 }

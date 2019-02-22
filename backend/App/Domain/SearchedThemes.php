@@ -45,14 +45,14 @@ final class SearchedThemes implements Themes {
 					]),
 					$this->keyword,
 				),
-				$selection
-			)
+				$selection,
+			),
 		))->rows();
 		foreach ($themes as $theme) {
 			yield new StoredTheme(
 				$theme['id'],
 				new Storage\MemoryConnection($this->connection, $theme),
-				new Access\FakeUser()
+				new Access\FakeUser(),
 			);
 		}
 	}
@@ -65,8 +65,8 @@ final class SearchedThemes implements Themes {
 					new Sql\AnsiSelect(['count(DISTINCT themes.id)']),
 					$this->keyword,
 				),
-				$selection
-			)
+				$selection,
+			),
 		))->field();
 	}
 }

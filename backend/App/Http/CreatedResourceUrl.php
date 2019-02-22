@@ -29,7 +29,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 		$parts = explode(self::DELIMITER, $this->origin->path());
 		$replacements = $this->replacements(
 			$this->placeholders($parts),
-			$this->parameters
+			$this->parameters,
 		) + $parts;
 		ksort($replacements);
 		return ltrim(implode(self::DELIMITER, $replacements), self::DELIMITER);
@@ -41,7 +41,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 	public function reference(): string {
 		return rtrim(
 			$this->origin->reference(),
-			self::DELIMITER
+			self::DELIMITER,
 		) . self::DELIMITER . $this->path();
 	}
 
@@ -59,7 +59,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 			static function(string $placeholder): string {
 				return str_replace(['{', '}'], '', $placeholder);
 			},
-			preg_grep('~^{.+}$~', $parts)
+			preg_grep('~^{.+}$~', $parts),
 		);
 	}
 
@@ -78,7 +78,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 			static function(string $placeholder) use ($parameters) {
 				return $parameters[$placeholder];
 			},
-			$placeholders
+			$placeholders,
 		);
 	}
 
@@ -93,7 +93,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 			$placeholders,
 			static function(string $placeholder) use ($parameters): bool {
 				return !isset($parameters[$placeholder]);
-			}
+			},
 		);
 	}
 
@@ -108,7 +108,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 			'Placeholder%s "%s" %s unused',
 			$plural ? 's' : '',
 			implode(', ', $lost),
-			$plural ? 'are' : 'is'
+			$plural ? 'are' : 'is',
 		);
 	}
 }

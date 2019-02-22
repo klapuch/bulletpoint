@@ -61,7 +61,7 @@ final class ExistingBulletpoint implements Domain\Bulletpoint {
 		return (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT EXISTS(SELECT 1 FROM contributed_bulletpoints WHERE id = :id AND user_id = :user_id)',
-			['id' => $id, 'user_id' => $this->user->id()]
+			['id' => $id, 'user_id' => $this->user->id()],
 		))->field();
 	}
 }

@@ -23,8 +23,8 @@ final class RandomDatabases implements Databases {
 			sprintf(
 				'CREATE DATABASE %s WITH TEMPLATE %s',
 				$this->name,
-				$this->credentials['template']
-			)
+				$this->credentials['template'],
+			),
 		);
 		return $this->database($this->name);
 	}
@@ -40,8 +40,8 @@ final class RandomDatabases implements Databases {
 				new Storage\SafePDO(
 					sprintf($this->credentials['dsn'], $name),
 					$this->credentials['user'],
-					$this->credentials['password']
-				)
+					$this->credentials['password'],
+				),
 			),
 			new class implements Predis\ClientInterface {
 				/** @var mixed|null */
@@ -90,7 +90,7 @@ final class RandomDatabases implements Databases {
 						return $this->cache[$method][$arguments[0]];
 					return null;
 				}
-			}
+			},
 		);
 	}
 }

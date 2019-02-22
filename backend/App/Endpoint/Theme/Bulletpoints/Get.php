@@ -27,7 +27,7 @@ final class Get implements Application\View {
 		$bulletpoints = new Domain\ThemeBulletpoints(
 			$parameters['theme_id'],
 			$this->connection,
-			new Access\FakeUser()
+			new Access\FakeUser(),
 		);
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
@@ -35,10 +35,10 @@ final class Get implements Application\View {
 					static function (Domain\Bulletpoint $bulletpoint, Output\Format $format): Output\Format {
 						return $bulletpoint->print($format);
 					},
-					...iterator_to_array($bulletpoints->all())
+					...iterator_to_array($bulletpoints->all()),
 				)),
-				['X-Total-Count' => $bulletpoints->count()]
-			)
+				['X-Total-Count' => $bulletpoints->count()],
+			),
 		);
 	}
 }

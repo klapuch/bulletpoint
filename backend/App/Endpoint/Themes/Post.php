@@ -48,15 +48,15 @@ final class Post implements Application\View {
 				[
 					'id' => (new Domain\StoredThemes(
 						$this->user,
-						$this->connection
+						$this->connection,
 					))->create(
 						(new Validation\ChainedRule(
 							new Constraint\StructuredJson(new \SplFileInfo(self::SCHEMA)),
 							new Constraint\ThemeRule(),
-						))->apply(Json::decode($this->request->body()->serialization()))
+						))->apply(Json::decode($this->request->body()->serialization())),
 					),
-				]
-			)
+				],
+			),
 		);
 	}
 }

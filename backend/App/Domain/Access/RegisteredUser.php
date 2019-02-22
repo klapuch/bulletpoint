@@ -25,7 +25,7 @@ final class RegisteredUser implements User {
 		$user = (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT * FROM users WHERE id = :id',
-			['id' => $this->id()]
+			['id' => $this->id()],
 		))->row();
 		return (new ConstantUser((string) $user['id'], $user))->properties();
 	}
@@ -44,7 +44,7 @@ final class RegisteredUser implements User {
 		return (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT EXISTS(SELECT 1 FROM users WHERE id = :id)',
-			['id' => $id]
+			['id' => $id],
 		))->field();
 	}
 }

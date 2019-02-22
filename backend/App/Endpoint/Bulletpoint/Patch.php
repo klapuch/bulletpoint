@@ -35,7 +35,7 @@ final class Patch implements Application\View {
 		$bulletpoint = new Domain\ExistingBulletpoint(
 			new Domain\StoredBulletpoint($parameters['id'], $this->connection, $this->user),
 			$parameters['id'],
-			$this->connection
+			$this->connection,
 		);
 		$payload = (new Constraint\StructuredJson(
 			new \SplFileInfo(self::SCHEMA),

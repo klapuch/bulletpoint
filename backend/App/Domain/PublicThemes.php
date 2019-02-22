@@ -23,7 +23,7 @@ final class PublicThemes implements Themes {
 			$this->origin->all($selection),
 			static function(Theme $theme): Theme {
 				return new PublicTheme($theme);
-			}
+			},
 		);
 	}
 

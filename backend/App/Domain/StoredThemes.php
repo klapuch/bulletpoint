@@ -37,8 +37,8 @@ final class StoredThemes implements Themes {
 					'tags' => json_encode($theme['tags']), // TODO: use array
 					'user_id' => $this->user->id(),
 					'reference_url' => $theme['reference']['url'],
-				]
-			))->returning(['id'])
+				],
+			))->returning(['id']),
 		))->field();
 	}
 
@@ -56,14 +56,14 @@ final class StoredThemes implements Themes {
 					'created_at',
 					'is_starred',
 				]))->from(['web.themes']),
-				$selection
-			)
+				$selection,
+			),
 		))->rows();
 		foreach ($themes as $theme) {
 			yield new StoredTheme(
 				$theme['id'],
 				new Storage\MemoryConnection($this->connection, $theme),
-				$this->user
+				$this->user,
 			);
 		}
 	}
@@ -73,8 +73,8 @@ final class StoredThemes implements Themes {
 			$this->connection,
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['count(*)']))->from(['web.themes']),
-				$selection
-			)
+				$selection,
+			),
 		))->field();
 	}
 }

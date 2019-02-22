@@ -29,12 +29,12 @@ final class BulletpointRule implements Validation\Rule {
 					'link' => $subject['source']['type'] === 'web'
 						? (new Validation\FriendlyRule(
 							new UrlRule(),
-							t('bulletpoint.source.link.not.valid')
+							t('bulletpoint.source.link.not.valid'),
 						))->apply($subject['source']['link'])
 						: $subject['source']['link'],
 				],
 			],
-			$subject
+			$subject,
 		);
 	}
 }

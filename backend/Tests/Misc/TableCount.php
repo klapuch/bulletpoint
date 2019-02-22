@@ -27,9 +27,9 @@ final class TableCount implements Assertion {
 			$this->count,
 			(new Storage\NativeQuery(
 				$this->connection,
-				sprintf('SELECT count(*) FROM "%s"', $this->table)
+				sprintf('SELECT count(*) FROM "%s"', $this->table),
 			))->field(),
-			sprintf('%s TABLE', strtoupper($this->table))
+			sprintf('%s TABLE', strtoupper($this->table)),
 		);
 	}
 }

@@ -27,7 +27,7 @@ final class Preflight implements Application\View {
 		return isset(
 			$headers['Access-Control-Request-Method'],
 			$headers['Access-Control-Request-Headers'],
-			$headers['Origin']
+			$headers['Origin'],
 		);
 	}
 }

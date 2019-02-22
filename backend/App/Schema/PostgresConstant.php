@@ -21,9 +21,9 @@ final class PostgresConstant implements Enum {
 		return array_column(
 			(new Storage\NativeQuery(
 				$this->connection,
-				sprintf('SELECT unnest(constant.%s()) AS values ORDER BY 1', $this->name)
+				sprintf('SELECT unnest(constant.%s()) AS values ORDER BY 1', $this->name),
 			))->rows(),
-			'values'
+			'values',
 		);
 	}
 }

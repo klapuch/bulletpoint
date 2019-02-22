@@ -24,7 +24,7 @@ final class ChosenRole implements Role {
 		return (bool) array_uintersect(
 			[$this->user->properties()['role'] ?? 'guest'],
 			$this->roles,
-			'strcasecmp'
+			'strcasecmp',
 		);
 	}
 }

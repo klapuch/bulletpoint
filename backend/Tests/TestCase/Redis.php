@@ -15,7 +15,7 @@ trait Redis {
 		parent::setUp();
 		Tester\Environment::lock('redis', __DIR__ . '/../temp');
 		$credentials = (new Configuration\ValidIni(
-			new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini')
+			new \SplFileInfo(__DIR__ . '/../Configuration/.secrets.ini'),
 		))->read();
 		$this->redis = new Predis\Client($credentials['REDIS']['uri']);
 		$this->redis->flushall();

@@ -39,7 +39,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'user_rating',
 				'user_id',
 			]))->from(['web.bulletpoints'])
-				->where('id = :id', ['id' => $this->id])
+				->where('id = :id', ['id' => $this->id]),
 		))->row();
 		return new Output\FilledFormat(
 			$format,
@@ -59,7 +59,7 @@ final class StoredBulletpoint implements Bulletpoint {
 					'link' => $row['source_link'],
 					'type' => $row['source_type'],
 				],
-			]
+			],
 		);
 	}
 
@@ -73,7 +73,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],
 				'content' => $bulletpoint['content'],
-			])->where('id = :id', ['id' => $this->id])
+			])->where('id = :id', ['id' => $this->id]),
 		))->execute();
 	}
 
@@ -81,7 +81,7 @@ final class StoredBulletpoint implements Bulletpoint {
 		(new Storage\TypedQuery(
 			$this->connection,
 			'DELETE FROM bulletpoints WHERE id = :id',
-			['id' => $this->id]
+			['id' => $this->id],
 		))->execute();
 	}
 
@@ -91,9 +91,9 @@ final class StoredBulletpoint implements Bulletpoint {
 			(new Sql\PgInsertInto(
 				'bulletpoint_ratings',
 				['point' => ':point', 'user_id' => ':user_id', 'bulletpoint_id' => ':bulletpoint_id'],
-				['point' => $point, 'user_id' => $this->user->id(), 'bulletpoint_id' => $this->id]
+				['point' => $point, 'user_id' => $this->user->id(), 'bulletpoint_id' => $this->id],
 			))->onConflict(['user_id', 'bulletpoint_id'])
-				->doUpdate(['point' => 'EXCLUDED.point'])
+				->doUpdate(['point' => 'EXCLUDED.point']),
 		))->execute();
 	}
 }

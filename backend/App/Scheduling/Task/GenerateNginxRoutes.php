@@ -24,7 +24,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 	public function fulfill(): void {
 		file_put_contents(
 			$this->destination->getPathname(),
-			$this->locations($this->source->read())
+			$this->locations($this->source->read()),
 		);
 	}
 
@@ -42,8 +42,8 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 								'	include php.conf;',
 								$this->limitExcept($block['methods']),
 								$this->preflight($block['methods']),
-							]
-						)
+							],
+						),
 					);
 					return <<<CONF
 					{$this->location($block['params'] ?? [], $block['location'])} {
@@ -52,8 +52,8 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 					CONF;
 				},
 				array_keys($source),
-				$source
-			)
+				$source,
+			),
 		);
 	}
 
@@ -81,8 +81,8 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 				static function(string $param): string {
 					return sprintf('%1$s=$%1$s', $param);
 				},
-				array_keys($params)
-			)
+				array_keys($params),
+			),
 		);
 		return <<<CONF
 			fastcgi_param ROUTE_PARAM_QUERY {$query};
@@ -97,17 +97,17 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 					static function(string $name): string {
 						return sprintf('{%s}', $name);
 					},
-					array_keys($params)
+					array_keys($params),
 				),
 				array_map(
 					static function(string $name, string $regex): string {
 						return sprintf('(?<%s>%s)', $name, $regex);
 					},
 					array_keys($params),
-					$params
+					$params,
 				),
-				$sample
-			)
+				$sample,
+			),
 		);
 	}
 

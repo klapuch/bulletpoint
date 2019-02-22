@@ -23,7 +23,7 @@ final class TableEnum implements Enum {
 			$this->connection,
 			(new AnsiSelect(['id', 'name']))
 				->from([$this->table])
-				->orderBy(['id' => 'ASC'])
+				->orderBy(['id' => 'ASC']),
 		))->rows();
 		return (array) array_combine(array_column($enum, 'id'), $enum);
 	}

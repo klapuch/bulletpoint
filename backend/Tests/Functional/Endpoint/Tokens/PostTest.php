@@ -26,11 +26,11 @@ final class PostTest extends TestCase\Runtime {
 		$response = (new Endpoint\Tokens\Post(
 			new Application\FakeRequest(
 				new Output\FakeFormat(
-					json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
-				)
+					json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR),
+				),
 			),
 			$this->connection,
-			new Encryption\FakeCipher(true)
+			new Encryption\FakeCipher(true),
 		))->response([]);
 		$access = json_decode($response->body()->serialization(), true);
 		Assert::true(isset($access['token']));
@@ -42,10 +42,10 @@ final class PostTest extends TestCase\Runtime {
 		Assert::exception(function () {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
-					new Output\FakeFormat(json_encode(['foo' => 'bar'], JSON_THROW_ON_ERROR))
+					new Output\FakeFormat(json_encode(['foo' => 'bar'], JSON_THROW_ON_ERROR)),
 				),
 				$this->connection,
-				new Encryption\FakeCipher(true)
+				new Encryption\FakeCipher(true),
 			))->response([]);
 		}, \UnexpectedValueException::class, 'The property login is required');
 	}
@@ -55,11 +55,11 @@ final class PostTest extends TestCase\Runtime {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						json_encode(['login' => 'foo@baz.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
-					)
+						json_encode(['login' => 'foo@baz.cz', 'password' => '123'], JSON_THROW_ON_ERROR),
+					),
 				),
 				$this->connection,
-				new Encryption\FakeCipher(false)
+				new Encryption\FakeCipher(false),
 			))->response([]);
 		}, \UnexpectedValueException::class, 'Email "foo@baz.cz" does not exist', HTTP_FORBIDDEN);
 	}
@@ -71,11 +71,11 @@ final class PostTest extends TestCase\Runtime {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
-					)
+						json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR),
+					),
 				),
 				$this->connection,
-				new Encryption\FakeCipher(false)
+				new Encryption\FakeCipher(false),
 			))->response([]);
 		}, \UnexpectedValueException::class, 'Wrong password', HTTP_FORBIDDEN);
 	}
@@ -86,11 +86,11 @@ final class PostTest extends TestCase\Runtime {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
-						json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR)
-					)
+						json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR),
+					),
 				),
 				$this->connection,
-				new Encryption\FakeCipher(true)
+				new Encryption\FakeCipher(true),
 			))->response([]);
 		}, \UnexpectedValueException::class, 'Email has not been verified yet', HTTP_FORBIDDEN);
 	}

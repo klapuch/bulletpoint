@@ -38,7 +38,7 @@ final class Patch implements Application\View {
 		$theme = new Domain\ExistingTheme(
 			new Domain\StoredTheme($parameters['id'], $this->connection, $this->user),
 			$parameters['id'],
-			$this->connection
+			$this->connection,
 		);
 		if (isset($payload['is_starred'])) {
 			if ($payload['is_starred'] === true)

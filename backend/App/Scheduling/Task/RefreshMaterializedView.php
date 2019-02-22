@@ -21,7 +21,7 @@ final class RefreshMaterializedView implements Scheduling\Job {
 	public function fulfill(): void {
 		(new Storage\NativeQuery(
 			$this->connection,
-			sprintf('REFRESH MATERIALIZED VIEW CONCURRENTLY %s', $this->view)
+			sprintf('REFRESH MATERIALIZED VIEW CONCURRENTLY %s', $this->view),
 		))->execute();
 	}
 
