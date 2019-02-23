@@ -7,7 +7,7 @@ export const withReferencedTheme = (
   bulletpoint: FetchedBulletpointType,
   state: Object,
 ): FetchedBulletpointType => {
-  bulletpoint.referenced_theme = bulletpoint.referenced_theme_id.map(referenced_theme_id => {
+  bulletpoint.referenced_theme = bulletpoint.referenced_theme_id.map((referenced_theme_id) => {
     return themes.getById(referenced_theme_id, state); // eslint-disable-line
   });
   return bulletpoint;

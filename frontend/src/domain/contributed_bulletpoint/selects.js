@@ -1,5 +1,5 @@
 // @flow
-import {isEmpty, isEqual} from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import type { FetchedBulletpointType } from '../bulletpoint/types';
 import * as themes from '../theme/selects';
 import * as bulletpoints from '../bulletpoint/selects';

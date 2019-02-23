@@ -9,7 +9,7 @@ import type { ErrorBulletpointType, PostedBulletpointType } from '../types';
 import * as validation from '../validation';
 import * as user from '../../user';
 import * as formats from '../formats';
-import type {FetchedThemeType} from "../../theme/types";
+import type { FetchedThemeType } from '../../theme/types';
 
 export type FormTypes = 'default' | 'edit' | 'add';
 type TargetType = {|
@@ -146,8 +146,8 @@ export default class extends React.Component<Props, State> {
     } else {
       const option = select || { value: null, label: null };
       referenced_theme_id = [option.value, ...referenced_theme_id];
-      preparedReferencedThemes = [ ...preparedReferencedThemes, { id: option.value, name: option.label }];
-      preparedReferencedThemes = [ ...preparedReferencedThemes.filter(theme => theme.id !== null), emptyPreparedReferencedTheme ];
+      preparedReferencedThemes = [...preparedReferencedThemes, { id: option.value, name: option.label }];
+      preparedReferencedThemes = [...preparedReferencedThemes.filter(theme => theme.id !== null), emptyPreparedReferencedTheme];
     }
     this.setState(
       prevState => ({
@@ -156,9 +156,8 @@ export default class extends React.Component<Props, State> {
           referenced_theme_id,
         },
         preparedReferencedThemes,
-      })
+      }),
     );
-
   };
 
   onSubmit = () => {

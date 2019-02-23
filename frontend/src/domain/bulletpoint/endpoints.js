@@ -31,16 +31,15 @@ export const all = (
   return axios.get(`/themes/${themeId}/bulletpoints`)
     .then(response => dispatch(receivedAll(themeId, response.data)))
     .then(() => bulletpoints.getByTheme(themeId, getState()))
-    .then(themeBulletpoints => {
+    .then((themeBulletpoints) => {
       forEach(
         themeBulletpoints,
         themeBulletpoint => (
           themeBulletpoint.referenced_theme_id.forEach(referencedThemeId => (
-              dispatch(theme.single(referencedThemeId))
-            )
-          )
+            dispatch(theme.single(referencedThemeId))
+          ))
         ),
-      )
+      );
     });
 };
 
