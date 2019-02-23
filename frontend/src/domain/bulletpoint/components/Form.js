@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { uniqBy } from 'lodash';
 // $FlowFixMe ok
 import AsyncSelect from 'react-select/lib/Async';
 import classNames from 'classnames';
@@ -76,17 +75,21 @@ type Props = {|
   +referencedThemes: Array<FetchedThemeType>,
 |};
 type State = {|
+  passedReferencedThemes: Array<{
+    id: ?number,
+    name: ?string,
+  }>,
   preparedReferencedThemes: Array<{
     id: ?number,
     name: ?string,
-    match: ?string,
   }>,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};
+const emptyPreparedReferencedTheme = { id: null, name: null };
 const initState = {
   referencedThemes: [],
-  preparedReferencedThemes: [],
+  preparedReferencedThemes: [emptyPreparedReferencedTheme],
   bulletpoint: {
     content: '',
     referenced_theme_id: [],
@@ -106,15 +109,13 @@ export default class extends React.Component<Props, State> {
 
   componentWillReceiveProps(nextProps: Props): void {
     if (nextProps.bulletpoint !== null) {
-      const references = formats.withoutMarks(formats.references(nextProps.bulletpoint.content));
-      this.setState({
+      this.setState(prevState => ({
         bulletpoint: nextProps.bulletpoint,
-        preparedReferencedThemes: nextProps.referencedThemes.map((theme, order) => ({
-          id: theme.id,
-          name: theme.name,
-          match: references[order],
-        })),
-      });
+        preparedReferencedThemes: [
+          ...nextProps.referencedThemes.map(theme => ({ id: theme.id, name: theme.name })),
+          ...prevState.preparedReferencedThemes,
+        ],
+      }));
     }
   }
 
@@ -125,15 +126,6 @@ export default class extends React.Component<Props, State> {
     } else if (name === 'source_type') {
       input = { source: { type: value, link: '' } };
     } else {
-      if (name === 'content') {
-        const references = formats.withoutMarks(formats.references(value));
-        this.setState(prevState => ({
-          preparedReferencedThemes: uniqBy([
-            ...prevState.preparedReferencedThemes,
-            ...references.map(match => ({ id: null, name: null, match })),
-          ], 'match')
-        }));
-      }
       input = { ...this.state.bulletpoint, [name]: value };
     }
     this.setState(prevState => ({
@@ -145,19 +137,28 @@ export default class extends React.Component<Props, State> {
     }));
   };
 
-  handleSelectChange = (select: ?Object, match) => {
-    const option = select || { value: null, label: null };
+  handleSelectChange = (select: ?Object, { action }, order) => {
+    let referenced_theme_id = this.state.bulletpoint.referenced_theme_id;
+    let preparedReferencedThemes = this.state.preparedReferencedThemes;
+    if (action === 'clear' && preparedReferencedThemes.length > 1) {
+      delete referenced_theme_id[order];
+      delete preparedReferencedThemes[order];
+    } else {
+      const option = select || { value: null, label: null };
+      referenced_theme_id = [option.value, ...referenced_theme_id];
+      preparedReferencedThemes = [ ...preparedReferencedThemes, { id: option.value, name: option.label }];
+      preparedReferencedThemes = [ ...preparedReferencedThemes.filter(theme => theme.id !== null), emptyPreparedReferencedTheme ];
+    }
     this.setState(
       prevState => ({
         bulletpoint: {
           ...prevState.bulletpoint,
-          referenced_theme_id: [...prevState.bulletpoint.referenced_theme_id, option.value],
+          referenced_theme_id,
         },
-        preparedReferencedThemes: [...prevState.preparedReferencedThemes, { id: option.value, name: option.label, match }].filter(theme => {
-          return theme.id !== null;
-        }),
+        preparedReferencedThemes,
       })
     );
+
   };
 
   onSubmit = () => {
@@ -169,10 +170,7 @@ export default class extends React.Component<Props, State> {
       }));
     } else {
       this.props.onAddClick();
-      this.props.onSubmit({
-        ...bulletpoint,
-        referenced_theme_id: bulletpoint.referenced_theme_id,
-      }).then(() => this.setState(initState));
+      this.props.onSubmit(bulletpoint).then(() => this.setState(initState));
     }
   };
 
@@ -184,7 +182,6 @@ export default class extends React.Component<Props, State> {
   render() {
     const { bulletpoint, errors } = this.state;
     const { preparedReferencedThemes } = this.state;
-    console.log(preparedReferencedThemes);
     return (
       <>
         {this.props.type === 'default' ? null : (
@@ -220,20 +217,20 @@ export default class extends React.Component<Props, State> {
   }
 }
 
-const PreparedThemes = ({ id, themes, onSelectChange }) => (
-  themes.length !== 0 ? <div className="form-group">
+const PreparedThemes = ({ id, onSelectChange, themes }) => (
+  <div className="form-group">
     <label htmlFor="referenced_theme_id">Odkazující se témata</label>
     {themes.map((theme, i) => (
       <div key={i}>
-        <label>{theme.match}</label>
+        <label>Odkazujcí se téma</label>
         <AsyncSelect
           isClearable
           value={{ value: theme.id, label: theme.name }}
-          onChange={(select) => onSelectChange(select, theme.match)}
+          onChange={(select, options) => onSelectChange(select, options, i)}
           loadOptions={keyword => allReactSelectSearches(keyword, [id])}
           styles={{ option: base => ({ ...base, color: '#000' }) }}
         />
       </div>
     ))}
-  </div> : null
+  </div>
 );

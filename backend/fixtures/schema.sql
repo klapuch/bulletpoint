@@ -757,6 +757,7 @@ BEGIN
 			new.content,
 			new.user_id
 		)
+		RETURNING id
 	)
 	INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
 	SELECT r.theme_id::integer, (SELECT id FROM inserted_bulletpoint) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
