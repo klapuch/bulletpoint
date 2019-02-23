@@ -78,13 +78,13 @@ type Props = {|
   +referencedThemes: Array<FetchedThemeType>,
 |};
 type State = {|
-  preparedReferencedThemes: PreparedReferencedThemesType,
+  referencedThemes: PreparedReferencedThemesType,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};
-const emptyPreparedReferencedTheme = { id: null, name: null };
+const emptyReferencedTheme = { id: null, name: null };
 const initState = {
-  preparedReferencedThemes: [emptyPreparedReferencedTheme],
+  referencedThemes: [emptyReferencedTheme],
   bulletpoint: {
     content: '',
     referenced_theme_id: [],
@@ -107,9 +107,11 @@ export default class extends React.Component<Props, State> {
       this.setState(prevState => ({
         // $FlowFixMe its ok
         bulletpoint: nextProps.bulletpoint,
-        preparedReferencedThemes: [
-          ...nextProps.referencedThemes.map(theme => ({ id: theme.id, name: theme.name })),
-          ...prevState.preparedReferencedThemes,
+        referencedThemes: [
+          ...nextProps.referencedThemes
+            .filter(Boolean)
+            .map(theme => ({ id: theme.id, name: theme.name })),
+          ...prevState.referencedThemes.filter(Boolean),
         ],
       }));
     }
@@ -134,29 +136,29 @@ export default class extends React.Component<Props, State> {
   };
 
   handleSelectChange = (select: ?Object, { action }: {| action: string |}, order: number) => {
-    let { bulletpoint: { referenced_theme_id }, preparedReferencedThemes } = this.state;
-    if (action === 'clear' && preparedReferencedThemes.length > 1) {
+    let { bulletpoint: { referenced_theme_id }, referencedThemes } = this.state;
+    if (action === 'clear' && referencedThemes.length > 1) {
       delete referenced_theme_id[order];
-      delete preparedReferencedThemes[order];
+      delete referencedThemes[order];
     } else {
       const option = select || { value: 0, label: null };
       referenced_theme_id = [option.value, ...referenced_theme_id];
-      preparedReferencedThemes = [
-        ...preparedReferencedThemes,
+      referencedThemes = [
+        ...referencedThemes,
         { id: option.value, name: option.label },
       ];
-      preparedReferencedThemes = [
-        ...preparedReferencedThemes.filter(theme => theme.id !== null),
-        emptyPreparedReferencedTheme,
+      referencedThemes = [
+        ...referencedThemes.filter(theme => theme.id !== null),
+        emptyReferencedTheme,
       ];
     }
     this.setState(
       prevState => ({
         bulletpoint: {
           ...prevState.bulletpoint,
-          referenced_theme_id,
+          referenced_theme_id: referenced_theme_id.filter(Boolean),
         },
-        preparedReferencedThemes,
+        referencedThemes,
       }),
     );
   };
@@ -180,8 +182,7 @@ export default class extends React.Component<Props, State> {
   };
 
   render() {
-    const { bulletpoint, errors } = this.state;
-    const { preparedReferencedThemes } = this.state;
+    const { bulletpoint, errors, referencedThemes } = this.state;
     return (
       <>
         {this.props.type === 'default' ? null : (
@@ -191,10 +192,10 @@ export default class extends React.Component<Props, State> {
               <input type="text" className="form-control" id="content" name="content" value={bulletpoint.content} onChange={this.onChange} />
               {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
             </div>
-            <PreparedThemes
+            <ReferencedThemes
               id={this.props.themeId}
               onSelectChange={this.handleSelectChange}
-              themes={preparedReferencedThemes}
+              themes={referencedThemes}
             />
             <div className="form-group">
               <label htmlFor="source_type">Typ zdroje</label>
@@ -221,12 +222,12 @@ export default class extends React.Component<Props, State> {
   }
 }
 
-type PreparedThemesType = {|
+type ReferencedThemesType = {|
   +id: number,
   +onSelectChange: (?Object, Object, number) => (void),
   +themes: PreparedReferencedThemesType,
 |};
-const PreparedThemes = ({ id, onSelectChange, themes }: PreparedThemesType) => (
+const ReferencedThemes = ({ id, onSelectChange, themes }: ReferencedThemesType) => (
   <div className="form-group">
     <label htmlFor="referenced_theme_id">Odkazující se témata</label>
     {themes.map((theme, i) => (
