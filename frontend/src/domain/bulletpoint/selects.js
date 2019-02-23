@@ -9,11 +9,11 @@ export const withReferencedTheme = (
 ): FetchedBulletpointType => {
   return {
     ...bulletpoint,
-    referenced_theme: {
+    referenced_theme: [
       ...bulletpoint.referenced_theme_id.map(
         referenced_theme_id => themes.getById(referenced_theme_id, state),
       ),
-    },
+    ],
   };
 };
 export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpointType> => {

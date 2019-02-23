@@ -64,6 +64,10 @@ const CancelButton = ({ formType, onClick, children }: { children: string, ...Bu
 };
 
 
+type PreparedReferencedThemesType = Array<{
+  id: ?number,
+  name: ?string,
+}>;
 type Props = {|
   +bulletpoint: ?PostedBulletpointType,
   +onSubmit: (PostedBulletpointType) => (Promise<any>),
@@ -74,20 +78,12 @@ type Props = {|
   +referencedThemes: Array<FetchedThemeType>,
 |};
 type State = {|
-  passedReferencedThemes: Array<{
-    id: ?number,
-    name: ?string,
-  }>,
-  preparedReferencedThemes: Array<{
-    id: ?number,
-    name: ?string,
-  }>,
+  preparedReferencedThemes: PreparedReferencedThemesType,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};
 const emptyPreparedReferencedTheme = { id: null, name: null };
 const initState = {
-  referencedThemes: [],
   preparedReferencedThemes: [emptyPreparedReferencedTheme],
   bulletpoint: {
     content: '',
@@ -109,6 +105,7 @@ export default class extends React.Component<Props, State> {
   componentWillReceiveProps(nextProps: Props): void {
     if (nextProps.bulletpoint !== null) {
       this.setState(prevState => ({
+        // $FlowFixMe its ok
         bulletpoint: nextProps.bulletpoint,
         preparedReferencedThemes: [
           ...nextProps.referencedThemes.map(theme => ({ id: theme.id, name: theme.name })),
@@ -136,13 +133,13 @@ export default class extends React.Component<Props, State> {
     }));
   };
 
-  handleSelectChange = (select: ?Object, { action }, order) => {
-    let { referenced_theme_id, preparedReferencedThemes } = this.state.bulletpoint;
+  handleSelectChange = (select: ?Object, { action }: {| action: string |}, order: number) => {
+    let { bulletpoint: { referenced_theme_id }, preparedReferencedThemes } = this.state;
     if (action === 'clear' && preparedReferencedThemes.length > 1) {
       delete referenced_theme_id[order];
       delete preparedReferencedThemes[order];
     } else {
-      const option = select || { value: null, label: null };
+      const option = select || { value: 0, label: null };
       referenced_theme_id = [option.value, ...referenced_theme_id];
       preparedReferencedThemes = [
         ...preparedReferencedThemes,
@@ -226,8 +223,8 @@ export default class extends React.Component<Props, State> {
 
 type PreparedThemesType = {|
   +id: number,
-  +onSelectChange: (?Object) => (void),
-  +themes: Array<FetchedThemeType>,
+  +onSelectChange: (?Object, Object, number) => (void),
+  +themes: PreparedReferencedThemesType,
 |};
 const PreparedThemes = ({ id, onSelectChange, themes }: PreparedThemesType) => (
   <div className="form-group">
