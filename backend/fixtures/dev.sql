@@ -21,14 +21,14 @@ INSERT INTO public.themes (id, name, reference_id, user_id, created_at) OVERRIDI
 INSERT INTO public.themes (id, name, reference_id, user_id, created_at) OVERRIDING SYSTEM VALUE VALUES (7, 'Kongruence', 7, 1, '2019-02-10 23:28:18.560324+01');
 
 INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (2, 1, 2, 1, 'Datové typy', '2019-01-13 19:02:27.402929+01');
-INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (3, 1, 5, 1, 'Objektově orientovaný', '2019-01-13 19:02:27.406272+01');
+INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (3, 1, 5, 1, '[[Objektově orientovaný]]', '2019-01-13 19:02:27.406272+01');
 INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (4, 2, 4, 1, 'Zapouzdření', '2019-01-13 19:02:27.409961+01');
 INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (6, 4, 7, 1, 'Otevřený zdrojový kód', '2019-01-19 11:58:55.472299+01');
-INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (5, 3, 6, 1, 'Open Source', '2019-01-19 11:57:34.252092+01');
+INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (5, 3, 6, 1, '[[Open Source]]', '2019-01-19 11:57:34.252092+01');
 INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (1, 1, 1, 1, 'Strmá křivka učení', '2019-01-13 19:02:27.392957+01');
 INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (7, 5, 8, 1, 'Datový formát', '2019-01-19 12:45:50.675016+01');
-INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (8, 3, 9, 1, 'JSON podpora', '2019-01-19 12:46:37.97745+01');
-INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (9, 6, 10, 1, 'Open source', '2019-01-20 19:25:28.708165+01');
+INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (8, 3, 9, 1, '[[JSON]] podpora', '2019-01-19 12:46:37.97745+01');
+INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (9, 6, 10, 1, '[[Open source]]', '2019-01-20 19:25:28.708165+01');
 INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (10, 6, 11, 1, 'Autor Linus Torvalds', '2019-01-20 19:25:52.422695+01');
 INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (11, 6, 12, 1, 'Vydáno 2005', '2019-01-20 19:26:14.824176+01');
 INSERT INTO public.public_bulletpoints (id, theme_id, source_id, user_id, content, created_at) OVERRIDING SYSTEM VALUE VALUES (12, 6, 13, 1, 'Distribuovaný vývoj', '2019-01-20 19:27:31.693743+01');
