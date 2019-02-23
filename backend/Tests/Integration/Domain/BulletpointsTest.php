@@ -21,9 +21,9 @@ final class BulletpointsTest extends TestCase\Runtime {
 
 	public function testAllByTheme(): void {
 		['id' => $theme] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
-		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
-		['id' => $id1] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['theme_id' => $theme]))->try();
-		['id' => $id2] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['theme_id' => $theme]))->try();
+		(new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints'))->try();
+		['id' => $id1] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints', ['theme_id' => $theme]))->try();
+		['id' => $id2] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints', ['theme_id' => $theme]))->try();
 		$bulletpoints = array_map(
 			static function (Domain\Bulletpoint $bulletpoint): array {
 				return (new Misc\TestingFormat($bulletpoint->print(new Output\Json())))->raw();
@@ -46,16 +46,16 @@ final class BulletpointsTest extends TestCase\Runtime {
 				'link' => 'https://www.wikipedia.cz/test',
 				'type' => 'web',
 			],
-			'referenced_theme_id' => null,
+			'referenced_theme_id' => [],
 		]);
-		(new Misc\TableCount($this->connection, 'bulletpoints', 1))->assert();
+		(new Misc\TableCount($this->connection, 'public_bulletpoints', 1))->assert();
 		(new Misc\TableCount($this->connection, 'sources', 1))->assert();
 	}
 
 	public function testCountingByTheme(): void {
 		['id' => $theme] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
 		Assert::same(0, (new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser()))->count());
-		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['theme_id' => $theme]))->try();
+		(new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints', ['theme_id' => $theme]))->try();
 		Assert::same(1, (new Domain\ThemeBulletpoints($theme, $this->connection, new Access\FakeUser()))->count());
 	}
 }

@@ -18,8 +18,8 @@ export type FetchedBulletpointType = {|
   |},
   +content: string,
   +theme_id: number,
-  +referenced_theme_id: number | null,
-  referenced_theme: FetchedThemeType | null,
+  +referenced_theme_id: Array<number>,
+  referenced_theme: Array<FetchedThemeType>,
 |};
 export type PostedBulletpointType = {|
   +source: {|
@@ -27,8 +27,8 @@ export type PostedBulletpointType = {|
     +type: SourceType,
   |},
   +content: string,
-  +referenced_theme_id: number | null,
-  +referenced_theme?: FetchedThemeType | null,
+  +referenced_theme_id: Array<number>,
+  +referenced_theme?: Array<FetchedThemeType>,
 |};
 export type ErrorBulletpointType = {|
   +source_link: ?string,

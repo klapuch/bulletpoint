@@ -8,6 +8,7 @@ import { allReactSelectSearches } from '../../theme/endpoints';
 import type { ErrorBulletpointType, PostedBulletpointType } from '../types';
 import * as validation from '../validation';
 import * as user from '../../user';
+import type { FetchedThemeType } from '../../theme/types';
 
 export type FormTypes = 'default' | 'edit' | 'add';
 type TargetType = {|
@@ -63,6 +64,10 @@ const CancelButton = ({ formType, onClick, children }: { children: string, ...Bu
 };
 
 
+type PreparedReferencedThemesType = Array<{
+  id: ?number,
+  name: ?string,
+}>;
 type Props = {|
   +bulletpoint: ?PostedBulletpointType,
   +onSubmit: (PostedBulletpointType) => (Promise<any>),
@@ -70,20 +75,19 @@ type Props = {|
   +onCancelClick: () => (void),
   +type: FormTypes,
   +themeId: number,
+  +referencedThemes: Array<FetchedThemeType>,
 |};
 type State = {|
-  referenced_theme: {
-    id: ?number,
-    name: ?string,
-  } | null,
+  referencedThemes: PreparedReferencedThemesType,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};
+const emptyReferencedTheme = { id: null, name: null };
 const initState = {
-  referenced_theme: null,
+  referencedThemes: [emptyReferencedTheme],
   bulletpoint: {
     content: '',
-    referenced_theme_id: null,
+    referenced_theme_id: [],
     source: {
       link: '',
       type: 'web',
@@ -100,7 +104,16 @@ export default class extends React.Component<Props, State> {
 
   componentWillReceiveProps(nextProps: Props): void {
     if (nextProps.bulletpoint !== null) {
-      this.setState({ bulletpoint: nextProps.bulletpoint });
+      this.setState(prevState => ({
+        // $FlowFixMe its ok
+        bulletpoint: nextProps.bulletpoint,
+        referencedThemes: [
+          ...nextProps.referencedThemes
+            .filter(Boolean)
+            .map(theme => ({ id: theme.id, name: theme.name })),
+          ...prevState.referencedThemes.filter(Boolean),
+        ],
+      }));
     }
   }
 
@@ -122,18 +135,32 @@ export default class extends React.Component<Props, State> {
     }));
   };
 
-  handleSelectChange = (select: ?Object) => {
-    const option = select || { value: null, label: null };
-    this.setState(prevState => ({
-      referenced_theme: {
-        id: option.value,
-        name: option.label,
-      },
-      bulletpoint: {
-        ...prevState.bulletpoint,
-        referenced_theme_id: option.value,
-      },
-    }));
+  handleSelectChange = (select: ?Object, { action }: {| action: string |}, order: number) => {
+    let { bulletpoint: { referenced_theme_id }, referencedThemes } = this.state;
+    if (action === 'clear' && referencedThemes.length > 1) {
+      delete referenced_theme_id[order];
+      delete referencedThemes[order];
+    } else {
+      const option = select || { value: 0, label: null };
+      referenced_theme_id = [option.value, ...referenced_theme_id];
+      referencedThemes = [
+        ...referencedThemes,
+        { id: option.value, name: option.label },
+      ];
+      referencedThemes = [
+        ...referencedThemes.filter(theme => theme.id !== null),
+        emptyReferencedTheme,
+      ];
+    }
+    this.setState(
+      prevState => ({
+        bulletpoint: {
+          ...prevState.bulletpoint,
+          referenced_theme_id: referenced_theme_id.filter(Boolean),
+        },
+        referencedThemes,
+      }),
+    );
   };
 
   onSubmit = () => {
@@ -145,10 +172,7 @@ export default class extends React.Component<Props, State> {
       }));
     } else {
       this.props.onAddClick();
-      this.props.onSubmit({
-        ...bulletpoint,
-        referenced_theme_id: bulletpoint.referenced_theme_id,
-      }).then(() => this.setState(initState));
+      this.props.onSubmit(bulletpoint).then(() => this.setState(initState));
     }
   };
 
@@ -158,8 +182,7 @@ export default class extends React.Component<Props, State> {
   };
 
   render() {
-    const { bulletpoint, errors } = this.state;
-    const referencedTheme = this.state.referenced_theme || { id: '', name: '' };
+    const { bulletpoint, errors, referencedThemes } = this.state;
     return (
       <>
         {this.props.type === 'default' ? null : (
@@ -169,16 +192,11 @@ export default class extends React.Component<Props, State> {
               <input type="text" className="form-control" id="content" name="content" value={bulletpoint.content} onChange={this.onChange} />
               {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
             </div>
-            <div className="form-group">
-              <label htmlFor="referenced_theme_id">Odkazující se téma</label>
-              <AsyncSelect
-                isClearable
-                value={{ value: referencedTheme.id, label: referencedTheme.name }}
-                onChange={this.handleSelectChange}
-                loadOptions={keyword => allReactSelectSearches(keyword, [this.props.themeId])}
-                styles={{ option: base => ({ ...base, color: '#000' }) }}
-              />
-            </div>
+            <ReferencedThemes
+              id={this.props.themeId}
+              onSelectChange={this.handleSelectChange}
+              themes={referencedThemes}
+            />
             <div className="form-group">
               <label htmlFor="source_type">Typ zdroje</label>
               <select className="form-control" id="source_type" name="source_type" value={bulletpoint.source.type} onChange={this.onChange}>
@@ -203,3 +221,26 @@ export default class extends React.Component<Props, State> {
     );
   }
 }
+
+type ReferencedThemesType = {|
+  +id: number,
+  +onSelectChange: (?Object, Object, number) => (void),
+  +themes: PreparedReferencedThemesType,
+|};
+const ReferencedThemes = ({ id, onSelectChange, themes }: ReferencedThemesType) => (
+  <div className="form-group">
+    <label htmlFor="referenced_theme_id">Odkazující se témata</label>
+    {themes.map((theme, i) => (
+      <div key={i}>
+        <label>Odkazujcí se téma</label>
+        <AsyncSelect
+          isClearable
+          value={{ value: theme.id, label: theme.name }}
+          onChange={(select, options) => onSelectChange(select, options, i)}
+          loadOptions={keyword => allReactSelectSearches(keyword, [id])}
+          styles={{ option: base => ({ ...base, color: '#000' }) }}
+        />
+      </div>
+    ))}
+  </div>
+);

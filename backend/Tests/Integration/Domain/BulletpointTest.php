@@ -21,8 +21,8 @@ final class BulletpointTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
 	public function testBulletpointById(): void {
-		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
-		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['content' => 'TEST']))->try();
+		(new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints'))->try();
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints', ['content' => 'TEST']))->try();
 		$bulletpoint = (new Misc\TestingFormat(
 			(new Domain\ExistingBulletpoint(
 				new Domain\StoredBulletpoint(
@@ -40,7 +40,7 @@ final class BulletpointTest extends TestCase\Runtime {
 	}
 
 	public function testEditing(): void {
-		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints'))->try();
 		(new Domain\ExistingBulletpoint(
 			new Domain\StoredBulletpoint($id, $this->connection, new Access\FakeUser()),
 			$id,
@@ -51,7 +51,7 @@ final class BulletpointTest extends TestCase\Runtime {
 				'type' => 'web',
 			],
 			'content' => 'TEST OK!',
-			'referenced_theme_id' => null,
+			'referenced_theme_id' => [],
 		]);
 		$bulletpoint = (new Storage\TypedQuery($this->connection, 'SELECT * FROM web.bulletpoints WHERE id = ?', [$id]))->row();
 		Assert::same($id, $bulletpoint['id']);
@@ -59,13 +59,13 @@ final class BulletpointTest extends TestCase\Runtime {
 	}
 
 	public function testDeleting(): void {
-		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints'))->try();
 		(new Domain\ExistingBulletpoint(
 			new Domain\StoredBulletpoint($id, $this->connection, new Access\FakeUser()),
 			$id,
 			$this->connection,
 		))->delete();
-		Assert::same(0, (new Storage\TypedQuery($this->connection, 'SELECT count(*) FROM bulletpoints'))->field());
+		Assert::same(0, (new Storage\TypedQuery($this->connection, 'SELECT count(*) FROM public_bulletpoints'))->field());
 	}
 
 	public function testThrowingOnUnknown(): void {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Functional\Endpoint\ContributedBulletpoint;
+namespace Bulletpoint\Functional\Endpoint\Theme\Bulletpoints;
 
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Endpoint;
@@ -11,21 +11,22 @@ use Klapuch\Application;
 use Klapuch\Output;
 use Tester\Assert;
 
-require __DIR__ . '/../../../bootstrap.php';
+require __DIR__ . '/../../../../bootstrap.php';
 
 /**
  * @testCase
  */
-final class PutTest extends TestCase\Runtime {
+final class PostTest extends TestCase\Runtime {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse(): void {
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
+		['id' => $referencedThemeId] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
 		['id' => $userId] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
-		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'contributed_bulletpoints', ['user_id' => $userId]))->try();
-		$response = (new Endpoint\ContributedBulletpoint\Put(
+		$response = (new Endpoint\Theme\Bulletpoints\Post(
 			new Application\FakeRequest(new Output\Json([
-				'content' => 'TEST OK!',
-				'referenced_theme_id' => [],
+				'content' => 'This is [[referenced]]',
+				'referenced_theme_id' => [$referencedThemeId],
 				'source' => [
 					'link' => 'https://www.wikipedia.com',
 					'type' => 'web',
@@ -33,9 +34,9 @@ final class PutTest extends TestCase\Runtime {
 			])),
 			$this->connection,
 			new Access\FakeUser((string) $userId),
-		))->response(['id' => $id]);
+		))->response(['theme_id' => $id]);
 		Assert::same(HTTP_NO_CONTENT, $response->status());
 	}
 }
 
-(new PutTest())->run();
+(new PostTest())->run();

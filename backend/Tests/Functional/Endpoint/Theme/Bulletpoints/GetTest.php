@@ -19,8 +19,8 @@ final class GetTest extends TestCase\Runtime {
 
 	public function testSuccessfulResponse(): void {
 		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
-		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['theme_id' => $id]))->try();
-		(new Fixtures\SamplePostgresData($this->connection, 'bulletpoints', ['theme_id' => $id]))->try();
+		(new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints', ['theme_id' => $id]))->try();
+		(new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints', ['theme_id' => $id]))->try();
 		$response = (new Endpoint\Theme\Bulletpoints\Get($this->connection))->response(['theme_id' => $id]);
 		$payload = json_decode($response->body()->serialization());
 		(new Misc\SchemaAssertion($payload, new \SplFileInfo(Endpoint\Theme\Bulletpoints\Get::SCHEMA)))->assert();

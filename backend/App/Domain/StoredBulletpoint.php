@@ -69,7 +69,7 @@ final class StoredBulletpoint implements Bulletpoint {
 			(new Sql\PreparedUpdate(
 				new Sql\AnsiUpdate('web.bulletpoints'),
 			))->set([
-				'referenced_theme_id' => $bulletpoint['referenced_theme_id'],
+				'referenced_theme_id' => json_encode($bulletpoint['referenced_theme_id']), // TODO: use array
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],
 				'content' => $bulletpoint['content'],
@@ -80,7 +80,7 @@ final class StoredBulletpoint implements Bulletpoint {
 	public function delete(): void {
 		(new Storage\TypedQuery(
 			$this->connection,
-			'DELETE FROM bulletpoints WHERE id = :id',
+			'DELETE FROM public_bulletpoints WHERE id = :id',
 			['id' => $this->id],
 		))->execute();
 	}

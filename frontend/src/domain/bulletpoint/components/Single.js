@@ -2,10 +2,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import getSlug from 'speakingurl';
+import reactStringReplace from 'react-string-replace';
 import styled from 'styled-components';
 import { DownButton, UpButton } from './RateButton';
 import Source from '../../theme/components/Source';
 import type { FetchedBulletpointType, PointType } from '../types';
+import * as format from '../formats';
 
 const ActionButton = styled.span`
   cursor: pointer;
@@ -14,15 +16,17 @@ const ActionButton = styled.span`
 `;
 
 const withLink = (bulletpoint: FetchedBulletpointType) => {
-  if (bulletpoint.referenced_theme_id === null) {
-    return bulletpoint.content;
-  }
-  const referencedTheme = bulletpoint.referenced_theme || { id: '', name: null };
-  return (
-    <Link to={`/themes/${referencedTheme.id}/${getSlug(referencedTheme.name)}`}>
-      {bulletpoint.content}
-    </Link>
-  );
+  const referencedTheme = bulletpoint.referenced_theme;
+  let order = 0;
+  return reactStringReplace(bulletpoint.content, format.REGEX, (match) => {
+    const currentTheme = referencedTheme[order];
+    order += 1;
+    return (
+      <Link key={order} to={`/themes/${currentTheme.id}/${getSlug(currentTheme.name)}`}>
+        {match}
+      </Link>
+    );
+  });
 };
 
 type Props = {|

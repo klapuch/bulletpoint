@@ -60,7 +60,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 			(new Sql\PreparedUpdate(
 				new Sql\AnsiUpdate('web.contributed_bulletpoints'),
 			))->set([
-				'referenced_theme_id' => $bulletpoint['referenced_theme_id'],
+				'referenced_theme_id' => json_encode($bulletpoint['referenced_theme_id']), // TODO: use array
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],
 			])->where('id = :id', ['id' => $this->id])

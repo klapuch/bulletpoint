@@ -19,11 +19,11 @@ final class PutTest extends TestCase\Runtime {
 	use TestCase\Page;
 
 	public function testSuccessfulResponse(): void {
-		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints'))->try();
 		$response = (new Endpoint\Bulletpoint\Put(
 			new Application\FakeRequest(new Output\Json([
 				'content' => 'TEST OK!',
-				'referenced_theme_id' => null,
+				'referenced_theme_id' => [],
 				'source' => [
 					'link' => 'https://www.wikipedia.com',
 					'type' => 'web',

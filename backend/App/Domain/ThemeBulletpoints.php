@@ -65,7 +65,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 				[
 					'content' => $bulletpoint['content'],
 					'theme_id' => $this->theme,
-					'referenced_theme_id' => $bulletpoint['referenced_theme_id'],
+					'referenced_theme_id' => json_encode($bulletpoint['referenced_theme_id']), // TODO: use array
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
 					'user_id' => $this->user->id(),
@@ -78,7 +78,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 		return (new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\AnsiSelect(['count(*)']))
-				->from(['bulletpoints'])
+				->from(['public_bulletpoints'])
 				->where('theme_id = :theme_id', ['theme_id' => $this->theme]),
 		))->field();
 	}

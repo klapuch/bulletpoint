@@ -19,7 +19,7 @@ final class RatingTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
 	public function testAddingRating(): void {
-		['id' => $bulletpoint] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
+		['id' => $bulletpoint] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints'))->try();
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
 		(new Domain\StoredBulletpoint($bulletpoint, $this->connection, new Access\FakeUser((string) $user)))->rate(+1);
 		Assert::same(2, (new TypedQuery($this->connection, 'SELECT sum(point) FROM bulletpoint_ratings'))->field());
@@ -30,7 +30,7 @@ final class RatingTest extends TestCase\Runtime {
 	}
 
 	public function testOnePerUser(): void {
-		['id' => $bulletpoint] = (new Fixtures\SamplePostgresData($this->connection, 'bulletpoints'))->try();
+		['id' => $bulletpoint] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints'))->try();
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
 		Assert::same(1, (new TypedQuery($this->connection, 'SELECT sum(point) FROM bulletpoint_ratings'))->field());
 		(new Domain\StoredBulletpoint($bulletpoint, $this->connection, new Access\FakeUser((string) $user)))->rate(+1);
