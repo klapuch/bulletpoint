@@ -153,6 +153,11 @@ class Theme extends React.Component<Props, State> {
             {user.isLoggedIn() && (
               <Form
                 themeId={parseInt(this.props.match.params.id, 10)}
+                referencedThemes={
+                  this.state.bulletpointId
+                    ? this.props.getBulletpointById(this.state.bulletpointId).referenced_theme
+                    : []
+                }
                 bulletpoint={this.state.bulletpoint}
                 onAddClick={this.handleAddClick}
                 onCancelClick={this.handleCancelClick}

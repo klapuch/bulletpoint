@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { uniqBy } from 'lodash';
 // $FlowFixMe ok
 import AsyncSelect from 'react-select/lib/Async';
 import classNames from 'classnames';
@@ -8,6 +9,8 @@ import { allReactSelectSearches } from '../../theme/endpoints';
 import type { ErrorBulletpointType, PostedBulletpointType } from '../types';
 import * as validation from '../validation';
 import * as user from '../../user';
+import * as formats from '../formats';
+import type {FetchedThemeType} from "../../theme/types";
 
 export type FormTypes = 'default' | 'edit' | 'add';
 type TargetType = {|
@@ -70,20 +73,23 @@ type Props = {|
   +onCancelClick: () => (void),
   +type: FormTypes,
   +themeId: number,
+  +referencedThemes: Array<FetchedThemeType>,
 |};
 type State = {|
-  referenced_theme: {
+  preparedReferencedThemes: Array<{
     id: ?number,
     name: ?string,
-  } | null,
+    match: ?string,
+  }>,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};
 const initState = {
-  referenced_theme: null,
+  referencedThemes: [],
+  preparedReferencedThemes: [],
   bulletpoint: {
     content: '',
-    referenced_theme_id: null,
+    referenced_theme_id: [],
     source: {
       link: '',
       type: 'web',
@@ -100,7 +106,15 @@ export default class extends React.Component<Props, State> {
 
   componentWillReceiveProps(nextProps: Props): void {
     if (nextProps.bulletpoint !== null) {
-      this.setState({ bulletpoint: nextProps.bulletpoint });
+      const references = formats.withoutMarks(formats.references(nextProps.bulletpoint.content));
+      this.setState({
+        bulletpoint: nextProps.bulletpoint,
+        preparedReferencedThemes: nextProps.referencedThemes.map((theme, order) => ({
+          id: theme.id,
+          name: theme.name,
+          match: references[order],
+        })),
+      });
     }
   }
 
@@ -111,6 +125,15 @@ export default class extends React.Component<Props, State> {
     } else if (name === 'source_type') {
       input = { source: { type: value, link: '' } };
     } else {
+      if (name === 'content') {
+        const references = formats.withoutMarks(formats.references(value));
+        this.setState(prevState => ({
+          preparedReferencedThemes: uniqBy([
+            ...prevState.preparedReferencedThemes,
+            ...references.map(match => ({ id: null, name: null, match })),
+          ], 'match')
+        }));
+      }
       input = { ...this.state.bulletpoint, [name]: value };
     }
     this.setState(prevState => ({
@@ -122,18 +145,19 @@ export default class extends React.Component<Props, State> {
     }));
   };
 
-  handleSelectChange = (select: ?Object) => {
+  handleSelectChange = (select: ?Object, match) => {
     const option = select || { value: null, label: null };
-    this.setState(prevState => ({
-      referenced_theme: {
-        id: option.value,
-        name: option.label,
-      },
-      bulletpoint: {
-        ...prevState.bulletpoint,
-        referenced_theme_id: option.value,
-      },
-    }));
+    this.setState(
+      prevState => ({
+        bulletpoint: {
+          ...prevState.bulletpoint,
+          referenced_theme_id: [...prevState.bulletpoint.referenced_theme_id, option.value],
+        },
+        preparedReferencedThemes: [...prevState.preparedReferencedThemes, { id: option.value, name: option.label, match }].filter(theme => {
+          return theme.id !== null;
+        }),
+      })
+    );
   };
 
   onSubmit = () => {
@@ -159,7 +183,8 @@ export default class extends React.Component<Props, State> {
 
   render() {
     const { bulletpoint, errors } = this.state;
-    const referencedTheme = this.state.referenced_theme || { id: '', name: '' };
+    const { preparedReferencedThemes } = this.state;
+    console.log(preparedReferencedThemes);
     return (
       <>
         {this.props.type === 'default' ? null : (
@@ -169,16 +194,7 @@ export default class extends React.Component<Props, State> {
               <input type="text" className="form-control" id="content" name="content" value={bulletpoint.content} onChange={this.onChange} />
               {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
             </div>
-            <div className="form-group">
-              <label htmlFor="referenced_theme_id">Odkazující se téma</label>
-              <AsyncSelect
-                isClearable
-                value={{ value: referencedTheme.id, label: referencedTheme.name }}
-                onChange={this.handleSelectChange}
-                loadOptions={keyword => allReactSelectSearches(keyword, [this.props.themeId])}
-                styles={{ option: base => ({ ...base, color: '#000' }) }}
-              />
-            </div>
+            <PreparedThemes id={this.props.themeId} onSelectChange={this.handleSelectChange} themes={preparedReferencedThemes} />
             <div className="form-group">
               <label htmlFor="source_type">Typ zdroje</label>
               <select className="form-control" id="source_type" name="source_type" value={bulletpoint.source.type} onChange={this.onChange}>
@@ -203,3 +219,21 @@ export default class extends React.Component<Props, State> {
     );
   }
 }
+
+const PreparedThemes = ({ id, themes, onSelectChange }) => (
+  themes.length !== 0 ? <div className="form-group">
+    <label htmlFor="referenced_theme_id">Odkazující se témata</label>
+    {themes.map((theme, i) => (
+      <div key={i}>
+        <label>{theme.match}</label>
+        <AsyncSelect
+          isClearable
+          value={{ value: theme.id, label: theme.name }}
+          onChange={(select) => onSelectChange(select, theme.match)}
+          loadOptions={keyword => allReactSelectSearches(keyword, [id])}
+          styles={{ option: base => ({ ...base, color: '#000' }) }}
+        />
+      </div>
+    ))}
+  </div> : null
+);
