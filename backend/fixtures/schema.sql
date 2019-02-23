@@ -98,7 +98,7 @@ CREATE FUNCTION array_diff(anyarray, anyarray) RETURNS anyarray AS $BODY$
 $BODY$ LANGUAGE sql IMMUTABLE;
 
 CREATE FUNCTION array_equals(anyarray, anyarray) RETURNS boolean AS $BODY$
-	SELECT $1 <@ $2 AND $1 @> $2;
+	SELECT ($1 IS NOT NULL AND $1 <@ $2) AND ($2 IS NOT NULL AND $1 @> $2);
 $BODY$ LANGUAGE sql IMMUTABLE;
 
 
@@ -659,7 +659,11 @@ CREATE VIEW web.bulletpoints AS
 CREATE FUNCTION web.bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 BEGIN
 	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
-		RAISE EXCEPTION 'Number of referenced themes in text is not matching with passed ID list.';
+		RAISE EXCEPTION USING MESSAGE = format(
+			'Number of referenced themes in text (%s) is not matching with passed ID list (%s).',
+			number_of_references(new.content),
+			jsonb_array_length(new.referenced_theme_id)
+		 );
 	END IF;
 
 	WITH inserted_source AS (
@@ -686,7 +690,11 @@ DECLARE
 	v_new_referenced_themes int[];
 BEGIN
 	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
-		RAISE EXCEPTION 'Number of referenced themes in text is not matching with passed ID list.';
+		RAISE EXCEPTION USING MESSAGE = format(
+			'Number of referenced themes in text (%s) is not matching with passed ID list (%s).',
+			number_of_references(new.content),
+			jsonb_array_length(new.referenced_theme_id)
+		);
 	END IF;
 
 	WITH updated_bulletpoint AS (
@@ -695,6 +703,9 @@ BEGIN
 		RETURNING *
 	)
 	UPDATE public.sources SET link = new.source_link, type = new.source_type WHERE id = (SELECT source_id FROM updated_bulletpoint);
+
+	v_current_referenced_themes = array_agg(bulletpoint_id) FROM bulletpoint_referenced_themes WHERE id = new.id;
+	v_new_referenced_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
 
 	IF (NOT array_equals(v_current_referenced_themes, v_new_referenced_themes)) THEN
 		DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
