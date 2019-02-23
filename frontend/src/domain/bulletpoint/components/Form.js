@@ -8,7 +8,6 @@ import { allReactSelectSearches } from '../../theme/endpoints';
 import type { ErrorBulletpointType, PostedBulletpointType } from '../types';
 import * as validation from '../validation';
 import * as user from '../../user';
-import * as formats from '../formats';
 import type { FetchedThemeType } from '../../theme/types';
 
 export type FormTypes = 'default' | 'edit' | 'add';
@@ -138,16 +137,21 @@ export default class extends React.Component<Props, State> {
   };
 
   handleSelectChange = (select: ?Object, { action }, order) => {
-    let referenced_theme_id = this.state.bulletpoint.referenced_theme_id;
-    let preparedReferencedThemes = this.state.preparedReferencedThemes;
+    let { referenced_theme_id, preparedReferencedThemes } = this.state.bulletpoint;
     if (action === 'clear' && preparedReferencedThemes.length > 1) {
       delete referenced_theme_id[order];
       delete preparedReferencedThemes[order];
     } else {
       const option = select || { value: null, label: null };
       referenced_theme_id = [option.value, ...referenced_theme_id];
-      preparedReferencedThemes = [...preparedReferencedThemes, { id: option.value, name: option.label }];
-      preparedReferencedThemes = [...preparedReferencedThemes.filter(theme => theme.id !== null), emptyPreparedReferencedTheme];
+      preparedReferencedThemes = [
+        ...preparedReferencedThemes,
+        { id: option.value, name: option.label },
+      ];
+      preparedReferencedThemes = [
+        ...preparedReferencedThemes.filter(theme => theme.id !== null),
+        emptyPreparedReferencedTheme,
+      ];
     }
     this.setState(
       prevState => ({
@@ -190,7 +194,11 @@ export default class extends React.Component<Props, State> {
               <input type="text" className="form-control" id="content" name="content" value={bulletpoint.content} onChange={this.onChange} />
               {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
             </div>
-            <PreparedThemes id={this.props.themeId} onSelectChange={this.handleSelectChange} themes={preparedReferencedThemes} />
+            <PreparedThemes
+              id={this.props.themeId}
+              onSelectChange={this.handleSelectChange}
+              themes={preparedReferencedThemes}
+            />
             <div className="form-group">
               <label htmlFor="source_type">Typ zdroje</label>
               <select className="form-control" id="source_type" name="source_type" value={bulletpoint.source.type} onChange={this.onChange}>
@@ -216,7 +224,12 @@ export default class extends React.Component<Props, State> {
   }
 }
 
-const PreparedThemes = ({ id, onSelectChange, themes }) => (
+type PreparedThemesType = {|
+  +id: number,
+  +onSelectChange: (?Object) => (void),
+  +themes: Array<FetchedThemeType>,
+|};
+const PreparedThemes = ({ id, onSelectChange, themes }: PreparedThemesType) => (
   <div className="form-group">
     <label htmlFor="referenced_theme_id">Odkazující se témata</label>
     {themes.map((theme, i) => (

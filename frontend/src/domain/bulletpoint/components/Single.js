@@ -17,12 +17,12 @@ const ActionButton = styled.span`
 
 const withLink = (bulletpoint: FetchedBulletpointType) => {
   const referencedTheme = bulletpoint.referenced_theme;
-  let i = 0;
+  let order = 0;
   return reactStringReplace(bulletpoint.content, format.REGEX, (match) => {
-    const currentTheme = referencedTheme[i];
-    i++;
+    const currentTheme = referencedTheme[order];
+    order += 1;
     return (
-      <Link key={i} to={`/themes/${currentTheme.id}/${getSlug(currentTheme.name)}`}>
+      <Link key={order} to={`/themes/${currentTheme.id}/${getSlug(currentTheme.name)}`}>
         {match}
       </Link>
     );

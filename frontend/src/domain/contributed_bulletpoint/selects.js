@@ -17,7 +17,9 @@ export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpoi
 const referencedThemesFetching = (theme: number, state: Object): boolean => {
   return getByTheme(theme, state)
     .map(bulletpoint => bulletpoint.referenced_theme_id)
-    .map(referencedThemeIds => referencedThemeIds.map(referencedThemeId => themes.singleFetching(referencedThemeId, state)))
+    .map(referencedThemeIds => (
+      referencedThemeIds.map(referencedThemeId => themes.singleFetching(referencedThemeId, state))
+    ))
     .filter(areFetching => areFetching.filter(isFetching => isFetching === true))
     .filter(areFetching => areFetching.length > 0)
     .filter(areFetching => isEqual(areFetching, [true]))
