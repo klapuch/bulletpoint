@@ -1,10 +1,8 @@
 FROM postgres:11-alpine
 
-RUN apk add --no-cache supervisor
+RUN apk add --no-cache supervisor make git
 RUN mkdir /etc/supervisor.d
 COPY cron.ini /etc/supervisor.d/cron.ini
-
-ENV PGPASSWORD postgres
 
 COPY postgresql.dev.conf /etc/postgresql.conf
 

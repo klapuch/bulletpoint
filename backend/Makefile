@@ -71,6 +71,15 @@ cron:               ## run cron tasks
 composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative
 
+migration-create:
+	@sh migrations/create.sh $(name)
+
+migration-run:
+	@sh migrations/run.sh $(name)
+
+migration-run-new:
+	@sh migrations/run-new.sh
+
 move-schemas:       ## move JSON schemas
 	mkdir -p www/schema/bulletpoint/rating
 	mkdir -p www/schema/token

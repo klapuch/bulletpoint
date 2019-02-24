@@ -843,3 +843,12 @@ CREATE TRIGGER cron_jobs_row_bi_trigger
 	BEFORE INSERT
 	ON log.cron_jobs
 	FOR EACH ROW EXECUTE PROCEDURE cron_jobs_trigger_row_bi();
+
+
+CREATE SCHEMA deploy;
+
+CREATE TABLE deploy.migrations (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	filename citext NOT NULL UNIQUE,
+	migrated_at timestamp with time zone NOT NULL DEFAULT now()
+);

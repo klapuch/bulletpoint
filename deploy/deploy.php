@@ -36,6 +36,11 @@ task('passwords:put', static function (): void {
 	run(sprintf('cp {{release_path}}/backend/App/Configuration/secrets.sample.ini {{release_path}}/backend/App/Configuration/secrets.ini'));
 });
 
+task('migrations:run', static function (): void {
+	cd('{{release_path}}/backend');
+	run(sprintf('PGPASSWORD=%s make migration-run-new', getenv('ENV_PGPASSWORD')));
+});
+
 task('nginx:config:move', static function (): void {
 	run('cp {{release_path}}/docker/nginx/bulletpoint.prod.conf /etc/nginx/sites-available/bulletpoint.conf');
 	run('cp {{release_path}}/docker/nginx/bulletpoint.prod.conf /etc/nginx/sites-enabled/bulletpoint.conf');
@@ -68,6 +73,7 @@ task('deploy', [
 	'deploy:update_code',
 	'deploy:shared',
 	'deploy:writable',
+	'migrations:run',
 	'composer:install',
 	'react:build',
 	'deploy:clear_paths',
