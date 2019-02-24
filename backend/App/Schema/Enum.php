@@ -9,4 +9,11 @@ interface Enum {
 	 * @return array
 	 */
 	public function values(): array;
+
+	/**
+	 * Add new enum value
+	 * @param string $name
+	 * @return void
+	 */
+	public function add(string $name): void;
 }

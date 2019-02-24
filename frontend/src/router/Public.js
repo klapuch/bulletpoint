@@ -55,6 +55,7 @@ const Public = ({
                     )}
                   />
                   {user.isAdmin() && <NavItem title="Nové téma" to="/themes/create">Nové téma</NavItem>}
+                  {user.isAdmin() && <NavItem title="Přidat tag" to="/tags/add">Přidat tag</NavItem>}
                   {user.isLoggedIn()
                     ? <NavItem title="Odhlásit se" to="/sign/out">Odhlásit se</NavItem>
                     : <NavItem title="Přihlásit se" to="/sign/in">Přihlásit se</NavItem>

@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type { TagType } from '../types';
+import type { FetchedTagType } from '../types';
 import Tag from './Single';
 
 type Props = {|
-  +tags: Array<TagType>,
+  +tags: Array<FetchedTagType>,
 |};
 const Tags = ({ tags }: Props) => (
   // $FlowFixMe Not sure why

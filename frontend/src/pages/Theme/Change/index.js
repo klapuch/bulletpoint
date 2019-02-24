@@ -10,7 +10,7 @@ import * as themes from '../../../domain/theme/selects';
 import Form from '../../../domain/theme/components/Form';
 import Loader from '../../../ui/Loader';
 import type { FetchedThemeType, PostedThemeType } from '../../../domain/theme/types';
-import type { TagType } from '../../../domain/tags/types';
+import type { FetchedTagType } from '../../../domain/tags/types';
 
 type Props = {|
   +changeTheme: (number, PostedThemeType, () => (void)) => (void),
@@ -19,7 +19,7 @@ type Props = {|
   +fetching: boolean,
   +history: Object,
   +match: Object,
-  +tags: Array<TagType>,
+  +tags: Array<FetchedTagType>,
   +theme: FetchedThemeType,
 |};
 class Create extends React.Component<Props> {

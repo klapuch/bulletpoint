@@ -70,6 +70,9 @@ final class ApplicationRoutes implements Routing\Routes {
 			'tags [GET]' => function(): Application\View {
 				return new Endpoint\Tags\Get($this->connection);
 			},
+			'tags [POST]' => function() use ($request): Application\View {
+				return new Endpoint\Tags\Post($this->connection, $request);
+			},
 			'themes/{theme_id}/bulletpoints [GET]' => function(): Application\View {
 				return new Endpoint\Theme\Bulletpoints\Get($this->connection);
 			},

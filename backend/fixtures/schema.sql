@@ -116,8 +116,21 @@ CREATE TRIGGER references_audit_trigger
 
 CREATE TABLE tags (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	name text NOT NULL
+	name text NOT NULL UNIQUE
 );
+
+CREATE FUNCTION tags_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+	new.name = nullif(new.name, '');
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER tags_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON tags
+	FOR EACH ROW EXECUTE PROCEDURE tags_trigger_row_biu();
 
 CREATE TRIGGER tags_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT

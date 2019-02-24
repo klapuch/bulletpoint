@@ -3,12 +3,12 @@ import {
   RECEIVED_TAGS,
   REQUESTED_TAGS,
 } from './actions';
-import type { TagType } from './types';
+import type { FetchedTagType } from './types';
 
 type State = {|
   +all: {|
     fetching: boolean,
-    payload: Array<TagType|Object>,
+    payload: Array<FetchedTagType|Object>,
   |},
 |};
 const init = {

@@ -26,4 +26,7 @@ final class PostgresConstant implements Enum {
 			'values',
 		);
 	}
+
+	public function add(string $name): void {
+	}
 }
