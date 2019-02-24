@@ -15,7 +15,7 @@ import Loader from '../../ui/Loader';
 import SlugRedirect from '../../router/SlugRedirect';
 import type { FetchedBulletpointType, PostedBulletpointType, PointType } from '../../domain/bulletpoint/types';
 import type { FetchedThemeType } from '../../domain/theme/types';
-import type { FormTypes } from '../../domain/bulletpoint/components/Form';
+import type { FormTypes } from '../../domain/bulletpoint/components/Form/types';
 import { default as AllBulletpoints } from '../../domain/bulletpoint/components/All';
 import FullTitle from '../../domain/theme/components/FullTitle';
 

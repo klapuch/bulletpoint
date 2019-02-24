@@ -3,66 +3,13 @@ import React from 'react';
 // $FlowFixMe ok
 import AsyncSelect from 'react-select/lib/Async';
 import classNames from 'classnames';
-import styled from 'styled-components';
-import { allReactSelectSearches } from '../../theme/endpoints';
-import type { ErrorBulletpointType, PostedBulletpointType } from '../types';
-import * as validation from '../validation';
-import * as user from '../../user';
-import type { FetchedThemeType } from '../../theme/types';
-
-export type FormTypes = 'default' | 'edit' | 'add';
-type TargetType = {|
-  target: {|
-    name: string,
-    value: string,
-  |},
-|};
-type ButtonProps = {|
-  formType: FormTypes,
-  onClick: () => (void),
-|};
-
-
-const SpaceLink = styled.a`
-  margin-right: 5px;
-`;
-
-
-const SubmitButton = ({ formType, onClick, children }: { children: string, ...ButtonProps }) => {
-  const className = classNames('btn', formType === 'default' ? 'btn-default' : 'btn-success');
-  return (
-    <SpaceLink className={className} onClick={onClick} role="button">{children}</SpaceLink>
-  );
-};
-
-const ConfirmButton = ({ formType, onClick }: ButtonProps) => {
-  if (formType === 'default') {
-    return (
-      <SubmitButton formType={formType} onClick={onClick}>
-        {user.isAdmin() ? 'Přidat bulletpoint' : 'Navrhnout bulletpoint'}
-      </SubmitButton>
-    );
-  } else if (formType === 'add') {
-    return (
-      <SubmitButton formType={formType} onClick={onClick}>
-        {user.isAdmin() ? 'Přidat' : 'Navrhnout'}
-      </SubmitButton>
-    );
-  } else if (formType === 'edit') {
-    return <SubmitButton formType={formType} onClick={onClick}>Upravit</SubmitButton>;
-  }
-  return null;
-};
-
-const CancelButton = ({ formType, onClick, children }: { children: string, ...ButtonProps }) => {
-  if (formType === 'default') {
-    return null;
-  }
-  return (
-    <SpaceLink className="btn btn-danger" onClick={onClick} role="button">{children}</SpaceLink>
-  );
-};
-
+import { allReactSelectSearches } from '../../../theme/endpoints';
+import type { ErrorBulletpointType, PostedBulletpointType } from '../../types';
+import * as validation from '../../validation';
+import type { FetchedThemeType } from '../../../theme/types';
+import CancelButton from './CancelButton';
+import ConfirmButton from './ConfirmButton';
+import type { TargetType, FormTypes } from './types';
 
 type PreparedReferencedThemesType = Array<{
   id: ?number,
