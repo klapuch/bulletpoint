@@ -8,6 +8,7 @@ import CancelButton from './CancelButton';
 import ConfirmButton from './ConfirmButton';
 import type { TargetType, FormTypes, ReferencedThemesType } from './types';
 import ReferencedThemes from './Input/ReferencedThemes';
+import { FORM_TYPE_DEFAULT } from './types';
 
 type Props = {|
   +bulletpoint: ?PostedBulletpointType,
@@ -44,6 +45,7 @@ export default class extends React.Component<Props, State> {
   state = initState;
 
   componentWillReceiveProps(nextProps: Props): void {
+    this.setState(initState);
     if (nextProps.bulletpoint !== null) {
       this.setState(prevState => ({
         // $FlowFixMe its ok
@@ -83,7 +85,7 @@ export default class extends React.Component<Props, State> {
       delete referencedThemes[order];
     } else {
       const option = select || { value: 0, label: null };
-      referenced_theme_id = [option.value, ...referenced_theme_id];
+      referenced_theme_id = [...referenced_theme_id, option.value];
       referencedThemes = [
         ...referencedThemes,
         { id: option.value, name: option.label },
@@ -106,7 +108,7 @@ export default class extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { bulletpoint } = this.state;
-    if (this.props.type !== 'default' && validation.anyErrors(bulletpoint)) {
+    if (this.props.type !== FORM_TYPE_DEFAULT && validation.anyErrors(bulletpoint)) {
       this.setState(prevState => ({
         ...prevState,
         errors: validation.errors(prevState.bulletpoint),
