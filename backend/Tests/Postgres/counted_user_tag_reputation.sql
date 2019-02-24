@@ -1,7 +1,7 @@
 CREATE FUNCTION tests.incrementing() RETURNS void AS $BODY$
-	DECLARE
-		v_user_id integer;
-		v_theme_id integer;
+DECLARE
+	v_user_id integer;
+	v_theme_id integer;
 BEGIN
 	SELECT samples.users() INTO v_user_id;
 	SELECT samples.themes(jsonb_build_object('reference_id', samples."references"(), 'user_id', v_user_id)) INTO v_theme_id;

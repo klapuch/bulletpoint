@@ -1,9 +1,9 @@
 CREATE FUNCTION tests.single_tag() RETURNS void AS $BODY$
-	DECLARE
-		v_user_id integer;
-		v_source_id integer;
-		v_tag_id integer;
-		v_theme_id integer;
+DECLARE
+	v_user_id integer;
+	v_source_id integer;
+	v_tag_id integer;
+	v_theme_id integer;
 BEGIN
 	SELECT samples.users() INTO v_user_id;
 	SELECT samples.sources() INTO v_source_id;
@@ -22,12 +22,12 @@ BEGIN
 END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION tests.multiple_tags() RETURNS void AS $BODY$
-	DECLARE
-		v_user_id integer;
-		v_source_id integer;
-		v_tag_id1 integer;
-		v_tag_id2 integer;
-		v_theme_id integer;
+DECLARE
+	v_user_id integer;
+	v_source_id integer;
+	v_tag_id1 integer;
+	v_tag_id2 integer;
+	v_theme_id integer;
 BEGIN
 	SELECT samples.users() INTO v_user_id;
 	SELECT samples.sources() INTO v_source_id;
@@ -49,12 +49,12 @@ BEGIN
 END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION tests.delete_from_tags() RETURNS void AS $BODY$
-	DECLARE
-		v_user_id integer;
-		v_source_id integer;
-		v_tag_id1 integer;
-		v_tag_id2 integer;
-		v_theme_id integer;
+DECLARE
+	v_user_id integer;
+	v_source_id integer;
+	v_tag_id1 integer;
+	v_tag_id2 integer;
+	v_theme_id integer;
 BEGIN
 	SELECT samples.users() INTO v_user_id;
 	SELECT samples.sources() INTO v_source_id;
@@ -78,12 +78,12 @@ BEGIN
 END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION tests.delete_from_theme_tags() RETURNS void AS $BODY$
-	DECLARE
-		v_user_id integer;
-		v_source_id integer;
-		v_tag_id1 integer;
-		v_tag_id2 integer;
-		v_theme_id integer;
+DECLARE
+	v_user_id integer;
+	v_source_id integer;
+	v_tag_id1 integer;
+	v_tag_id2 integer;
+	v_theme_id integer;
 BEGIN
 	SELECT samples.users() INTO v_user_id;
 	SELECT samples.sources() INTO v_source_id;
@@ -107,11 +107,11 @@ BEGIN
 END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION tests.multiple_bulletpoints() RETURNS void AS $BODY$
-	DECLARE
-		v_user_id integer;
-		v_tag_id1 integer;
-		v_tag_id2 integer;
-		v_theme_id integer;
+DECLARE
+	v_user_id integer;
+	v_tag_id1 integer;
+	v_tag_id2 integer;
+	v_theme_id integer;
 BEGIN
 	SELECT samples.users() INTO v_user_id;
 	SELECT samples.tags() INTO v_tag_id1;
@@ -134,11 +134,11 @@ BEGIN
 END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION tests.multiple_bulletpoints_remove_tag() RETURNS void AS $BODY$
-	DECLARE
-		v_user_id integer;
-		v_tag_id1 integer;
-		v_tag_id2 integer;
-		v_theme_id integer;
+DECLARE
+	v_user_id integer;
+	v_tag_id1 integer;
+	v_tag_id2 integer;
+	v_theme_id integer;
 BEGIN
 	SELECT samples.users() INTO v_user_id;
 	SELECT samples.tags() INTO v_tag_id1;
@@ -164,11 +164,11 @@ END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 
 CREATE FUNCTION tests.multiple_bulletpoints_remove_theme_tag() RETURNS void AS $BODY$
-	DECLARE
-		v_user_id integer;
-		v_tag_id1 integer;
-		v_tag_id2 integer;
-		v_theme_id integer;
+DECLARE
+	v_user_id integer;
+	v_tag_id1 integer;
+	v_tag_id2 integer;
+	v_theme_id integer;
 BEGIN
 	SELECT samples.users() INTO v_user_id;
 	SELECT samples.tags() INTO v_tag_id1;

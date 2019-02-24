@@ -506,8 +506,8 @@ CREATE TABLE bulletpoint_ratings (
 );
 
 CREATE FUNCTION bulletpoint_ratings_trigger_row_aiud() RETURNS trigger AS $$
-	DECLARE
-		r bulletpoint_ratings;
+DECLARE
+	r bulletpoint_ratings;
 BEGIN
 	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
 
@@ -553,7 +553,8 @@ CREATE VIEW web.themes AS
 	LEFT JOIN user_starred_themes ON user_starred_themes.theme_id = themes.id AND user_starred_themes.user_id = globals_get_user();
 
 CREATE FUNCTION web.themes_trigger_row_ii() RETURNS trigger AS $BODY$
-	DECLARE v_theme_id integer;
+DECLARE
+	v_theme_id integer;
 BEGIN
 	WITH inserted_reference AS (
 		INSERT INTO public."references" (url) VALUES (new.reference_url)
@@ -574,12 +575,12 @@ END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION web.themes_trigger_row_iu() RETURNS trigger AS $BODY$
-	DECLARE
-		v_theme public.themes;
-		v_current_tags integer[];
-		v_new_tags integer[];
-		v_current_alternative_names text[];
-		v_new_alternative_names text[];
+DECLARE
+	v_theme public.themes;
+	v_current_tags integer[];
+	v_new_tags integer[];
+	v_current_alternative_names text[];
+	v_new_alternative_names text[];
 BEGIN
 	UPDATE public.themes SET name = new.name WHERE id = new.id RETURNING * INTO v_theme;
 	UPDATE public."references" SET url = new.reference_url WHERE id = v_theme.reference_id;
