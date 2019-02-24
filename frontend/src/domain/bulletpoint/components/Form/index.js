@@ -6,7 +6,7 @@ import * as validation from '../../validation';
 import type { FetchedThemeType } from '../../../theme/types';
 import CancelButton from './CancelButton';
 import ConfirmButton from './ConfirmButton';
-import type { TargetType, FormTypes } from './types';
+import type { TargetType, FormTypes, ReferencedThemesType } from './types';
 import ReferencedThemes from './Input/ReferencedThemes';
 
 type Props = {|
@@ -19,7 +19,7 @@ type Props = {|
   +referencedThemes: Array<FetchedThemeType>,
 |};
 type State = {|
-  referencedThemes: PreparedReferencedThemesType,
+  referencedThemes: ReferencedThemesType,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};

@@ -9,7 +9,7 @@ export type ButtonProps = {|
   formType: FormTypes,
   onClick: () => (void),
 |};
-export type PreparedReferencedThemesType = Array<{
+export type ReferencedThemesType = Array<{
   id: ?number,
   name: ?string,
 }>;
