@@ -1,8 +1,5 @@
 // @flow
 import React from 'react';
-import { Link } from 'react-router-dom';
-import getSlug from 'speakingurl';
-import reactStringReplace from 'react-string-replace';
 import styled from 'styled-components';
 import { DownButton, UpButton } from './RateButton';
 import Source from '../../theme/components/Source';
@@ -14,20 +11,6 @@ const ActionButton = styled.span`
   float: right;
   padding-left: 5px;
 `;
-
-const withLink = (bulletpoint: FetchedBulletpointType) => {
-  const referencedTheme = bulletpoint.referenced_theme;
-  let order = 0;
-  return reactStringReplace(bulletpoint.content, format.REGEX, (match) => {
-    const currentTheme = referencedTheme[order];
-    order += 1;
-    return (
-      <Link key={order} to={`/themes/${currentTheme.id}/${getSlug(currentTheme.name)}`}>
-        {match}
-      </Link>
-    );
-  });
-};
 
 type Props = {|
   +children: FetchedBulletpointType,
@@ -55,7 +38,7 @@ const Single = ({
       {children.rating.up}
     </UpButton>
     )}
-    {withLink(children)}
+    {format.replaceBulletpointMatches(children)}
     {onDeleteClick && <ActionButton className="text-danger glyphicon glyphicon-remove" aria-hidden="true" onClick={() => onDeleteClick(children.id)} />}
     {onEditClick && <ActionButton className="glyphicon glyphicon-pencil" aria-hidden="true" onClick={() => onEditClick(children.id)} />}
     <br />

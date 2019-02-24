@@ -1,73 +1,15 @@
 // @flow
 import React from 'react';
-// $FlowFixMe ok
-import AsyncSelect from 'react-select/lib/Async';
 import classNames from 'classnames';
-import styled from 'styled-components';
-import { allReactSelectSearches } from '../../theme/endpoints';
-import type { ErrorBulletpointType, PostedBulletpointType } from '../types';
-import * as validation from '../validation';
-import * as user from '../../user';
-import type { FetchedThemeType } from '../../theme/types';
+import type { ErrorBulletpointType, PostedBulletpointType } from '../../types';
+import * as validation from '../../validation';
+import type { FetchedThemeType } from '../../../theme/types';
+import CancelButton from './CancelButton';
+import ConfirmButton from './ConfirmButton';
+import type { TargetType, FormTypes, ReferencedThemesType } from './types';
+import ReferencedThemes from './Input/ReferencedThemes';
+import { FORM_TYPE_DEFAULT } from './types';
 
-export type FormTypes = 'default' | 'edit' | 'add';
-type TargetType = {|
-  target: {|
-    name: string,
-    value: string,
-  |},
-|};
-type ButtonProps = {|
-  formType: FormTypes,
-  onClick: () => (void),
-|};
-
-
-const SpaceLink = styled.a`
-  margin-right: 5px;
-`;
-
-
-const SubmitButton = ({ formType, onClick, children }: { children: string, ...ButtonProps }) => {
-  const className = classNames('btn', formType === 'default' ? 'btn-default' : 'btn-success');
-  return (
-    <SpaceLink className={className} onClick={onClick} role="button">{children}</SpaceLink>
-  );
-};
-
-const ConfirmButton = ({ formType, onClick }: ButtonProps) => {
-  if (formType === 'default') {
-    return (
-      <SubmitButton formType={formType} onClick={onClick}>
-        {user.isAdmin() ? 'Přidat bulletpoint' : 'Navrhnout bulletpoint'}
-      </SubmitButton>
-    );
-  } else if (formType === 'add') {
-    return (
-      <SubmitButton formType={formType} onClick={onClick}>
-        {user.isAdmin() ? 'Přidat' : 'Navrhnout'}
-      </SubmitButton>
-    );
-  } else if (formType === 'edit') {
-    return <SubmitButton formType={formType} onClick={onClick}>Upravit</SubmitButton>;
-  }
-  return null;
-};
-
-const CancelButton = ({ formType, onClick, children }: { children: string, ...ButtonProps }) => {
-  if (formType === 'default') {
-    return null;
-  }
-  return (
-    <SpaceLink className="btn btn-danger" onClick={onClick} role="button">{children}</SpaceLink>
-  );
-};
-
-
-type PreparedReferencedThemesType = Array<{
-  id: ?number,
-  name: ?string,
-}>;
 type Props = {|
   +bulletpoint: ?PostedBulletpointType,
   +onSubmit: (PostedBulletpointType) => (Promise<any>),
@@ -78,7 +20,7 @@ type Props = {|
   +referencedThemes: Array<FetchedThemeType>,
 |};
 type State = {|
-  referencedThemes: PreparedReferencedThemesType,
+  referencedThemes: ReferencedThemesType,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};
@@ -103,6 +45,7 @@ export default class extends React.Component<Props, State> {
   state = initState;
 
   componentWillReceiveProps(nextProps: Props): void {
+    this.setState(initState);
     if (nextProps.bulletpoint !== null) {
       this.setState(prevState => ({
         // $FlowFixMe its ok
@@ -120,11 +63,11 @@ export default class extends React.Component<Props, State> {
   onChange = ({ target: { name, value } }: TargetType) => {
     let input = null;
     if (name === 'source_link') {
-      input = { source: { ...this.state.bulletpoint.source, link: value } };
+      input = { source: { link: value } };
     } else if (name === 'source_type') {
       input = { source: { type: value, link: '' } };
     } else {
-      input = { ...this.state.bulletpoint, [name]: value };
+      input = { [name]: value };
     }
     this.setState(prevState => ({
       // $FlowFixMe goes from select
@@ -142,7 +85,7 @@ export default class extends React.Component<Props, State> {
       delete referencedThemes[order];
     } else {
       const option = select || { value: 0, label: null };
-      referenced_theme_id = [option.value, ...referenced_theme_id];
+      referenced_theme_id = [...referenced_theme_id, option.value];
       referencedThemes = [
         ...referencedThemes,
         { id: option.value, name: option.label },
@@ -165,7 +108,7 @@ export default class extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { bulletpoint } = this.state;
-    if (this.props.type !== 'default' && validation.anyErrors(bulletpoint)) {
+    if (this.props.type !== FORM_TYPE_DEFAULT && validation.anyErrors(bulletpoint)) {
       this.setState(prevState => ({
         ...prevState,
         errors: validation.errors(prevState.bulletpoint),
@@ -185,11 +128,18 @@ export default class extends React.Component<Props, State> {
     const { bulletpoint, errors, referencedThemes } = this.state;
     return (
       <>
-        {this.props.type === 'default' ? null : (
+        {this.props.type === FORM_TYPE_DEFAULT ? null : (
           <form>
             <div className={classNames('form-group', errors.content && 'has-error')}>
               <label htmlFor="content">Obsah</label>
-              <input type="text" className="form-control" id="content" name="content" value={bulletpoint.content} onChange={this.onChange} />
+              <input
+                type="text"
+                className="form-control"
+                id="content"
+                name="content"
+                value={bulletpoint.content}
+                onChange={this.onChange}
+              />
               {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
             </div>
             <ReferencedThemes
@@ -207,7 +157,14 @@ export default class extends React.Component<Props, State> {
             {bulletpoint.source.type === 'head' ? null : (
               <div className={classNames('form-group', errors.source_link && 'has-error')}>
                 <label htmlFor="source_link">Odkaz na zdroj</label>
-                <input type="text" className="form-control" id="source_link" name="source_link" value={bulletpoint.source.link} onChange={this.onChange} />
+                <input
+                  type="text"
+                  className="form-control"
+                  id="source_link"
+                  name="source_link"
+                  value={bulletpoint.source.link}
+                  onChange={this.onChange}
+                />
                 {errors.source_link && <span className="help-block">{validation.toMessage(errors, 'source_link')}</span>}
               </div>
             )}
@@ -221,26 +178,3 @@ export default class extends React.Component<Props, State> {
     );
   }
 }
-
-type ReferencedThemesType = {|
-  +id: number,
-  +onSelectChange: (?Object, Object, number) => (void),
-  +themes: PreparedReferencedThemesType,
-|};
-const ReferencedThemes = ({ id, onSelectChange, themes }: ReferencedThemesType) => (
-  <div className="form-group">
-    <label htmlFor="referenced_theme_id">Odkazující se témata</label>
-    {themes.map((theme, i) => (
-      <div key={i}>
-        <label>Odkazujcí se téma</label>
-        <AsyncSelect
-          isClearable
-          value={{ value: theme.id, label: theme.name }}
-          onChange={(select, options) => onSelectChange(select, options, i)}
-          loadOptions={keyword => allReactSelectSearches(keyword, [id])}
-          styles={{ option: base => ({ ...base, color: '#000' }) }}
-        />
-      </div>
-    ))}
-  </div>
-);
