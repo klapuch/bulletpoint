@@ -64,11 +64,11 @@ class Form extends React.Component<Props, State> {
   handleChange = ({ target: { name, value } }: TargetType) => {
     let input = null;
     if (name === 'reference_url') {
-      input = { reference: { ...this.state.theme.reference, url: value } };
+      input = { reference: { url: value } };
     } else if (name === 'alternative_names') {
       input = { alternative_names: value.split(',') };
     } else {
-      input = { ...this.state.theme, [name]: value };
+      input = { [name]: value };
     }
     this.setState(prevState => ({
       theme: {

@@ -128,7 +128,7 @@ export default class extends React.Component<Props, State> {
     const { bulletpoint, errors, referencedThemes } = this.state;
     return (
       <>
-        {this.props.type === 'default' ? null : (
+        {this.props.type === FORM_TYPE_DEFAULT ? null : (
           <form>
             <div className={classNames('form-group', errors.content && 'has-error')}>
               <label htmlFor="content">Obsah</label>
