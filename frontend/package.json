@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@babel/preset-flow": "^7.0.0",
     "axios": "^0.18.0",
     "bootstrap": "^3.4.0",
     "classnames": "^2.2.6",
@@ -45,7 +44,9 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "presets": ["@babel/preset-flow"],
+  "presets": [
+    "@babel/preset-flow"
+  ],
   "browserslist": [
     ">0.2%",
     "not dead",
@@ -53,6 +54,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/preset-flow": "^7.0.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-flowtype": "^3.2.0",
     "eslint-plugin-import": "^2.14.0",
