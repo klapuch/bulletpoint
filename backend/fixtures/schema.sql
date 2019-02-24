@@ -69,6 +69,10 @@ $BODY$ LANGUAGE plpgsql;
 
 
 -- functions
+CREATE FUNCTION is_empty(text) RETURNS boolean AS $BODY$
+	SELECT trim(BOTH FROM $1) = '';
+$BODY$ LANGUAGE sql IMMUTABLE;
+
 CREATE FUNCTION globals_get_variable(in_variable text) RETURNS text AS $BODY$
 BEGIN
 	RETURN nullif(current_setting(format('globals.%s', in_variable)), '');
@@ -116,21 +120,9 @@ CREATE TRIGGER references_audit_trigger
 
 CREATE TABLE tags (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	name text NOT NULL UNIQUE
+	name text NOT NULL UNIQUE,
+	CONSTRAINT tags_name_not_empty CHECK (NOT is_empty(name))
 );
-
-CREATE FUNCTION tags_trigger_row_biu() RETURNS trigger AS $BODY$
-BEGIN
-	new.name = nullif(new.name, '');
-
-	RETURN new;
-END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
-
-CREATE TRIGGER tags_row_biu_trigger
-	BEFORE INSERT OR UPDATE
-	ON tags
-	FOR EACH ROW EXECUTE PROCEDURE tags_trigger_row_biu();
 
 CREATE TRIGGER tags_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
@@ -219,22 +211,10 @@ CREATE TABLE themes (
 	reference_id integer NOT NULL,
 	user_id integer NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT themes_name_not_empty CHECK (NOT is_empty(name)),
 	CONSTRAINT themes_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id) ON DELETE SET NULL ON UPDATE RESTRICT,
 	CONSTRAINT themes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
-
-CREATE FUNCTION themes_trigger_row_biu() RETURNS trigger AS $BODY$
-BEGIN
-	new.name = nullif(new.name, '');
-
-	RETURN new;
-END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
-
-CREATE TRIGGER themes_row_biu_trigger
-	BEFORE INSERT OR UPDATE
-	ON themes
-	FOR EACH ROW EXECUTE PROCEDURE themes_trigger_row_biu();
 
 CREATE TRIGGER themes_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
@@ -246,21 +226,9 @@ CREATE TABLE theme_alternative_names (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	name character varying(255) NOT NULL,
 	theme_id integer NOT NULL,
+	CONSTRAINT theme_alternative_names_name_not_empty CHECK (NOT is_empty(name)),
 	CONSTRAINT theme_alternative_names_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
-
-CREATE FUNCTION theme_alternative_names_trigger_row_biu() RETURNS trigger AS $BODY$
-BEGIN
-	new.name = nullif(new.name, '');
-
-	RETURN new;
-END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
-
-CREATE TRIGGER theme_alternative_names_row_biu_trigger
-	BEFORE INSERT OR UPDATE
-	ON theme_alternative_names
-	FOR EACH ROW EXECUTE PROCEDURE theme_alternative_names_trigger_row_biu();
 
 CREATE TRIGGER theme_alternative_names_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
@@ -327,6 +295,7 @@ CREATE TABLE sources (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	link text NULL,
 	type sources_type NOT NULL,
+	CONSTRAINT sources_link_not_empty CHECK (NOT is_empty(link)),
 	CONSTRAINT link_type_not_null CHECK (CASE WHEN type = 'web' THEN link IS NOT NULL ELSE TRUE END),
 	CONSTRAINT link_type_null CHECK (CASE WHEN type = 'head' THEN link IS NULL ELSE TRUE END)
 );
@@ -335,19 +304,6 @@ CREATE TRIGGER sources_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
 	ON sources
 	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
-
-CREATE FUNCTION sources_trigger_row_biu() RETURNS trigger AS $BODY$
-BEGIN
-	new.link = nullif(new.link, '');
-
-	RETURN new;
-END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
-
-CREATE TRIGGER sources_row_biu_trigger
-	BEFORE INSERT OR UPDATE
-	ON sources
-	FOR EACH ROW EXECUTE PROCEDURE sources_trigger_row_biu();
 
 CREATE FUNCTION number_of_references(text) RETURNS integer AS $BODY$
 	SELECT count(*)::integer FROM regexp_matches($1, '\[\[.+?\]\]', 'g');
@@ -361,6 +317,7 @@ CREATE TABLE bulletpoints (
 	content character varying(255) NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now(),
 	is_contribution boolean NOT NULL,
+	CONSTRAINT bulletpoints_content_not_empty CHECK (NOT is_empty(content)),
 	CONSTRAINT bulletpoints_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT bulletpoints_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
@@ -378,14 +335,6 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE FUNCTION bulletpoints_trigger_row_biu() RETURNS trigger AS $BODY$
-BEGIN
-	new.content = nullif(new.content, '');
-
-	RETURN new;
-END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
-
 CREATE FUNCTION bulletpoints_trigger_row_ad() RETURNS trigger AS $BODY$
 BEGIN
 	DELETE FROM sources WHERE id = old.source_id;
@@ -398,11 +347,6 @@ CREATE TRIGGER bulletpoints_row_ai_trigger
 	AFTER INSERT
 	ON bulletpoints
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_ai();
-
-CREATE TRIGGER bulletpoints_row_biu_trigger
-	BEFORE INSERT OR UPDATE
-	ON bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_biu();
 
 CREATE TRIGGER bulletpoints_row_ad_trigger
 	AFTER DELETE
