@@ -116,7 +116,7 @@ CREATE TRIGGER references_audit_trigger
 
 CREATE TABLE tags (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	name text NOT NULL
+	name text NOT NULL UNIQUE
 );
 
 CREATE TRIGGER tags_audit_trigger

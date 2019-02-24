@@ -84,6 +84,10 @@ final class GenerateJsonSchema implements Scheduling\Job {
 		$schemas->save($themeContributedBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/ContributedBulletpoint/schema/get.json'));
 		$schemas->save($themeContributedBulletpoint->put(), new \SplFileInfo(__DIR__ . '/../../Endpoint/ContributedBulletpoint/schema/put.json'));
 		$schemas->save($themeContributedBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/ContributedBulletpoints/schema/get.json'));
+
+		$tags = new Schema\Tag\Structure();
+		$schemas->save($tags->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tags/schema/post.json'));
+		$schemas->save($tags->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tags/schema/get.json'));
 	}
 
 	public function name(): string {

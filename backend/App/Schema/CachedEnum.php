@@ -41,4 +41,7 @@ final class CachedEnum implements Enum {
 	private function key(string $field, string $type): string {
 		return sprintf('%s:%s', self::NAMESPACE . $type, $field);
 	}
+
+	public function add(string $name): void {
+	}
 }

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Schema;
 
 use Klapuch\Sql\AnsiSelect;
+use Klapuch\Sql\PgInsertInto;
 use Klapuch\Storage;
 
 final class TableEnum implements Enum {
@@ -26,5 +27,12 @@ final class TableEnum implements Enum {
 				->orderBy(['id' => 'ASC']),
 		))->rows();
 		return (array) array_combine(array_column($enum, 'id'), $enum);
+	}
+
+	public function add(string $name): void {
+		(new Storage\BuiltQuery(
+			$this->connection,
+			new PgInsertInto($this->table, ['name' => ':name'], ['name' => $name]),
+		))->execute();
 	}
 }
