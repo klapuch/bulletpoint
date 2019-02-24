@@ -7,6 +7,7 @@ use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
 use Klapuch\Sql;
 use Klapuch\Storage;
+use Nette\Utils\Json;
 
 final class ThemeBulletpoints implements Domain\Bulletpoints {
 	/** @var \Klapuch\Storage\Connection */
@@ -63,7 +64,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 				[
 					'content' => $bulletpoint['content'],
 					'theme_id' => $this->theme,
-					'referenced_theme_id' => json_encode($bulletpoint['referenced_theme_id']), // TODO: use array
+					'referenced_theme_id' => Json::encode($bulletpoint['referenced_theme_id']), // TODO: use array
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
 					'user_id' => $this->user->id(),

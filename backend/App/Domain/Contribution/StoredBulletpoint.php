@@ -8,6 +8,7 @@ use Bulletpoint\Domain\Access;
 use Klapuch\Output;
 use Klapuch\Sql;
 use Klapuch\Storage;
+use Nette\Utils\Json;
 
 final class StoredBulletpoint implements Domain\Bulletpoint {
 	/** @var int */
@@ -60,7 +61,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 			(new Sql\PreparedUpdate(
 				new Sql\AnsiUpdate('web.contributed_bulletpoints'),
 			))->set([
-				'referenced_theme_id' => json_encode($bulletpoint['referenced_theme_id']), // TODO: use array
+				'referenced_theme_id' => Json::encode($bulletpoint['referenced_theme_id']), // TODO: use array
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],
 			])->where('id = :id', ['id' => $this->id])

@@ -5,6 +5,7 @@ namespace Bulletpoint\Constraint;
 
 use JsonSchema;
 use Klapuch\Validation;
+use Nette\Utils\Json;
 
 /**
  * JSON structured by schema
@@ -60,7 +61,7 @@ final class StructuredJson implements Validation\Rule {
 	 * @return \stdClass
 	 */
 	private function forValidation($subject): \stdClass {
-		return (object) json_decode(json_encode($subject, JSON_THROW_ON_ERROR));
+		return (object) Json::decode(Json::encode($subject));
 	}
 
 	/**
@@ -68,6 +69,6 @@ final class StructuredJson implements Validation\Rule {
 	 * @return array
 	 */
 	private function forOutput($subject): array {
-		return json_decode(json_encode($subject, JSON_THROW_ON_ERROR), true);
+		return Json::decode(Json::encode($subject), true);
 	}
 }

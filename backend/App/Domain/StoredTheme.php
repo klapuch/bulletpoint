@@ -6,6 +6,7 @@ namespace Bulletpoint\Domain;
 use Klapuch\Output;
 use Klapuch\Sql;
 use Klapuch\Storage;
+use Nette\Utils\Json;
 
 final class StoredTheme implements Theme {
 	/** @var int */
@@ -62,8 +63,8 @@ final class StoredTheme implements Theme {
 				new Sql\AnsiUpdate('web.themes'),
 			))->set([
 				'name' => $theme['name'],
-				'alternative_names' => json_encode($theme['alternative_names']),
-				'tags' => json_encode($theme['tags']), // TODO: use array
+				'alternative_names' => Json::encode($theme['alternative_names']),
+				'tags' => Json::encode($theme['tags']), // TODO: use array
 				'reference_url' => $theme['reference']['url'],
 			])->where('id = :id', ['id' => $this->id]),
 		))->execute();
