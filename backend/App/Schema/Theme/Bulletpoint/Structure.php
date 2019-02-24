@@ -48,7 +48,7 @@ final class Structure {
 				'source' => [
 					'type' => 'object',
 					'properties' => [
-						'link' => ['type' => 'string'],
+						'link' => ['type' => ['string', 'null']],
 						'type' => [
 							'type' => 'string',
 							'enum' => (new Schema\PostgresConstant('sources_type', $this->connection))->values(),
