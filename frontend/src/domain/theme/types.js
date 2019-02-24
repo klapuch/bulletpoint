@@ -1,11 +1,11 @@
 // @flow
-import type { TagType } from '../tags/types';
+import type { FetchedTagType } from '../tags/types';
 
 export type FetchedThemeType = {|
   +id: number,
   +user_id: number,
   +is_starred: boolean,
-  +tags: Array<TagType>,
+  +tags: Array<FetchedTagType>,
   +alternative_names: Array<string>,
   +name: string,
   +created_at: string,

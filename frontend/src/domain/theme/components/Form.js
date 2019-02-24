@@ -5,7 +5,7 @@ import { isEmpty, zipObject } from 'lodash';
 import Select from 'react-select';
 import classNames from 'classnames';
 import type { ErrorThemeType, FetchedThemeType, PostedThemeType } from '../types';
-import type { TagType } from '../../tags/types';
+import type { FetchedTagType } from '../../tags/types';
 import * as validation from '../validation';
 
 type TargetType = {|
@@ -17,7 +17,7 @@ type TargetType = {|
 
 type Props = {|
   +onSubmit: (PostedThemeType) => (void),
-  +tags: Array<TagType>,
+  +tags: Array<FetchedTagType>,
   +theme?: ?FetchedThemeType,
 |};
 type State = {|

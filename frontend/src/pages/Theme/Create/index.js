@@ -8,13 +8,13 @@ import * as theme from '../../../domain/theme/endpoints';
 import Form from '../../../domain/theme/components/Form';
 import Loader from '../../../ui/Loader';
 import type { PostedThemeType } from '../../../domain/theme/types';
-import type { TagType } from '../../../domain/tags/types';
+import type { FetchedTagType } from '../../../domain/tags/types';
 
 type Props = {|
   +history: Object,
   +fetchTags: (void) => (void),
   +fetching: boolean,
-  +tags: Array<TagType>,
+  +tags: Array<FetchedTagType>,
 |};
 class Create extends React.Component<Props> {
   componentDidMount(): void {
