@@ -1,20 +1,14 @@
 // @flow
 import React from 'react';
-// $FlowFixMe ok
-import AsyncSelect from 'react-select/lib/Async';
 import classNames from 'classnames';
-import { allReactSelectSearches } from '../../../theme/endpoints';
 import type { ErrorBulletpointType, PostedBulletpointType } from '../../types';
 import * as validation from '../../validation';
 import type { FetchedThemeType } from '../../../theme/types';
 import CancelButton from './CancelButton';
 import ConfirmButton from './ConfirmButton';
 import type { TargetType, FormTypes } from './types';
+import ReferencedThemes from './Input/ReferencedThemes';
 
-type PreparedReferencedThemesType = Array<{
-  id: ?number,
-  name: ?string,
-}>;
 type Props = {|
   +bulletpoint: ?PostedBulletpointType,
   +onSubmit: (PostedBulletpointType) => (Promise<any>),
@@ -168,26 +162,3 @@ export default class extends React.Component<Props, State> {
     );
   }
 }
-
-type ReferencedThemesType = {|
-  +id: number,
-  +onSelectChange: (?Object, Object, number) => (void),
-  +themes: PreparedReferencedThemesType,
-|};
-const ReferencedThemes = ({ id, onSelectChange, themes }: ReferencedThemesType) => (
-  <div className="form-group">
-    <label htmlFor="referenced_theme_id">Odkazující se témata</label>
-    {themes.map((theme, i) => (
-      <div key={i}>
-        <label>Odkazujcí se téma</label>
-        <AsyncSelect
-          isClearable
-          value={{ value: theme.id, label: theme.name }}
-          onChange={(select, options) => onSelectChange(select, options, i)}
-          loadOptions={keyword => allReactSelectSearches(keyword, [id])}
-          styles={{ option: base => ({ ...base, color: '#000' }) }}
-        />
-      </div>
-    ))}
-  </div>
-);
