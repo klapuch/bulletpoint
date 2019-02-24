@@ -2,7 +2,7 @@
 import React from 'react';
 import Form from '../../../domain/tags/components/Form';
 import { add } from '../../../domain/tags/endpoints';
-import type {PostedTagType} from "../../../domain/tags/types";
+import type { PostedTagType } from '../../../domain/tags/types';
 
 type Props = {|
   +history: Object,

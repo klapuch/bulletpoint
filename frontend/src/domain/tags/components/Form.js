@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {PostedTagType, TargetType} from "../types";
+import type { PostedTagType, TargetType } from '../types';
 
 type Props = {|
-  +onSubmit: (PostedTagType) => (Promise<any>),
+  +onSubmit: (PostedTagType) => (any),
 |};
 type State = {|
   tag: PostedTagType,
@@ -17,7 +17,7 @@ export default class extends React.Component<Props, State> {
   state = initState;
 
   onChange = ({ target: { name, value } }: TargetType) => {
-    let input = { [name]: value };
+    const input = { [name]: value };
     this.setState(prevState => ({
       tag: {
         ...prevState.tag,
@@ -29,11 +29,6 @@ export default class extends React.Component<Props, State> {
   onSubmit = () => {
     const { tag } = this.state;
     this.props.onSubmit(tag);
-  };
-
-  onCancelClick = () => {
-    this.props.onCancelClick();
-    this.setState(initState);
   };
 
   render() {
@@ -53,7 +48,7 @@ export default class extends React.Component<Props, State> {
             />
           </div>
         </form>
-        <a className="btn btn-success" onClick={this.onSubmit} role="button">Přidat</a>
+        <button type="button" tabIndex="0" className="btn btn-success" onClick={this.onSubmit}>Přidat</button>
       </>
     );
   }
