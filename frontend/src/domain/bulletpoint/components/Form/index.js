@@ -61,11 +61,11 @@ export default class extends React.Component<Props, State> {
   onChange = ({ target: { name, value } }: TargetType) => {
     let input = null;
     if (name === 'source_link') {
-      input = { source: { ...this.state.bulletpoint.source, link: value } };
+      input = { source: { link: value } };
     } else if (name === 'source_type') {
       input = { source: { type: value, link: '' } };
     } else {
-      input = { ...this.state.bulletpoint, [name]: value };
+      input = { [name]: value };
     }
     this.setState(prevState => ({
       // $FlowFixMe goes from select
@@ -130,7 +130,14 @@ export default class extends React.Component<Props, State> {
           <form>
             <div className={classNames('form-group', errors.content && 'has-error')}>
               <label htmlFor="content">Obsah</label>
-              <input type="text" className="form-control" id="content" name="content" value={bulletpoint.content} onChange={this.onChange} />
+              <input
+                type="text"
+                className="form-control"
+                id="content"
+                name="content"
+                value={bulletpoint.content}
+                onChange={this.onChange}
+              />
               {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
             </div>
             <ReferencedThemes
@@ -148,7 +155,14 @@ export default class extends React.Component<Props, State> {
             {bulletpoint.source.type === 'head' ? null : (
               <div className={classNames('form-group', errors.source_link && 'has-error')}>
                 <label htmlFor="source_link">Odkaz na zdroj</label>
-                <input type="text" className="form-control" id="source_link" name="source_link" value={bulletpoint.source.link} onChange={this.onChange} />
+                <input
+                  type="text"
+                  className="form-control"
+                  id="source_link"
+                  name="source_link"
+                  value={bulletpoint.source.link}
+                  onChange={this.onChange}
+                />
                 {errors.source_link && <span className="help-block">{validation.toMessage(errors, 'source_link')}</span>}
               </div>
             )}
