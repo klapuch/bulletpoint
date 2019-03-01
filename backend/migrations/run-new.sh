@@ -1,5 +1,14 @@
 #!/bin/bash
 
-for file in `git diff --diff-filter=A --name-only HEAD^ '*/*/*.sql'`; do
-	sh ./migrations/run.sh ${0%/*}/../../$file;
+MIGRATION_FILENAMES=`find migrations/*/*.sql | tr '\n' ','`
+MIGRATION_FILENAMES_TO_RUN=`psql -h localhost -U bulletpoint -d bulletpoint -tA -X -c "SELECT deploy.migrations_to_run('$MIGRATION_FILENAMES')"`
+
+if [[ "$MIGRATION_FILENAMES_TO_RUN" == "" ]]; then
+	echo "SUCCESS! Nothing to migrate.";
+	exit 0;
+fi
+
+for filename in $MIGRATION_FILENAMES_TO_RUN; do
+	echo "Migrating $filename...";
+	sh ./migrations/run.sh $filename && echo "Migration of $filename was successful.";
 done

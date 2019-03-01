@@ -810,3 +810,20 @@ CREATE TABLE deploy.migrations (
 	filename citext NOT NULL UNIQUE,
 	migrated_at timestamp with time zone NOT NULL DEFAULT now()
 );
+
+
+CREATE FUNCTION deploy.migrations_to_run(in_filenames text) RETURNS SETOF text AS $BODY$
+DECLARE
+	v_filenames text[];
+BEGIN
+    v_filenames = string_to_array(trim(TRAILING ',' FROM in_filenames), ',');
+
+	IF EXISTS(SELECT filename FROM unnest(v_filenames) AS filenames(filename) WHERE filename NOT ILIKE '%.sql') THEN
+		RAISE EXCEPTION USING MESSAGE = 'Filenames must be in format %.sql';
+	END IF;
+
+	RETURN QUERY SELECT unnest(v_filenames)
+	EXCEPT
+	SELECT filename FROM deploy.migrations;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;

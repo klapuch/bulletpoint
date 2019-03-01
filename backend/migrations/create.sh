@@ -1,8 +1,12 @@
 #!/bin/sh
 
-MIGRATION_FILENAME=migrations/`date +"%Y"`/`git rev-parse --abbrev-ref HEAD`--`date +"%m-%d"`--$1.sql
+# BRANCH_NAME--2019-01-01.sql
+MIGRATION_NAME=`git rev-parse --abbrev-ref HEAD`--`date +"%m-%d"`.sql
+
+# migrations/2019/BRANCH_NAME--2019-01-01.sql
+MIGRATION_FILENAME=migrations/`date +"%Y"`/$MIGRATION_NAME
 
 mkdir -p migrations/`date +"%Y"`
 cp -i migrations/template.sql $MIGRATION_FILENAME
 
-sed -i -e "s~VAR__MIGRATION_NAME~migrations/`date +"%Y"`/$MIGRATION_FILENAME~g" $MIGRATION_FILENAME
+sed -i -e "s~VAR__MIGRATION_NAME~$MIGRATION_FILENAME~g" $MIGRATION_FILENAME

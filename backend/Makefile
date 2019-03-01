@@ -72,13 +72,16 @@ composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative
 
 migration-create:
-	@sh migrations/create.sh $(name)
+	@sh migrations/create.sh
 
 migration-run:
-	@sh migrations/run.sh $(name)
+	@sh migrations/run.sh
 
 migration-run-new:
 	@sh migrations/run-new.sh
+
+migration-list-new:
+	@sh migrations/list-new.sh
 
 move-schemas:       ## move JSON schemas
 	mkdir -p www/schema/bulletpoint/rating
