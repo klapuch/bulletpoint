@@ -1,6 +1,6 @@
 FROM postgres:11-alpine
 
-RUN apk add --no-cache supervisor make git
+RUN apk add --no-cache supervisor make git findutils
 RUN mkdir /etc/supervisor.d
 COPY cron.ini /etc/supervisor.d/cron.ini
 

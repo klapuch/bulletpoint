@@ -82,3 +82,6 @@ INSERT INTO contributed_bulletpoints (theme_id, source_id, user_id, content) VAL
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY bulletpoint_reputations;
 REFRESH MATERIALIZED VIEW CONCURRENTLY starred_themes;
+
+INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/78-testing_migration--02-24.sql');
+INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/81-tag_support--02-24.sql');
