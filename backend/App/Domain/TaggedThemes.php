@@ -39,6 +39,7 @@ final class TaggedThemes implements Themes {
 					'reference_url',
 					'user_id',
 					'created_at',
+					'is_starred',
 				]))->from(['web.tagged_themes'])
 					->where('tag_id = :tag_id', ['tag_id' => $this->tag]),
 				$selection,
