@@ -9,9 +9,9 @@ import Loader from '../../ui/Loader';
 import SlugRedirect from '../../router/SlugRedirect';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import { default as AllThemes } from '../../domain/theme/components/All';
-import type { PaginationType } from "../../api/dataset/PaginationType";
-import { receivedInit, turnPage } from "../../api/dataset/actions";
-import { getSourcePagination } from "../../api/dataset/selects";
+import type { PaginationType } from '../../api/dataset/PaginationType';
+import { receivedInit, turnPage } from '../../api/dataset/actions';
+import { getSourcePagination } from '../../api/dataset/selects';
 import Pager from '../../components/Pager';
 
 type Props = {|
@@ -35,6 +35,13 @@ class Themes extends React.Component<Props> {
     this.reload();
   }
 
+  componentDidUpdate(prevProps: Props) {
+    const { match: { params: { tag } } } = this.props;
+    if (prevProps.match.params.tag !== tag) {
+      this.reload();
+    }
+  }
+
   reload = () => {
     const PER_PAGE = 5;
     Promise.resolve()
@@ -46,15 +53,8 @@ class Themes extends React.Component<Props> {
         } else {
           this.props.fetchTaggedThemes(parseInt(tag, 10), pagination);
         }
-      })
+      });
   };
-
-  componentDidUpdate(prevProps: Props) {
-    const { match: { params: { tag } } } = this.props;
-    if (prevProps.match.params.tag !== tag) {
-      this.reload();
-    }
-  }
 
   getHeader = () => {
     const { match: { params: { tag } } } = this.props;
@@ -118,8 +118,16 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   fetchRecentThemes: (pagination: PaginationType) => dispatch(theme.allRecent(pagination)),
-  fetchTaggedThemes: (tag: number, pagination: PaginationType) => dispatch(theme.allByTag(tag, pagination)),
-  initPaging: (paging: PaginationType) => dispatch(receivedInit(SOURCE_NAME, paging)),
-  turnPage: (page: number, current: PaginationType) => dispatch(turnPage(SOURCE_NAME, page, current)),
+  fetchTaggedThemes: (
+    tag: number,
+    pagination: PaginationType,
+  ) => dispatch(theme.allByTag(tag, pagination)),
+  initPaging: (
+    paging: PaginationType,
+  ) => dispatch(receivedInit(SOURCE_NAME, paging)),
+  turnPage: (
+    page: number,
+    current: PaginationType,
+  ) => dispatch(turnPage(SOURCE_NAME, page, current)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Themes);

@@ -12,7 +12,7 @@ import {
 import { fetchedSingle } from './selects';
 import * as response from '../../api/response';
 import type { PostedThemeType } from './types';
-import type {PaginationType} from "../../api/dataset/PaginationType";
+import type { PaginationType } from '../../api/dataset/PaginationType';
 
 export const single = (id: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedSingle(id, getState())) {
@@ -54,10 +54,20 @@ export const change = (
     .then(next);
 };
 
-const all = (params: Object, pagination: ?PaginationType = { page: 1, perPage: 10 }) => (dispatch: (mixed) => Object) => {
+const all = (
+  params: Object,
+  pagination: ?PaginationType = { page: 1, perPage: 10 },
+) => (dispatch: (mixed) => Object) => {
   dispatch(requestedAll());
   axios.get(
-    '/themes', { params: { page: pagination.page, per_page: pagination.perPage, ...params } })
+    '/themes', {
+      params: {
+        page: pagination.page,
+        per_page: pagination.perPage,
+        ...params,
+      }
+    },
+  )
     .then(response => dispatch(receivedAll(response.data, response.headers)));
 };
 

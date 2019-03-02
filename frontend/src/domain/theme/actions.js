@@ -1,7 +1,7 @@
 // @flow
 
 import type { FetchedThemeType } from './types';
-import * as response from "../../api/response";
+import * as response from '../../api/response';
 
 export const RECEIVED_THEME = 'RECEIVED_THEME';
 export const RECEIVED_THEMES = 'RECEIVED_THEMES';

@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import classNames from "classnames";
-import type { PaginationType } from "../api/dataset/PaginationType";
+import classNames from 'classnames';
 import styled from 'styled-components';
+import type { PaginationType } from '../api/dataset/PaginationType';
 
 const MoveButton = styled.a`
   cursor: pointer;
@@ -37,13 +37,17 @@ const Pager = ({
     <nav aria-label="Page navigation">
       <ul className="pager">
         <li className={classNames('previous', isFirstPage ? 'disabled' : null)}>
-          <MoveButton onClick={isFirstPage ? () => null : (e) => handlePageChange(e, previousPage)}>
-            <span aria-hidden="true">&larr;</span> Previous
+          <MoveButton onClick={isFirstPage ? () => null : e => handlePageChange(e, previousPage)}>
+            <span aria-hidden="true">&larr;</span>
+            {' '}
+Previous
           </MoveButton>
         </li>
         <li className={classNames('next', isLastPage ? 'disabled' : null)}>
-          <MoveButton onClick={isLastPage ? () => null : (e) => handlePageChange(e, nextPage)}>
-            <span aria-hidden="true">&rarr;</span> Next
+          <MoveButton onClick={isLastPage ? () => null : e => handlePageChange(e, nextPage)}>
+            <span aria-hidden="true">&rarr;</span>
+            {' '}
+Next
           </MoveButton>
         </li>
       </ul>
