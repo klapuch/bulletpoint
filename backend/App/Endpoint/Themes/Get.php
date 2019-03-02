@@ -22,7 +22,7 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var Uri */
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
 
 	public function __construct(Storage\Connection $connection, Uri $uri) {
@@ -67,26 +67,26 @@ final class Get implements Application\View {
 							return $theme->print($format);
 						},
 						...iterator_to_array(
-							   $themes->all(
-								   new Dataset\CombinedSelection(
-									   new Constraint\AllowedSort(
-										   new Dataset\RestSort($parameters['sort']),
-										   self::SORTS,
-										   ),
-									   new Dataset\RestPaging(
-										   $parameters['page'],
-										   $parameters['per_page'],
-										   ),
-									   ),
-								   ),
-							   ),
-						)),
+							$themes->all(
+								new Dataset\CombinedSelection(
+									new Constraint\AllowedSort(
+										new Dataset\RestSort($parameters['sort']),
+										self::SORTS,
+									),
+									new Dataset\RestPaging(
+										$parameters['page'],
+										$parameters['per_page'],
+									),
+								),
+							),
+						),
+					)),
 					['X-Total-Count' => $count],
-					),
 				),
+			),
 			$parameters['page'],
 			new UI\AttainablePagination($parameters['page'], $parameters['per_page'], $count),
-			$this->uri
+			$this->uri,
 		);
 	}
 }
