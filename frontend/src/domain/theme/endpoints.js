@@ -58,7 +58,7 @@ const all = (params: Object, pagination: ?PaginationType = { page: 1, perPage: 1
   dispatch(requestedAll());
   axios.get(
     '/themes', { params: { page: pagination.page, per_page: pagination.perPage, ...params } })
-    .then(response => dispatch(receivedAll(response.data)));
+    .then(response => dispatch(receivedAll(response.data, response.headers)));
 };
 
 export const allByTag = (tag: ?number, pagination: PaginationType) => (dispatch: (mixed) => Object) => (

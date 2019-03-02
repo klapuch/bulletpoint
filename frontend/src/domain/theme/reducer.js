@@ -43,6 +43,7 @@ export default (state: State = init, action: Object): State => {
           payload: action.themes,
           fetching: action.fetching,
         },
+        total: action.total,
       };
     case REQUESTED_THEME:
       return {

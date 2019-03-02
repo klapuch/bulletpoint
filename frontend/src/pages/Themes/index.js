@@ -12,6 +12,7 @@ import { default as AllThemes } from '../../domain/theme/components/All';
 import type { PaginationType } from "../../api/dataset/PaginationType";
 import { receivedInit, turnPage } from "../../api/dataset/actions";
 import { getSourcePagination } from "../../api/dataset/selects";
+import Pager from '../../components/Pager';
 
 type Props = {|
   +params: {|
@@ -23,6 +24,7 @@ type Props = {|
     |},
   |},
   +themes: Array<FetchedThemeType>,
+  +total: number,
   +fetching: boolean,
   +fetchRecentThemes: () => (void),
   +fetchTaggedThemes: (tag: number) => (void),
@@ -34,8 +36,9 @@ class Themes extends React.Component<Props> {
   }
 
   reload = () => {
+    const PER_PAGE = 5;
     Promise.resolve()
-      .then(() => this.props.initPaging({ page: 1, perPage: 2 }))
+      .then(() => this.props.initPaging({ page: 1, perPage: PER_PAGE }))
       .then(() => {
         const { match: { params: { tag } }, pagination } = this.props;
         if (isEmpty(tag)) {
@@ -77,6 +80,12 @@ class Themes extends React.Component<Props> {
     return themes.getCommonTag(this.props.themes, parseInt(tag, 10));
   };
 
+  handleChangePage = (page: number) => (
+    Promise.resolve()
+      .then(() => this.props.turnPage(page, this.props.pagination))
+      .then(this.reload)
+  );
+
   render() {
     const { themes, fetching } = this.props;
     if (fetching) {
@@ -90,6 +99,11 @@ class Themes extends React.Component<Props> {
         <h1>{this.getHeader()}</h1>
         <br />
         <AllThemes themes={themes} />
+        <Pager
+          total={this.props.total}
+          pagination={this.props.pagination}
+          onPageChange={this.handleChangePage}
+        />
       </SlugRedirect>
     );
   }
@@ -97,6 +111,7 @@ class Themes extends React.Component<Props> {
 
 const SOURCE_NAME = 'themes';
 const mapStateToProps = state => ({
+  total: themes.getTotal(state),
   themes: themes.getAll(state),
   fetching: themes.allFetching(state),
   pagination: getSourcePagination(SOURCE_NAME, state),
