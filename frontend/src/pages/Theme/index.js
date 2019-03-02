@@ -103,8 +103,10 @@ class Theme extends React.Component<Props, State> {
   };
 
   handleDeleteClick = (bulletpointId: number) => {
-    const { match: { params: { id } } } = this.props;
-    this.props.deleteBulletpoint(id, bulletpointId, this.reload);
+    if (window.confirm('Opravdu chceš tento bulletpoint smazat?')) {
+      const { match: { params: { id } } } = this.props;
+      this.props.deleteBulletpoint(id, bulletpointId, this.reload);
+    }
   };
 
   handleEditClick = (bulletpointId: number) => {

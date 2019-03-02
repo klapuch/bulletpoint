@@ -5,6 +5,7 @@
   ],
   "rules": {
     "no-else-return": 0, // weird
+    "no-alert": 0, // I use confirm
     "react/destructuring-assignment": 0, // used for dispatch, ..
 
     "import/no-named-default": 0,
