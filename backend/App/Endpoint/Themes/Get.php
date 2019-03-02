@@ -65,7 +65,10 @@ final class Get implements Application\View {
 									new Dataset\RestSort($parameters['sort']),
 									self::SORTS,
 								),
-								new Dataset\EmptySelection(),
+								new Dataset\RestPaging(
+									$parameters['page'],
+									$parameters['per_page'],
+								)
 							),
 						),
 					),
