@@ -25,3 +25,5 @@ export const getCommonTag = memoizee((themes: Array<FetchedThemeType>, tagId: nu
     .reduce((prev, current) => ({ [current.id]: current.name, ...prev }), {});
   return tag[tagId];
 });
+
+export const getTotal = (state: Object): number => state.theme.total;

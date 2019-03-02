@@ -5,6 +5,7 @@ import themeBulletpoints from '../domain/bulletpoint/reducer';
 import themeContributedBulletpoints from '../domain/contributed_bulletpoint/reducer';
 import tags from '../domain/tags/reducer';
 import message from '../ui/message/reducer';
+import dataset from '../api/dataset/reducer';
 import { SIGN_IN, SIGN_OUT } from '../domain/sign/actions';
 
 const appReducer = combineReducers({
@@ -13,6 +14,7 @@ const appReducer = combineReducers({
   themeContributedBulletpoints,
   tags,
   message,
+  dataset,
 });
 
 export default function rootReducer(state: Object, action: Object) {

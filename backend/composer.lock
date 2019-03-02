@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "61f93d0447cdae52979c6959c6266e79",
+    "content-hash": "38a2a2510acbcbce1b330f28625264c2",
     "packages": [
         {
             "name": "justinrainbow/json-schema",
@@ -636,6 +636,55 @@
             "time": "2019-01-01T13:48:50+00:00"
         },
         {
+            "name": "klapuch/ui",
+            "version": "0.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klapuch/UI.git",
+                "reference": "f822de07b774e14844188bff2ba23249a2e3a59a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klapuch/UI/zipball/f822de07b774e14844188bff2ba23249a2e3a59a",
+                "reference": "f822de07b774e14844188bff2ba23249a2e3a59a",
+                "shasum": ""
+            },
+            "require": {
+                "klapuch/output": "^2.4",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "^1.0",
+                "jakub-onderka/php-parallel-lint": "^0.9.2",
+                "mockery/mockery": "^1.0",
+                "nette/tester": "^2.0",
+                "phing/phing": "^2.16",
+                "phpstan/phpstan": "^0.8.0",
+                "sebastian/phpcpd": "^3.0",
+                "slevomat/coding-standard": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Klapuch\\UI\\": [
+                        "Core/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Dominik Klapuch",
+                    "email": "klapuchdominik@gmail.com",
+                    "homepage": "https://www.github.com/klapuch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "UI web components",
+            "homepage": "https://www.github.com/klapuch/UI",
+            "time": "2017-10-10T19:17:32+00:00"
+        },
+        {
             "name": "klapuch/uri",
             "version": "3.0.0",
             "source": {
@@ -873,16 +922,16 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.6.0",
+            "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "28c54772200b5fefd8c9a421b36019cda2b2f9f4"
+                "reference": "e179856e5dcc3ced99df1596cd299246fb1c3ac2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/28c54772200b5fefd8c9a421b36019cda2b2f9f4",
-                "reference": "28c54772200b5fefd8c9a421b36019cda2b2f9f4",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/e179856e5dcc3ced99df1596cd299246fb1c3ac2",
+                "reference": "e179856e5dcc3ced99df1596cd299246fb1c3ac2",
                 "shasum": ""
             },
             "require": {
@@ -936,7 +985,7 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2019-02-20T06:26:57+00:00"
+            "time": "2019-03-01T02:12:13+00:00"
         }
     ],
     "packages-dev": [
@@ -1453,33 +1502,33 @@
         },
         {
             "name": "nette/finder",
-            "version": "v2.4.2",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/finder.git",
-                "reference": "ee951a656cb8ac622e5dd33474a01fd2470505a0"
+                "reference": "6be1b83ea68ac558aff189d640abe242e0306fe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/finder/zipball/ee951a656cb8ac622e5dd33474a01fd2470505a0",
-                "reference": "ee951a656cb8ac622e5dd33474a01fd2470505a0",
+                "url": "https://api.github.com/repos/nette/finder/zipball/6be1b83ea68ac558aff189d640abe242e0306fe2",
+                "reference": "6be1b83ea68ac558aff189d640abe242e0306fe2",
                 "shasum": ""
             },
             "require": {
-                "nette/utils": "~2.4",
-                "php": ">=5.6.0"
+                "nette/utils": "^2.4 || ~3.0.0",
+                "php": ">=7.1"
             },
             "conflict": {
                 "nette/nette": "<2.2"
             },
             "require-dev": {
-                "nette/tester": "~2.0",
+                "nette/tester": "^2.0",
                 "tracy/tracy": "^2.3"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1511,7 +1560,7 @@
                 "iterator",
                 "nette"
             ],
-            "time": "2018-06-28T11:49:23+00:00"
+            "time": "2019-02-28T18:13:25+00:00"
         },
         {
             "name": "nette/neon",
@@ -1638,16 +1687,16 @@
         },
         {
             "name": "nette/robot-loader",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/robot-loader.git",
-                "reference": "fc76c70e740b10f091e502b2e393d0be912f38d4"
+                "reference": "3e8d75d6d976e191bdf46752ca40a286671219d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/robot-loader/zipball/fc76c70e740b10f091e502b2e393d0be912f38d4",
-                "reference": "fc76c70e740b10f091e502b2e393d0be912f38d4",
+                "url": "https://api.github.com/repos/nette/robot-loader/zipball/3e8d75d6d976e191bdf46752ca40a286671219d2",
+                "reference": "3e8d75d6d976e191bdf46752ca40a286671219d2",
                 "shasum": ""
             },
             "require": {
@@ -1699,7 +1748,7 @@
                 "nette",
                 "trait"
             ],
-            "time": "2018-08-13T14:19:06+00:00"
+            "time": "2019-03-01T20:23:02+00:00"
         },
         {
             "name": "nette/tester",
@@ -1866,16 +1915,16 @@
         },
         {
             "name": "pepakriz/phpstan-exception-rules",
-            "version": "v0.6.2",
+            "version": "v0.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pepakriz/phpstan-exception-rules.git",
-                "reference": "1314ff56d65d53e2ba77f43025819a2e82d97b3c"
+                "reference": "4a0f561b79e6fe5758074ad3ee228e2fe96ed11f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pepakriz/phpstan-exception-rules/zipball/1314ff56d65d53e2ba77f43025819a2e82d97b3c",
-                "reference": "1314ff56d65d53e2ba77f43025819a2e82d97b3c",
+                "url": "https://api.github.com/repos/pepakriz/phpstan-exception-rules/zipball/4a0f561b79e6fe5758074ad3ee228e2fe96ed11f",
+                "reference": "4a0f561b79e6fe5758074ad3ee228e2fe96ed11f",
                 "shasum": ""
             },
             "require": {
@@ -1910,7 +1959,7 @@
                 "MIT"
             ],
             "description": "Exception rules for PHPStan",
-            "time": "2019-02-15T07:36:17+00:00"
+            "time": "2019-02-28T06:55:59+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -2308,16 +2357,16 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "5.0.0",
+            "version": "5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "fdab228c1800db9e65a62dde306bfa856d98fcc3"
+                "reference": "777ab1871859f5ab5fe3165ad0c2c855b02f5b7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/fdab228c1800db9e65a62dde306bfa856d98fcc3",
-                "reference": "fdab228c1800db9e65a62dde306bfa856d98fcc3",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/777ab1871859f5ab5fe3165ad0c2c855b02f5b7c",
+                "reference": "777ab1871859f5ab5fe3165ad0c2c855b02f5b7c",
                 "shasum": ""
             },
             "require": {
@@ -2344,7 +2393,7 @@
                 "MIT"
             ],
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
-            "time": "2019-02-03T20:31:35+00:00"
+            "time": "2019-02-26T21:17:00+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
