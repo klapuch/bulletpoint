@@ -49,7 +49,7 @@ INSERT INTO public.sources (link, type) VALUES ('https://cs.m.wikipedia.org/wiki
 INSERT INTO public.sources (link, type) VALUES ('https://cs.m.wikipedia.org/wiki/Git', 'web');
 INSERT INTO public.sources (link, type) VALUES ('http://www.psychologie-ovlivnovani.cz/', 'web');
 
-INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (2, 2);
+INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (3, 2);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (5, 4);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (8, 5);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (9, 4);
