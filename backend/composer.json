@@ -31,6 +31,7 @@
     "klapuch/dataset": "^0.0.1",
     "klapuch/scheduling": "^0.0.1",
     "klapuch/encryption": "^2.1",
+    "klapuch/ui": "^0.0.4",
     "tracy/tracy": "^2.5",
     "justinrainbow/json-schema": "^5.2",
     "nette/utils": "^2.5"

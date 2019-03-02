@@ -65,7 +65,7 @@ final class ApplicationRoutes implements Routing\Routes {
 				);
 			},
 			'themes [GET]' => function(): Application\View {
-				return new Endpoint\Themes\Get($this->connection);
+				return new Endpoint\Themes\Get($this->connection, $this->url);
 			},
 			'tags [GET]' => function(): Application\View {
 				return new Endpoint\Tags\Get($this->connection);

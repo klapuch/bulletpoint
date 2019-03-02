@@ -11,6 +11,8 @@ use Klapuch\Application;
 use Klapuch\Dataset;
 use Klapuch\Output;
 use Klapuch\Storage;
+use Klapuch\UI;
+use Klapuch\Uri\Uri;
 
 final class Get implements Application\View {
 	private const SORTS = [
@@ -20,8 +22,12 @@ final class Get implements Application\View {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	public function __construct(Storage\Connection $connection) {
+	/** @var Uri */
+	private $uri;
+
+	public function __construct(Storage\Connection $connection, Uri $uri) {
 		$this->connection = $connection;
+		$this->uri = $uri;
 	}
 
 	/**
@@ -52,29 +58,35 @@ final class Get implements Application\View {
 				),
 			);
 		}
-		return new Response\JsonResponse(
-			new Application\PlainResponse(
-				(new Output\JsonPrintedObjects(
-					static function (Domain\Theme $theme, Output\Format $format): Output\Format {
-						return $theme->print($format);
-					},
-					...iterator_to_array(
-						$themes->all(
-							new Dataset\CombinedSelection(
-								new Constraint\AllowedSort(
-									new Dataset\RestSort($parameters['sort']),
-									self::SORTS,
-								),
-								new Dataset\RestPaging(
-									$parameters['page'],
-									$parameters['per_page'],
-								)
-							),
-						),
+		$count = $themes->count(new Dataset\EmptySelection());
+		return new Response\PaginatedResponse(
+			new Response\JsonResponse(
+				new Application\PlainResponse(
+					(new Output\JsonPrintedObjects(
+						static function (Domain\Theme $theme, Output\Format $format): Output\Format {
+							return $theme->print($format);
+						},
+						...iterator_to_array(
+							   $themes->all(
+								   new Dataset\CombinedSelection(
+									   new Constraint\AllowedSort(
+										   new Dataset\RestSort($parameters['sort']),
+										   self::SORTS,
+										   ),
+									   new Dataset\RestPaging(
+										   $parameters['page'],
+										   $parameters['per_page'],
+										   ),
+									   ),
+								   ),
+							   ),
+						)),
+					['X-Total-Count' => $count],
 					),
-				)),
-				['X-Total-Count' => $themes->count(new Dataset\EmptySelection())],
-			),
+				),
+			$parameters['page'],
+			new UI\AttainablePagination($parameters['page'], $parameters['per_page'], $count),
+			$this->uri
 		);
 	}
 }
