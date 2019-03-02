@@ -431,6 +431,12 @@ BEGIN
 		RAISE EXCEPTION 'Referenced theme must differ from the assigned.';
 	END IF;
 
+	IF TG_OP = 'INSERT' THEN
+		IF (number_of_references((SELECT content FROM public_bulletpoints WHERE id = r.bulletpoint_id)) = 0) THEN
+			RAISE EXCEPTION 'Bulletpoint does not include place for reference.';
+		END IF;
+	END IF;
+
 	RETURN r;
 END;
 $$ LANGUAGE plpgsql VOLATILE;

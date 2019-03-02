@@ -1,13 +1,13 @@
 #!/bin/bash
 disconnect;
-psql -U bulletpoint -c "DROP DATABASE IF EXISTS bulletpoint_test";
-psql -U bulletpoint -c "CREATE DATABASE bulletpoint_test";
+psql -U bulletpoint -d postgres -c "DROP DATABASE IF EXISTS bulletpoint_test";
+psql -U bulletpoint -d postgres -c "CREATE DATABASE bulletpoint_test";
 psql -U bulletpoint bulletpoint_test < /var/www/bulletpoint/backend/fixtures/schema.sql;
 psql -U bulletpoint bulletpoint_test < /var/www/bulletpoint/backend/Tests/Fixtures/plest.sql;
 psql -U bulletpoint bulletpoint_test < /var/www/bulletpoint/backend/Tests/Fixtures/samples.sql;
 psql -U bulletpoint bulletpoint_test < /var/www/bulletpoint/backend/Tests/Fixtures/test_utils.sql;
 
-psql -U bulletpoint -c "DROP DATABASE IF EXISTS bulletpoint";
-psql -U bulletpoint -c "CREATE DATABASE bulletpoint";
+psql -U bulletpoint -d postgres -c "DROP DATABASE IF EXISTS bulletpoint";
+psql -U bulletpoint -d postgres -c "CREATE DATABASE bulletpoint";
 psql -U bulletpoint bulletpoint < /var/www/bulletpoint/backend/fixtures/schema.sql;
 psql -U bulletpoint bulletpoint < /var/www/bulletpoint/backend/fixtures/test.sql;
