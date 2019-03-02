@@ -9,6 +9,9 @@ import Loader from '../../ui/Loader';
 import SlugRedirect from '../../router/SlugRedirect';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import { default as AllThemes } from '../../domain/theme/components/All';
+import type { PaginationType } from "../../api/dataset/PaginationType";
+import { receivedInit, turnPage } from "../../api/dataset/actions";
+import { getSourcePagination } from "../../api/dataset/selects";
 
 type Props = {|
   +params: {|
@@ -23,25 +26,30 @@ type Props = {|
   +fetching: boolean,
   +fetchRecentThemes: () => (void),
   +fetchTaggedThemes: (tag: number) => (void),
+  +initPaging: (PaginationType) => (void),
 |};
 class Themes extends React.Component<Props> {
   componentDidMount(): void {
-    const { match: { params: { tag } } } = this.props;
-    if (isEmpty(tag)) {
-      this.props.fetchRecentThemes();
-    } else {
-      this.props.fetchTaggedThemes(parseInt(tag, 10));
-    }
+    this.reload();
   }
+
+  reload = () => {
+    Promise.resolve()
+      .then(() => this.props.initPaging({ page: 1, perPage: 2 }))
+      .then(() => {
+        const { match: { params: { tag } }, pagination } = this.props;
+        if (isEmpty(tag)) {
+          this.props.fetchRecentThemes(pagination);
+        } else {
+          this.props.fetchTaggedThemes(parseInt(tag, 10), pagination);
+        }
+      })
+  };
 
   componentDidUpdate(prevProps: Props) {
     const { match: { params: { tag } } } = this.props;
     if (prevProps.match.params.tag !== tag) {
-      if (isEmpty(tag)) {
-        this.props.fetchRecentThemes();
-      } else {
-        this.props.fetchTaggedThemes(parseInt(tag, 10));
-      }
+      this.reload();
     }
   }
 
@@ -87,12 +95,16 @@ class Themes extends React.Component<Props> {
   }
 }
 
+const SOURCE_NAME = 'themes';
 const mapStateToProps = state => ({
   themes: themes.getAll(state),
   fetching: themes.allFetching(state),
+  pagination: getSourcePagination(SOURCE_NAME, state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchRecentThemes: () => dispatch(theme.allRecent()),
-  fetchTaggedThemes: (tag: number) => dispatch(theme.allByTag(tag)),
+  fetchRecentThemes: (pagination: PaginationType) => dispatch(theme.allRecent(pagination)),
+  fetchTaggedThemes: (tag: number, pagination: PaginationType) => dispatch(theme.allByTag(tag, pagination)),
+  initPaging: (paging: PaginationType) => dispatch(receivedInit(SOURCE_NAME, paging)),
+  turnPage: (page: number, current: PaginationType) => dispatch(turnPage(SOURCE_NAME, page, current)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Themes);
