@@ -3,6 +3,7 @@
 function t(string $identifier, string ...$params): string {
 	$translations = [
 		'access.bad.email' => ['cs' => 'Email "%s" neexistuje', 'en' => 'Email "%s" does not exist'],
+		'tag.already.exists' => ['cs' => 'Tag "%s" již existuje.', 'en' => 'Tag "%s" already exists.'],
 		'access.bad.username' => ['cs' => 'Uživatelské jméno "%s" neexistuje', 'en' => 'Username "%s" does not exist'],
 		'access.bad.password' => ['cs' => 'Špatné heslo', 'en' => 'Wrong password'],
 		'theme.reference.url.not.valid' => ['cs' => 'Odkaz není platná URL', 'en' => 'URL of reference is not valid'],

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Endpoint\Tags;
 
 use Bulletpoint\Constraint;
-use Bulletpoint\Schema;
+use Bulletpoint\Domain;
 use Klapuch\Application;
 use Klapuch\Storage;
 use Nette\Utils\Json;
@@ -27,7 +27,10 @@ final class Post implements Application\View {
 		$tag = (new Constraint\StructuredJson(
 			new \SplFileInfo(self::SCHEMA),
 		))->apply(Json::decode($this->request->body()->serialization()));
-		(new Schema\TableEnum('tags', $this->connection))->add($tag['name']);
+		(new Domain\UniqueTags(
+			new Domain\StoredTags($this->connection),
+			$this->connection,
+		))->add($tag['name']);
 		return new Application\EmptyResponse();
 	}
 }
