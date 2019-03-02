@@ -25,10 +25,12 @@ type Props = {|
   |},
   +themes: Array<FetchedThemeType>,
   +total: number,
+  +pagination: PaginationType,
   +fetching: boolean,
   +fetchRecentThemes: () => (void),
   +fetchTaggedThemes: (tag: number) => (void),
   +initPaging: (PaginationType) => (void),
+  +turnPage: (number, PaginationType) => (void),
 |};
 class Themes extends React.Component<Props> {
   componentDidMount(): void {
@@ -80,11 +82,11 @@ class Themes extends React.Component<Props> {
     return themes.getCommonTag(this.props.themes, parseInt(tag, 10));
   };
 
-  handleChangePage = (page: number) => (
+  handleChangePage = (page: number) => {
     Promise.resolve()
       .then(() => this.props.turnPage(page, this.props.pagination))
-      .then(this.reload)
-  );
+      .then(this.reload);
+  };
 
   render() {
     const { themes, fetching } = this.props;

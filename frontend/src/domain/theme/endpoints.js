@@ -65,17 +65,22 @@ const all = (
         page: pagination.page,
         per_page: pagination.perPage,
         ...params,
-      }
+      },
     },
   )
     .then(response => dispatch(receivedAll(response.data, response.headers)));
 };
 
-export const allByTag = (tag: ?number, pagination: PaginationType) => (dispatch: (mixed) => Object) => (
+export const allByTag = (
+  tag: ?number,
+  pagination: PaginationType,
+) => (dispatch: (mixed) => Object) => (
   dispatch(all({ tag_id: tag }, pagination))
 );
 
-export const allRecent = (pagination: PaginationType) => (dispatch: (mixed) => Object) => (
+export const allRecent = (
+  pagination: PaginationType,
+) => (dispatch: (mixed) => Object) => (
   dispatch(all({ sort: '-created_at' }, pagination))
 );
 
