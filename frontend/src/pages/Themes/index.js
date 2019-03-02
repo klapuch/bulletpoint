@@ -27,8 +27,8 @@ type Props = {|
   +total: number,
   +pagination: PaginationType,
   +fetching: boolean,
-  +fetchRecentThemes: () => (void),
-  +fetchTaggedThemes: (tag: number) => (void),
+  +fetchRecentThemes: (PaginationType) => (void),
+  +fetchTaggedThemes: (tag: number, PaginationType) => (void),
   +initPaging: (PaginationType) => (void),
   +turnPage: (number, PaginationType) => (void),
 |};

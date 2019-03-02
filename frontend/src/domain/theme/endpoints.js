@@ -56,7 +56,7 @@ export const change = (
 
 const all = (
   params: Object,
-  pagination: ?PaginationType = { page: 1, perPage: 10 },
+  pagination: PaginationType = { page: 1, perPage: 10 },
 ) => (dispatch: (mixed) => Object) => {
   dispatch(requestedAll());
   axios.get(

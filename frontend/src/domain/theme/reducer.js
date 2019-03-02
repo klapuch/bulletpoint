@@ -15,6 +15,7 @@ type State = {|
     payload: Array<Object>,
     fetching: boolean,
   |},
+  +total: number,
 |};
 const init = {
   single: {},
@@ -22,6 +23,7 @@ const init = {
     payload: [],
     fetching: true,
   },
+  total: 0,
 };
 export default (state: State = init, action: Object): State => {
   switch (action.type) {
