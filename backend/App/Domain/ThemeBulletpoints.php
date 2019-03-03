@@ -31,6 +31,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 				'content',
 				'theme_id',
 				'referenced_theme_id',
+				'compared_theme_id',
 				'source_link',
 				'source_type',
 				'total_rating',
@@ -62,11 +63,13 @@ final class ThemeBulletpoints implements Bulletpoints {
 					'source_link' => ':source_link',
 					'user_id' => ':user_id',
 					'referenced_theme_id' => ':referenced_theme_id',
+					'compared_theme_id' => ':compared_theme_id',
 				],
 				[
 					'content' => $bulletpoint['content'],
 					'theme_id' => $this->theme,
 					'referenced_theme_id' => Json::encode($bulletpoint['referenced_theme_id']), // TODO: use array
+					'compared_theme_id' => Json::encode($bulletpoint['compared_theme_id']), // TODO: use array
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
 					'user_id' => $this->user->id(),

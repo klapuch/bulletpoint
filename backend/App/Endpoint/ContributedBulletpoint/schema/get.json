@@ -37,13 +37,21 @@
             "items": {
                 "type": "number"
             }
+        },
+        "compared_theme_id": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
         }
     },
     "required": [
         "id",
         "source",
         "content",
-        "theme_id"
+        "theme_id",
+        "referenced_theme_id",
+        "compared_theme_id"
     ],
     "type": "object"
 }

@@ -26,6 +26,7 @@ final class PutTest extends TestCase\Runtime {
 			new Application\FakeRequest(new Output\Json([
 				'content' => 'TEST OK!',
 				'referenced_theme_id' => [],
+				'compared_theme_id' => [],
 				'source' => [
 					'link' => 'https://www.wikipedia.com',
 					'type' => 'web',

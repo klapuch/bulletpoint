@@ -22,11 +22,13 @@ final class PostTest extends TestCase\Runtime {
 	public function testSuccessfulResponse(): void {
 		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
 		['id' => $referencedThemeId] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
+		['id' => $comparedThemeId] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
 		['id' => $userId] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
 		$response = (new Endpoint\Theme\Bulletpoints\Post(
 			new Application\FakeRequest(new Output\Json([
 				'content' => 'This is [[referenced]]',
 				'referenced_theme_id' => [$referencedThemeId],
+				'compared_theme_id' => [$comparedThemeId],
 				'source' => [
 					'link' => 'https://www.wikipedia.com',
 					'type' => 'web',
