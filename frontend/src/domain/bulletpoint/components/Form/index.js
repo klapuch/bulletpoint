@@ -63,7 +63,7 @@ export default class extends React.Component<Props, State> {
   onChange = ({ target: { name, value } }: TargetType) => {
     let input = null;
     if (name === 'source_link') {
-      input = { source: { link: value } };
+      input = { source: { ...this.state.bulletpoint.source, link: value } };
     } else if (name === 'source_type') {
       input = { source: { type: value, link: '' } };
     } else {
