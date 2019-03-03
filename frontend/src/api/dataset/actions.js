@@ -16,6 +16,10 @@ export const receivedInit = (source: string, pagination: PaginationType) => ({
   pagination,
 });
 
+export const receivedReset = (source: string, pagination: PaginationType) => (
+  receivedPagination(source, { ...pagination, page: 1 })
+);
+
 export const turnPage = (source: string, page: number, current: PaginationType) => (
   receivedPagination(source, { page, perPage: current.perPage })
 );

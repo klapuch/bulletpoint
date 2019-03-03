@@ -10,7 +10,7 @@ import SlugRedirect from '../../router/SlugRedirect';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import { default as AllThemes } from '../../domain/theme/components/All';
 import type { PaginationType } from '../../api/dataset/PaginationType';
-import { receivedInit, turnPage } from '../../api/dataset/actions';
+import { receivedInit, turnPage, receivedReset } from '../../api/dataset/actions';
 import { getSourcePagination } from '../../api/dataset/selects';
 import Pager from '../../components/Pager';
 
@@ -30,6 +30,7 @@ type Props = {|
   +fetchRecentThemes: (PaginationType) => (void),
   +fetchTaggedThemes: (tag: number, PaginationType) => (void),
   +initPaging: (PaginationType) => (void),
+  +resetPaging: (PaginationType) => (void),
   +turnPage: (number, PaginationType) => (void),
 |};
 class Themes extends React.Component<Props> {
@@ -40,23 +41,9 @@ class Themes extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
     const { match: { params: { tag } } } = this.props;
     if (prevProps.match.params.tag !== tag) {
-      this.reload();
+      this.reload(pagination => this.props.resetPaging(pagination));
     }
   }
-
-  reload = () => {
-    const PER_PAGE = 5;
-    Promise.resolve()
-      .then(() => this.props.initPaging({ page: 1, perPage: PER_PAGE }))
-      .then(() => {
-        const { match: { params: { tag } }, pagination } = this.props;
-        if (isEmpty(tag)) {
-          this.props.fetchRecentThemes(pagination);
-        } else {
-          this.props.fetchTaggedThemes(parseInt(tag, 10), pagination);
-        }
-      });
-  };
 
   getHeader = () => {
     const { match: { params: { tag } } } = this.props;
@@ -85,8 +72,27 @@ class Themes extends React.Component<Props> {
   handleChangePage = (page: number) => {
     Promise.resolve()
       .then(() => this.props.turnPage(page, this.props.pagination))
-      .then(this.reload);
+      .then(() => this.reload());
   };
+
+  reload(onResetPaging?: (PaginationType) => (void)) {
+    const PER_PAGE = 5;
+    Promise.resolve()
+      .then(() => {
+        return typeof onResetPaging === 'undefined'
+          ? this.props.initPaging
+          : this.props.resetPaging;
+      })
+      .then(initPaging => initPaging({ page: 1, perPage: PER_PAGE }))
+      .then(() => {
+        const { match: { params: { tag } }, pagination } = this.props;
+        if (isEmpty(tag)) {
+          this.props.fetchRecentThemes(pagination);
+        } else {
+          this.props.fetchTaggedThemes(parseInt(tag, 10), pagination);
+        }
+      });
+  }
 
   render() {
     const { themes, fetching } = this.props;
@@ -127,6 +133,9 @@ const mapDispatchToProps = dispatch => ({
   initPaging: (
     paging: PaginationType,
   ) => dispatch(receivedInit(SOURCE_NAME, paging)),
+  resetPaging: (
+    paging: PaginationType,
+  ) => dispatch(receivedReset(SOURCE_NAME, paging)),
   turnPage: (
     page: number,
     current: PaginationType,
