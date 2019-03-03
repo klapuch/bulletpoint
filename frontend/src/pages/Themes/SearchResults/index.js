@@ -45,6 +45,13 @@ class Themes extends React.Component<Props> {
           <title>{this.getTitle()}</title>
         </Helmet>
         <h1>{this.getHeader()}</h1>
+        {themes.length !== 0 && (
+        <h3>
+          <small>
+            {`Počet výsledků: ${themes.length}`}
+          </small>
+        </h3>
+        )}
         <br />
         {isEmpty(themes) ? <h2>Žádné shody</h2> : <AllThemes themes={themes} />}
       </>
