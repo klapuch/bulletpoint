@@ -85,7 +85,7 @@ export const allRecent = (
 );
 
 export const allSearched = (keyword: string) => (dispatch: (mixed) => Object) => (
-  dispatch(all({ q: keyword }))
+  dispatch(all({ q: keyword }, { page: 1, perPage: 20 }))
 );
 
 export const allReactSelectSearches = (keyword: string, except: Array<number>): Promise<any> => (
