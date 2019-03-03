@@ -670,11 +670,6 @@ END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION web.bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
-DECLARE
-	v_current_referenced_themes int[];
-	v_new_referenced_themes int[];
-	v_current_compared_themes int[];
-	v_new_compared_themes int[];
 BEGIN
 	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
 		RAISE EXCEPTION USING MESSAGE = format(
@@ -693,23 +688,37 @@ BEGIN
 	SET link = new.source_link, type = new.source_type
 	WHERE id = (SELECT source_id FROM updated_bulletpoint);
 
-	v_current_referenced_themes = array_agg(bulletpoint_id) FROM bulletpoint_referenced_themes WHERE id = new.id;
-	v_new_referenced_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
 
-	IF (NOT array_equals(v_current_referenced_themes, v_new_referenced_themes)) THEN
-		DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
-		INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
-		SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
-	END IF;
+	<<l_referenced_themes>>
+	DECLARE
+		v_current_referenced_themes int[];
+		v_new_referenced_themes int[];
+	BEGIN
+		v_current_referenced_themes = array_agg(bulletpoint_id) FROM bulletpoint_referenced_themes WHERE id = new.id;
+		v_new_referenced_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
 
-	v_current_compared_themes = array_agg(bulletpoint_id) FROM bulletpoint_theme_comparisons WHERE id = new.id;
-	v_new_compared_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
+		IF (NOT array_equals(v_current_referenced_themes, v_new_referenced_themes)) THEN
+			DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
+			INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
+			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
+		END IF;
+	END l_referenced_themes;
 
-	IF (NOT array_equals(v_current_compared_themes, v_new_compared_themes)) THEN
-		DELETE FROM public.bulletpoint_theme_comparisons WHERE bulletpoint_id = new.id;
-		INSERT INTO public.bulletpoint_theme_comparisons (theme_id, bulletpoint_id)
-		SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
-	END IF;
+
+	<<l_compared_themes>>
+	DECLARE
+		v_current_compared_themes int[];
+		v_new_compared_themes int[];
+	BEGIN
+		v_current_compared_themes = array_agg(bulletpoint_id) FROM bulletpoint_theme_comparisons WHERE id = new.id;
+		v_new_compared_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
+
+		IF (NOT array_equals(v_current_compared_themes, v_new_compared_themes)) THEN
+			DELETE FROM public.bulletpoint_theme_comparisons WHERE bulletpoint_id = new.id;
+			INSERT INTO public.bulletpoint_theme_comparisons (theme_id, bulletpoint_id)
+			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
+		END IF;
+	END l_compared_themes;
 
 	RETURN new;
 END
@@ -780,11 +789,6 @@ END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION web.contributed_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
-DECLARE
-	v_current_referenced_themes int[];
-	v_new_referenced_themes int[];
-	v_current_compared_themes int[];
-	v_new_compared_themes int[];
 BEGIN
 	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
 		RAISE EXCEPTION USING MESSAGE = format(
@@ -803,23 +807,37 @@ BEGIN
 	SET link = new.source_link, type = new.source_type
 	WHERE id = (SELECT source_id FROM updated_bulletpoint);
 
-	v_current_referenced_themes = array_agg(bulletpoint_id) FROM bulletpoint_referenced_themes WHERE id = new.id;
-	v_new_referenced_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
 
-	IF (NOT array_equals(v_current_referenced_themes, v_new_referenced_themes)) THEN
-		DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
-		INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
-		SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
-	END IF;
+	<<l_referenced_themes>>
+	DECLARE
+		v_current_referenced_themes int[];
+		v_new_referenced_themes int[];
+	BEGIN
+		v_current_referenced_themes = array_agg(bulletpoint_id) FROM bulletpoint_referenced_themes WHERE id = new.id;
+		v_new_referenced_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
 
-	v_current_compared_themes = array_agg(bulletpoint_id) FROM bulletpoint_theme_comparisons WHERE id = new.id;
-	v_new_compared_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
+		IF (NOT array_equals(v_current_referenced_themes, v_new_referenced_themes)) THEN
+			DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
+			INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
+			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
+		END IF;
+	END l_referenced_themes;
 
-	IF (NOT array_equals(v_current_compared_themes, v_new_compared_themes)) THEN
-		DELETE FROM public.bulletpoint_theme_comparisons WHERE bulletpoint_id = new.id;
-		INSERT INTO public.bulletpoint_theme_comparisons (theme_id, bulletpoint_id)
-		SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
-	END IF;
+
+	<<l_compared_themes>>
+	DECLARE
+		v_current_compared_themes int[];
+		v_new_compared_themes int[];
+	BEGIN
+		v_current_compared_themes = array_agg(bulletpoint_id) FROM bulletpoint_theme_comparisons WHERE id = new.id;
+		v_new_compared_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
+
+		IF (NOT array_equals(v_current_compared_themes, v_new_compared_themes)) THEN
+			DELETE FROM public.bulletpoint_theme_comparisons WHERE bulletpoint_id = new.id;
+			INSERT INTO public.bulletpoint_theme_comparisons (theme_id, bulletpoint_id)
+			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
+		END IF;
+	END l_compared_themes;
 
 	RETURN new;
 END
