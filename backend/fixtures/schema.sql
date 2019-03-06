@@ -422,6 +422,31 @@ CREATE TABLE bulletpoint_theme_comparisons (
 	CONSTRAINT bulletpoint_theme_comparisons_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+CREATE FUNCTION bulletpoint_theme_comparisons_trigger_row_biu() RETURNS trigger AS $$
+BEGIN
+    IF (
+		NOT EXISTS(
+			SELECT tag_id
+			FROM theme_tags
+			WHERE theme_id = new.theme_id
+			INTERSECT
+			SELECT tag_id
+			FROM theme_tags
+			WHERE theme_id = (SELECT theme_id FROM bulletpoints WHERE id = new.bulletpoint_id)
+		)
+	) THEN
+		RAISE EXCEPTION 'Themes must have some common tags.';
+	END IF;
+
+	RETURN new;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER bulletpoint_theme_comparisons_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON bulletpoint_theme_comparisons
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoint_theme_comparisons_trigger_row_biu();
+
 
 CREATE TABLE bulletpoint_referenced_themes (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -432,22 +457,18 @@ CREATE TABLE bulletpoint_referenced_themes (
 );
 
 CREATE FUNCTION bulletpoint_referenced_themes_trigger_row_biu() RETURNS trigger AS $$
-DECLARE
-	r bulletpoint_referenced_themes;
 BEGIN
-	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
-
-	IF ((SELECT theme_id = r.theme_id FROM bulletpoints WHERE id = r.bulletpoint_id)) THEN
+	IF ((SELECT theme_id = new.theme_id FROM bulletpoints WHERE id = new.bulletpoint_id)) THEN
 		RAISE EXCEPTION 'Referenced theme must differ from the assigned.';
 	END IF;
 
 	IF TG_OP = 'INSERT' THEN
-		IF (number_of_references((SELECT content FROM public_bulletpoints WHERE id = r.bulletpoint_id)) = 0) THEN
+		IF (number_of_references((SELECT content FROM public_bulletpoints WHERE id = new.bulletpoint_id)) = 0) THEN
 			RAISE EXCEPTION 'Bulletpoint does not include place for reference.';
 		END IF;
 	END IF;
 
-	RETURN r;
+	RETURN new;
 END;
 $$ LANGUAGE plpgsql VOLATILE;
 
