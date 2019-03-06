@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
+use Klapuch\Configuration;
 use Klapuch\Scheduling;
 use Klapuch\Storage;
-use Klapuch\Configuration;
 
 final class PlPgSqlCheck implements Scheduling\Job {
 	private const INDENT = "\t";
@@ -46,7 +46,7 @@ final class PlPgSqlCheck implements Scheduling\Job {
 		return (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT EXISTS(SELECT 1 FROM pg_extension WHERE extname = ?)',
-			['plpgsql_check']
+			['plpgsql_check'],
 		))->field();
 	}
 
@@ -193,7 +193,6 @@ final class PlPgSqlCheck implements Scheduling\Job {
 		});
 	}
 
-
 	/**
 	 * @param string[] $values
 	 * @return string
@@ -203,12 +202,12 @@ final class PlPgSqlCheck implements Scheduling\Job {
 		return implode(', ', array_map([$this, 'sqlExpression'], $values));
 	}
 
-
 	/**
+	 * @internal
 	 * @param mixed $value
 	 * @return string
 	 */
-	private function sqlExpression($value): string
+	public function sqlExpression($value): string
 	{
 		return sprintf("'%s'", $value);
 	}

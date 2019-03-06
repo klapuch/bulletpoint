@@ -6,7 +6,6 @@ namespace Bulletpoint\Scheduling;
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Bulletpoint\Configuration;
-use Bulletpoint\Scheduling\Task;
 use Klapuch\Configuration\ValidIni;
 use Klapuch\Scheduling;
 use Klapuch\Storage;
