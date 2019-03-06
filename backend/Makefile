@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := check
-.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock composer-install, count-postgres-tests generate-routes check-test-extensions generate-nginx-conf check-changed-conf phpstan-test
+.PHONY: lint phpcpd phpstan phpcs phpcbf tests tester-coverage echo-failed-tests validate-composer.lock composer-install, count-postgres-tests generate-routes check-test-extensions generate-nginx-conf check-changed-conf phpstan-test plpgsql_check
 
 PHPCS_CACHE_DIR := /tmp/cache
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --cache=$(PHPCS_CACHE_DIR)/phpcs --tab-width=4 -sp App Tests
@@ -8,7 +8,6 @@ CHECK_TEST_EXTENSIONS := find Tests/Integration/ -name '*.php' | grep -v '\Test.
 
 check: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests
 ci: check tester-coverage
-init: lint
 
 help:               ## help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
