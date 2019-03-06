@@ -6,7 +6,7 @@ PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --ca
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
 CHECK_TEST_EXTENSIONS := find Tests/Integration/ -name '*.php' | grep -v '\Test.php$$'
 
-check: validate-composer.lock check-changed-conf check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests
+check: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests
 ci: validate-composer.lock check-changed-conf check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
 init: lint
 
@@ -67,6 +67,9 @@ check-changed-conf: ## check changed configs
 
 cron:               ## run cron tasks
 	php App/Scheduling/index.php Cron
+
+plpgsql_check:      ## run plpgsql_check
+	php App/Scheduling/index.php PlPgSqlCheck
 
 composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative

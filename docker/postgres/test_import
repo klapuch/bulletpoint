@@ -11,3 +11,4 @@ psql -U bulletpoint -d postgres -c "DROP DATABASE IF EXISTS bulletpoint";
 psql -U bulletpoint -d postgres -c "CREATE DATABASE bulletpoint";
 psql -U bulletpoint bulletpoint < /var/www/bulletpoint/backend/fixtures/schema.sql;
 psql -U bulletpoint bulletpoint < /var/www/bulletpoint/backend/fixtures/test.sql;
+psql -U bulletpoint bulletpoint < /var/www/bulletpoint/backend/Tests/Fixtures/plpgsql_check.sql;

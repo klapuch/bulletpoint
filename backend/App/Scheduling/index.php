@@ -57,6 +57,10 @@ try {
 			),
 			$connection,
 		),
+		new Task\PlPgSqlCheck(
+			$connection,
+			new ValidIni(new \SplFileInfo(__DIR__ . '/Task/plpgsql_check.ini')),
+		),
 	))->fulfill();
 } catch(\Throwable $e) {
 	$logger->log($e);
