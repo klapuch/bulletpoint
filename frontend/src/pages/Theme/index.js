@@ -116,6 +116,7 @@ class Theme extends React.Component<Props, State> {
       bulletpointId,
       bulletpoint: {
         referenced_theme_id: bulletpoint.referenced_theme_id,
+        compared_theme_id: bulletpoint.compared_theme_id,
         content: bulletpoint.content,
         source: bulletpoint.source,
       },
@@ -158,6 +159,11 @@ class Theme extends React.Component<Props, State> {
                 referencedThemes={
                   this.state.bulletpointId
                     ? this.props.getBulletpointById(this.state.bulletpointId).referenced_theme
+                    : []
+                }
+                comparedThemes={
+                  this.state.bulletpointId
+                    ? this.props.getBulletpointById(this.state.bulletpointId).compared_theme
                     : []
                 }
                 bulletpoint={this.state.bulletpoint}

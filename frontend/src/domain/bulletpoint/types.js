@@ -20,6 +20,7 @@ export type FetchedBulletpointType = {|
   +theme_id: number,
   +referenced_theme_id: Array<number>,
   referenced_theme: Array<FetchedThemeType>,
+  compared_theme: Array<FetchedThemeType>,
 |};
 export type PostedBulletpointType = {|
   +source: {|
@@ -28,7 +29,9 @@ export type PostedBulletpointType = {|
   |},
   +content: string,
   +referenced_theme_id: Array<number>,
+  +compared_theme_id: Array<number>,
   +referenced_theme?: Array<FetchedThemeType>,
+  +compared_themes?: Array<FetchedThemeType>,
 |};
 export type ErrorBulletpointType = {|
   +source_link: ?string,

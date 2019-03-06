@@ -40,6 +40,18 @@ export const all = (
           ))
         ),
       );
+      return themeBulletpoints;
+    })
+    .then((themeBulletpoints) => {
+      forEach(
+        themeBulletpoints,
+        themeBulletpoint => (
+          themeBulletpoint.compared_theme_id.forEach(comparedThemeId => (
+            dispatch(theme.single(comparedThemeId))
+          ))
+        ),
+      );
+      return themeBulletpoints;
     });
 };
 
