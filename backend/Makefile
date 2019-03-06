@@ -84,7 +84,7 @@ migration-create:
 	@sh migrations/create.sh
 
 migration-run:
-	@sh migrations/run.sh
+	@sh migrations/run.sh $(name)
 
 migration-run-new:
 	@sh migrations/run-new.sh
