@@ -28,9 +28,12 @@ export const withComparisons = (content: string, bulletpoint: FetchedBulletpoint
   return (
     <em>
       {content} &hellip; než {comparedTheme.map((theme, order) => (
-        <Link key={order} to={`/themes/${theme.id}/${getSlug(theme.name)}`}>
-          {theme.name}
-        </Link>
+        <>
+          {order === 0 ? '' : ', '}
+          <Link key={order} to={`/themes/${theme.id}/${getSlug(theme.name)}`}>
+            {theme.name}
+          </Link>
+        </>
     ))}
     </em>
   );
