@@ -6,7 +6,9 @@ import * as validation from '../../validation';
 import type { FetchedThemeType } from '../../../theme/types';
 import CancelButton from './CancelButton';
 import ConfirmButton from './ConfirmButton';
-import type {TargetType, FormTypes, ReferencedThemesType, ComparedThemesType} from './types';
+import type {
+  TargetType, FormTypes, ReferencedThemesType, ComparedThemesType,
+} from './types';
 import ReferencedThemes from './Input/ReferencedThemes';
 import ComparedThemes from './Input/ComparedThemes';
 import { FORM_TYPE_DEFAULT } from './types';
@@ -165,7 +167,9 @@ export default class extends React.Component<Props, State> {
   };
 
   render() {
-    const { bulletpoint, errors, referencedThemes, comparedThemes } = this.state;
+    const {
+      bulletpoint, errors, referencedThemes, comparedThemes,
+    } = this.state;
     return (
       <>
         {this.props.type === FORM_TYPE_DEFAULT ? null : (
