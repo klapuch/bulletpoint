@@ -6,6 +6,7 @@ namespace Bulletpoint\Scheduling;
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Bulletpoint\Configuration;
+use Bulletpoint\Scheduling\Task;
 use Klapuch\Configuration\ValidIni;
 use Klapuch\Scheduling;
 use Klapuch\Storage;
@@ -56,6 +57,10 @@ try {
 				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf'),
 			),
 			$connection,
+		),
+		new Task\PlPgSqlCheck(
+			$connection,
+			new ValidIni(new \SplFileInfo(__DIR__ . '/Task/plpgsql_check.ini')),
 		),
 	))->fulfill();
 } catch(\Throwable $e) {

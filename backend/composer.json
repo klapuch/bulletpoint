@@ -20,6 +20,7 @@
     "ext-xsl": "*",
     "ext-igbinary": "*",
     "ext-curl": "*",
+    "ext-simplexml": "*",
     "klapuch/application": "^0.0.4",
     "klapuch/configuration": "^0.0.2",
     "klapuch/output": "^2.12.1",

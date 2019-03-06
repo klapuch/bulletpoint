@@ -78,7 +78,7 @@ BEGIN
 	RETURN nullif(current_setting(format('globals.%s', in_variable)), '');
 	EXCEPTION WHEN OTHERS THEN RETURN NULL;
 END;
-$BODY$ LANGUAGE plpgsql;
+$BODY$ LANGUAGE plpgsql STABLE;
 
 
 CREATE FUNCTION globals_get_user() RETURNS integer AS $BODY$
@@ -832,4 +832,4 @@ BEGIN
 	EXCEPT
 	SELECT filename FROM deploy.migrations;
 END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
+$BODY$ LANGUAGE plpgsql STABLE;
