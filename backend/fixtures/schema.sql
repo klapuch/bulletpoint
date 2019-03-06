@@ -423,8 +423,12 @@ CREATE TABLE bulletpoint_theme_comparisons (
 );
 
 CREATE FUNCTION bulletpoint_theme_comparisons_trigger_row_biu() RETURNS trigger AS $$
+DECLARE
+	v_theme_from_bulletpoint integer;
 BEGIN
-    IF (
+	v_theme_from_bulletpoint = theme_id FROM bulletpoints WHERE id = new.bulletpoint_id;
+
+	IF (
 		NOT EXISTS(
 			SELECT tag_id
 			FROM theme_tags
@@ -432,10 +436,14 @@ BEGIN
 			INTERSECT
 			SELECT tag_id
 			FROM theme_tags
-			WHERE theme_id = (SELECT theme_id FROM bulletpoints WHERE id = new.bulletpoint_id)
+			WHERE theme_id = v_theme_from_bulletpoint
 		)
 	) THEN
 		RAISE EXCEPTION 'Themes must have some common tags.';
+	END IF;
+
+	IF (new.theme_id = v_theme_from_bulletpoint) THEN
+		RAISE EXCEPTION 'Compared theme must differ from the bulletpoint assigned one.';
 	END IF;
 
 	RETURN new;

@@ -73,7 +73,7 @@ BEGIN
 	SELECT samples.public_bulletpoints(jsonb_build_object('theme_id', v_theme_id1)) INTO v_bulletpoint_id;
 	UPDATE web.bulletpoints SET
 		content = 'ABC',
-		compared_theme_id = format('[%s,%s]', v_theme_id1, v_theme_id2)::jsonb
+		compared_theme_id = format('[%s,%s]', v_theme_id2, v_theme_id3)::jsonb
 	WHERE id = v_bulletpoint_id;
 
 	PERFORM assert.same(2, (SELECT count(*)::integer FROM bulletpoint_theme_comparisons));
