@@ -19,6 +19,7 @@ export type FetchedBulletpointType = {|
   +content: string,
   +theme_id: number,
   +referenced_theme_id: Array<number>,
+  +compared_theme_id: Array<number>,
   referenced_theme: Array<FetchedThemeType>,
   compared_theme: Array<FetchedThemeType>,
 |};
