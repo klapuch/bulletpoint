@@ -54,7 +54,7 @@ final class PaginatedResponseTest extends TestCase\Runtime {
 					}
 
 					public function status(): int {
-						return 301;
+						return HTTP_MOVED_PERMANENTLY;
 					}
 				},
 				5,
