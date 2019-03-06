@@ -428,6 +428,10 @@ DECLARE
 BEGIN
 	v_theme_from_bulletpoint = theme_id FROM bulletpoints WHERE id = new.bulletpoint_id;
 
+	IF (new.theme_id = v_theme_from_bulletpoint) THEN
+		RAISE EXCEPTION 'Compared theme must differ from the bulletpoint assigned one.';
+	END IF;
+
 	IF (
 		NOT EXISTS(
 			SELECT tag_id
@@ -440,10 +444,6 @@ BEGIN
 		)
 	) THEN
 		RAISE EXCEPTION 'Themes must have some common tags.';
-	END IF;
-
-	IF (new.theme_id = v_theme_from_bulletpoint) THEN
-		RAISE EXCEPTION 'Compared theme must differ from the bulletpoint assigned one.';
 	END IF;
 
 	RETURN new;
