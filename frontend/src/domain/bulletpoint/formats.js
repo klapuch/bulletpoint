@@ -19,3 +19,25 @@ export const replaceBulletpointMatches = (bulletpoint: FetchedBulletpointType) =
     );
   });
 };
+
+export const withComparisons = (content: string, bulletpoint: FetchedBulletpointType) => {
+  const { compared_theme: comparedTheme } = bulletpoint;
+  if (comparedTheme.length === 0) {
+    return content;
+  }
+  return (
+    <em>
+      {content}
+      {' '}
+&hellip; než
+      {comparedTheme.map((theme, order) => (
+        <>
+          {order === 0 ? '' : ', '}
+          <Link key={order} to={`/themes/${theme.id}/${getSlug(theme.name)}`}>
+            {theme.name}
+          </Link>
+        </>
+      ))}
+    </em>
+  );
+};

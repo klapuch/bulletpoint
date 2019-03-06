@@ -45,8 +45,12 @@ final class Structure {
 					'type' => 'array',
 					'items' => ['type' => 'number'],
 				],
+				'compared_theme_id' => [
+					'type' => 'array',
+					'items' => ['type' => 'number'],
+				],
 			],
-			'required' => ['id', 'source', 'content', 'theme_id'],
+			'required' => ['id', 'source', 'content', 'theme_id', 'referenced_theme_id', 'compared_theme_id'],
 			'type' => 'object',
 		];
 	}
@@ -60,8 +64,9 @@ final class Structure {
 				'content' => $get['properties']['content'],
 				'source' => $get['properties']['source'],
 				'referenced_theme_id' => $get['properties']['referenced_theme_id'],
+				'compared_theme_id' => $get['properties']['compared_theme_id'],
 			],
-			'required' => ['content', 'source', 'referenced_theme_id'],
+			'required' => ['content', 'source', 'referenced_theme_id', 'compared_theme_id'],
 			'type' => 'object',
 		];
 	}

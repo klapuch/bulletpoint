@@ -6,8 +6,11 @@ import * as validation from '../../validation';
 import type { FetchedThemeType } from '../../../theme/types';
 import CancelButton from './CancelButton';
 import ConfirmButton from './ConfirmButton';
-import type { TargetType, FormTypes, ReferencedThemesType } from './types';
+import type {
+  TargetType, FormTypes, ReferencedThemesType, ComparedThemesType,
+} from './types';
 import ReferencedThemes from './Input/ReferencedThemes';
+import ComparedThemes from './Input/ComparedThemes';
 import { FORM_TYPE_DEFAULT } from './types';
 
 type Props = {|
@@ -18,18 +21,23 @@ type Props = {|
   +type: FormTypes,
   +themeId: number,
   +referencedThemes: Array<FetchedThemeType>,
+  +comparedThemes: Array<FetchedThemeType>,
 |};
 type State = {|
   referencedThemes: ReferencedThemesType,
+  comparedThemes: ComparedThemesType,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};
 const emptyReferencedTheme = { id: null, name: null };
+const emptyComparedTheme = { id: null, name: null };
 const initState = {
   referencedThemes: [emptyReferencedTheme],
+  comparedThemes: [emptyComparedTheme],
   bulletpoint: {
     content: '',
     referenced_theme_id: [],
+    compared_theme_id: [],
     source: {
       link: '',
       type: 'web',
@@ -56,6 +64,12 @@ export default class extends React.Component<Props, State> {
             .map(theme => ({ id: theme.id, name: theme.name })),
           ...prevState.referencedThemes.filter(Boolean),
         ],
+        comparedThemes: [
+          ...nextProps.comparedThemes
+            .filter(Boolean)
+            .map(theme => ({ id: theme.id, name: theme.name })),
+          ...prevState.comparedThemes.filter(Boolean),
+        ],
       }));
     }
   }
@@ -78,7 +92,7 @@ export default class extends React.Component<Props, State> {
     }));
   };
 
-  handleSelectChange = (select: ?Object, { action }: {| action: string |}, order: number) => {
+  handleReferencedTheme = (select: ?Object, { action }: {| action: string |}, order: number) => {
     let { bulletpoint: { referenced_theme_id }, referencedThemes } = this.state;
     if (action === 'clear' && referencedThemes.length > 1) {
       delete referenced_theme_id[order];
@@ -106,6 +120,34 @@ export default class extends React.Component<Props, State> {
     );
   };
 
+  handleComparedTheme = (select: ?Object, { action }: {| action: string |}, order: number) => {
+    let { bulletpoint: { compared_theme_id }, comparedThemes } = this.state;
+    if (action === 'clear' && comparedThemes.length > 1) {
+      delete compared_theme_id[order];
+      delete comparedThemes[order];
+    } else {
+      const option = select || { value: 0, label: null };
+      compared_theme_id = [...compared_theme_id, option.value];
+      comparedThemes = [
+        ...comparedThemes,
+        { id: option.value, name: option.label },
+      ];
+      comparedThemes = [
+        ...comparedThemes.filter(theme => theme.id !== null),
+        emptyComparedTheme,
+      ];
+    }
+    this.setState(
+      prevState => ({
+        bulletpoint: {
+          ...prevState.bulletpoint,
+          compared_theme_id: compared_theme_id.filter(Boolean),
+        },
+        comparedThemes,
+      }),
+    );
+  };
+
   onSubmit = () => {
     const { bulletpoint } = this.state;
     if (this.props.type !== FORM_TYPE_DEFAULT && validation.anyErrors(bulletpoint)) {
@@ -125,7 +167,9 @@ export default class extends React.Component<Props, State> {
   };
 
   render() {
-    const { bulletpoint, errors, referencedThemes } = this.state;
+    const {
+      bulletpoint, errors, referencedThemes, comparedThemes,
+    } = this.state;
     return (
       <>
         {this.props.type === FORM_TYPE_DEFAULT ? null : (
@@ -144,8 +188,13 @@ export default class extends React.Component<Props, State> {
             </div>
             <ReferencedThemes
               id={this.props.themeId}
-              onSelectChange={this.handleSelectChange}
+              onSelectChange={this.handleReferencedTheme}
               themes={referencedThemes}
+            />
+            <ComparedThemes
+              id={this.props.themeId}
+              onSelectChange={this.handleComparedTheme}
+              themes={comparedThemes}
             />
             <div className="form-group">
               <label htmlFor="source_type">Typ zdroje</label>

@@ -33,6 +33,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'id',
 				'theme_id',
 				'referenced_theme_id',
+				'compared_theme_id',
 				'source_link',
 				'source_type',
 				'content',
@@ -46,6 +47,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'id' => $row['id'],
 				'theme_id' => $row['theme_id'],
 				'referenced_theme_id' => $row['referenced_theme_id'],
+				'compared_theme_id' => $row['compared_theme_id'],
 				'content' => $row['content'],
 				'source' => [
 					'link' => $row['source_link'],
@@ -62,6 +64,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				new Sql\AnsiUpdate('web.contributed_bulletpoints'),
 			))->set([
 				'referenced_theme_id' => Json::encode($bulletpoint['referenced_theme_id']), // TODO: use array
+				'compared_theme_id' => Json::encode($bulletpoint['compared_theme_id']), // TODO: use array
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],
 			])->where('id = :id', ['id' => $this->id])

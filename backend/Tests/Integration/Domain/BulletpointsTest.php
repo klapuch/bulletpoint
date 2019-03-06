@@ -47,6 +47,7 @@ final class BulletpointsTest extends TestCase\Runtime {
 				'type' => 'web',
 			],
 			'referenced_theme_id' => [],
+			'compared_theme_id' => [],
 		]);
 		(new Misc\TableCount($this->connection, 'public_bulletpoints', 1))->assert();
 		(new Misc\TableCount($this->connection, 'sources', 1))->assert();

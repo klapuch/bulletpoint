@@ -14,3 +14,7 @@ export type ReferencedThemesType = Array<{
   id: ?number,
   name: ?string,
 }>;
+export type ComparedThemesType = Array<{
+  id: ?number,
+  name: ?string,
+}>;

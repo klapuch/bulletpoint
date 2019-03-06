@@ -11,6 +11,9 @@ INSERT INTO public."references" (url) VALUES ('https://cs.wikipedia.org/wiki/Ote
 INSERT INTO public."references" (url) VALUES ('https://www.json.org/');
 INSERT INTO public."references" (url) VALUES ('https://git-scm.com/');
 INSERT INTO public."references" (url) VALUES ('https://cs.wikipedia.org/wiki/Kongruence_(psychologie)');
+INSERT INTO public."references" (url) VALUES ('https://www.coffeespot.cz/rozdily-kava-arabica-robusta');
+INSERT INTO public."references" (url) VALUES ('https://cs.wikipedia.org/wiki/Kofein');
+INSERT INTO public."references" (url) VALUES ('https://www.coffeespot.cz/rozdily-kava-arabica-robusta');
 
 INSERT INTO public.themes (name, reference_id, user_id, created_at) VALUES ('PHP', 1, 1, '2019-01-13 19:02:27.372965+01');
 INSERT INTO public.themes (name, reference_id, user_id, created_at) VALUES ('OOP', 2, 1, '2019-01-13 19:02:27.377934+01');
@@ -19,6 +22,9 @@ INSERT INTO public.themes (name, reference_id, user_id, created_at) VALUES ('Ope
 INSERT INTO public.themes (name, reference_id, user_id, created_at) VALUES ('JSON', 5, 1, '2019-01-19 12:45:15.436224+01');
 INSERT INTO public.themes (name, reference_id, user_id, created_at) VALUES ('Git', 6, 1, '2019-01-20 19:24:49.99384+01');
 INSERT INTO public.themes (name, reference_id, user_id, created_at) VALUES ('Kongruence', 7, 1, '2019-02-10 23:28:18.560324+01');
+INSERT INTO public.themes (name, reference_id, user_id, created_at) VALUES ('Arabica', 8, 1, now());
+INSERT INTO public.themes (name, reference_id, user_id, created_at) VALUES ('Kofein', 9, 1, now());
+INSERT INTO public.themes (name, reference_id, user_id, created_at) VALUES ('Robusta', 10, 1, now());
 
 INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (1, 1, 1, 'Strmá křivka učení', '2019-01-13 19:02:27.392957+01');
 INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (1, 2, 1, 'Datové typy', '2019-01-13 19:02:27.402929+01');
@@ -33,6 +39,8 @@ INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, c
 INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (6, 12, 1, 'Vydáno 2005', '2019-01-20 19:26:14.824176+01');
 INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (6, 13, 1, 'Distribuovaný vývoj', '2019-01-20 19:27:31.693743+01');
 INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (7, 14, 1, 'Soulad mezi verbálním a neverbálním chování', '2019-02-10 23:30:04.547761+01');
+INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (8, 15, 1, '2x více cukru', now());
+INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (8, 16, 1, 'Obsahuje 2-3× méně [[kofeinu]]', now());
 
 INSERT INTO public.sources (link, type) VALUES (NULL, 'head');
 INSERT INTO public.sources (link, type) VALUES ('https://wikipedia.org/wiki/PHP', 'web');
@@ -48,17 +56,21 @@ INSERT INTO public.sources (link, type) VALUES ('https://cs.m.wikipedia.org/wiki
 INSERT INTO public.sources (link, type) VALUES ('https://cs.m.wikipedia.org/wiki/Git', 'web');
 INSERT INTO public.sources (link, type) VALUES ('https://cs.m.wikipedia.org/wiki/Git', 'web');
 INSERT INTO public.sources (link, type) VALUES ('http://www.psychologie-ovlivnovani.cz/', 'web');
+INSERT INTO public.sources (link, type) VALUES ('https://www.coffeespot.cz/rozdily-kava-arabica-robusta', 'web');
+INSERT INTO public.sources (link, type) VALUES ('https://www.coffeespot.cz/rozdily-kava-arabica-robusta', 'web');
 
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (3, 2);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (5, 4);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (8, 5);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (9, 4);
+INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (15, 9);
 
 INSERT INTO public.tags (name) VALUES ('programovací jazyk');
 INSERT INTO public.tags (name) VALUES ('IT');
 INSERT INTO public.tags (name) VALUES ('Software');
 INSERT INTO public.tags (name) VALUES ('Databáze');
 INSERT INTO public.tags (name) VALUES ('Psychologie');
+INSERT INTO public.tags (name) VALUES ('Káva');
 
 INSERT INTO public.theme_alternative_names (name, theme_id) VALUES ('Objektově orientované programování', 2);
 INSERT INTO public.theme_alternative_names (name, theme_id) VALUES ('PG', 3);
@@ -72,16 +84,18 @@ INSERT INTO public.theme_tags (theme_id, tag_id) VALUES (4, 3);
 INSERT INTO public.theme_tags (theme_id, tag_id) VALUES (5, 3);
 INSERT INTO public.theme_tags (theme_id, tag_id) VALUES (6, 3);
 INSERT INTO public.theme_tags (theme_id, tag_id) VALUES (7, 5);
-
-INSERT INTO public.user_tag_reputations (user_id, tag_id, reputation) VALUES (1, 3, 4);
-INSERT INTO public.user_tag_reputations (user_id, tag_id, reputation) VALUES (1, 5, 1);
-INSERT INTO public.user_tag_reputations (user_id, tag_id, reputation) VALUES (1, 1, 0);
-INSERT INTO public.user_tag_reputations (user_id, tag_id, reputation) VALUES (1, 2, 0);
+INSERT INTO public.theme_tags (theme_id, tag_id) VALUES (8, 6);
+INSERT INTO public.theme_tags (theme_id, tag_id) VALUES (9, 6);
+INSERT INTO public.theme_tags (theme_id, tag_id) VALUES (10, 6);
 
 INSERT INTO contributed_bulletpoints (theme_id, source_id, user_id, content) VALUES (1, 3, 2, 'Test');
+
+INSERT INTO bulletpoint_theme_comparisons (theme_id, bulletpoint_id) VALUES (10, 14);
+INSERT INTO bulletpoint_theme_comparisons (theme_id, bulletpoint_id) VALUES (10, 15);
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY bulletpoint_reputations;
 REFRESH MATERIALIZED VIEW CONCURRENTLY starred_themes;
 
 INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/78-testing_migration--02-24.sql');
 INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/81-tag_support--02-24.sql');
+INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/88-any_referenced_theme--03-02.sql');
