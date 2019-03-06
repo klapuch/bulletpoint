@@ -7,7 +7,7 @@ TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.lo
 CHECK_TEST_EXTENSIONS := find Tests/Integration/ -name '*.php' | grep -v '\Test.php$$'
 
 check: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests
-ci: validate-composer.lock check-changed-conf check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
+ci: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests tester-coverage
 init: lint
 
 help:               ## help
