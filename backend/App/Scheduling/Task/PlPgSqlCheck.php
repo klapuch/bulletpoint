@@ -124,10 +124,10 @@ final class PlPgSqlCheck implements Scheduling\Job {
 				if ($description['query'] !== '') {
 					echo self::INDENT . sprintf('Query: %s', $description['query']) . PHP_EOL;
 				}
-				if (isset($description['statement']) && $description['statement'] !== '') {
+				if ($description['statement'] !== '') {
 					echo self::INDENT . sprintf('Statement: %s', $description['statement']) . PHP_EOL;
 				}
-				if (isset($description['line']) && $description['line'] !== '') {
+				if ($description['line'] !== '') {
 					echo self::INDENT . sprintf('Line: %s', $description['line']) . PHP_EOL;
 				}
 				echo PHP_EOL;
