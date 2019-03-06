@@ -27,8 +27,8 @@ final class PlPgSqlCheck implements Scheduling\Job {
 			exit(1);
 		}
 		$numberOfErrors = array_sum([
-			self::writeErrors($this->parsedFunctionErrors($this->checkFunctions())),
-			self::writeErrors($this->parsedTriggerErrors($this->checkTriggers())),
+			self::writeErrors($this->parsedFunctionErrors($this->functionErrors())),
+			self::writeErrors($this->parsedTriggerErrors($this->triggerErrors())),
 		]);
 		if ($numberOfErrors === 0) {
 			echo '[OK] No errors' . PHP_EOL;
@@ -53,7 +53,7 @@ final class PlPgSqlCheck implements Scheduling\Job {
 	/**
 	 * @return mixed[]
 	 */
-	private function checkTriggers(): array {
+	private function triggerErrors(): array {
 		$sql = <<<SQL
 			SELECT
 			ss.proname AS function, (pcf).lineno, (pcf).statement,
@@ -86,7 +86,7 @@ final class PlPgSqlCheck implements Scheduling\Job {
 	/**
 	 * @return mixed[]
 	 */
-	private function checkFunctions(): array {
+	private function functionErrors(): array {
 		$sql = <<<SQL
 			SELECT p.oid, p.proname AS function, plpgsql_check_function(p.oid, format := 'xml', performance_warnings := TRUE)
 			FROM pg_catalog.pg_namespace n
