@@ -6,7 +6,7 @@ PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --ca
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
 CHECK_TEST_EXTENSIONS := find Tests/Integration/ -name '*.php' | grep -v '\Test.php$$'
 
-check: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpcpd phpstan phpcs tests count-postgres-tests
+check: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpcpd psalm phpstan phpcs tests count-postgres-tests
 ci: check tester-coverage
 
 help:               ## help
@@ -21,6 +21,9 @@ phpstan:            ## phpstan
 
 phpstan-test:
 	PHPSTAN=1 vendor/bin/phpstan analyse -l max -c phpstan.test.neon Tests
+
+psalm:              ## psalm
+	vendor/bin/psalm
 
 phpcs:              ## phpcs
 	@mkdir -p $(PHPCS_CACHE_DIR)

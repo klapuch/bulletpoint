@@ -8,8 +8,5 @@ interface Bulletpoints {
 
 	public function add(array $bulletpoint): void;
 
-	/**
-	 * @return \Iterator|\Bulletpoint\Domain\Bulletpoint[]
-	 */
 	public function all(): \Iterator;
 }

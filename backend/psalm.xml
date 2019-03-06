@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<psalm
+    totallyTyped="false"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config file:///var/www/bulletpoint/backend/vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="App" />
+        <ignoreFiles>
+            <file name="App/Domain/Access/FakeUser.php"/>
+            <file name="App/Domain/Access/FakeEntrance.php"/>
+            <file name="App/Domain/FakeThemes.php"/>
+        </ignoreFiles>
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <LessSpecificReturnType errorLevel="info" />
+    </issueHandlers>
+</psalm>
