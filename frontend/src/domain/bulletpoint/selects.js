@@ -37,28 +37,27 @@ export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpoi
   }
   return [];
 };
-const referencedThemesFetching = (theme: number, state: Object): boolean => {
-  return getByTheme(theme, state)
-    .map(bulletpoint => bulletpoint.referenced_theme_id)
-    .map(referencedThemeIds => (
-      referencedThemeIds.map(referencedThemeId => themes.singleFetching(referencedThemeId, state))
-    ))
+const relatedThemesFetching = (state: Object, themeIds: Array<Array<number>>): boolean => {
+  return themeIds.map(relatedThemeIds => (
+    relatedThemeIds.map(relatedThemeId => themes.singleFetching(relatedThemeId, state))
+  ))
     .filter(areFetching => areFetching.filter(isFetching => isFetching === true))
     .filter(areFetching => areFetching.length > 0)
     .filter(areFetching => isEqual(areFetching, [true]))
     .length > 0;
 };
-const comparedThemesFetching = (theme: number, state: Object): boolean => {
-  return getByTheme(theme, state)
-    .map(bulletpoint => bulletpoint.referenced_theme_id)
-    .map(comparedThemeIds => (
-      comparedThemeIds.map(comparedThemeId => themes.singleFetching(comparedThemeId, state))
-    ))
-    .filter(areFetching => areFetching.filter(isFetching => isFetching === true))
-    .filter(areFetching => areFetching.length > 0)
-    .filter(areFetching => isEqual(areFetching, [true]))
-    .length > 0;
-};
+const referencedThemesFetching = (theme: number, state: Object): boolean => (
+  relatedThemesFetching(
+    state,
+    getByTheme(theme, state).map(bulletpoint => bulletpoint.referenced_theme_id),
+  )
+);
+const comparedThemesFetching = (theme: number, state: Object): boolean => (
+  relatedThemesFetching(
+    state,
+    getByTheme(theme, state).map(bulletpoint => bulletpoint.compared_theme_id),
+  )
+);
 export const fetchedAll = (theme: number, state: Object): boolean => (
   !isEmpty(state.themeBulletpoints.all[theme] ? state.themeBulletpoints.all[theme].payload : {})
 );
@@ -74,8 +73,11 @@ export const getById = (
   bulletpoint: number,
   state: Object,
 ): FetchedBulletpointType|Object => (
-  withReferencedTheme(
-    first(getByTheme(theme, state).filter(single => single.id === bulletpoint)),
+  withComparedTheme(
+    withReferencedTheme(
+      first(getByTheme(theme, state).filter(single => single.id === bulletpoint)),
+      state,
+    ),
     state,
   )
 );

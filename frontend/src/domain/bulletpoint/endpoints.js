@@ -35,19 +35,11 @@ export const all = (
       forEach(
         themeBulletpoints,
         themeBulletpoint => (
-          themeBulletpoint.referenced_theme_id.forEach(referencedThemeId => (
+          [
+            ...themeBulletpoint.referenced_theme_id,
+            ...themeBulletpoint.compared_theme_id,
+          ].forEach(referencedThemeId => (
             dispatch(theme.single(referencedThemeId))
-          ))
-        ),
-      );
-      return themeBulletpoints;
-    })
-    .then((themeBulletpoints) => {
-      forEach(
-        themeBulletpoints,
-        themeBulletpoint => (
-          themeBulletpoint.compared_theme_id.forEach(comparedThemeId => (
-            dispatch(theme.single(comparedThemeId))
           ))
         ),
       );
