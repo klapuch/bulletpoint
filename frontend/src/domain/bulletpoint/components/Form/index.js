@@ -54,19 +54,19 @@ export default class extends React.Component<Props, State> {
   componentWillReceiveProps(nextProps: Props): void {
     this.setState(initState);
     if (nextProps.bulletpoint !== null) {
+      const toSelectionFormat = theme => (
+        theme.filter(Boolean)
+          .map(single => ({ id: single.id, name: single.name }))
+      );
       this.setState(prevState => ({
         // $FlowFixMe its ok
         bulletpoint: nextProps.bulletpoint,
         referencedThemes: [
-          ...nextProps.referencedThemes
-            .filter(Boolean)
-            .map(theme => ({ id: theme.id, name: theme.name })),
+          ...toSelectionFormat(nextProps.referencedThemes),
           ...prevState.referencedThemes.filter(Boolean),
         ],
         comparedThemes: [
-          ...nextProps.comparedThemes
-            .filter(Boolean)
-            .map(theme => ({ id: theme.id, name: theme.name })),
+          ...toSelectionFormat(nextProps.comparedThemes),
           ...prevState.comparedThemes.filter(Boolean),
         ],
       }));
