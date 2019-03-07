@@ -29,11 +29,10 @@ type State = {|
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
 |};
-const emptyReferencedTheme = { id: null, name: null };
-const emptyComparedTheme = { id: null, name: null };
+const emptyThemeSelection = { id: null, name: null };
 const initState = {
-  referencedThemes: [emptyReferencedTheme],
-  comparedThemes: [emptyComparedTheme],
+  referencedThemes: [emptyThemeSelection],
+  comparedThemes: [emptyThemeSelection],
   bulletpoint: {
     content: '',
     referenced_theme_id: [],
@@ -92,60 +91,46 @@ export default class extends React.Component<Props, State> {
     }));
   };
 
-  handleReferencedTheme = (select: ?Object, { action }: {| action: string |}, order: number) => {
-    let { bulletpoint: { referenced_theme_id }, referencedThemes } = this.state;
-    if (action === 'clear' && referencedThemes.length > 1) {
-      delete referenced_theme_id[order];
-      delete referencedThemes[order];
+  handleThemeChange = (
+    select: ?Object,
+    action: string,
+    order: number,
+    fetchedName: string,
+    currentName: string,
+  ) => {
+    let { [currentName]: currentTheme, bulletpoint: { [fetchedName]: fetchedTheme } } = this.state;
+    if (action === 'clear' && currentTheme.length > 1) {
+      delete fetchedTheme[order];
+      delete currentTheme[order];
     } else {
       const option = select || { value: 0, label: null };
-      referenced_theme_id = [...referenced_theme_id, option.value];
-      referencedThemes = [
-        ...referencedThemes,
+      fetchedTheme = [...fetchedTheme, option.value];
+      currentTheme = [
+        ...currentTheme,
         { id: option.value, name: option.label },
       ];
-      referencedThemes = [
-        ...referencedThemes.filter(Boolean).filter(theme => theme.id !== null),
-        emptyReferencedTheme,
+      currentTheme = [
+        ...currentTheme.filter(Boolean).filter(theme => theme.id !== null),
+        emptyThemeSelection,
       ];
     }
     this.setState(
       prevState => ({
         bulletpoint: {
           ...prevState.bulletpoint,
-          referenced_theme_id: referenced_theme_id.filter(Boolean),
+          [fetchedName]: fetchedTheme.filter(Boolean),
         },
-        referencedThemes,
+        [currentName]: currentTheme,
       }),
     );
   };
 
+  handleReferencedTheme = (select: ?Object, { action }: {| action: string |}, order: number) => {
+    this.handleThemeChange(select, action, order, 'referenced_theme_id', 'referencedThemes');
+  };
+
   handleComparedTheme = (select: ?Object, { action }: {| action: string |}, order: number) => {
-    let { bulletpoint: { compared_theme_id }, comparedThemes } = this.state;
-    if (action === 'clear' && comparedThemes.length > 1) {
-      delete compared_theme_id[order];
-      delete comparedThemes[order];
-    } else {
-      const option = select || { value: 0, label: null };
-      compared_theme_id = [...compared_theme_id, option.value];
-      comparedThemes = [
-        ...comparedThemes,
-        { id: option.value, name: option.label },
-      ];
-      comparedThemes = [
-        ...comparedThemes.filter(Boolean).filter(theme => theme.id !== null),
-        emptyComparedTheme,
-      ];
-    }
-    this.setState(
-      prevState => ({
-        bulletpoint: {
-          ...prevState.bulletpoint,
-          compared_theme_id: compared_theme_id.filter(Boolean),
-        },
-        comparedThemes,
-      }),
-    );
+    this.handleThemeChange(select, action, order, 'compared_theme_id', 'comparedThemes');
   };
 
   onSubmit = () => {
