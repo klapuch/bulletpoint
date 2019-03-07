@@ -50,7 +50,7 @@ class Themes extends React.Component<Props> {
     if (isEmpty(tag)) {
       return 'Nedávno přidaná témata';
     }
-    return <>Témata vybraná pro "<strong>{this.getTag()}</strong>"</>;
+    return <>Témata vybraná pro &quot;<strong>{this.getTag()}</strong>&quot;</>;
   };
 
   getTitle = () => {

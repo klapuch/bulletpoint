@@ -15,7 +15,7 @@ const Public = ({
 }: Props): Route => (
   <Route
     {...rest}
-    render={props => (
+    render={(props: { location: Object }) => (
       <>
         {title()}
         <div id="wrap">

@@ -26,7 +26,7 @@ class Themes extends React.Component<Props> {
 
   getHeader = () => {
     const { params: { q } } = this.props;
-    return <>Výsledky hledání pro "<strong>{q}</strong>"</>;
+    return <>Výsledky hledání pro &quot;<strong>{q}</strong>&quot;</>;
   };
 
   getTitle = () => {

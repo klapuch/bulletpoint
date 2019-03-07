@@ -10,7 +10,7 @@ type Props = {
 const Private = ({ component: Component, ...rest }: Props): Route => (
   <Route
     {...rest}
-    render={props => (
+    render={(props: { location: Object }) => (
       user.isLoggedIn()
         ? <Public component={Component} {...props} />
         : <Redirect to={{ pathname: '/sign/in', state: { from: props.location } }} />
