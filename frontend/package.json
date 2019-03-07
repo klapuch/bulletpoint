@@ -44,9 +44,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "presets": [
-    "@babel/preset-flow"
-  ],
   "browserslist": [
     ">0.2%",
     "not dead",
@@ -54,7 +51,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@babel/preset-flow": "^7.0.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-flowtype": "^3.2.0",
     "eslint-plugin-import": "^2.14.0",
