@@ -105,7 +105,7 @@ export default class extends React.Component<Props, State> {
         { id: option.value, name: option.label },
       ];
       referencedThemes = [
-        ...referencedThemes.filter(theme => theme.id !== null),
+        ...referencedThemes.filter(Boolean).filter(theme => theme.id !== null),
         emptyReferencedTheme,
       ];
     }
@@ -133,7 +133,7 @@ export default class extends React.Component<Props, State> {
         { id: option.value, name: option.label },
       ];
       comparedThemes = [
-        ...comparedThemes.filter(theme => theme.id !== null),
+        ...comparedThemes.filter(Boolean).filter(theme => theme.id !== null),
         emptyComparedTheme,
       ];
     }
