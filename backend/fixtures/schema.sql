@@ -356,9 +356,12 @@ CREATE TRIGGER bulletpoints_row_ad_trigger
 CREATE VIEW contributed_bulletpoints AS
 	SELECT * FROM bulletpoints WHERE is_contribution = TRUE;
 
-CREATE FUNCTION contributed_bulletpoints_trigger_row_iiu() RETURNS trigger AS $BODY$
+CREATE VIEW public_bulletpoints AS
+	SELECT * FROM bulletpoints WHERE is_contribution = FALSE;
+
+CREATE FUNCTION bulletpoints_trigger_row_iiu() RETURNS trigger AS $BODY$
 BEGIN
-	new.is_contribution = TRUE;
+	new.is_contribution = (TG_ARGV[0]::jsonb -> 'is_contribution')::boolean;
 	IF TG_OP = 'INSERT' THEN
 		INSERT INTO bulletpoints (theme_id, source_id, user_id, content, created_at, is_contribution) VALUES (
 			new.theme_id,
@@ -367,9 +370,11 @@ BEGIN
 			new.content,
 			COALESCE(new.created_at, now()),
 			new.is_contribution
-		) RETURNING * INTO new;
+		)
+		RETURNING * INTO new;
 	ELSIF TG_OP = 'UPDATE' THEN
-		UPDATE bulletpoints SET theme_id = new.theme_id, source_id = new.source_id, user_id = new.user_id, content = new.content, created_at = new.created_at, is_contribution = new.is_contribution
+		UPDATE bulletpoints
+		SET theme_id = new.theme_id, source_id = new.source_id, user_id = new.user_id, content = new.content, created_at = new.created_at, is_contribution = new.is_contribution
 		WHERE id = new.id
 		RETURNING * INTO new;
 	END IF;
@@ -381,37 +386,12 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 CREATE TRIGGER contributed_bulletpoints_trigger_row_iiu
 	INSTEAD OF INSERT OR UPDATE
 	ON contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE contributed_bulletpoints_trigger_row_iiu();
-
-CREATE VIEW public_bulletpoints AS
-	SELECT * FROM bulletpoints WHERE is_contribution = FALSE;
-
-CREATE FUNCTION public_bulletpoints_trigger_row_iiu() RETURNS trigger AS $BODY$
-BEGIN
-	new.is_contribution = FALSE;
-	IF TG_OP = 'INSERT' THEN
-		INSERT INTO bulletpoints (theme_id, source_id, user_id, content, created_at, is_contribution) VALUES (
-			new.theme_id,
-			new.source_id,
-			new.user_id,
-			new.content,
-			COALESCE(new.created_at, now()),
-			new.is_contribution
-		) RETURNING * INTO new;
-	ELSIF TG_OP = 'UPDATE' THEN
-		UPDATE bulletpoints SET theme_id = new.theme_id, source_id = new.source_id, user_id = new.user_id, content = new.content, created_at = new.created_at, is_contribution = new.is_contribution
-		WHERE id = new.id
-		RETURNING * INTO new;
-	END IF;
-
-	RETURN new;
-END
-$BODY$ LANGUAGE plpgsql VOLATILE;
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_iiu('{"is_contribution":true}');
 
 CREATE TRIGGER public_bulletpoints_trigger_row_iiu
 	INSTEAD OF INSERT OR UPDATE
 	ON public_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE public_bulletpoints_trigger_row_iiu();
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_iiu('{"is_contribution":false}');
 
 
 CREATE TABLE bulletpoint_theme_comparisons (
@@ -579,31 +559,39 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 CREATE FUNCTION web.themes_trigger_row_iu() RETURNS trigger AS $BODY$
 DECLARE
 	v_theme public.themes;
-	v_current_tags integer[];
-	v_new_tags integer[];
-	v_current_alternative_names text[];
-	v_new_alternative_names text[];
 BEGIN
 	UPDATE public.themes SET name = new.name WHERE id = new.id RETURNING * INTO v_theme;
 	UPDATE public."references" SET url = new.reference_url WHERE id = v_theme.reference_id;
 
-	v_current_tags = array_agg(tag_id) FROM public.theme_tags WHERE theme_id = v_theme.id;
-	v_new_tags = array_agg(r.tag::integer) FROM jsonb_array_elements(new.tags) AS r(tag);
+	<<l_tags>>
+	DECLARE
+		v_current_tags integer[];
+		v_new_tags integer[];
+	BEGIN
+		v_current_tags = array_agg(tag_id) FROM public.theme_tags WHERE theme_id = v_theme.id;
+		v_new_tags = array_agg(r.tag::integer) FROM jsonb_array_elements(new.tags) AS r(tag);
 
-	IF (NOT array_equals(v_current_tags, v_new_tags)) THEN
-		DELETE FROM public.theme_tags WHERE theme_id = v_theme.id;
-		INSERT INTO public.theme_tags (theme_id, tag_id)
-		SELECT v_theme.id, r.tag FROM unnest(v_new_tags) AS r(tag);
-	END IF;
+		IF (NOT array_equals(v_current_tags, v_new_tags)) THEN
+			DELETE FROM public.theme_tags WHERE theme_id = v_theme.id;
+			INSERT INTO public.theme_tags (theme_id, tag_id)
+			SELECT v_theme.id, r.tag FROM unnest(v_new_tags) AS r(tag);
+		END IF;
+	END l_tags;
 
-	v_current_alternative_names = array_agg(name) FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
-	v_new_alternative_names = array_agg(r.alternative_name) FROM jsonb_array_elements_text(new.alternative_names) AS r(alternative_name);
+	<<l_alternative_names>>
+	DECLARE
+		v_current_alternative_names text[];
+		v_new_alternative_names text[];
+	BEGIN
+		v_current_alternative_names = array_agg(name) FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
+		v_new_alternative_names = array_agg(r.alternative_name) FROM jsonb_array_elements_text(new.alternative_names) AS r(alternative_name);
 
-	IF (NOT array_equals(v_current_alternative_names, v_new_alternative_names)) THEN
-		DELETE FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
-		INSERT INTO public.theme_alternative_names (theme_id, name)
-		SELECT v_theme.id, r.alternative_name FROM unnest(v_new_alternative_names) AS r(alternative_name);
-	END IF;
+		IF (NOT array_equals(v_current_alternative_names, v_new_alternative_names)) THEN
+			DELETE FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
+			INSERT INTO public.theme_alternative_names (theme_id, name)
+			SELECT v_theme.id, r.alternative_name FROM unnest(v_new_alternative_names) AS r(alternative_name);
+		END IF;
+	END l_alternative_names;
 
 	RETURN new;
 END
@@ -668,6 +656,7 @@ CREATE VIEW web.bulletpoints AS
 CREATE FUNCTION web.bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 DECLARE
 	v_bulletpoint_id integer;
+	v_source_id integer;
 BEGIN
 	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
 		RAISE EXCEPTION USING MESSAGE = format(
@@ -677,16 +666,25 @@ BEGIN
 		 );
 	END IF;
 
-	WITH inserted_source AS (
-		INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
-	)
-	INSERT INTO public.public_bulletpoints (theme_id, source_id, content, user_id) VALUES (
-		new.theme_id,
-		(SELECT id FROM inserted_source),
-		new.content,
-		new.user_id
-	)
-	RETURNING id INTO v_bulletpoint_id;
+	INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id INTO v_source_id;
+
+	IF ((TG_ARGV[0]::jsonb -> 'is_contribution')::boolean) THEN
+		INSERT INTO public.contributed_bulletpoints (theme_id, source_id, content, user_id) VALUES (
+			new.theme_id,
+			v_source_id,
+			new.content,
+			new.user_id
+		)
+		RETURNING id INTO v_bulletpoint_id;
+	ELSE
+		INSERT INTO public.public_bulletpoints (theme_id, source_id, content, user_id) VALUES (
+			new.theme_id,
+			v_source_id,
+			new.content,
+			new.user_id
+		)
+		RETURNING id INTO v_bulletpoint_id;
+	END IF;
 
 	INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
 	SELECT r.theme_id::integer, v_bulletpoint_id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
@@ -699,6 +697,8 @@ END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION web.bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
+DECLARE
+    v_source_id integer;
 BEGIN
 	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
 		RAISE EXCEPTION USING MESSAGE = format(
@@ -708,14 +708,19 @@ BEGIN
 		);
 	END IF;
 
-	WITH updated_bulletpoint AS (
+	IF ((TG_ARGV[0]::jsonb -> 'is_contribution')::boolean) THEN
+		UPDATE public.contributed_bulletpoints SET content = new.content
+		WHERE id = new.id
+		RETURNING source_id INTO v_source_id;
+	ELSE
 		UPDATE public.public_bulletpoints SET content = new.content
 		WHERE id = new.id
-		RETURNING *
-	)
+		RETURNING source_id INTO v_source_id;
+	END IF;
+
 	UPDATE public.sources
 	SET link = new.source_link, type = new.source_type
-	WHERE id = (SELECT source_id FROM updated_bulletpoint);
+	WHERE id = v_source_id;
 
 
 	<<l_referenced_themes>>
@@ -756,12 +761,12 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 CREATE TRIGGER bulletpoints_trigger_row_ii
 	INSTEAD OF INSERT
 	ON web.bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii();
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii('{"is_contribution": false}');
 
 CREATE TRIGGER bulletpoints_trigger_row_iu
 	INSTEAD OF UPDATE
 	ON web.bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_iu();
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_iu('{"is_contribution": false}');
 
 
 CREATE VIEW web.contributed_bulletpoints AS
@@ -784,103 +789,15 @@ SELECT
 	) AS bulletpoint_theme_comparisons ON bulletpoint_theme_comparisons.bulletpoint_id = contributed_bulletpoints.id
 	ORDER BY contributed_bulletpoints.created_at DESC, length(contributed_bulletpoints.content) ASC;
 
-CREATE FUNCTION web.contributed_bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
-DECLARE
-	v_bulletpoint_id integer;
-BEGIN
-	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
-		RAISE EXCEPTION USING MESSAGE = format(
-			'Number of referenced themes in text (%s) is not matching with passed ID list (%s).',
-			number_of_references(new.content),
-			jsonb_array_length(new.referenced_theme_id)
-		 );
-	END IF;
-
-	WITH inserted_source AS (
-		INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id
-	)
-	INSERT INTO public.contributed_bulletpoints (theme_id, source_id, content, user_id) VALUES (
-		new.theme_id,
-		(SELECT id FROM inserted_source),
-		new.content,
-		new.user_id
-	)
-	RETURNING id INTO v_bulletpoint_id;
-
-	INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
-	SELECT r.theme_id::integer, v_bulletpoint_id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
-
-	INSERT INTO public.bulletpoint_theme_comparisons (theme_id, bulletpoint_id)
-	SELECT r.theme_id::integer, v_bulletpoint_id FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
-
-	RETURN new;
-END
-$BODY$ LANGUAGE plpgsql VOLATILE;
-
-CREATE FUNCTION web.contributed_bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
-BEGIN
-	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
-		RAISE EXCEPTION USING MESSAGE = format(
-			'Number of referenced themes in text (%s) is not matching with passed ID list (%s).',
-			number_of_references(new.content),
-			jsonb_array_length(new.referenced_theme_id)
-		);
-	END IF;
-
-	WITH updated_bulletpoint AS (
-		UPDATE public.contributed_bulletpoints SET content = new.content
-		WHERE id = new.id
-		RETURNING *
-	)
-	UPDATE public.sources
-	SET link = new.source_link, type = new.source_type
-	WHERE id = (SELECT source_id FROM updated_bulletpoint);
-
-
-	<<l_referenced_themes>>
-	DECLARE
-		v_current_referenced_themes int[];
-		v_new_referenced_themes int[];
-	BEGIN
-		v_current_referenced_themes = array_agg(bulletpoint_id) FROM bulletpoint_referenced_themes WHERE id = new.id;
-		v_new_referenced_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
-
-		IF (NOT array_equals(v_current_referenced_themes, v_new_referenced_themes)) THEN
-			DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
-			INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
-			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
-		END IF;
-	END l_referenced_themes;
-
-
-	<<l_compared_themes>>
-	DECLARE
-		v_current_compared_themes int[];
-		v_new_compared_themes int[];
-	BEGIN
-		v_current_compared_themes = array_agg(bulletpoint_id) FROM bulletpoint_theme_comparisons WHERE id = new.id;
-		v_new_compared_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
-
-		IF (NOT array_equals(v_current_compared_themes, v_new_compared_themes)) THEN
-			DELETE FROM public.bulletpoint_theme_comparisons WHERE bulletpoint_id = new.id;
-			INSERT INTO public.bulletpoint_theme_comparisons (theme_id, bulletpoint_id)
-			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
-		END IF;
-	END l_compared_themes;
-
-	RETURN new;
-END
-$BODY$ LANGUAGE plpgsql VOLATILE;
-
 CREATE TRIGGER contributed_bulletpoints_trigger_row_ii
 	INSTEAD OF INSERT
 	ON web.contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE web.contributed_bulletpoints_trigger_row_ii();
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii('{"is_contribution": true}');
 
 CREATE TRIGGER contributed_bulletpoints_trigger_row_iu
 	INSTEAD OF UPDATE
 	ON web.contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE web.contributed_bulletpoints_trigger_row_iu();
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii('{"is_contribution": true}');
 
 
 -- tables
