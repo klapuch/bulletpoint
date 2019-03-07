@@ -3,8 +3,12 @@ import { isEmpty } from 'lodash';
 import memoizee from 'memoizee';
 import type { FetchedThemeType } from './types';
 
+export const requestedSingle = (id: number, state: Object): boolean => !!state.theme.single[id];
+
 export const fetchedSingle = (id: number, state: Object): boolean => (
-  state.theme.single[id] ? !isEmpty(state.theme.single[id].payload) : false
+  requestedSingle(id, state) || (
+    state.theme.single[id] ? !isEmpty(state.theme.single[id].payload) : false
+  )
 );
 
 export const getById = (id: number, state: Object): FetchedThemeType|Object => (
