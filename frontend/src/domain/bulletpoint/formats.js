@@ -31,12 +31,12 @@ export const withComparisons = (content: string, bulletpoint: FetchedBulletpoint
       {' '}
 &hellip; než&nbsp;
       {comparedTheme.map((theme, order) => (
-        <>
+        <React.Fragment key={order}>
           {order === 0 ? '' : ', '}
-          <Link key={order} to={`/themes/${theme.id}/${getSlug(theme.name)}`}>
+          <Link to={`/themes/${theme.id}/${getSlug(theme.name)}`}>
             {theme.name}
           </Link>
-        </>
+        </React.Fragment>
       ))}
     </em>
   );
