@@ -29,7 +29,7 @@ export const withComparisons = (content: string, bulletpoint: FetchedBulletpoint
     <em>
       {content}
       {' '}
-&hellip; než
+&hellip; než&nbsp;
       {comparedTheme.map((theme, order) => (
         <>
           {order === 0 ? '' : ', '}
