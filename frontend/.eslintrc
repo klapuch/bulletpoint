@@ -31,5 +31,6 @@
   },
   env: {
     browser: true, // because of document in tests,
+    "jest": true,
   }
 }

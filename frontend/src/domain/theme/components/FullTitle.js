@@ -24,7 +24,7 @@ type Props = {|
 const FullTitle = ({ theme, onStarClick }: Props) => (
   <>
     <div>
-      <Star active={theme.is_starred} onClick={onStarClick} />
+      {user.isLoggedIn() && <Star active={theme.is_starred} onClick={onStarClick} />}
       <Title>{theme.name}</Title>
       <Reference url={theme.reference.url} />
       {

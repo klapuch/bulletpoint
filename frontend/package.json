@@ -38,7 +38,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint -c .eslintrc src/ --ignore-path .eslintignore",
-    "check": "yarn lint && yarn run flow",
+    "check": "yarn lint && yarn jest && yarn run flow",
     "flow-compile": "yarn run babel src/ -- -d lib/"
   },
   "eslintConfig": {
@@ -51,11 +51,17 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.2.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-flowtype": "^3.2.0",
     "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.3.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "7.12.4",
-    "flow-bin": "^0.89.0"
+    "flow-bin": "^0.89.0",
+    "react-test-renderer": "^16.8.4"
   }
 }

@@ -3,7 +3,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import * as user from '../domain/user';
 
 const Resized = styled.span`
   font-size: 34px;
@@ -34,9 +33,6 @@ export default class Star extends React.Component<Props, State> {
   };
 
   render() {
-    if (!user.isLoggedIn()) {
-      return null;
-    }
     const { active } = this.state;
     return (
       <Resized

@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders active star 1`] = `
+<span
+  aria-hidden="true"
+  className="glyphicon glyphicon-star sc-bdVaJa aAjEk"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onMouseOut={[Function]}
+  onMouseOver={[Function]}
+/>
+`;
+
+exports[`renders not active star 1`] = `
+<span
+  aria-hidden="true"
+  className="glyphicon glyphicon-star-empty sc-bdVaJa aAjEk"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onMouseOut={[Function]}
+  onMouseOver={[Function]}
+/>
+`;
