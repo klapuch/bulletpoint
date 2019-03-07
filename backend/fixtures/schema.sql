@@ -361,7 +361,13 @@ CREATE VIEW public_bulletpoints AS
 
 CREATE FUNCTION bulletpoints_trigger_row_iiu() RETURNS trigger AS $BODY$
 BEGIN
-	new.is_contribution = (TG_ARGV[0]::jsonb -> 'is_contribution')::boolean;
+	IF TG_TABLE_NAME = 'contributed_bulletpoints' THEN
+		new.is_contribution = TRUE;
+	ELSIF TG_TABLE_NAME = 'public_bulletpoints' THEN
+		new.is_contribution = FALSE;
+	ELSE
+		RAISE EXCEPTION USING MESSAGE = format('Trigger for table "%s" is not defined.', TG_TABLE_NAME);
+	END IF;
 	IF TG_OP = 'INSERT' THEN
 		INSERT INTO bulletpoints (theme_id, source_id, user_id, content, created_at, is_contribution) VALUES (
 			new.theme_id,
@@ -386,12 +392,12 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 CREATE TRIGGER contributed_bulletpoints_trigger_row_iiu
 	INSTEAD OF INSERT OR UPDATE
 	ON contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_iiu('{"is_contribution":true}');
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_iiu();
 
 CREATE TRIGGER public_bulletpoints_trigger_row_iiu
 	INSTEAD OF INSERT OR UPDATE
 	ON public_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_iiu('{"is_contribution":false}');
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_iiu();
 
 
 CREATE TABLE bulletpoint_theme_comparisons (
@@ -668,7 +674,7 @@ BEGIN
 
 	INSERT INTO public.sources (link, type) VALUES (new.source_link, new.source_type) RETURNING id INTO v_source_id;
 
-	IF ((TG_ARGV[0]::jsonb -> 'is_contribution')::boolean) THEN
+	IF TG_TABLE_NAME = 'contributed_bulletpoints' THEN
 		INSERT INTO public.contributed_bulletpoints (theme_id, source_id, content, user_id) VALUES (
 			new.theme_id,
 			v_source_id,
@@ -676,7 +682,7 @@ BEGIN
 			new.user_id
 		)
 		RETURNING id INTO v_bulletpoint_id;
-	ELSE
+	ELSIF TG_TABLE_NAME = 'bulletpoints' THEN
 		INSERT INTO public.public_bulletpoints (theme_id, source_id, content, user_id) VALUES (
 			new.theme_id,
 			v_source_id,
@@ -684,6 +690,8 @@ BEGIN
 			new.user_id
 		)
 		RETURNING id INTO v_bulletpoint_id;
+	ELSE
+		RAISE EXCEPTION USING MESSAGE = format('Trigger for table "%s" is not defined.', TG_TABLE_NAME);
 	END IF;
 
 	INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
@@ -698,7 +706,7 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION web.bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
 DECLARE
-    v_source_id integer;
+	v_source_id integer;
 BEGIN
 	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
 		RAISE EXCEPTION USING MESSAGE = format(
@@ -708,14 +716,16 @@ BEGIN
 		);
 	END IF;
 
-	IF ((TG_ARGV[0]::jsonb -> 'is_contribution')::boolean) THEN
+	IF TG_TABLE_NAME = 'contributed_bulletpoints' THEN
 		UPDATE public.contributed_bulletpoints SET content = new.content
 		WHERE id = new.id
 		RETURNING source_id INTO v_source_id;
-	ELSE
+	ELSIF TG_TABLE_NAME = 'bulletpoints' THEN
 		UPDATE public.public_bulletpoints SET content = new.content
 		WHERE id = new.id
 		RETURNING source_id INTO v_source_id;
+	ELSE
+		RAISE EXCEPTION USING MESSAGE = format('Trigger for table "%s" is not defined.', TG_TABLE_NAME);
 	END IF;
 
 	UPDATE public.sources
@@ -761,12 +771,12 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 CREATE TRIGGER bulletpoints_trigger_row_ii
 	INSTEAD OF INSERT
 	ON web.bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii('{"is_contribution": false}');
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii();
 
 CREATE TRIGGER bulletpoints_trigger_row_iu
 	INSTEAD OF UPDATE
 	ON web.bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_iu('{"is_contribution": false}');
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_iu();
 
 
 CREATE VIEW web.contributed_bulletpoints AS
@@ -792,12 +802,12 @@ SELECT
 CREATE TRIGGER contributed_bulletpoints_trigger_row_ii
 	INSTEAD OF INSERT
 	ON web.contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii('{"is_contribution": true}');
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii();
 
 CREATE TRIGGER contributed_bulletpoints_trigger_row_iu
 	INSTEAD OF UPDATE
 	ON web.contributed_bulletpoints
-	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii('{"is_contribution": true}');
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii();
 
 
 -- tables
