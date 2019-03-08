@@ -49,11 +49,7 @@ CREATE TABLE audit.history (
 );
 
 CREATE FUNCTION audit.trigger_table_audit() RETURNS trigger AS $BODY$
-DECLARE
-	r record;
 BEGIN
-	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
-
 	EXECUTE format(
 		'INSERT INTO audit.history ("table", operation, user_id, old, new) VALUES (%L, %L, %L, %L, %L)',
 		TG_TABLE_NAME,
@@ -63,7 +59,7 @@ BEGIN
 		CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN row_to_json(new) ELSE NULL END
 	);
 
-	RETURN r;
+	RETURN CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
 END;
 $BODY$ LANGUAGE plpgsql;
 
