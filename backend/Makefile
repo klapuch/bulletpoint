@@ -3,7 +3,7 @@
 PHPCS_CACHE_DIR := /tmp/cache
 PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --cache=$(PHPCS_CACHE_DIR)/phpcs --tab-width=4 -sp App Tests
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
-CHECK_TEST_EXTENSIONS := find Tests/Integration/ -name '*.php' | grep -v '\Test.php$$'
+CHECK_TEST_EXTENSIONS := find Tests/Integration/ Tests/Unit Tests/Functional -name '*.php' | grep -v '\Test.php$$'
 
 .PHONY: check
 check: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpmnd phpstan psalm phpcs tests count-postgres-tests
