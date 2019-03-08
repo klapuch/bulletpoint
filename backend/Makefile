@@ -29,7 +29,7 @@ phpstan:            ## phpstan
 	vendor/bin/phpstan analyse -l max -c phpstan.neon App
 	@make phpstan-test --no-print-directory
 
-.PHONY: phpstan
+.PHONY: phpstan-test
 phpstan-test:
 	PHPSTAN=1 vendor/bin/phpstan analyse -l max -c phpstan.test.neon Tests
 
