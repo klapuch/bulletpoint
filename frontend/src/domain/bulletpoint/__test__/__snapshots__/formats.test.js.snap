@@ -43,4 +43,30 @@ exports[`adding than part 2`] = `
 </em>
 `;
 
+exports[`replacing by positions 1`] = `
+Array [
+  "",
+  <Link
+    replace={false}
+    to="/themes/1/php"
+  >
+    PHP
+  </Link>,
+  " is ",
+  <Link
+    replace={false}
+    to="/themes/2/acronym"
+  >
+    acronym
+  </Link>,
+  "",
+]
+`;
+
+exports[`text as nothing to replae 1`] = `
+Array [
+  "PHP is acronym",
+]
+`;
+
 exports[`without than part for empty 1`] = `"This good enough"`;

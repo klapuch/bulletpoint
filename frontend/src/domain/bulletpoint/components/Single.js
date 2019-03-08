@@ -38,7 +38,7 @@ const Single = ({
       {children.rating.up}
     </UpButton>
     )}
-    {format.withComparisons(format.replaceBulletpointMatches(children), children)}
+    {format.withComparisons(format.replaceMatches(children), children)}
     {onDeleteClick && <ActionButton className="text-danger glyphicon glyphicon-remove" aria-hidden="true" onClick={() => onDeleteClick(children.id)} />}
     {onEditClick && <ActionButton className="glyphicon glyphicon-pencil" aria-hidden="true" onClick={() => onEditClick(children.id)} />}
     <br />

@@ -6,7 +6,7 @@ import type { FetchedBulletpointType } from './types';
 
 const REGEX = /\[\[(.+?)\]\]/g;
 
-export const replaceBulletpointMatches = (bulletpoint: FetchedBulletpointType) => {
+export const replaceMatches = (bulletpoint: FetchedBulletpointType) => {
   const { referenced_theme: referencedTheme } = bulletpoint;
   let order = 0;
   return reactStringReplace(bulletpoint.content, REGEX, (match) => {

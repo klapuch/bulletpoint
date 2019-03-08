@@ -1,4 +1,4 @@
-import { withComparisons } from '../formats';
+import { withComparisons, replaceMatches } from '../formats';
 
 test('adding than part', () => {
   expect(
@@ -30,6 +30,30 @@ test('without than part for empty', () => {
     withComparisons(
       'This good enough',
       { compared_theme: [] },
+    ),
+  ).toMatchSnapshot();
+});
+
+test('replacing by positions', () => {
+  expect(
+    replaceMatches(
+      {
+        content: '[[PHP]] is [[acronym]]',
+        referenced_theme: [
+          { id: 1, name: 'PHP' },
+          { id: 2, name: 'Acronym' },
+        ],
+      },
+    ),
+  ).toMatchSnapshot();
+});
+
+test('text as nothing to replae', () => {
+  expect(
+    replaceMatches(
+      {
+        content: 'PHP is acronym',
+      },
     ),
   ).toMatchSnapshot();
 });
