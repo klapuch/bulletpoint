@@ -49,9 +49,13 @@ final class Structure {
 					'properties' => ['url' => ['type' => 'string']],
 					'required' => ['url'],
 				],
+				'related_themes_id' => [
+					'type' => 'array',
+					'items' => ['type' => 'number'],
+				],
 				'created_at' => ['type' => 'string', 'format' => 'date-time'],
 			],
-			'required' => ['tags', 'name', 'reference', 'is_starred'],
+			'required' => ['tags', 'name', 'reference', 'is_starred', 'related_themes_id'],
 			'type' => 'object',
 		];
 	}

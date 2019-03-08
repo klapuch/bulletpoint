@@ -37,6 +37,7 @@ final class TaggedThemes implements Themes {
 					'alternative_names',
 					'tags',
 					'reference_url',
+					'related_themes_id',
 					'user_id',
 					'created_at',
 					'is_starred',

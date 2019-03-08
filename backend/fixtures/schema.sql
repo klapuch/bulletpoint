@@ -221,6 +221,23 @@ CREATE TRIGGER themes_audit_trigger
 	ON themes
 	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
 
+CREATE FUNCTION related_themes(in_theme_id integer) RETURNS SETOF integer AS $BODY$
+SELECT DISTINCT ON (theme_id) theme_id
+FROM bulletpoints
+	JOIN (
+	SELECT bulletpoint_id, priority FROM (
+		SELECT bulletpoint_id, theme_id, 1 AS priority
+		FROM bulletpoint_theme_comparisons
+		UNION ALL
+		SELECT bulletpoint_id, theme_id, 2 AS priority
+		FROM bulletpoint_referenced_themes
+	) AS referenced_bulletpoints
+	WHERE referenced_bulletpoints.theme_id = in_theme_id
+) AS related_bulletpoints ON related_bulletpoints.bulletpoint_id = bulletpoints.id
+ORDER BY theme_id, priority
+LIMIT 10;
+$BODY$ LANGUAGE sql STABLE ROWS 10;
+
 
 CREATE TABLE theme_alternative_names (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -523,7 +540,8 @@ CREATE VIEW web.themes AS
 		"references".url AS reference_url,
 		users.id AS user_id,
 		COALESCE(json_theme_alternative_names.alternative_names, '[]') AS alternative_names,
-		user_starred_themes.id IS NOT NULL AS is_starred
+		user_starred_themes.id IS NOT NULL AS is_starred,
+		array_to_json(ARRAY(SELECT related_themes(themes.id)))::jsonb AS related_themes_id
 	FROM public.themes
 	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id

@@ -49,6 +49,12 @@
                 "url"
             ]
         },
+        "related_themes_id": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
+        },
         "created_at": {
             "type": "string",
             "format": "date-time"
@@ -58,7 +64,8 @@
         "tags",
         "name",
         "reference",
-        "is_starred"
+        "is_starred",
+        "related_themes_id"
     ],
     "type": "object"
 }
