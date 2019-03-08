@@ -8,7 +8,7 @@ import type { FetchedThemeType } from '../types';
 type Props = {|
   +children: FetchedThemeType,
 |};
-const Single = ({ children: theme }: Props) => (
+const Preview = ({ children: theme }: Props) => (
   <>
     <Link className="no-link" to={`/themes/${theme.id}/${getSlug(theme.name)}`}>
       <h2>{theme.name}</h2>
@@ -22,4 +22,4 @@ const Single = ({ children: theme }: Props) => (
   </>
 );
 
-export default Single;
+export default Preview;

@@ -8,7 +8,7 @@ import * as theme from '../../../domain/theme/endpoints';
 import * as themes from '../../../domain/theme/selects';
 import Loader from '../../../ui/Loader';
 import type { FetchedThemeType } from '../../../domain/theme/types';
-import { default as AllThemes } from '../../../domain/theme/components/All';
+import { default as AllThemes } from '../../../domain/theme/components/Previews';
 
 type Props = {|
   +params: {|

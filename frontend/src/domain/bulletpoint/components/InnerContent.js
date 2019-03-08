@@ -12,7 +12,7 @@ type Props = {|
   +onEditClick?: (id: number) => (void),
   +onDeleteClick?: (id: number) => (void),
 |};
-const Single = ({
+const InnerContent = ({
   children, onRatingChange, onEditClick, onDeleteClick,
 }: Props) => (
   <>
@@ -24,4 +24,4 @@ const Single = ({
   </>
 );
 
-export default Single;
+export default InnerContent;

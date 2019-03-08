@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type { FetchedBulletpointType, PointType } from '../types';
-import Bulletpoint from './Single';
+import InnerContent from './InnerContent';
 
 type Props = {|
   +bulletpoints: Array<FetchedBulletpointType>,
@@ -9,7 +9,7 @@ type Props = {|
   +onEditClick?: (number) => (void),
   +onDeleteClick?: (number) => (void),
 |};
-const All = ({
+const Boxes = ({
   bulletpoints,
   onRatingChange,
   onEditClick,
@@ -18,16 +18,16 @@ const All = ({
   <ul className="list-group">
     {bulletpoints.map(bulletpoint => (
       <li key={`bulletpoint-${bulletpoint.id}`} className="list-group-item">
-        <Bulletpoint
+        <InnerContent
           onRatingChange={onRatingChange}
           onEditClick={onEditClick}
           onDeleteClick={onDeleteClick}
         >
           {bulletpoint}
-        </Bulletpoint>
+        </InnerContent>
       </li>
     ))}
   </ul>
 );
 
-export default All;
+export default Boxes;

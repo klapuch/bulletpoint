@@ -18,7 +18,7 @@ import SlugRedirect from '../../router/SlugRedirect';
 import type { FetchedBulletpointType, PostedBulletpointType, PointType } from '../../domain/bulletpoint/types';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import type { FormTypes } from '../../domain/bulletpoint/components/Form/types';
-import { default as AllBulletpoints } from '../../domain/bulletpoint/components/All';
+import Boxes from '../../domain/bulletpoint/components/Boxes';
 import Header from '../../domain/theme/components/Header';
 
 type State = {|
@@ -140,7 +140,7 @@ class Theme extends React.Component<Props, State> {
         <div className="row">
           <div className="col-sm-8">
             <h2 id="bulletpoints">Bulletpointy</h2>
-            <AllBulletpoints
+            <Boxes
               bulletpoints={this.props.bulletpoints}
               onRatingChange={this.handleBulletpointRatingChange}
               onEditClick={user.isAdmin() ? this.handleEditClick : undefined}
@@ -149,7 +149,7 @@ class Theme extends React.Component<Props, State> {
             {!isEmpty(this.props.contributedBulletpoints) && (
               <>
                 <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
-                <AllBulletpoints
+                <Boxes
                   bulletpoints={this.props.contributedBulletpoints}
                   onDeleteClick={this.handleDeleteClick}
                 />
