@@ -6,7 +6,7 @@ PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --ca
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
 CHECK_TEST_EXTENSIONS := find Tests/Integration/ -name '*.php' | grep -v '\Test.php$$'
 
-check: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpmnd phpcpd psalm phpstan phpcs tests count-postgres-tests
+check: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpmnd phpcpd phpstan psalm phpcs tests count-postgres-tests
 ci: check tester-coverage
 
 help:               ## help
