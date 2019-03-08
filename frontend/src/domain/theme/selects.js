@@ -3,16 +3,34 @@ import { isEmpty } from 'lodash';
 import memoizee from 'memoizee';
 import type { FetchedThemeType } from './types';
 
+const isSingleAvailable = (id: number, state: Object) => (
+  state.theme.single[id] && !isEmpty(state.theme.single[id].payload)
+);
+
+export const withRelatedThemes = (
+  theme: FetchedThemeType,
+  state: Object,
+): FetchedThemeType => ({
+  ...theme,
+  // eslint-disable-next-line
+  related_themes: theme.related_themes_id.map(id => (
+    // $FlowFixMe
+    isSingleAvailable(id, state) ? state.theme.single[id].payload : {}
+  )),
+});
+
+export const getById = (id: number, state: Object): FetchedThemeType|Object => (
+  isSingleAvailable(id, state)
+    ? withRelatedThemes(state.theme.single[id].payload, state)
+    : {}
+);
+
 export const requestedSingle = (id: number, state: Object): boolean => !!state.theme.single[id];
 
 export const fetchedSingle = (id: number, state: Object): boolean => (
   requestedSingle(id, state) || (
     state.theme.single[id] ? !isEmpty(state.theme.single[id].payload) : false
   )
-);
-
-export const getById = (id: number, state: Object): FetchedThemeType|Object => (
-  state.theme.single[id] ? state.theme.single[id].payload : {}
 );
 
 export const singleFetching = (id: number, state: Object): boolean => (

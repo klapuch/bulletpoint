@@ -1,5 +1,6 @@
 // @flow
 import axios from 'axios';
+import { forEach } from 'lodash';
 import {
   invalidatedSingle,
   receivedAll,
@@ -9,18 +10,27 @@ import {
   receivedUpdateSingle,
   requestedUpdateSingle,
 } from './actions';
-import { fetchedSingle } from './selects';
+import * as themes from './selects';
 import * as response from '../../api/response';
 import type { PostedThemeType } from './types';
 import type { PaginationType } from '../../api/dataset/PaginationType';
 
-export const single = (id: number) => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (fetchedSingle(id, getState())) {
+export const single = (
+  id: number,
+  flat: boolean = false,
+) => (dispatch: (mixed) => Object, getState: () => Object) => {
+  if (themes.fetchedSingle(id, getState())) {
     return Promise.resolve();
   }
   dispatch(requestedSingle(id));
   return axios.get(`/themes/${id}`)
-    .then(response => dispatch(receivedSingle(id, response.data)));
+    .then(response => dispatch(receivedSingle(id, response.data)))
+    .then(() => themes.getById(id, getState()).related_themes_id)
+    .then((themeIds: Array<number>) => {
+      if (flat === false) {
+        forEach(themeIds, themeId => dispatch(single(themeId, true)));
+      }
+    });
 };
 
 export const updateSingle = (

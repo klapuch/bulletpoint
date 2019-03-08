@@ -7,6 +7,8 @@ export type FetchedThemeType = {|
   +is_starred: boolean,
   +tags: Array<FetchedTagType>,
   +alternative_names: Array<string>,
+  +related_themes_id: Array<number>,
+  related_themes: Array<FetchedThemeType>,
   +name: string,
   +created_at: string,
   +reference: {|

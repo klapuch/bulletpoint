@@ -3,6 +3,8 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
+import { Link } from 'react-router-dom';
+import getSlug from 'speakingurl';
 import * as bulletpoint from '../../domain/bulletpoint/endpoints';
 import * as bulletpoints from '../../domain/bulletpoint/selects';
 import * as contributedBulletpoint from '../../domain/contributed_bulletpoint/endpoints';
@@ -172,6 +174,21 @@ class Theme extends React.Component<Props, State> {
                 type={this.state.formType}
                 onSubmit={this.handleSubmit}
               />
+            )}
+            {!isEmpty(this.props.theme.related_themes_id) && (
+              <>
+                <h2 id="related_themes">Související témata</h2>
+                <div className="well">
+                  {this.props.theme.related_themes.map((relatedTheme, order) => (
+                    <React.Fragment key={order}>
+                      {order === 0 ? '' : ', '}
+                      <Link key={order} to={`/themes/${relatedTheme.id}/${getSlug(relatedTheme.name)}`}>
+                        {relatedTheme.name}
+                      </Link>
+                    </React.Fragment>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         </div>
