@@ -70,7 +70,7 @@ $BODY$ LANGUAGE plpgsql;
 
 -- functions
 CREATE FUNCTION is_empty(text) RETURNS boolean AS $BODY$
-	SELECT trim(BOTH FROM $1) = '';
+	SELECT $1 IS NULL OR trim($1) = '';
 $BODY$ LANGUAGE sql IMMUTABLE;
 
 CREATE FUNCTION globals_get_variable(in_variable text) RETURNS text AS $BODY$
@@ -312,11 +312,25 @@ CREATE UNIQUE INDEX starred_themes_theme_id_uidx ON starred_themes(theme_id);
 CREATE TABLE sources (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	link text NULL,
-	type sources_type NOT NULL,
-	CONSTRAINT sources_link_not_empty CHECK (NOT is_empty(link)),
-	CONSTRAINT link_type_not_null CHECK (CASE WHEN type = 'web' THEN link IS NOT NULL ELSE TRUE END),
-	CONSTRAINT link_type_null CHECK (CASE WHEN type = 'head' THEN link IS NULL ELSE TRUE END)
+	type sources_type NOT NULL
 );
+
+CREATE FUNCTION sources_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+	IF new.type = 'web' AND is_empty(new.link) THEN
+		RAISE EXCEPTION 'Link from web can not be empty.';
+	ELSIF new.type = 'head' AND NOT is_empty(new.link) THEN
+		RAISE EXCEPTION 'Link from head must be empty.';
+	END IF;
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER sources_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON sources
+	FOR EACH ROW EXECUTE PROCEDURE sources_trigger_row_biu();
 
 CREATE TRIGGER sources_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
