@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`adding than part 1`] = `
+<em>
+  This is better
+   
+  … než 
+  <React.Fragment>
+    
+    <Link
+      replace={false}
+      to="/themes/1/everything"
+    >
+      everything
+    </Link>
+  </React.Fragment>
+</em>
+`;
+
+exports[`adding than part 2`] = `
+<em>
+  This is better
+   
+  … než 
+  <React.Fragment>
+    
+    <Link
+      replace={false}
+      to="/themes/1/everything"
+    >
+      everything
+    </Link>
+  </React.Fragment>
+  <React.Fragment>
+    , 
+    <Link
+      replace={false}
+      to="/themes/2/else"
+    >
+      else
+    </Link>
+  </React.Fragment>
+</em>
+`;
+
+exports[`without than part for empty 1`] = `"This good enough"`;
