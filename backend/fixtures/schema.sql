@@ -234,8 +234,8 @@ JOIN (
 	) AS referenced_bulletpoints
 	WHERE referenced_bulletpoints.theme_id = in_theme_id
 ) AS related_bulletpoints ON related_bulletpoints.bulletpoint_id = bulletpoints.id
-GROUP BY bulletpoints.theme_id, priority
-ORDER BY count(bulletpoints.theme_id) * priority DESC
+GROUP BY theme_id, priority
+ORDER BY count(theme_id) * priority DESC
 LIMIT 10
 $BODY$ LANGUAGE sql STABLE ROWS 10;
 
