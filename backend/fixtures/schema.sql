@@ -224,7 +224,7 @@ CREATE TRIGGER themes_audit_trigger
 CREATE FUNCTION related_themes(in_theme_id integer) RETURNS SETOF integer AS $BODY$
 SELECT theme_id
 FROM bulletpoints
-	JOIN (
+JOIN (
 	SELECT bulletpoint_id, priority FROM (
 		SELECT bulletpoint_id, bulletpoint_theme_comparisons.theme_id, 100 AS priority
 		FROM bulletpoint_theme_comparisons
@@ -234,7 +234,7 @@ FROM bulletpoints
 	) AS referenced_bulletpoints
 	WHERE referenced_bulletpoints.theme_id = in_theme_id
 ) AS related_bulletpoints ON related_bulletpoints.bulletpoint_id = bulletpoints.id
-GROUP BY theme_id, priority
+GROUP BY bulletpoints.theme_id, priority
 ORDER BY count(bulletpoints.theme_id) * priority DESC
 LIMIT 10
 $BODY$ LANGUAGE sql STABLE ROWS 10;
