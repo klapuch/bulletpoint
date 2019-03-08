@@ -2,15 +2,20 @@
 import React from 'react';
 import getSlug from 'speakingurl';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const SpacyLabel = styled.span`
+  margin-right: 7px;
+`;
 
 type Props = {|
   +children: string,
   +id: number,
 |};
-const Tag = ({ children, id }: Props) => (
+const Label = ({ children, id }: Props) => (
   <Link className="no-link" to={`/themes/tag/${id}/${getSlug(children)}`}>
-    <span style={{ marginRight: 7 }} className="label label-default">{children}</span>
+    <SpacyLabel className="label label-default">{children}</SpacyLabel>
   </Link>
 );
 
-export default Tag;
+export default Label;

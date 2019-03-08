@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import getSlug from 'speakingurl';
-import AllTags from '../../tags/components/All';
+import Labels from '../../tags/components/Labels';
 import type { FetchedThemeType } from '../types';
 
 type Props = {|
@@ -18,7 +18,7 @@ const Preview = ({ children: theme }: Props) => (
         {theme.alternative_names.join(', ')}
       </small>
     </div>
-    <AllTags tags={theme.tags} />
+    <Labels tags={theme.tags} />
   </>
 );
 

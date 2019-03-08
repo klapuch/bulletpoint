@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import type { FetchedThemeType } from '../types';
 import Reference from './Reference';
-import AllTags from '../../tags/components/All';
+import Labels from '../../tags/components/Labels';
 
 const Separator = styled.span`
   padding-right: 10px;
@@ -16,7 +16,7 @@ const Detail = ({ theme }: Props) => (
   <>
     <Reference url={theme.reference.url} />
     <Separator />
-    <AllTags tags={theme.tags} />
+    <Labels tags={theme.tags} />
   </>
 );
 

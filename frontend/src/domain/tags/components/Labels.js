@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
 import type { FetchedTagType } from '../types';
-import Tag from './Single';
+import Label from './Label';
 
 type Props = {|
   +tags: Array<FetchedTagType>,
 |};
-const Tags = ({ tags }: Props) => (
+const Labels = ({ tags }: Props) => (
   // $FlowFixMe Not sure why
-  tags.map(tag => <Tag id={tag.id} key={tag.id}>{tag.name}</Tag>)
+  tags.map(tag => <Label id={tag.id} key={tag.id}>{tag.name}</Label>)
 );
 
-export default Tags;
+export default Labels;
