@@ -1,5 +1,5 @@
 // @flow
-import { isEmpty, first, isEqual } from 'lodash';
+import { isEmpty, first, flatten } from 'lodash';
 import * as themes from '../theme/selects';
 import type { FetchedBulletpointType } from './types';
 
@@ -37,13 +37,9 @@ export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpoi
   }
   return [];
 };
-const relatedThemesFetching = (state: Object, themeIds: Array<Array<number>>): boolean => {
-  return themeIds.map(relatedThemeIds => (
-    relatedThemeIds.map(relatedThemeId => themes.singleFetching(relatedThemeId, state))
-  ))
-    .filter(areFetching => areFetching.filter(isFetching => isFetching === true))
-    .filter(areFetching => areFetching.length > 0)
-    .filter(areFetching => isEqual(areFetching, [true]))
+export const relatedThemesFetching = (state: Object, themeIds: Array<Array<number>>): boolean => {
+  return flatten(themeIds).map(relatedThemeId => themes.singleFetching(relatedThemeId, state))
+    .filter(Boolean)
     .length > 0;
 };
 const referencedThemesFetching = (theme: number, state: Object): boolean => (
