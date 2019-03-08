@@ -19,7 +19,7 @@ import type { FetchedBulletpointType, PostedBulletpointType, PointType } from '.
 import type { FetchedThemeType } from '../../domain/theme/types';
 import type { FormTypes } from '../../domain/bulletpoint/components/Form/types';
 import { default as AllBulletpoints } from '../../domain/bulletpoint/components/All';
-import FullTitle from '../../domain/theme/components/FullTitle';
+import Header from '../../domain/theme/components/Header';
 
 type State = {|
   formType: FormTypes,
@@ -136,7 +136,7 @@ class Theme extends React.Component<Props, State> {
     return (
       <SlugRedirect {...this.props} name={this.props.theme.name}>
         <Helmet><title>{this.props.theme.name}</title></Helmet>
-        <FullTitle theme={this.props.theme} onStarClick={this.handleStarClick} />
+        <Header theme={this.props.theme} onStarClick={this.handleStarClick} />
         <div className="row">
           <div className="col-sm-8">
             <h2 id="bulletpoints">Bulletpointy</h2>
