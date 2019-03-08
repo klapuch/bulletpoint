@@ -1,17 +1,21 @@
 // @flow
 import React from 'react';
-import type { PostedTagType, TargetType } from '../types';
+import classNames from 'classnames';
+import type { ErrorTagType, PostedTagType, TargetType } from '../types';
+import * as validation from '../validation';
 
 type Props = {|
   +onSubmit: (PostedTagType) => (any),
 |};
 type State = {|
   tag: PostedTagType,
+  errors: ErrorTagType,
 |};
 const initState = {
   tag: {
     name: '',
   },
+  errors: validation.initErrors,
 };
 export default class extends React.Component<Props, State> {
   state = initState;
@@ -26,17 +30,23 @@ export default class extends React.Component<Props, State> {
     }));
   };
 
-  onSubmit = () => {
-    const { tag } = this.state;
-    this.props.onSubmit(tag);
+  handleSubmit = () => {
+    if (validation.anyErrors(this.state.tag)) {
+      this.setState(prevState => ({
+        ...prevState,
+        errors: validation.errors(prevState.tag),
+      }));
+    } else {
+      this.props.onSubmit(this.state.tag);
+    }
   };
 
   render() {
-    const { tag } = this.state;
+    const { tag, errors } = this.state;
     return (
       <>
         <form>
-          <div className="form-group">
+          <div className={classNames('form-group', errors.name && 'has-error')}>
             <label htmlFor="name">Název</label>
             <input
               type="text"
@@ -46,9 +56,10 @@ export default class extends React.Component<Props, State> {
               value={tag.name}
               onChange={this.onChange}
             />
+            {errors.name && <span className="help-block">{validation.toMessage(errors, 'name')}</span>}
           </div>
         </form>
-        <button type="button" tabIndex="0" className="btn btn-success" onClick={this.onSubmit}>Přidat</button>
+        <button type="button" tabIndex="0" className="btn btn-success" onClick={this.handleSubmit}>Přidat</button>
       </>
     );
   }

@@ -13,3 +13,6 @@ export type TargetType = {|
     value: string,
   |},
 |};
+export type ErrorTagType = {|
+  +name: ?string,
+|};
