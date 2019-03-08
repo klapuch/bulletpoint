@@ -1,16 +1,10 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
-import { DownButton, UpButton } from './RateButton';
-import Source from '../../theme/components/Source';
 import type { FetchedBulletpointType, PointType } from '../types';
 import * as format from '../formats';
-
-const ActionButton = styled.span`
-  cursor: pointer;
-  float: right;
-  padding-left: 5px;
-`;
+import Rating from './Rating';
+import Options from './Options';
+import Details from './Details';
 
 type Props = {|
   +children: FetchedBulletpointType,
@@ -22,31 +16,11 @@ const Single = ({
   children, onRatingChange, onEditClick, onDeleteClick,
 }: Props) => (
   <>
-    {onRatingChange && (
-    <DownButton
-      rated={children.rating.user === -1}
-      onClick={() => onRatingChange(children.id, -1)}
-    >
-      {children.rating.down}
-    </DownButton>
-    )}
-    {onRatingChange && (
-    <UpButton
-      rated={children.rating.user === 1}
-      onClick={() => onRatingChange(children.id, 1)}
-    >
-      {children.rating.up}
-    </UpButton>
-    )}
+    <Rating onRatingChange={onRatingChange}>{children}</Rating>
     {format.withComparisons(format.replaceMatches(children), children)}
-    {onDeleteClick && <ActionButton className="text-danger glyphicon glyphicon-remove" aria-hidden="true" onClick={() => onDeleteClick(children.id)} />}
-    {onEditClick && <ActionButton className="glyphicon glyphicon-pencil" aria-hidden="true" onClick={() => onEditClick(children.id)} />}
+    <Options onDeleteClick={onDeleteClick} onEditClick={onEditClick}>{children}</Options>
     <br />
-    <small>
-      <cite>
-        <Source type={children.source.type} link={children.source.link} />
-      </cite>
-    </small>
+    <Details>{children}</Details>
   </>
 );
 
