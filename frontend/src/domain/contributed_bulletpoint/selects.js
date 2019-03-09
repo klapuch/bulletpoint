@@ -1,7 +1,6 @@
 // @flow
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty } from 'lodash';
 import type { FetchedBulletpointType } from '../bulletpoint/types';
-import * as themes from '../theme/selects';
 import * as bulletpoints from '../bulletpoint/selects';
 
 export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpointType> => {
@@ -14,17 +13,12 @@ export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpoi
   }
   return [];
 };
-const referencedThemesFetching = (theme: number, state: Object): boolean => {
-  return getByTheme(theme, state)
-    .map(bulletpoint => bulletpoint.referenced_theme_id)
-    .map(referencedThemeIds => (
-      referencedThemeIds.map(referencedThemeId => themes.singleFetching(referencedThemeId, state))
-    ))
-    .filter(areFetching => areFetching.filter(isFetching => isFetching === true))
-    .filter(areFetching => areFetching.length > 0)
-    .filter(areFetching => isEqual(areFetching, [true]))
-    .length > 0;
-};
+const referencedThemesFetching = (theme: number, state: Object): boolean => (
+  bulletpoints.relatedThemesFetching(
+    state,
+    getByTheme(theme, state).map(bulletpoint => bulletpoint.referenced_theme_id),
+  )
+);
 export const fetchedAll = (theme: number, state: Object): boolean => (
   !isEmpty(
     state.themeContributedBulletpoints.all[theme]

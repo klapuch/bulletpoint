@@ -85,7 +85,9 @@ class Theme extends React.Component<Props, State> {
     const { match: { params: { id } } } = this.props;
     this.props.fetchTheme(id);
     this.props.fetchBulletpoints(id);
-    this.props.fetchContributedBulletpoints(id);
+    if (user.isLoggedIn()) {
+      this.props.fetchContributedBulletpoints(id);
+    }
   };
 
   handleBulletpointRatingChange = (bulletpointId: number, point: PointType) => {
