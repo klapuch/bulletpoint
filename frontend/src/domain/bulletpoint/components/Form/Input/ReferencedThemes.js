@@ -10,7 +10,7 @@ type Props = {|
   +themes: ReferencedThemesType,
 |};
 const ReferencedThemes = ({ id, onSelectChange, themes }: Props) => (
-  <div className="form-group">
+  <>
     <label htmlFor="referenced_theme_id">Odkazující se témata</label>
     {themes.map((theme, i) => (
       <div key={i}>
@@ -24,6 +24,6 @@ const ReferencedThemes = ({ id, onSelectChange, themes }: Props) => (
         />
       </div>
     ))}
-  </div>
+  </>
 );
 export default ReferencedThemes;

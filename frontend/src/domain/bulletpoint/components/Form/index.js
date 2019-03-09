@@ -42,11 +42,7 @@ const initState = {
       type: 'web',
     },
   },
-  errors: {
-    content: null,
-    source_link: null,
-    source_type: null,
-  },
+  errors: validation.initErrors,
 };
 export default class extends React.Component<Props, State> {
   state = initState;
@@ -171,11 +167,14 @@ export default class extends React.Component<Props, State> {
               />
               {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
             </div>
-            <ReferencedThemes
-              id={this.props.themeId}
-              onSelectChange={this.handleReferencedTheme}
-              themes={referencedThemes}
-            />
+            <div className={classNames('form-group', errors.referenced_themes && 'has-error')}>
+              <ReferencedThemes
+                id={this.props.themeId}
+                onSelectChange={this.handleReferencedTheme}
+                themes={referencedThemes}
+              />
+              {errors.referenced_themes && <span className="help-block">{validation.toMessage(errors, 'referenced_themes')}</span>}
+            </div>
             <ComparedThemes
               id={this.props.themeId}
               onSelectChange={this.handleComparedTheme}

@@ -38,4 +38,5 @@ export type ErrorBulletpointType = {|
   +source_link: ?string,
   +source_type: ?string,
   +content: ?string,
+  +referenced_themes: ?string,
 |};

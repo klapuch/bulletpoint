@@ -6,6 +6,8 @@ import type { FetchedBulletpointType } from './types';
 
 const REGEX = /\[\[(.+?)\]\]/g;
 
+export const numberOfReferences = (text: string) => (text.match(REGEX) || []).length;
+
 export const replaceMatches = (bulletpoint: FetchedBulletpointType) => {
   const { referenced_theme: referencedTheme } = bulletpoint;
   let order = 0;
