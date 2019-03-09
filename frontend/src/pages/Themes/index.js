@@ -78,11 +78,9 @@ class Themes extends React.Component<Props> {
   reload(onResetPaging?: (PaginationType) => (void)) {
     const PER_PAGE = 5;
     Promise.resolve()
-      .then(() => {
-        return typeof onResetPaging === 'undefined'
-          ? this.props.initPaging
-          : this.props.resetPaging;
-      })
+      .then(() => (typeof onResetPaging === 'undefined'
+        ? this.props.initPaging
+        : this.props.resetPaging))
       .then(initPaging => initPaging({ page: 1, perPage: PER_PAGE }))
       .then(() => {
         const { match: { params: { tag } }, pagination } = this.props;

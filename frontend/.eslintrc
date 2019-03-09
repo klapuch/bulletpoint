@@ -12,9 +12,7 @@
     "jsx-a11y/no-autofocus": 0,
     "jsx-a11y/label-has-associated-control": 0,
     "jsx-a11y/label-has-for": 0,
-    "import/no-named-as-default": 0, // Multiple exports because of Redux state and tests
     "import/prefer-default-export": 0, // Multiple exports because of Redux state and tests
-    "arrow-body-style": 0,
     "no-shadow": 0, // Shadowing is a nice language feature. Naming is hard.
     "camelcase": 0, // API calls are snake_case
     "react/jsx-filename-extension": 0, // No, JSX belongs to .js files
