@@ -8,7 +8,7 @@ import * as theme from '../../../domain/theme/endpoints';
 import * as themes from '../../../domain/theme/selects';
 import Loader from '../../../ui/Loader';
 import type { FetchedThemeType } from '../../../domain/theme/types';
-import { default as AllThemes } from '../../../domain/theme/components/Previews';
+import Previews from '../../../domain/theme/components/Previews';
 
 type Props = {|
   +params: {|
@@ -53,7 +53,7 @@ class Themes extends React.Component<Props> {
         </h3>
         )}
         <br />
-        {isEmpty(themes) ? <h2>Žádné shody</h2> : <AllThemes themes={themes} />}
+        {isEmpty(themes) ? <h2>Žádné shody</h2> : <Previews themes={themes} />}
       </>
     );
   }

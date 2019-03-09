@@ -8,7 +8,7 @@ import * as themes from '../../domain/theme/selects';
 import Loader from '../../ui/Loader';
 import SlugRedirect from '../../router/SlugRedirect';
 import type { FetchedThemeType } from '../../domain/theme/types';
-import { default as AllThemes } from '../../domain/theme/components/Previews';
+import Previews from '../../domain/theme/components/Previews';
 import type { PaginationType } from '../../api/dataset/PaginationType';
 import { receivedInit, turnPage, receivedReset } from '../../api/dataset/actions';
 import { getSourcePagination } from '../../api/dataset/selects';
@@ -106,7 +106,7 @@ class Themes extends React.Component<Props> {
         </Helmet>
         <h1>{this.getHeader()}</h1>
         <br />
-        <AllThemes themes={themes} />
+        <Previews themes={themes} />
         <Pager
           total={this.props.total}
           pagination={this.props.pagination}

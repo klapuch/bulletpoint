@@ -6,14 +6,14 @@ import Default from '../pages/Default';
 import Error404 from '../pages/Error/Error404';
 import Public from './Public';
 import Private from './Private';
-import { default as Theme } from '../pages/Theme';
-import { default as Themes } from '../pages/Themes';
-import { default as ThemesSearchResults } from '../pages/Themes/SearchResults';
-import { default as CreateTheme } from '../pages/Theme/Create';
-import { default as ChangeTheme } from '../pages/Theme/Change';
-import { default as SignIn } from '../pages/Sign/In';
-import { default as SignOut } from '../pages/Sign/Out';
-import { default as AddTag } from '../pages/Tag/Add';
+import Theme from '../pages/Theme';
+import Themes from '../pages/Themes';
+import ThemesSearchResults from '../pages/Themes/SearchResults';
+import CreateTheme from '../pages/Theme/Create';
+import ChangeTheme from '../pages/Theme/Change';
+import SignIn from '../pages/Sign/In';
+import SignOut from '../pages/Sign/Out';
+import AddTag from '../pages/Tag/Add';
 
 const Title = ({ children }: {| +children?: string |}) => (
   <Helmet titleTemplate="%s | Bulletpoint" defaultTitle="Bulletpoint">
