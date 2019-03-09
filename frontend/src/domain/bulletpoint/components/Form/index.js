@@ -19,7 +19,7 @@ type Props = {|
   +onAddClick: () => (void),
   +onCancelClick: () => (void),
   +type: FormTypes,
-  +themeId: number,
+  +theme: FetchedThemeType,
   +referencedThemes: Array<FetchedThemeType>,
   +comparedThemes: Array<FetchedThemeType>,
 |};
@@ -169,14 +169,14 @@ export default class extends React.Component<Props, State> {
             </div>
             <div className={classNames('form-group', errors.referenced_themes && 'has-error')}>
               <ReferencedThemes
-                id={this.props.themeId}
+                theme={this.props.theme}
                 onSelectChange={this.handleReferencedTheme}
                 themes={referencedThemes}
               />
               {errors.referenced_themes && <span className="help-block">{validation.toMessage(errors, 'referenced_themes')}</span>}
             </div>
             <ComparedThemes
-              id={this.props.themeId}
+              theme={this.props.theme}
               onSelectChange={this.handleComparedTheme}
               themes={comparedThemes}
             />

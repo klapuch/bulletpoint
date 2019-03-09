@@ -646,7 +646,7 @@ CREATE TRIGGER themes_trigger_row_iu
 CREATE VIEW web.tagged_themes AS
 	SELECT tag_id, themes.*
 	FROM web.themes
-	JOIN theme_tags ON theme_tags.theme_id = themes.id;
+	LEFT JOIN theme_tags ON theme_tags.theme_id = themes.id;
 
 
 CREATE VIEW web.bulletpoints AS

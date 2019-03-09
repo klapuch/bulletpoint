@@ -157,7 +157,7 @@ class Theme extends React.Component<Props, State> {
             )}
             {user.isLoggedIn() && (
               <Form
-                themeId={parseInt(this.props.match.params.id, 10)}
+                theme={this.props.theme}
                 referencedThemes={
                   this.state.bulletpointId
                     ? this.props.getBulletpointById(this.state.bulletpointId).referenced_theme

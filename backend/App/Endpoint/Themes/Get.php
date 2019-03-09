@@ -34,30 +34,34 @@ final class Get implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		if (isset($parameters['tag_id'])) {
-			$themes = new Domain\PublicThemes(
-				new Domain\TaggedThemes(
-					new Domain\FakeThemes(),
-					array_map('intval', array_filter(explode(',', (string) $parameters['tag_id']), 'strlen')),
-					$this->connection,
-				),
+		$parameters['tag_id'] = array_map('intval', array_filter(explode(',', (string) ($parameters['tag_id'] ?? '')), 'strlen'));
+		$parameters['q'] = (string) ($parameters['q'] ?? '');
+		if ($parameters['tag_id'] !== [] && $parameters['q'] !== '') {
+			$themes = new Domain\SearchTaggedThemes(
+				new Domain\FakeThemes(),
+				$parameters['q'],
+				$parameters['tag_id'],
+				$this->connection,
 			);
-		} elseif (isset($parameters['q'])) {
-			$themes = new Domain\PublicThemes(
-				new Domain\SearchedThemes(
-					new Domain\FakeThemes(),
-					(string) $parameters['q'],
-					$this->connection,
-				),
+		} elseif ($parameters['tag_id'] !== []) {
+			$themes = new Domain\TaggedThemes(
+				new Domain\FakeThemes(),
+				$parameters['tag_id'],
+				$this->connection,
+			);
+		} elseif ($parameters['q'] !== '') {
+			$themes = new Domain\SearchedThemes(
+				new Domain\FakeThemes(),
+				$parameters['q'],
+				$this->connection,
 			);
 		} else {
-			$themes = new Domain\PublicThemes(
-				new Domain\StoredThemes(
-					new Access\FakeUser(),
-					$this->connection,
-				),
+			$themes = new Domain\StoredThemes(
+				new Access\FakeUser(),
+				$this->connection,
 			);
 		}
+		$themes = new Domain\PublicThemes($themes);
 		$count = $themes->count(new Dataset\EmptySelection());
 		return new Response\PaginatedResponse(
 			new Response\JsonResponse(

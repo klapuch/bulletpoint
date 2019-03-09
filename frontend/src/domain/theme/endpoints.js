@@ -12,8 +12,9 @@ import {
 } from './actions';
 import * as themes from './selects';
 import * as response from '../../api/response';
-import type { PostedThemeType } from './types';
+import type { FetchedThemeType, PostedThemeType } from './types';
 import type { PaginationType } from '../../api/dataset/PaginationType';
+import type { FetchedTagType } from '../tags/types';
 
 export const single = (
   id: number,
@@ -98,9 +99,23 @@ export const allSearched = (keyword: string) => (dispatch: (mixed) => Object) =>
   dispatch(all({ q: keyword }, { page: 1, perPage: 20 }))
 );
 
+const toReactSelectSearches = (themes: Array<FetchedThemeType>, except: Array<number>) => (
+  themes.filter(theme => !except.includes(theme.id))
+    .map(theme => ({ label: theme.name, value: theme.id }))
+);
+
 export const allReactSelectSearches = (keyword: string, except: Array<number>): Promise<any> => (
   axios.get('/themes', { params: { q: keyword } })
     .then(response => response.data)
-    .then(themes => themes.filter(theme => !except.includes(theme.id)))
-    .then(themes => themes.map(theme => ({ label: theme.name, value: theme.id })))
+    .then(themes => toReactSelectSearches(themes, except))
+);
+
+export const allReactSelectTagSearches = (
+  keyword: string,
+  tags: Array<FetchedTagType>,
+  except: Array<number>,
+): Promise<any> => (
+  axios.get('/themes', { params: { q: keyword, tag_id: tags.map(tag => tag.id).join(',') } })
+    .then(response => response.data)
+    .then(themes => toReactSelectSearches(themes, except))
 );
