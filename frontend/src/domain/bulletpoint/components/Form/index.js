@@ -138,7 +138,7 @@ export default class extends React.Component<Props, State> {
       }));
     } else {
       this.props.onAddClick();
-      this.props.onSubmit(bulletpoint).then(() => this.setState(initState));
+      this.props.onSubmit(bulletpoint);
     }
   };
 
