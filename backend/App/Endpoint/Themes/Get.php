@@ -35,11 +35,10 @@ final class Get implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		$parameters['tag_id'] = array_map('intval', array_filter(explode(',', (string) ($parameters['tag_id'] ?? '')), 'strlen'));
-		$parameters['q'] = (string) ($parameters['q'] ?? '');
-		if ($parameters['tag_id'] !== [] && $parameters['q'] !== '') {
+		if ($parameters['tag_id'] !== [] && isset($parameters['q'])) {
 			$themes = new Domain\SearchTaggedThemes(
 				new Domain\FakeThemes(),
-				$parameters['q'],
+				(string) $parameters['q'],
 				$parameters['tag_id'],
 				$this->connection,
 			);
@@ -49,10 +48,10 @@ final class Get implements Application\View {
 				$parameters['tag_id'],
 				$this->connection,
 			);
-		} elseif ($parameters['q'] !== '') {
+		} elseif (isset($parameters['q'])) {
 			$themes = new Domain\SearchedThemes(
 				new Domain\FakeThemes(),
-				$parameters['q'],
+				(string) $parameters['q'],
 				$this->connection,
 			);
 		} else {
