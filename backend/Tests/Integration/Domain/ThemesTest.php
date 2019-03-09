@@ -52,7 +52,7 @@ final class ThemesTest extends TestCase\Runtime {
 		['id' => $theme2] = (new Fixtures\SamplePostgresData($this->connection, 'themes'))->try();
 		(new Fixtures\SamplePostgresData($this->connection, 'theme_tags', ['tag_id' => $tag1, 'theme_id' => $theme1]))->try();
 		(new Fixtures\SamplePostgresData($this->connection, 'theme_tags', ['tag_id' => $tag2, 'theme_id' => $theme2]))->try();
-		$themes = new Domain\TaggedThemes(new Domain\FakeThemes(), $tag1, $this->connection);
+		$themes = new Domain\TaggedThemes(new Domain\FakeThemes(), [$tag1], $this->connection);
 		Assert::count(1, iterator_to_array($themes->all(new Dataset\EmptySelection())));
 		Assert::same(1, $themes->count(new Dataset\EmptySelection()));
 	}

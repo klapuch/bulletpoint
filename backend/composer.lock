@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e2842c7297ce17fcba09f9c5d54c5255",
+    "content-hash": "a5ad4ecfd818f6c5ffbb8c39edd0212c",
     "packages": [
         {
             "name": "justinrainbow/json-schema",
@@ -525,16 +525,16 @@
         },
         {
             "name": "klapuch/sql",
-            "version": "0.0.1",
+            "version": "0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Sql.git",
-                "reference": "a0153aa9103091132703fc18947afef56e7dcd33"
+                "reference": "b89c17ee9365e47abb045926f346fd7f557d08da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Sql/zipball/a0153aa9103091132703fc18947afef56e7dcd33",
-                "reference": "a0153aa9103091132703fc18947afef56e7dcd33",
+                "url": "https://api.github.com/repos/klapuch/Sql/zipball/b89c17ee9365e47abb045926f346fd7f557d08da",
+                "reference": "b89c17ee9365e47abb045926f346fd7f557d08da",
                 "shasum": ""
             },
             "require": {
@@ -573,7 +573,7 @@
                 "fluent",
                 "sql"
             ],
-            "time": "2019-01-01T13:38:57+00:00"
+            "time": "2019-03-09T14:05:49+00:00"
         },
         {
             "name": "klapuch/storage",

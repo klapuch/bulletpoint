@@ -14,13 +14,13 @@ final class TaggedThemes implements Themes {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var int */
-	private $tag;
+	/** @var int[] */
+	private $tags;
 
-	public function __construct(Themes $origin, int $tag, Storage\Connection $connection) {
+	public function __construct(Themes $origin, array $tags, Storage\Connection $connection) {
 		$this->origin = $origin;
 		$this->connection = $connection;
-		$this->tag = $tag;
+		$this->tags = $tags;
 	}
 
 	public function create(array $theme): int {
@@ -42,7 +42,7 @@ final class TaggedThemes implements Themes {
 					'created_at',
 					'is_starred',
 				]))->from(['web.tagged_themes'])
-					->where('tag_id = :tag_id', ['tag_id' => $this->tag]),
+					->whereIn('tag_id', ['tag_id' => $this->tags]),
 				$selection,
 			),
 		))->rows();
@@ -61,7 +61,7 @@ final class TaggedThemes implements Themes {
 			new Dataset\SelectiveStatement(
 				(new Sql\AnsiSelect(['count(*)']))
 					->from(['web.tagged_themes'])
-					->where('tag_id = :tag_id', ['tag_id' => $this->tag]),
+					->whereIn('tag_id', ['tag_id' => $this->tags]),
 				$selection,
 			),
 		))->field();

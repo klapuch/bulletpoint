@@ -38,7 +38,7 @@ final class Get implements Application\View {
 			$themes = new Domain\PublicThemes(
 				new Domain\TaggedThemes(
 					new Domain\FakeThemes(),
-					$parameters['tag_id'],
+					array_map('intval', array_filter(explode(',', (string) $parameters['tag_id']), 'strlen')),
 					$this->connection,
 				),
 			);

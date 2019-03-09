@@ -13,6 +13,10 @@ abstract class DecoratedWhere implements Sql\Where {
 		$this->origin = $origin;
 	}
 
+	public function whereIn(string $column, array $parameters = []): Sql\Where {
+		return $this->origin->whereIn($column, $parameters);
+	}
+
 	public function where(string $condition, array $parameters = []): Sql\Where {
 		return $this->origin->where($condition, $parameters);
 	}

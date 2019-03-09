@@ -25,7 +25,7 @@
     "klapuch/configuration": "^0.0.2",
     "klapuch/output": "^2.12.1",
     "klapuch/storage": "^0.0.1",
-    "klapuch/sql": "^0.0.1",
+    "klapuch/sql": "^0.0.2",
     "klapuch/validation": "^2.6.3",
     "klapuch/iterator": "^1.1.2",
     "klapuch/routing": "^0.0.14",
