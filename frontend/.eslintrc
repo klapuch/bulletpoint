@@ -1,7 +1,7 @@
 {
-  "parser"  : "babel-eslint",
-  "extends" : [
-    "airbnb",
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb"
   ],
   "rules": {
     "no-else-return": 0, // weird
@@ -17,14 +17,24 @@
     "react/jsx-filename-extension": 0, // No, JSX belongs to .js files
     "react/require-default-props": 0, // Does not work with API - first call is undefined
     "react/no-array-index-key": 0, // TODO: not always unique
-    "jsx-a11y/anchor-is-valid": [ "error", {
-      "components": [ "Link" ],
-      "specialLink": [ "to" ],
-      "aspects": [ "noHref" ],
-    }]
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "to"
+        ],
+        "aspects": [
+          "noHref"
+        ]
+      }
+    ]
   },
   env: {
-    browser: true, // because of document in tests,
-    jest: true,
+    browser: true,
+    // because of document in tests,
+    jest: true
   }
 }
