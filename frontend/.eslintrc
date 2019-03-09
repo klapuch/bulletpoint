@@ -7,7 +7,6 @@
     "no-else-return": 0, // weird
     "no-alert": 0, // I use confirm
     "react/destructuring-assignment": 0, // used for dispatch, ..
-
     "react/jsx-one-expression-per-line": 0,
     "jsx-a11y/no-autofocus": 0,
     "jsx-a11y/label-has-associated-control": 0,
@@ -18,16 +17,14 @@
     "react/jsx-filename-extension": 0, // No, JSX belongs to .js files
     "react/require-default-props": 0, // Does not work with API - first call is undefined
     "react/no-array-index-key": 0, // TODO: not always unique
-    "react/forbid-prop-types": [0, { "forbid": ["array", "object"] }],
     "jsx-a11y/anchor-is-valid": [ "error", {
       "components": [ "Link" ],
       "specialLink": [ "to" ],
       "aspects": [ "noHref" ],
-    }],
-    import/no-extraneous-dependencies: [error, { devDependencies: true }],
+    }]
   },
   env: {
     browser: true, // because of document in tests,
-    "jest": true,
+    jest: true,
   }
 }
