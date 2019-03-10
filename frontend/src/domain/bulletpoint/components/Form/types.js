@@ -1,5 +1,7 @@
-export const FORM_TYPE_DEFAULT = 'default';
-export type FormTypes = FORM_TYPE_DEFAULT | 'edit' | 'add';
+export const FORM_TYPE_DEFAULT = 'hidden';
+export const FORM_TYPE_ADD = 'add';
+export const FORM_TYPE_EDIT = 'edit';
+export type FormTypes = FORM_TYPE_DEFAULT | FORM_TYPE_EDIT | FORM_TYPE_ADD;
 export type TargetType = {|
   target: {|
     name: string,

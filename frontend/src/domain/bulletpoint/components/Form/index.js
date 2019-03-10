@@ -1,27 +1,28 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type { ErrorBulletpointType, PostedBulletpointType } from '../../types';
+import type { ErrorBulletpointType, FetchedBulletpointType, PostedBulletpointType } from '../../types';
 import * as validation from '../../validation';
 import type { FetchedThemeType } from '../../../theme/types';
 import CancelButton from './CancelButton';
 import ConfirmButton from './ConfirmButton';
 import type {
-  TargetType, FormTypes, ReferencedThemesType, ComparedThemesType,
+  TargetType,
+  FormTypes,
+  ReferencedThemesType,
+  ComparedThemesType,
 } from './types';
+import { FORM_TYPE_DEFAULT } from './types';
 import ReferencedThemes from './Input/ReferencedThemes';
 import ComparedThemes from './Input/ComparedThemes';
-import { FORM_TYPE_DEFAULT } from './types';
+import { fromFetchedToPosted } from '../../types';
 
 type Props = {|
-  +bulletpoint: ?PostedBulletpointType,
+  +bulletpoint?: FetchedBulletpointType,
   +onSubmit: (PostedBulletpointType) => (Promise<any>),
-  +onAddClick: () => (void),
   +onCancelClick: () => (void),
   +type: FormTypes,
   +theme: FetchedThemeType,
-  +referencedThemes: Array<FetchedThemeType>,
-  +comparedThemes: Array<FetchedThemeType>,
 |};
 type State = {|
   referencedThemes: ReferencedThemesType,
@@ -47,27 +48,29 @@ const initState = {
 export default class extends React.Component<Props, State> {
   state = initState;
 
-  componentWillReceiveProps(nextProps: Props): void {
-    this.setState(initState);
-    if (nextProps.bulletpoint !== null) {
-      const toSelectionFormat = theme => (
-        theme.filter(Boolean)
-          .map(single => ({ id: single.id, name: single.name }))
-      );
-      this.setState(prevState => ({
-        // $FlowFixMe its ok
-        bulletpoint: nextProps.bulletpoint,
+  componentDidMount(): void {
+    this.reload();
+  }
+
+  reload = () => {
+    const { bulletpoint } = this.props;
+    if (typeof bulletpoint !== 'undefined') {
+      const toSelectionFormat = theme => theme
+        .filter(Boolean)
+        .map(single => ({ id: single.id, name: single.name }));
+      this.setState({
+        bulletpoint: fromFetchedToPosted(bulletpoint),
         referencedThemes: [
-          ...toSelectionFormat(nextProps.referencedThemes),
-          ...prevState.referencedThemes.filter(Boolean),
+          ...toSelectionFormat(bulletpoint.referenced_theme),
+          emptyThemeSelection,
         ],
         comparedThemes: [
-          ...toSelectionFormat(nextProps.comparedThemes),
-          ...prevState.comparedThemes.filter(Boolean),
+          ...toSelectionFormat(bulletpoint.compared_theme),
+          emptyThemeSelection,
         ],
-      }));
+      });
     }
-  }
+  };
 
   onChange = ({ target: { name, value } }: TargetType) => {
     let input = null;
@@ -131,78 +134,76 @@ export default class extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { bulletpoint } = this.state;
-    if (this.props.type !== FORM_TYPE_DEFAULT && validation.anyErrors(bulletpoint)) {
+    if (validation.anyErrors(bulletpoint)) {
       this.setState(prevState => ({
         ...prevState,
         errors: validation.errors(prevState.bulletpoint),
       }));
     } else {
-      this.props.onAddClick();
       this.props.onSubmit(bulletpoint);
     }
   };
 
   onCancelClick = () => {
     this.props.onCancelClick();
-    this.setState(initState);
+    this.reload();
   };
 
   render() {
-    const {
-      bulletpoint, errors, referencedThemes, comparedThemes,
-    } = this.state;
+    const { bulletpoint, errors } = this.state;
+    if (this.props.type === FORM_TYPE_DEFAULT) {
+      return null;
+    }
     return (
       <>
-        {this.props.type === FORM_TYPE_DEFAULT ? null : (
-          <form>
-            <div className={classNames('form-group', errors.content && 'has-error')}>
-              <label htmlFor="content">Obsah</label>
+        <form>
+          <div className={classNames('form-group', errors.content && 'has-error')}>
+            <label htmlFor="content">Obsah</label>
+            <input
+              type="text"
+              className="form-control"
+              id="content"
+              name="content"
+              value={bulletpoint.content}
+              onChange={this.onChange}
+            />
+            {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
+          </div>
+          <div className={classNames('form-group', errors.referenced_themes && 'has-error')}>
+            <ReferencedThemes
+              theme={this.props.theme}
+              onSelectChange={this.handleReferencedTheme}
+              themes={this.state.referencedThemes}
+            />
+            {errors.referenced_themes && <span className="help-block">{validation.toMessage(errors, 'referenced_themes')}</span>}
+          </div>
+          <ComparedThemes
+            theme={this.props.theme}
+            onSelectChange={this.handleComparedTheme}
+            themes={this.state.comparedThemes}
+          />
+          <div className="form-group">
+            <label htmlFor="source_type">Typ zdroje</label>
+            <select className="form-control" id="source_type" name="source_type" value={bulletpoint.source.type} onChange={this.onChange}>
+              <option value="web">Web</option>
+              <option value="head">Z vlastní hlavy</option>
+            </select>
+          </div>
+          {bulletpoint.source.type === 'head' ? null : (
+            <div className={classNames('form-group', errors.source_link && 'has-error')}>
+              <label htmlFor="source_link">Odkaz na zdroj</label>
               <input
                 type="text"
                 className="form-control"
-                id="content"
-                name="content"
-                value={bulletpoint.content}
+                id="source_link"
+                name="source_link"
+                value={bulletpoint.source.link}
                 onChange={this.onChange}
               />
-              {errors.content && <span className="help-block">{validation.toMessage(errors, 'content')}</span>}
+              {errors.source_link && <span className="help-block">{validation.toMessage(errors, 'source_link')}</span>}
             </div>
-            <div className={classNames('form-group', errors.referenced_themes && 'has-error')}>
-              <ReferencedThemes
-                theme={this.props.theme}
-                onSelectChange={this.handleReferencedTheme}
-                themes={referencedThemes}
-              />
-              {errors.referenced_themes && <span className="help-block">{validation.toMessage(errors, 'referenced_themes')}</span>}
-            </div>
-            <ComparedThemes
-              theme={this.props.theme}
-              onSelectChange={this.handleComparedTheme}
-              themes={comparedThemes}
-            />
-            <div className="form-group">
-              <label htmlFor="source_type">Typ zdroje</label>
-              <select className="form-control" id="source_type" name="source_type" value={bulletpoint.source.type} onChange={this.onChange}>
-                <option value="web">Web</option>
-                <option value="head">Z vlastní hlavy</option>
-              </select>
-            </div>
-            {bulletpoint.source.type === 'head' ? null : (
-              <div className={classNames('form-group', errors.source_link && 'has-error')}>
-                <label htmlFor="source_link">Odkaz na zdroj</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="source_link"
-                  name="source_link"
-                  value={bulletpoint.source.link}
-                  onChange={this.onChange}
-                />
-                {errors.source_link && <span className="help-block">{validation.toMessage(errors, 'source_link')}</span>}
-              </div>
-            )}
-          </form>
-        )}
+          )}
+        </form>
         <ConfirmButton onClick={this.onSubmit} formType={this.props.type} />
         <CancelButton onClick={this.onCancelClick} formType={this.props.type}>
           Zrušit

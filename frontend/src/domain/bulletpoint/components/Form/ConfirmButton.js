@@ -1,16 +1,11 @@
+// @flow
 import React from 'react';
 import * as user from '../../../user';
 import SubmitButton from './SubmitButton';
 import type { ButtonProps } from './types';
 
 const ConfirmButton = ({ formType, onClick }: ButtonProps) => {
-  if (formType === 'default') {
-    return (
-      <SubmitButton formType={formType} onClick={onClick}>
-        {user.isAdmin() ? 'Přidat bulletpoint' : 'Navrhnout bulletpoint'}
-      </SubmitButton>
-    );
-  } else if (formType === 'add') {
+  if (formType === 'add') {
     return (
       <SubmitButton formType={formType} onClick={onClick}>
         {user.isAdmin() ? 'Přidat' : 'Navrhnout'}

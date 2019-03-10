@@ -20,11 +20,12 @@ import type { FetchedThemeType } from '../../domain/theme/types';
 import type { FormTypes } from '../../domain/bulletpoint/components/Form/types';
 import Boxes from '../../domain/bulletpoint/components/Boxes';
 import Header from '../../domain/theme/components/Header';
+import { FORM_TYPE_ADD, FORM_TYPE_DEFAULT, FORM_TYPE_EDIT } from '../../domain/bulletpoint/components/Form/types';
+import AddButton from '../../domain/bulletpoint/components/Form/AddButton';
 
 type State = {|
   formType: FormTypes,
-  bulletpointId: number | null,
-  bulletpoint: ?PostedBulletpointType,
+  bulletpointId: number|null,
 |};
 type Props = {|
   +addBulletpoint: (themeId: number, PostedBulletpointType, (void) => (void)) => (Promise<any>),
@@ -52,9 +53,8 @@ type Props = {|
   +theme: FetchedThemeType,
 |};
 const initState = {
-  formType: 'default',
+  formType: FORM_TYPE_DEFAULT,
   bulletpointId: null,
-  bulletpoint: null,
 };
 class Theme extends React.Component<Props, State> {
   state = initState;
@@ -72,10 +72,11 @@ class Theme extends React.Component<Props, State> {
 
   handleSubmit = (bulletpoint: PostedBulletpointType) => {
     const { match: { params: { id } } } = this.props;
-    if (this.state.formType === 'add') {
+    const { bulletpointId } = this.state;
+    if (this.state.formType === FORM_TYPE_ADD) {
       return this.props.addBulletpoint(id, bulletpoint, this.reload);
-    } else if (this.state.formType === 'edit' && this.state.bulletpointId !== null) {
-      return this.props.editBulletpoint(id, this.state.bulletpointId, bulletpoint, this.reload);
+    } else if (this.state.formType === FORM_TYPE_EDIT && bulletpointId !== null) {
+      return this.props.editBulletpoint(id, bulletpointId, bulletpoint, this.reload);
     }
     return Promise.resolve();
   };
@@ -113,19 +114,7 @@ class Theme extends React.Component<Props, State> {
     }
   };
 
-  handleEditClick = (bulletpointId: number) => {
-    const bulletpoint = this.props.getBulletpointById(bulletpointId);
-    this.setState({
-      formType: 'edit',
-      bulletpointId,
-      bulletpoint: {
-        referenced_theme_id: bulletpoint.referenced_theme_id,
-        compared_theme_id: bulletpoint.compared_theme_id,
-        content: bulletpoint.content,
-        source: bulletpoint.source,
-      },
-    });
-  };
+  handleEditClick = (id: number) => this.setState({ formType: 'edit', bulletpointId: id });
 
   handleAddClick = () => this.setState({ formType: 'add' });
 
@@ -158,22 +147,30 @@ class Theme extends React.Component<Props, State> {
               </>
             )}
             {user.isLoggedIn() && (
+              this.props.bulletpoints.map(bulletpoint => (
+                <Form
+                  key={bulletpoint.id}
+                  theme={this.props.theme}
+                  bulletpoint={bulletpoint}
+                  onCancelClick={this.handleCancelClick}
+                  type={
+                    bulletpoint.id === this.state.bulletpointId
+                      ? this.state.formType
+                      : FORM_TYPE_DEFAULT
+                  }
+                  onSubmit={this.handleSubmit}
+                />
+              ))
+            )}
+            {user.isLoggedIn()
+              && ![FORM_TYPE_ADD, FORM_TYPE_EDIT].includes(this.state.formType)
+              && <AddButton onClick={this.handleAddClick} />
+            }
+            {this.state.formType === FORM_TYPE_ADD && (
               <Form
                 theme={this.props.theme}
-                referencedThemes={
-                  this.state.bulletpointId
-                    ? this.props.getBulletpointById(this.state.bulletpointId).referenced_theme
-                    : []
-                }
-                comparedThemes={
-                  this.state.bulletpointId
-                    ? this.props.getBulletpointById(this.state.bulletpointId).compared_theme
-                    : []
-                }
-                bulletpoint={this.state.bulletpoint}
-                onAddClick={this.handleAddClick}
                 onCancelClick={this.handleCancelClick}
-                type={this.state.formType}
+                type={FORM_TYPE_ADD}
                 onSubmit={this.handleSubmit}
               />
             )}

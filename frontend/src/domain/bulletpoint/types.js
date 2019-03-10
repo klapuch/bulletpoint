@@ -1,4 +1,5 @@
 // @flow
+import { omit } from 'lodash';
 import type { FetchedThemeType } from '../theme/types';
 
 export type PointType = 1 | 0 | -1;
@@ -40,3 +41,6 @@ export type ErrorBulletpointType = {|
   +content: ?string,
   +referenced_themes: ?string,
 |};
+export const fromFetchedToPosted = (bulletpoint: FetchedBulletpointType) => (
+  omit(bulletpoint, ['id', 'rating', 'theme_id', 'referenced_theme', 'compared_theme', 'user_id'])
+);
