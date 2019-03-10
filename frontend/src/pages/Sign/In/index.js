@@ -5,11 +5,15 @@ import { Redirect } from 'react-router-dom';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import Form from '../../../domain/sign/components/Form';
 import * as sign from '../../../domain/sign/endpoints';
-import type {PostedCredentialsType, PostedProviderCredentialsType, ProviderTypes} from '../../../domain/sign/types';
+import type { PostedCredentialsType, PostedProviderCredentialsType, ProviderTypes } from '../../../domain/sign/types';
 import { FACEBOOK_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
 
 type Props = {|
-  +signIn: (ProviderTypes, PostedCredentialsType|PostedProviderCredentialsType, () => (void)) => (void),
+  +signIn: (
+    ProviderTypes,
+    PostedCredentialsType|PostedProviderCredentialsType,
+    () => (void),
+  ) => (void),
   +location: Object,
 |};
 type State = {|
