@@ -1,7 +1,7 @@
 // @flow
 import axios from 'axios';
 import * as message from '../../ui/message/actions';
-import type { PostedCredentialsType } from '../sign/types';
+import type { PostedCredentialsType, PostedProviderCredentialsType } from '../sign/types';
 
 export const create = (
   credentials: PostedCredentialsType,

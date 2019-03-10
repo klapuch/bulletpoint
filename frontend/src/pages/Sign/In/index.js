@@ -2,11 +2,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import Form from '../../../domain/sign/components/Form';
 import * as sign from '../../../domain/sign/endpoints';
-import type {PostedCredentialsType, ProviderType} from '../../../domain/sign/types';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
-import {FACEBOOK_PROVIDER, INTERNAL_PROVIDER} from "../../../domain/sign/types";
+import type { PostedCredentialsType, ProviderType } from '../../../domain/sign/types';
+import { FACEBOOK_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
 
 type Props = {|
   +signIn: (PostedCredentialsType, () => (void)) => (void),
@@ -21,7 +21,7 @@ class In extends React.Component<Props, State> {
   };
 
   afterLogin = () => {
-    this.setState({ redirectToReferrer: true })
+    this.setState({ redirectToReferrer: true });
   };
 
   handleSubmit = (credentials: PostedCredentialsType) => {
@@ -58,7 +58,7 @@ class In extends React.Component<Props, State> {
             fields="email"
             callback={this.handleFacebookLogin}
             render={() => (
-              <div className="fb-login-button" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"/>
+              <div className="fb-login-button" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false" />
             )}
           />
         </div>

@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
+import { parse } from 'cookie';
 import type { PostedCredentialsType, ErrorCredentialsType } from '../types';
 import * as validation from '../validation';
-import { parse } from 'cookie';
 
 type EventType = {|
   +target: {|

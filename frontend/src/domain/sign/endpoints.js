@@ -6,7 +6,7 @@ import * as message from '../../ui/message/actions';
 import type { PostedCredentialsType, ProviderType } from './types';
 import { fetchMe } from '../user/endpoints';
 import type { MeType } from '../user/types';
-import {FACEBOOK_PROVIDER, INTERNAL_PROVIDER} from "./types";
+import { FACEBOOK_PROVIDER, INTERNAL_PROVIDER } from './types';
 
 export const signIn = (
   provider: ProviderType,
