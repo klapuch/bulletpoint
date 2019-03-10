@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
+import { parse } from 'cookie';
 import type { PostedCredentialsType, ErrorCredentialsType } from '../types';
 import * as validation from '../validation';
 
@@ -54,6 +55,10 @@ class Form extends React.Component<Props, State> {
   };
 
   render() {
+    const cookie = parse(window.document.cookie);
+    if (typeof cookie.secret === 'undefined') {
+      return null;
+    }
     const { credentials, errors } = this.state;
     return (
       <form className="form-horizontal">

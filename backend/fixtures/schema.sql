@@ -128,17 +128,21 @@ CREATE TRIGGER tags_audit_trigger
 
 CREATE TABLE users (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	username usernames NOT NULL UNIQUE,
+	username usernames UNIQUE,
 	email citext NOT NULL UNIQUE,
-	password text NOT NULL,
-	role roles NOT NULL DEFAULT 'member'::roles
+	password text,
+	facebook_id bigint UNIQUE,
+	role roles NOT NULL DEFAULT 'member'::roles,
+	CONSTRAINT users_password_empty_for_3rd_party CHECK (password IS NULL AND facebook_id IS NOT NULL OR password IS NOT NULL AND facebook_id IS NULL),
+	CONSTRAINT users_username_empty_for_3rd_party CHECK (username IS NULL AND facebook_id IS NOT NULL OR username IS NOT NULL AND facebook_id IS NULL)
 );
 
 CREATE FUNCTION users_trigger_row_ai() RETURNS trigger AS $$
 BEGIN
-	INSERT INTO access.verification_codes (user_id, code) VALUES (
+	INSERT INTO access.verification_codes (user_id, code, used_at) VALUES (
 		new.id,
-		format('%s:%s', encode(gen_random_bytes(25), 'hex'), encode(digest(new.id::text, 'sha1'), 'hex'))
+		format('%s:%s', encode(gen_random_bytes(25), 'hex'), encode(digest(new.id::text, 'sha1'), 'hex')),
+		CASE WHEN new.facebook_id IS NOT NULL THEN now() ELSE NULL END
 	);
 
 	RETURN new;
