@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import FacebookLogin from 'react-facebook-login';
 import Form from '../../../domain/sign/components/Form';
 import * as sign from '../../../domain/sign/endpoints';
 import type { PostedCredentialsType, PostedProviderCredentialsType, ProviderTypes } from '../../../domain/sign/types';
@@ -61,9 +61,6 @@ class In extends React.Component<Props, State> {
             appId={process.env.REACT_APP_FACEBOOK_APP_ID}
             fields="email"
             callback={this.handleFacebookLogin}
-            render={() => (
-              <div className="fb-login-button" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false" />
-            )}
           />
         </div>
 
