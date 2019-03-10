@@ -47,7 +47,7 @@ final class Post implements Application\View {
 	public function response(array $parameters): Application\Response {
 		$provider = $parameters['provider'] ?? null;
 		if ($provider === self::FACEBOOK_PROVIDER) {
-			$entrance = new Access\FacebookEntrance(
+			$entrance = new Access\OAuthEntrance(
 				$this->connection,
 				new GuzzleHttp\Client(),
 			);

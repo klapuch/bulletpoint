@@ -33,7 +33,7 @@ final class FacebookEntranceTest extends TestCase\Runtime {
 		$response->shouldReceive('getStatusCode')->andReturn(HTTP_BAD_REQUEST);
 		$response->shouldReceive('getBody')->andReturn('');
 		$http->shouldReceive('request')->andReturn($response);
-		(new Access\FacebookEntrance($this->connection, $http))->enter(['login' => 'abc']);
+		(new Access\OAuthEntrance($this->connection, $http))->enter(['login' => 'abc']);
 	}
 
 	public function testInsertingNewFacebookAccount(): void {
@@ -55,7 +55,7 @@ final class FacebookEntranceTest extends TestCase\Runtime {
 					'facebook_id' => 123,
 				],
 			),
-			(new Access\FacebookEntrance($this->connection, $http))->enter(['login' => 'TOKEN']),
+			(new Access\OAuthEntrance($this->connection, $http))->enter(['login' => 'TOKEN']),
 		);
 	}
 
@@ -80,7 +80,7 @@ final class FacebookEntranceTest extends TestCase\Runtime {
 					'facebook_id' => 123,
 				],
 			),
-			(new Access\FacebookEntrance($this->connection, $http))->enter(['login' => 'TOKEN']),
+			(new Access\OAuthEntrance($this->connection, $http))->enter(['login' => 'TOKEN']),
 		);
 	}
 

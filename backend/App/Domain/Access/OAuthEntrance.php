@@ -9,10 +9,11 @@ use Klapuch\Storage;
 use Nette\Utils\Json;
 
 /**
- * Secure entrance for entering users to the system via facebook
+ * Secure entrance for entering users to the system via oauth providers
  */
-final class FacebookEntrance implements Entrance {
-	private const ENDPOINT = 'https://graph.facebook.com/v2.3/me';
+final class OAuthEntrance implements Entrance {
+	private const GOOGLE_ENDPOINT = 'https://www.googleapis.com/oauth2/v3/userinfo';
+	private const FACEBOOK_ENDPOINT = 'https://graph.facebook.com/v2.3/me';
 	private const FIELDS = ['email'];
 
 	/** @var \Klapuch\Storage\Connection */
@@ -50,7 +51,7 @@ final class FacebookEntrance implements Entrance {
 	private function credentials(string $accessToken): array {
 		$response = $this->http->request(
 			'GET',
-			self::ENDPOINT,
+			self::FACEBOOK_ENDPOINT,
 			['query' => ['fields' => implode(',', self::FIELDS), 'access_token' => $accessToken]],
 		);
 		$body = (string) $response->getBody();
