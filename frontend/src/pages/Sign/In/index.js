@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import Form from '../../../domain/sign/components/Form';
 import * as sign from '../../../domain/sign/endpoints';
 import type {PostedCredentialsType, ProviderType} from '../../../domain/sign/types';
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import {FACEBOOK_PROVIDER, INTERNAL_PROVIDER} from "../../../domain/sign/types";
 
 type Props = {|
@@ -52,11 +52,17 @@ class In extends React.Component<Props, State> {
           <h1>Přihlášení</h1>
         </div>
         <Form onSubmit={this.handleSubmit} />
-        <FacebookLogin
-          appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-          fields="email"
-          callback={this.handleFacebookLogin}
-        />
+        <div className="text-center">
+          <FacebookLogin
+            appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+            fields="email"
+            callback={this.handleFacebookLogin}
+            render={() => (
+              <div className="fb-login-button" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"/>
+            )}
+          />
+        </div>
+
       </>
     );
   }

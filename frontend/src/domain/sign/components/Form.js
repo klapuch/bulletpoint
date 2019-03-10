@@ -3,6 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import type { PostedCredentialsType, ErrorCredentialsType } from '../types';
 import * as validation from '../validation';
+import { parse } from 'cookie';
 
 type EventType = {|
   +target: {|
@@ -54,6 +55,10 @@ class Form extends React.Component<Props, State> {
   };
 
   render() {
+    const cookie = parse(window.document.cookie);
+    if (typeof cookie.secret === 'undefined') {
+      return null;
+    }
     const { credentials, errors } = this.state;
     return (
       <form className="form-horizontal">
