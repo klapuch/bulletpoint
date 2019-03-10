@@ -45,7 +45,7 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		$provider = $parameters['provider'] ?? NULL;
+		$provider = $parameters['provider'] ?? null;
 		if ($provider === self::FACEBOOK_PROVIDER) {
 			$entrance = new Access\FacebookEntrance(
 				$this->connection,
@@ -57,8 +57,8 @@ final class Post implements Application\View {
 				new Access\SecureEntrance(
 					$this->connection,
 					$this->cipher,
-					),
-				);
+				),
+			);
 		}
 		$user = (new Access\HarnessedEntrance(
 			new Access\TokenEntrance($entrance),
