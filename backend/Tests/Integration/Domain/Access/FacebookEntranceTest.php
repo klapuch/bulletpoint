@@ -17,7 +17,8 @@ require __DIR__ . '/../../../bootstrap.php';
  * @testCase
  */
 final class FacebookEntranceTest extends TestCase\Runtime {
-	use TestCase\Mockery, TestCase\TemplateDatabase {
+	use TestCase\Mockery;
+	use TestCase\TemplateDatabase {
 		TestCase\Mockery::tearDown as mockeryTeardown;
 		TestCase\TemplateDatabase::tearDown as databaseTeardow;
 	}
