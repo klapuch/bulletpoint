@@ -1,5 +1,6 @@
 includes:
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
+	- vendor/phpstan/phpstan-mockery/extension.neon
 parameters:
 	ignoreErrors:
 		- '~^Property .+::\$connection \(Klapuch\\Storage\\Connection\) does not accept null\.$~' # because GC
