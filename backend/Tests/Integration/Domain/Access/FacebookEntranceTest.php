@@ -7,7 +7,6 @@ use Bulletpoint\Domain\Access;
 use Bulletpoint\TestCase;
 use GuzzleHttp;
 use Klapuch\Storage;
-use Mockery\MockInterface;
 use Nette\Utils\Json;
 use Psr\Http\Message\ResponseInterface;
 use Tester\Assert;
@@ -27,7 +26,7 @@ final class FacebookEntranceTest extends TestCase\Runtime {
 	 * @throws \UnexpectedValueException Error during retrieving Facebook token.
 	 */
 	public function testThrowingOnNotOkStatus(): void {
-		/** @var GuzzleHttp\Client|MockInterface $http */
+		/** @var \GuzzleHttp\Client|\Mockery\MockInterface $http */
 		$http = $this->mock(GuzzleHttp\Client::class);
 		$response = $this->mock(ResponseInterface::class);
 		$response->shouldReceive('getStatusCode')->andReturn(HTTP_BAD_REQUEST);
@@ -37,7 +36,7 @@ final class FacebookEntranceTest extends TestCase\Runtime {
 	}
 
 	public function testInsertingNewFacebookAccount(): void {
-		/** @var GuzzleHttp\Client|MockInterface $http */
+		/** @var \GuzzleHttp\Client|\Mockery\MockInterface $http */
 		$http = $this->mock(GuzzleHttp\Client::class);
 		$response = $this->mock(ResponseInterface::class);
 		$response->shouldReceive('getStatusCode')->andReturn(HTTP_OK);
@@ -53,16 +52,16 @@ final class FacebookEntranceTest extends TestCase\Runtime {
 					'username' => null,
 					'password' => null,
 					'facebook_id' => 123,
-				]
+				],
 			),
-			(new Access\FacebookEntrance($this->connection, $http))->enter(['login' => 'TOKEN'])
+			(new Access\FacebookEntrance($this->connection, $http))->enter(['login' => 'TOKEN']),
 		);
 	}
 
 	public function testUpdatingEmailOfAlreadyRegistered(): void {
 		[$facebookId, $email] = [123, 'old@bar.cz'];
 		(new Storage\NativeQuery($this->connection, 'INSERT INTO users (facebook_id, email) VALUES (?, ?)', [$facebookId, $email]))->execute();
-		/** @var GuzzleHttp\Client|MockInterface $http */
+		/** @var \GuzzleHttp\Client|\Mockery\MockInterface $http */
 		$http = $this->mock(GuzzleHttp\Client::class);
 		$response = $this->mock(ResponseInterface::class);
 		$response->shouldReceive('getStatusCode')->andReturn(HTTP_OK);
@@ -78,9 +77,9 @@ final class FacebookEntranceTest extends TestCase\Runtime {
 					'username' => null,
 					'password' => null,
 					'facebook_id' => 123,
-				]
+				],
 			),
-			(new Access\FacebookEntrance($this->connection, $http))->enter(['login' => 'TOKEN'])
+			(new Access\FacebookEntrance($this->connection, $http))->enter(['login' => 'TOKEN']),
 		);
 	}
 

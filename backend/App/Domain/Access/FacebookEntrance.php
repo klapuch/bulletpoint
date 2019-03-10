@@ -18,7 +18,7 @@ final class FacebookEntrance implements Entrance {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var GuzzleHttp\Client */
+	/** @var \GuzzleHttp\Client */
 	private $http;
 
 	public function __construct(Storage\Connection $connection, GuzzleHttp\Client $http) {
@@ -38,11 +38,11 @@ final class FacebookEntrance implements Entrance {
 			(new Sql\PgInsertInto(
 				'users',
 				['facebook_id' => ':facebook_id', 'email' => ':email'],
-				['facebook_id' => $id, 'email' => $email]
+				['facebook_id' => $id, 'email' => $email],
 			))
 				->onConflict(['facebook_id'])
 				->doUpdate(['email' => ':email'])
-				->returning(['*'])
+				->returning(['*']),
 		))->row();
 		return new ConstantUser((string) $user['id'], $user);
 	}
