@@ -12,4 +12,4 @@ export type PostedProviderCredentialsType = {|
 |};
 export const FACEBOOK_PROVIDER = 'facebook';
 export const INTERNAL_PROVIDER = 'internal';
-export type ProviderType = FACEBOOK_PROVIDER | INTERNAL_PROVIDER;
+export type ProviderTypes = 'facebook' | 'internal';
