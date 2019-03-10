@@ -128,12 +128,6 @@ final class ApplicationRoutes implements Routing\Routes {
 					$this->cipher,
 				);
 			},
-			'facebook_tokens [POST]' => function() use ($request): Application\View {
-				return new Endpoint\FacebookTokens\Post(
-					$request,
-					$this->connection,
-				);
-			},
 			'tokens [DELETE]' => static function() use ($user): Application\View {
 				return new AuthenticatedView(
 					new Endpoint\Tokens\Delete(),

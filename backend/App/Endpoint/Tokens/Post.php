@@ -7,6 +7,7 @@ use Bulletpoint\Constraint;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Misc;
 use Bulletpoint\Response;
+use GuzzleHttp;
 use Klapuch\Application;
 use Klapuch\Encryption;
 use Klapuch\Output;
@@ -14,7 +15,12 @@ use Klapuch\Storage;
 use Nette\Utils\Json;
 
 final class Post implements Application\View {
+	private const FACEBOOK_PROVIDER = 'facebook';
 	private const SCHEMA = __DIR__ . '/schema/post.json';
+	private const FACEBOOK_SCHEMA = __DIR__ . '/Facebook/schema/post.json';
+	private const SCHEMAS = [
+		self::FACEBOOK_PROVIDER => self::FACEBOOK_SCHEMA,
+	];
 
 	/** @var \Klapuch\Application\Request */
 	private $request;
@@ -39,20 +45,27 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		$user = (new Access\HarnessedEntrance(
-			new Access\TokenEntrance(
-				new Access\VerifiedEntrance(
+		$provider = $parameters['provider'] ?? NULL;
+		if ($provider === self::FACEBOOK_PROVIDER) {
+			$entrance = new Access\FacebookEntrance(
+				$this->connection,
+				new GuzzleHttp\Client(),
+			);
+		} else {
+			$entrance = new Access\VerifiedEntrance(
+				$this->connection,
+				new Access\SecureEntrance(
 					$this->connection,
-					new Access\SecureEntrance(
-						$this->connection,
-						$this->cipher,
+					$this->cipher,
 					),
-				),
-			),
+				);
+		}
+		$user = (new Access\HarnessedEntrance(
+			new Access\TokenEntrance($entrance),
 			new Misc\ApiErrorCallback(HTTP_FORBIDDEN),
 		))->enter(
 			(new Constraint\StructuredJson(
-				new \SplFileInfo(self::SCHEMA),
+				new \SplFileInfo(self::SCHEMAS[$provider] ?? self::SCHEMA),
 			))->apply(Json::decode($this->request->body()->serialization())),
 		);
 		return new Response\JsonResponse(

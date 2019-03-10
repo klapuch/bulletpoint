@@ -26,9 +26,9 @@ export const signIn = (
     .then(() => onReceivedUser(data));
 
   if (provider === FACEBOOK_PROVIDER) {
-    dispatch(tokens.createFacebook({ login: credentials.login }, onCreatedToken));
+    dispatch(tokens.create({ login: credentials.login }, 'facebook', onCreatedToken));
   } else if (provider === INTERNAL_PROVIDER) {
-    dispatch(tokens.create(credentials, onCreatedToken));
+    dispatch(tokens.create(credentials, null, onCreatedToken));
   }
 };
 
