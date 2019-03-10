@@ -13,6 +13,16 @@ export const create = (
     .catch(error => dispatch(message.receivedApiError(error)))
 );
 
+export const createFacebook = (
+  credentials: PostedProviderCredentialsType,
+  next: (Object) => Promise<any>,
+) => (dispatch: (mixed) => Object) => (
+  axios.post('/facebook_tokens', credentials)
+    .then(response => response.data)
+    .then(next)
+    .catch(error => dispatch(message.receivedApiError(error)))
+);
+
 export const invalidate = (next: (void) => Promise<any>) => (
   axios.delete('/tokens').finally(next)
 );

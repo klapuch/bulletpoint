@@ -35,7 +35,8 @@
     "klapuch/ui": "^0.0.4",
     "tracy/tracy": "^2.5",
     "justinrainbow/json-schema": "^5.2",
-    "nette/utils": "^2.5"
+    "nette/utils": "^2.5",
+    "guzzlehttp/guzzle": "^6.3"
   },
   "require-dev": {
     "nette/tester": "^2.0",

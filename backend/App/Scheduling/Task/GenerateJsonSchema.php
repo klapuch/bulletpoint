@@ -62,6 +62,9 @@ final class GenerateJsonSchema implements Scheduling\Job {
 		$token = new Schema\Token\Structure();
 		$schemas->save($token->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tokens/schema/post.json'));
 
+		$facebookToken = new Schema\FacebookToken\Structure();
+		$schemas->save($facebookToken->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/FacebookTokens/schema/post.json'));
+
 		$refreshToken = new Schema\RefreshToken\Structure();
 		$schemas->save($refreshToken->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/RefreshTokens/schema/post.json'));
 

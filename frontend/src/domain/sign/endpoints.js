@@ -3,11 +3,13 @@ import * as tokens from '../token/endpoints';
 import * as session from '../access/session';
 import { requestedSignIn, requestedSignOut } from './actions';
 import * as message from '../../ui/message/actions';
-import type { PostedCredentialsType } from './types';
+import type { PostedCredentialsType, ProviderType } from './types';
 import { fetchMe } from '../user/endpoints';
 import type { MeType } from '../user/types';
+import {FACEBOOK_PROVIDER, INTERNAL_PROVIDER} from "./types";
 
 export const signIn = (
+  provider: ProviderType,
   credentials: PostedCredentialsType,
   next: (void) => void,
 ) => (dispatch: (mixed) => Object) => {
@@ -23,7 +25,11 @@ export const signIn = (
     .then(() => dispatch(requestedSignIn()))
     .then(() => onReceivedUser(data));
 
-  dispatch(tokens.create(credentials, onCreatedToken));
+  if (provider === FACEBOOK_PROVIDER) {
+    dispatch(tokens.createFacebook({ login: credentials.login }, onCreatedToken));
+  } else if (provider === INTERNAL_PROVIDER) {
+    dispatch(tokens.create(credentials, onCreatedToken));
+  }
 };
 
 export const signOut = (next: (void) => void) => (dispatch: (mixed) => Object) => {
