@@ -50,7 +50,7 @@ final class Post implements Application\View {
 		$credentials = (new Constraint\StructuredJson(
 			new \SplFileInfo(self::SCHEMAS[$provider] ?? self::SCHEMA),
 		))->apply(Json::decode($this->request->body()->serialization()));
-		if (in_array($provider, [self::FACEBOOK_PROVIDER, self::GOOGLE_PROVIDER])) {
+		if (in_array($provider, [self::FACEBOOK_PROVIDER, self::GOOGLE_PROVIDER], true)) {
 			$entrance = new Access\OAuthEntrance(
 				$this->connection,
 				new Access\OAuthRequest($provider, $credentials['login']),

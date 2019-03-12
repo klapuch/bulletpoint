@@ -15,7 +15,7 @@ final class OAuthEntrance implements Entrance {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var Http\Request */
+	/** @var \Klapuch\Http\Request */
 	private $request;
 
 	public function __construct(Storage\Connection $connection, Http\Request $request) {

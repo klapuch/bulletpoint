@@ -21,7 +21,7 @@ final class GoogleRequest implements Http\Request {
 	public function send(): Response {
 		$response = (new Http\BasicRequest(
 			'GET',
-			new Uri\ValidUrl(sprintf('https://www.googleapis.com/oauth2/v3/userinfo?access_token=%s', $this->accessToken))
+			new Uri\ValidUrl(sprintf('https://www.googleapis.com/oauth2/v3/userinfo?access_token=%s', $this->accessToken)),
 		))->send();
 		if ($response->code() !== HTTP_OK) {
 			throw new \UnexpectedValueException('Error during retrieving Google token.', 0, new \Exception($response->body()));

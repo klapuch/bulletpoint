@@ -36,9 +36,9 @@ final class OAuthEntranceTest extends TestCase\Runtime {
 				$this->connection,
 				new Http\FakeRequest(
 					new Http\FakeResponse(
-						Json::encode(['id' => 123, 'email' => 'new@bar.cz'])
-					)
-				)
+						Json::encode(['id' => 123, 'email' => 'new@bar.cz']),
+					),
+				),
 			))->enter(['login' => 'TOKEN']),
 		);
 	}
@@ -62,9 +62,9 @@ final class OAuthEntranceTest extends TestCase\Runtime {
 				$this->connection,
 				new Http\FakeRequest(
 					new Http\FakeResponse(
-						Json::encode(['id' => $facebookId, 'email' => 'new@bar.cz'])
-					)
-				)
+						Json::encode(['id' => $facebookId, 'email' => 'new@bar.cz']),
+					),
+				),
 			))->enter(['login' => 'TOKEN']),
 		);
 	}
@@ -84,16 +84,16 @@ final class OAuthEntranceTest extends TestCase\Runtime {
 					'password' => null,
 					'facebook_id' => 123,
 				],
-				),
+			),
 			(new Access\OAuthEntrance(
 				$this->connection,
 				new Http\FakeRequest(
 					new Http\FakeResponse(
-						Json::encode(['id' => $facebookId, 'email' => 'new@bar.cz'])
-					)
-				)
+						Json::encode(['id' => $facebookId, 'email' => 'new@bar.cz']),
+					),
+				),
 			))->enter(['login' => 'TOKEN']),
-			);
+		);
 	}
 }
 
