@@ -21,11 +21,11 @@ CREATE SCHEMA access;
 -- constants
 CREATE SCHEMA constant;
 
-CREATE FUNCTION constant.guest_id() RETURNS integer AS $$SELECT 0$$ LANGUAGE sql IMMUTABLE;
-CREATE FUNCTION constant.sources_type() RETURNS text[] AS $$SELECT ARRAY['web', 'head'];$$ LANGUAGE sql IMMUTABLE;
-CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $$SELECT ARRAY[-1, 0, 1];$$ LANGUAGE sql IMMUTABLE;
-CREATE FUNCTION constant.theme_tags_limit() RETURNS integer AS $$SELECT 4;$$ LANGUAGE sql IMMUTABLE;
-CREATE FUNCTION constant.roles() RETURNS text[] AS $$SELECT ARRAY['member', 'admin'];$$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.guest_id() RETURNS integer AS $BODY$SELECT 0$BODY$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.sources_type() RETURNS text[] AS $BODY$SELECT ARRAY['web', 'head'];$BODY$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $BODY$SELECT ARRAY[-1, 0, 1];$BODY$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.theme_tags_limit() RETURNS integer AS $BODY$SELECT 4;$BODY$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.roles() RETURNS text[] AS $BODY$SELECT ARRAY['member', 'admin'];$BODY$ LANGUAGE sql IMMUTABLE;
 
 -- types
 CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
@@ -137,7 +137,7 @@ CREATE TABLE users (
 	CONSTRAINT users_username_empty_for_3rd_party CHECK (username IS NULL AND facebook_id IS NOT NULL OR username IS NOT NULL AND facebook_id IS NULL)
 );
 
-CREATE FUNCTION users_trigger_row_ai() RETURNS trigger AS $$
+CREATE FUNCTION users_trigger_row_ai() RETURNS trigger AS $BODY$
 BEGIN
 	INSERT INTO access.verification_codes (user_id, code, used_at) VALUES (
 		new.id,
@@ -147,7 +147,7 @@ BEGIN
 
 	RETURN new;
 END;
-$$ LANGUAGE plpgsql VOLATILE;
+$BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE TRIGGER users_row_ai_trigger
 	AFTER INSERT
@@ -272,7 +272,7 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE FUNCTION theme_tags_trigger_row_ad() RETURNS trigger AS $$
+CREATE FUNCTION theme_tags_trigger_row_ad() RETURNS trigger AS $BODY$
 BEGIN
 	PERFORM update_user_tag_reputation(bulletpoints.user_id, old.tag_id, -1::bulletpoint_ratings_point)
 	FROM bulletpoints
@@ -280,7 +280,7 @@ BEGIN
 
 	RETURN old;
 END;
-$$ LANGUAGE plpgsql VOLATILE;
+$BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE TRIGGER theme_tags_row_biu_trigger
 	BEFORE INSERT OR UPDATE
@@ -440,7 +440,7 @@ CREATE TABLE bulletpoint_theme_comparisons (
 	CONSTRAINT bulletpoint_theme_comparisons_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE FUNCTION bulletpoint_theme_comparisons_trigger_row_biu() RETURNS trigger AS $$
+CREATE FUNCTION bulletpoint_theme_comparisons_trigger_row_biu() RETURNS trigger AS $BODY$
 DECLARE
 	v_theme_from_bulletpoint integer;
 BEGIN
@@ -466,7 +466,7 @@ BEGIN
 
 	RETURN new;
 END;
-$$ LANGUAGE plpgsql VOLATILE;
+$BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE TRIGGER bulletpoint_theme_comparisons_row_biu_trigger
 	BEFORE INSERT OR UPDATE
@@ -482,7 +482,7 @@ CREATE TABLE bulletpoint_referenced_themes (
 	CONSTRAINT bulletpoint_referenced_themes_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE FUNCTION bulletpoint_referenced_themes_trigger_row_biu() RETURNS trigger AS $$
+CREATE FUNCTION bulletpoint_referenced_themes_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
 	IF ((SELECT theme_id = new.theme_id FROM bulletpoints WHERE id = new.bulletpoint_id)) THEN
 		RAISE EXCEPTION 'Referenced theme must differ from the assigned.';
@@ -496,7 +496,7 @@ BEGIN
 
 	RETURN new;
 END;
-$$ LANGUAGE plpgsql VOLATILE;
+$BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE TRIGGER bulletpoint_referenced_themes_row_biu_trigger
 	BEFORE INSERT OR UPDATE
@@ -525,7 +525,7 @@ CREATE TABLE bulletpoint_ratings (
 	CONSTRAINT bulletpoint_ratings_user_id_bulletpoint_id UNIQUE (user_id, bulletpoint_id)
 );
 
-CREATE FUNCTION bulletpoint_ratings_trigger_row_aiud() RETURNS trigger AS $$
+CREATE FUNCTION bulletpoint_ratings_trigger_row_aiud() RETURNS trigger AS $BODY$
 DECLARE
 	r bulletpoint_ratings;
 BEGIN
@@ -538,7 +538,7 @@ BEGIN
 
 	RETURN r;
 END;
-$$ LANGUAGE plpgsql VOLATILE;
+$BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE TRIGGER bulletpoint_ratings_row_aiud_trigger
 	AFTER INSERT OR UPDATE OR DELETE
