@@ -6,7 +6,7 @@ import * as message from '../../ui/message/actions';
 import type { PostedCredentialsType, ProviderTypes } from './types';
 import { fetchMe } from '../user/endpoints';
 import type { MeType } from '../user/types';
-import { FACEBOOK_PROVIDER, INTERNAL_PROVIDER } from './types';
+import { FACEBOOK_PROVIDER, GOOGLE_PROVIDER } from './types';
 
 export const signIn = (
   provider: ProviderTypes,
@@ -27,7 +27,9 @@ export const signIn = (
 
   if (provider === FACEBOOK_PROVIDER) {
     dispatch(tokens.create({ login: credentials.login }, 'facebook', onCreatedToken));
-  } else if (provider === INTERNAL_PROVIDER) {
+  } else if (provider === GOOGLE_PROVIDER) {
+    dispatch(tokens.create({ login: credentials.login }, 'google', onCreatedToken));
+  } else {
     dispatch(tokens.create(credentials, null, onCreatedToken));
   }
 };

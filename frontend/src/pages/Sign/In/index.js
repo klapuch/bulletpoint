@@ -7,7 +7,7 @@ import GoogleLogin from 'react-google-login';
 import Form from '../../../domain/sign/components/Form';
 import * as sign from '../../../domain/sign/endpoints';
 import type { PostedCredentialsType, PostedProviderCredentialsType, ProviderTypes } from '../../../domain/sign/types';
-import { FACEBOOK_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
+import { FACEBOOK_PROVIDER, GOOGLE_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
 
 type Props = {|
   +signIn: (
@@ -46,7 +46,11 @@ class In extends React.Component<Props, State> {
   };
 
   handleGoogleLogin = (credentials: Object) => {
-    console.log(credentials.accessToken);
+    this.props.signIn(
+      GOOGLE_PROVIDER,
+      { login: credentials.accessToken },
+      this.afterLogin,
+    );
   };
 
   render() {
@@ -67,7 +71,7 @@ class In extends React.Component<Props, State> {
             fields="email"
             callback={this.handleFacebookLogin}
           />
-          <br/>
+          <br />
           <GoogleLogin
             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
             buttonText="LOGIN WITH GOOGLE"
