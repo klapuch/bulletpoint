@@ -37,7 +37,6 @@ final class GoogleRequest implements Http\Request {
 	private static function unify(string $body): string {
 		$decoded = Json::decode($body, Json::FORCE_ARRAY);
 		$decoded['id'] = $decoded['sub'];
-		unset($decoded['sub']);
 		return Json::encode($decoded);
 	}
 }
