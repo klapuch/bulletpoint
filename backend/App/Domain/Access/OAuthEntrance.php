@@ -36,7 +36,7 @@ final class OAuthEntrance implements Entrance {
 		$user = (new Storage\TypedQuery(
 			$this->connection,
 			'SELECT * FROM create_third_party_user(:provider, :id, :email) AS record',
-			['provider' => $this->provider, 'id' => $id, 'email' => $email]
+			['provider' => $this->provider, 'id' => $id, 'email' => $email],
 		))->row();
 		return new ConstantUser((string) $user['id'], $user);
 	}
