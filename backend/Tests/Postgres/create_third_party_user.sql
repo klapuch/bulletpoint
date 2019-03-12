@@ -20,3 +20,11 @@ BEGIN
 
 	PERFORM assert.same(ARRAY['1', '2'], (SELECT ARRAY[facebook_id, google_id] FROM users));
 END $BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE FUNCTION tests.from_password() RETURNS void AS $BODY$
+BEGIN
+	INSERT INTO users (username, email, password) VALUES ('facedown', 'foo@email.com', 'passwd1');
+	PERFORM create_third_party_user('facebook', '1', 'foo@email.com');
+
+	PERFORM assert.same(ARRAY['1'], (SELECT ARRAY[facebook_id] FROM users));
+END $BODY$ LANGUAGE plpgsql VOLATILE;

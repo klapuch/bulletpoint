@@ -133,7 +133,21 @@ CREATE TABLE users (
 	password text,
 	facebook_id text UNIQUE,
 	google_id text UNIQUE,
-	role roles NOT NULL DEFAULT 'member'::roles
+	role roles NOT NULL DEFAULT 'member'::roles,
+	CONSTRAINT users_password_empty_for_3rd_party CHECK (
+		CASE WHEN password IS NULL THEN
+			COALESCE(facebook_id, google_id) IS NOT NULL
+		ELSE
+			TRUE
+		END
+	),
+	CONSTRAINT users_username_empty_for_3rd_party CHECK (
+		CASE WHEN username IS NULL THEN
+			COALESCE(facebook_id, google_id) IS NOT NULL
+		ELSE
+			TRUE
+		END
+	)
 );
 
 CREATE FUNCTION create_third_party_user(in_provider text, in_id text, in_email text) RETURNS SETOF users AS $BODY$
