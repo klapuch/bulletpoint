@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain\Access;
 
-use GuzzleHttp;
+use Klapuch\Http;
 use Klapuch\Sql;
 use Klapuch\Storage;
 use Nette\Utils\Json;
@@ -12,19 +12,15 @@ use Nette\Utils\Json;
  * Secure entrance for entering users to the system via oauth providers
  */
 final class OAuthEntrance implements Entrance {
-	private const GOOGLE_ENDPOINT = 'https://www.googleapis.com/oauth2/v3/userinfo';
-	private const FACEBOOK_ENDPOINT = 'https://graph.facebook.com/v2.3/me';
-	private const FIELDS = ['email'];
-
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/** @var \GuzzleHttp\Client */
-	private $http;
+	/** @var Http\Request */
+	private $request;
 
-	public function __construct(Storage\Connection $connection, GuzzleHttp\Client $http) {
+	public function __construct(Storage\Connection $connection, Http\Request $request) {
 		$this->connection = $connection;
-		$this->http = $http;
+		$this->request = $request;
 	}
 
 	/**
@@ -33,7 +29,7 @@ final class OAuthEntrance implements Entrance {
 	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function enter(array $credentials): User {
-		['id' => $id, 'email' => $email] = $this->credentials($credentials['login']);
+		['id' => $id, 'email' => $email] = $this->credentials();
 		$user = (new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PgInsertInto(
@@ -48,17 +44,9 @@ final class OAuthEntrance implements Entrance {
 		return new ConstantUser((string) $user['id'], $user);
 	}
 
-	private function credentials(string $accessToken): array {
-		$response = $this->http->request(
-			'GET',
-			self::FACEBOOK_ENDPOINT,
-			['query' => ['fields' => implode(',', self::FIELDS), 'access_token' => $accessToken]],
-		);
-		$body = (string) $response->getBody();
-		if ($response->getStatusCode() !== HTTP_OK) {
-			throw new \UnexpectedValueException('Error during retrieving Facebook token.', 0, new \Exception($body));
-		}
-		return Json::decode($body, Json::FORCE_ARRAY);
+	private function credentials(): array {
+		$response = $this->request->send();
+		return Json::decode($response->body(), Json::FORCE_ARRAY);
 	}
 
 	public function exit(): User {

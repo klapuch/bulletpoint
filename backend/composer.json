@@ -36,7 +36,7 @@
     "tracy/tracy": "^2.5",
     "justinrainbow/json-schema": "^5.2",
     "nette/utils": "^2.5",
-    "guzzlehttp/guzzle": "^6.3"
+    "klapuch/http": "^1.4"
   },
   "require-dev": {
     "nette/tester": "^2.0",
@@ -47,7 +47,6 @@
     "phpstan/phpstan": "^0.11.0",
     "phpstan/phpstan-strict-rules": "*",
     "mockery/mockery": "^1.0.0",
-    "klapuch/http": "^1.4",
     "pepakriz/phpstan-exception-rules": "*",
     "vimeo/psalm": "^3.1",
     "povils/phpmnd": "^2.1",

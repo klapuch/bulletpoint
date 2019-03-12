@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Schema\FacebookToken;
+namespace Bulletpoint\Schema\Token\OAuth;
 
 final class Structure {
 	public function post(): array {

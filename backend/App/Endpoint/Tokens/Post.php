@@ -7,7 +7,6 @@ use Bulletpoint\Constraint;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Misc;
 use Bulletpoint\Response;
-use GuzzleHttp;
 use Klapuch\Application;
 use Klapuch\Encryption;
 use Klapuch\Output;
@@ -16,10 +15,12 @@ use Nette\Utils\Json;
 
 final class Post implements Application\View {
 	private const FACEBOOK_PROVIDER = 'facebook';
+	private const GOOGLE_PROVIDER = 'google';
 	private const SCHEMA = __DIR__ . '/schema/post.json';
-	private const FACEBOOK_SCHEMA = __DIR__ . '/Facebook/schema/post.json';
+	private const OAUTH_SCHEMA = __DIR__ . '/OAuth/schema/post.json';
 	private const SCHEMAS = [
-		self::FACEBOOK_PROVIDER => self::FACEBOOK_SCHEMA,
+		self::FACEBOOK_PROVIDER => self::OAUTH_SCHEMA,
+		self::GOOGLE_PROVIDER => self::OAUTH_SCHEMA,
 	];
 
 	/** @var \Klapuch\Application\Request */
@@ -46,10 +47,13 @@ final class Post implements Application\View {
 	 */
 	public function response(array $parameters): Application\Response {
 		$provider = $parameters['provider'] ?? null;
-		if ($provider === self::FACEBOOK_PROVIDER) {
+		$credentials = (new Constraint\StructuredJson(
+			new \SplFileInfo(self::SCHEMAS[$provider] ?? self::SCHEMA),
+		))->apply(Json::decode($this->request->body()->serialization()));
+		if (in_array($provider, [self::FACEBOOK_PROVIDER, self::GOOGLE_PROVIDER])) {
 			$entrance = new Access\OAuthEntrance(
 				$this->connection,
-				new GuzzleHttp\Client(),
+				new Access\OAuthRequest($provider, $credentials['login']),
 			);
 		} else {
 			$entrance = new Access\VerifiedEntrance(
@@ -63,11 +67,7 @@ final class Post implements Application\View {
 		$user = (new Access\HarnessedEntrance(
 			new Access\TokenEntrance($entrance),
 			new Misc\ApiErrorCallback(HTTP_FORBIDDEN),
-		))->enter(
-			(new Constraint\StructuredJson(
-				new \SplFileInfo(self::SCHEMAS[$provider] ?? self::SCHEMA),
-			))->apply(Json::decode($this->request->body()->serialization())),
-		);
+		))->enter($credentials);
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
 				new Output\Json(['token' => $user->id(), 'expiration' => $user->properties()['expiration']]),

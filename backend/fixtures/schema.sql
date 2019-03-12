@@ -132,9 +132,16 @@ CREATE TABLE users (
 	email citext NOT NULL UNIQUE,
 	password text,
 	facebook_id bigint UNIQUE,
+	google_id bigint UNIQUE,
 	role roles NOT NULL DEFAULT 'member'::roles,
-	CONSTRAINT users_password_empty_for_3rd_party CHECK (password IS NULL AND facebook_id IS NOT NULL OR password IS NOT NULL AND facebook_id IS NULL),
-	CONSTRAINT users_username_empty_for_3rd_party CHECK (username IS NULL AND facebook_id IS NOT NULL OR username IS NOT NULL AND facebook_id IS NULL)
+	CONSTRAINT users_password_empty_for_3rd_party CHECK (
+		password IS NULL AND COALESCE(facebook_id, google_id) IS NOT NULL
+		OR password IS NOT NULL AND COALESCE(facebook_id, google_id) IS NULL
+	),
+	CONSTRAINT users_username_empty_for_3rd_party CHECK (
+		username IS NULL AND COALESCE(facebook_id, google_id) IS NOT NULL
+		OR username IS NOT NULL AND COALESCE(facebook_id, google_id) IS NULL
+	)
 );
 
 CREATE FUNCTION users_trigger_row_ai() RETURNS trigger AS $BODY$
@@ -142,7 +149,7 @@ BEGIN
 	INSERT INTO access.verification_codes (user_id, code, used_at) VALUES (
 		new.id,
 		format('%s:%s', encode(gen_random_bytes(25), 'hex'), encode(digest(new.id::text, 'sha1'), 'hex')),
-		CASE WHEN new.facebook_id IS NOT NULL THEN now() ELSE NULL END
+		CASE WHEN COALESCE(new.facebook_id, new.google_id) IS NOT NULL THEN now() ELSE NULL END
 	);
 
 	RETURN new;
