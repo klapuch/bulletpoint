@@ -35,7 +35,7 @@ final class OAuthEntrance implements Entrance {
 		['id' => $id, 'email' => $email] = Json::decode($this->request->send()->body(), Json::FORCE_ARRAY);
 		$user = (new Storage\TypedQuery(
 			$this->connection,
-			'SELECT * FROM create_third_party_user(:provider, :id, :email) AS record',
+			'SELECT * FROM create_third_party_user(:provider, :id::text, :email) AS record',
 			['provider' => $this->provider, 'id' => $id, 'email' => $email],
 		))->row();
 		return new ConstantUser((string) $user['id'], $user);

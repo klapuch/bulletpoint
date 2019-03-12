@@ -131,20 +131,12 @@ CREATE TABLE users (
 	username usernames UNIQUE,
 	email citext NOT NULL UNIQUE,
 	password text,
-	facebook_id bigint UNIQUE,
-	google_id bigint UNIQUE,
-	role roles NOT NULL DEFAULT 'member'::roles,
-	CONSTRAINT users_password_empty_for_3rd_party CHECK (
-		password IS NULL AND COALESCE(facebook_id, google_id) IS NOT NULL
-		OR password IS NOT NULL AND COALESCE(facebook_id, google_id) IS NULL
-	),
-	CONSTRAINT users_username_empty_for_3rd_party CHECK (
-		username IS NULL AND COALESCE(facebook_id, google_id) IS NOT NULL
-		OR username IS NOT NULL AND COALESCE(facebook_id, google_id) IS NULL
-	)
+	facebook_id text UNIQUE,
+	google_id text UNIQUE,
+	role roles NOT NULL DEFAULT 'member'::roles
 );
 
-CREATE FUNCTION create_third_party_user(in_provider text, in_id integer, in_email text) RETURNS SETOF users AS $BODY$
+CREATE FUNCTION create_third_party_user(in_provider text, in_id text, in_email text) RETURNS SETOF users AS $BODY$
 DECLARE
 	v_provider_column CONSTANT hstore = hstore(ARRAY['facebook', 'facebook_id', 'google', 'google_id']);
 	v_column text;
