@@ -144,6 +144,31 @@ CREATE TABLE users (
 	)
 );
 
+CREATE FUNCTION create_third_party_user(in_provider text, in_id integer, in_email text) RETURNS SETOF users AS $BODY$
+DECLARE
+	v_provider_column CONSTANT hstore = hstore(ARRAY['facebook', 'facebook_id', 'google', 'google_id']);
+	v_column text;
+	v_exists boolean;
+BEGIN
+	v_column = v_provider_column -> in_provider;
+
+	IF v_column IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = format('Provider "%s" is unknown', in_provider);
+	END IF;
+
+	EXECUTE format('SELECT EXISTS(SELECT 1 FROM users WHERE %I = %L)', v_column, in_id) INTO v_exists;
+	IF v_exists THEN
+		RETURN QUERY EXECUTE format('UPDATE users SET email = %L WHERE %I = %L RETURNING *', in_email, v_column, in_id);
+	ELSE
+		RETURN QUERY EXECUTE format($$
+			INSERT INTO users (email, %I) VALUES (%L, %L)
+			ON CONFLICT(email) DO UPDATE SET email = %L, %I = %L
+			RETURNING *
+		$$, v_column, in_email, in_id, in_email, v_column, in_id, in_id);
+	END IF;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE ROWS 1;
+
 CREATE FUNCTION users_trigger_row_ai() RETURNS trigger AS $BODY$
 BEGIN
 	INSERT INTO access.verification_codes (user_id, code, used_at) VALUES (

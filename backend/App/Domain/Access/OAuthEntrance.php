@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain\Access;
 
 use Klapuch\Http;
-use Klapuch\Sql;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 
@@ -12,13 +11,17 @@ use Nette\Utils\Json;
  * Secure entrance for entering users to the system via oauth providers
  */
 final class OAuthEntrance implements Entrance {
+	/** @var string */
+	private $provider;
+
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
 	/** @var \Klapuch\Http\Request */
 	private $request;
 
-	public function __construct(Storage\Connection $connection, Http\Request $request) {
+	public function __construct(string $provider, Storage\Connection $connection, Http\Request $request) {
+		$this->provider = $provider;
 		$this->connection = $connection;
 		$this->request = $request;
 	}
@@ -29,24 +32,13 @@ final class OAuthEntrance implements Entrance {
 	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function enter(array $credentials): User {
-		['id' => $id, 'email' => $email] = $this->credentials();
-		$user = (new Storage\BuiltQuery(
+		['id' => $id, 'email' => $email] = Json::decode($this->request->send()->body(), Json::FORCE_ARRAY);
+		$user = (new Storage\TypedQuery(
 			$this->connection,
-			(new Sql\PgInsertInto(
-				'users',
-				['facebook_id' => ':facebook_id', 'email' => ':email'],
-				['facebook_id' => $id, 'email' => $email],
-			))
-				->onConflict(['facebook_id'])
-				->doUpdate(['email' => ':email'])
-				->returning(['*']),
+			'SELECT * FROM create_third_party_user(:provider, :id, :email) AS record',
+			['provider' => $this->provider, 'id' => $id, 'email' => $email]
 		))->row();
 		return new ConstantUser((string) $user['id'], $user);
-	}
-
-	private function credentials(): array {
-		$response = $this->request->send();
-		return Json::decode($response->body(), Json::FORCE_ARRAY);
 	}
 
 	public function exit(): User {

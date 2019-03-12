@@ -52,6 +52,7 @@ final class Post implements Application\View {
 		))->apply(Json::decode($this->request->body()->serialization()));
 		if (in_array($provider, [self::FACEBOOK_PROVIDER, self::GOOGLE_PROVIDER], true)) {
 			$entrance = new Access\OAuthEntrance(
+				$provider,
 				$this->connection,
 				new Access\OAuthRequest($provider, $credentials['login']),
 			);
