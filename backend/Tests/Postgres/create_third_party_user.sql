@@ -26,5 +26,5 @@ BEGIN
 	INSERT INTO users (username, email, password) VALUES ('facedown', 'foo@email.com', 'passwd1');
 	PERFORM create_third_party_user('facebook', '1', 'foo@email.com');
 
-	PERFORM assert.same(ARRAY['1'], (SELECT ARRAY[facebook_id] FROM users));
+	PERFORM assert.same(ARRAY['1'], (SELECT ARRAY[facebook_id]::text[] FROM users));
 END $BODY$ LANGUAGE plpgsql VOLATILE;

@@ -36,6 +36,8 @@ CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
 CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_ratings_point_range() @> ARRAY[VALUE]);
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 CREATE DOMAIN usernames AS citext CHECK (VALUE ~ '^[a-zA-Z0-9_]{3,25}$');
+CREATE DOMAIN number_string AS text CHECK (VALUE ~ '^[0-9]+$');
+CREATE DOMAIN openid_sub AS text CHECK (VALUE ~ '^.{1,255}$');
 
 -- schema audit
 CREATE TABLE audit.history (
@@ -131,8 +133,8 @@ CREATE TABLE users (
 	username usernames UNIQUE,
 	email citext NOT NULL UNIQUE,
 	password text,
-	facebook_id text UNIQUE,
-	google_id text UNIQUE,
+	facebook_id number_string UNIQUE,
+	google_id openid_sub UNIQUE,
 	role roles NOT NULL DEFAULT 'member'::roles,
 	CONSTRAINT users_password_empty_for_3rd_party CHECK (
 		CASE WHEN password IS NULL THEN
