@@ -3,10 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
 import Form from '../../../domain/sign/components/Form';
 import * as sign from '../../../domain/sign/endpoints';
 import type { PostedCredentialsType, PostedProviderCredentialsType, ProviderTypes } from '../../../domain/sign/types';
-import { FACEBOOK_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
+import { FACEBOOK_PROVIDER, GOOGLE_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
 
 type Props = {|
   +signIn: (
@@ -44,6 +45,14 @@ class In extends React.Component<Props, State> {
     );
   };
 
+  handleGoogleLogin = (credentials: Object) => {
+    this.props.signIn(
+      GOOGLE_PROVIDER,
+      { login: credentials.accessToken },
+      this.afterLogin,
+    );
+  };
+
   render() {
     const { from } = this.props.location.state || { from: { pathname: '/' } };
     const { redirectToReferrer } = this.state;
@@ -61,6 +70,13 @@ class In extends React.Component<Props, State> {
             appId={process.env.REACT_APP_FACEBOOK_APP_ID}
             fields="email"
             callback={this.handleFacebookLogin}
+          />
+          <br />
+          <GoogleLogin
+            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+            buttonText="LOGIN WITH GOOGLE"
+            onSuccess={this.handleGoogleLogin}
+            onFailure={this.handleGoogleLogin}
           />
         </div>
 

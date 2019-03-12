@@ -36,6 +36,8 @@ CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
 CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_ratings_point_range() @> ARRAY[VALUE]);
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 CREATE DOMAIN usernames AS citext CHECK (VALUE ~ '^[a-zA-Z0-9_]{3,25}$');
+CREATE DOMAIN number_string AS text CHECK (VALUE ~ '^[0-9]+$');
+CREATE DOMAIN openid_sub AS text CHECK (VALUE ~ '^.{1,255}$');
 
 -- schema audit
 CREATE TABLE audit.history (
@@ -131,18 +133,56 @@ CREATE TABLE users (
 	username usernames UNIQUE,
 	email citext NOT NULL UNIQUE,
 	password text,
-	facebook_id bigint UNIQUE,
+	facebook_id number_string UNIQUE,
+	google_id openid_sub UNIQUE,
 	role roles NOT NULL DEFAULT 'member'::roles,
-	CONSTRAINT users_password_empty_for_3rd_party CHECK (password IS NULL AND facebook_id IS NOT NULL OR password IS NOT NULL AND facebook_id IS NULL),
-	CONSTRAINT users_username_empty_for_3rd_party CHECK (username IS NULL AND facebook_id IS NOT NULL OR username IS NOT NULL AND facebook_id IS NULL)
+	CONSTRAINT users_password_empty_for_3rd_party CHECK (
+		CASE WHEN password IS NULL THEN
+			COALESCE(facebook_id, google_id) IS NOT NULL
+		ELSE
+			TRUE
+		END
+	),
+	CONSTRAINT users_username_empty_for_3rd_party CHECK (
+		CASE WHEN username IS NULL THEN
+			COALESCE(facebook_id, google_id) IS NOT NULL
+		ELSE
+			TRUE
+		END
+	)
 );
+
+CREATE FUNCTION create_third_party_user(in_provider text, in_id text, in_email text) RETURNS SETOF users AS $BODY$
+DECLARE
+	v_provider_column CONSTANT hstore = hstore(ARRAY['facebook', 'facebook_id', 'google', 'google_id']);
+	v_column text;
+	v_exists boolean;
+BEGIN
+	v_column = v_provider_column -> in_provider;
+
+	IF v_column IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = format('Provider "%s" is unknown', in_provider);
+	END IF;
+
+	EXECUTE format('SELECT EXISTS(SELECT 1 FROM users WHERE %I = %L)', v_column, in_id) INTO v_exists;
+	IF v_exists THEN
+		RETURN QUERY EXECUTE format('UPDATE users SET email = %L WHERE %I = %L RETURNING *', in_email, v_column, in_id);
+	ELSE
+		RETURN QUERY EXECUTE format($$
+			INSERT INTO users (email, %I) VALUES (%L, %L)
+			ON CONFLICT(email) DO UPDATE SET email = %L, %I = %L
+			RETURNING *
+		$$, v_column, in_email, in_id, in_email, v_column, in_id, in_id);
+	END IF;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE ROWS 1;
 
 CREATE FUNCTION users_trigger_row_ai() RETURNS trigger AS $BODY$
 BEGIN
 	INSERT INTO access.verification_codes (user_id, code, used_at) VALUES (
 		new.id,
 		format('%s:%s', encode(gen_random_bytes(25), 'hex'), encode(digest(new.id::text, 'sha1'), 'hex')),
-		CASE WHEN new.facebook_id IS NOT NULL THEN now() ELSE NULL END
+		CASE WHEN COALESCE(new.facebook_id, new.google_id) IS NOT NULL THEN now() ELSE NULL END
 	);
 
 	RETURN new;
