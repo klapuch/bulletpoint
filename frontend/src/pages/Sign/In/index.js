@@ -38,19 +38,23 @@ class In extends React.Component<Props, State> {
   };
 
   handleFacebookLogin = (credentials: Object) => {
-    this.props.signIn(
-      FACEBOOK_PROVIDER,
-      { login: credentials.accessToken },
-      this.afterLogin,
-    );
+    if (typeof credentials.accessToken !== 'undefined') {
+      this.props.signIn(
+        FACEBOOK_PROVIDER,
+        { login: credentials.accessToken },
+        this.afterLogin,
+      );
+    }
   };
 
   handleGoogleLogin = (credentials: Object) => {
-    this.props.signIn(
-      GOOGLE_PROVIDER,
-      { login: credentials.accessToken },
-      this.afterLogin,
-    );
+    if (typeof credentials.accessToken !== 'undefined') {
+      this.props.signIn(
+        GOOGLE_PROVIDER,
+        { login: credentials.accessToken },
+        this.afterLogin,
+      );
+    }
   };
 
   render() {
