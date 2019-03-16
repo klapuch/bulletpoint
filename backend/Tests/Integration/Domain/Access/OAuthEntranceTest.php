@@ -25,7 +25,7 @@ final class OAuthEntranceTest extends TestCase\Runtime {
 					'email' => 'new@bar.cz',
 					'role' => 'member',
 					'id' => 1,
-					'username' => null,
+					'username' => 'new',
 					'password' => null,
 					'facebook_id' => '123',
 					'google_id' => null,

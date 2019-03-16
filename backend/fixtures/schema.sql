@@ -26,6 +26,7 @@ CREATE FUNCTION constant.sources_type() RETURNS text[] AS $BODY$SELECT ARRAY['we
 CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $BODY$SELECT ARRAY[-1, 0, 1];$BODY$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.theme_tags_limit() RETURNS integer AS $BODY$SELECT 4;$BODY$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.roles() RETURNS text[] AS $BODY$SELECT ARRAY['member', 'admin'];$BODY$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.username_max_length() RETURNS integer AS $BODY$SELECT 25$BODY$ LANGUAGE sql IMMUTABLE;
 
 -- types
 CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
@@ -35,7 +36,7 @@ CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
 CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
 CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_ratings_point_range() @> ARRAY[VALUE]);
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
-CREATE DOMAIN usernames AS citext CHECK (VALUE ~ '^[a-zA-Z0-9_]{3,25}$');
+CREATE DOMAIN usernames AS citext CHECK (VALUE ~ format('^[a-zA-Z0-9_]{3,%s}$', constant.username_max_length()));
 CREATE DOMAIN number_string AS text CHECK (VALUE ~ '^[0-9]+$');
 CREATE DOMAIN openid_sub AS text CHECK (VALUE ~ '^.{1,255}$');
 
@@ -130,7 +131,7 @@ CREATE TRIGGER tags_audit_trigger
 
 CREATE TABLE users (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	username usernames UNIQUE,
+	username usernames NOT NULL UNIQUE,
 	email citext NOT NULL UNIQUE,
 	password text,
 	facebook_id number_string UNIQUE,
@@ -142,15 +143,33 @@ CREATE TABLE users (
 		ELSE
 			TRUE
 		END
-	),
-	CONSTRAINT users_username_empty_for_3rd_party CHECK (
-		CASE WHEN username IS NULL THEN
-			COALESCE(facebook_id, google_id) IS NOT NULL
-		ELSE
-			TRUE
-		END
 	)
 );
+
+CREATE FUNCTION random_username(in_email text) RETURNS text STRICT AS $BODY$
+DECLARE
+	v_local_part text;
+	v_generated_username text;
+	v_step integer;
+	v_attempts CONSTANT integer = 999;
+BEGIN
+	v_local_part = (string_to_array(in_email, '@'))[1];
+
+	IF v_local_part = in_email THEN
+		RAISE EXCEPTION USING MESSAGE = format('Passed value "%s" is not email', in_email);
+	END IF;
+
+	FOR v_step IN 0 .. v_attempts LOOP
+		v_generated_username = substr(v_local_part, 1, (SELECT constant.username_max_length()) - length(v_step::text));
+		IF v_step != 0 THEN
+			v_generated_username = v_generated_username || v_step;
+		END IF;
+		IF NOT EXISTS(SELECT 1 FROM users WHERE username = v_generated_username) THEN
+			RETURN v_generated_username;
+		END IF;
+	END LOOP;
+END;
+$BODY$ LANGUAGE plpgsql STABLE;
 
 CREATE FUNCTION create_third_party_user(in_provider text, in_id text, in_email text) RETURNS SETOF users AS $BODY$
 DECLARE
@@ -189,10 +208,25 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE FUNCTION users_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+	IF new.username IS NULL AND COALESCE(new.facebook_id, new.google_id) IS NOT NULL THEN
+		new.username = random_username(new.email);
+	END IF;
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
 CREATE TRIGGER users_row_ai_trigger
 	AFTER INSERT
 	ON users
 	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_ai();
+
+CREATE TRIGGER users_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON users
+	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_biu();
 
 
 CREATE TABLE user_tag_reputations (
