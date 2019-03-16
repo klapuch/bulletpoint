@@ -2,12 +2,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import Form from '../../../domain/sign/components/Form';
 import * as sign from '../../../domain/sign/endpoints';
 import type { PostedCredentialsType, PostedProviderCredentialsType, ProviderTypes } from '../../../domain/sign/types';
 import { FACEBOOK_PROVIDER, GOOGLE_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
+import FacebookLoginButton from '../../../components/FacebookLoginButton';
+import GoogleLoginButton from '../../../components/GoogleLoginButton';
 
 type Props = {|
   +signIn: (
@@ -74,6 +76,9 @@ class In extends React.Component<Props, State> {
             appId={process.env.REACT_APP_FACEBOOK_APP_ID}
             fields="email"
             callback={this.handleFacebookLogin}
+            render={renderProps => (
+              <FacebookLoginButton onClick={renderProps.onClick} />
+            )}
           />
           <br />
           <GoogleLogin
@@ -81,6 +86,9 @@ class In extends React.Component<Props, State> {
             buttonText="LOGIN WITH GOOGLE"
             onSuccess={this.handleGoogleLogin}
             onFailure={this.handleGoogleLogin}
+            render={renderProps => (
+              <GoogleLoginButton onClick={renderProps.onClick} />
+            )}
           />
         </div>
 
