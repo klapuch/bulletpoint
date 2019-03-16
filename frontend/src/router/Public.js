@@ -57,9 +57,19 @@ const Public = ({
                   {user.isAdmin() && <NavItem title="Nové téma" to="/themes/create">Nové téma</NavItem>}
                   {user.isAdmin() && <NavItem title="Přidat tag" to="/tags/add">Přidat tag</NavItem>}
                   {user.isLoggedIn()
-                    ? <NavItem title="Odhlásit se" to="/sign/out">Odhlásit se</NavItem>
-                    : <NavItem title="Přihlásit se" to="/sign/in">Přihlásit se</NavItem>
-                  }
+                    ? (
+                      <li className="dropdown">
+                        <a href="#" className="dropdown-toggle" title="Uživatel" data-toggle="dropdown" role="button" aria-expanded="false">
+                          {user.getUsername()}
+                          <span className="caret" />
+                        </a>
+                        <ul className="dropdown-menu" role="menu">
+                          <NavItem title="Nastavení" to="/settings">Nastavení</NavItem>
+                          <NavItem title="Odhlásit se" to="/sign/out">Odhlásit se</NavItem>
+                        </ul>
+                      </li>
+                    )
+                    : <NavItem title="Přihlásit se" to="/sign/in">Přihlásit se</NavItem>}
                 </ul>
               </div>
             </div>

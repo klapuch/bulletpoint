@@ -14,6 +14,7 @@ import ChangeTheme from '../pages/Theme/Change';
 import SignIn from '../pages/Sign/In';
 import SignOut from '../pages/Sign/Out';
 import AddTag from '../pages/Tag/Add';
+import Settings from '../pages/Settings';
 
 const Title = ({ children }: {| +children?: string |}) => (
   <Helmet titleTemplate="%s | Bulletpoint" defaultTitle="Bulletpoint">
@@ -29,6 +30,7 @@ export default ({ history }: Props) => (
     <Switch>
       <Public exact path="/" component={Default} title={() => <Title />} />
       <Private path="/tags/add" component={AddTag} title={() => <Title>Přidat tag</Title>} />
+      <Private path="/settings" component={Settings} title={() => <Title>Nastavení</Title>} />
       <Private path="/themes/create" component={CreateTheme} title={() => <Title>Nové téma</Title>} />
       <Private path="/themes/:id([0-9]+)/change" component={ChangeTheme} title={() => <Title />} />
       <Public path="/themes/tag/:tag([0-9]+)/:slug?" component={Themes} title={() => <Title />} />
