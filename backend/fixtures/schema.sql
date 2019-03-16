@@ -37,7 +37,6 @@ CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
 CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_ratings_point_range() @> ARRAY[VALUE]);
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 CREATE DOMAIN usernames AS citext CHECK (VALUE ~ format('^[a-zA-Z0-9_]{3,%s}$', constant.username_max_length()));
-CREATE DOMAIN number_string AS text CHECK (VALUE ~ '^[0-9]+$');
 CREATE DOMAIN openid_sub AS text CHECK (VALUE ~ '^.{1,255}$');
 
 -- schema audit
@@ -134,12 +133,12 @@ CREATE TABLE users (
 	username usernames NOT NULL UNIQUE,
 	email citext NOT NULL UNIQUE,
 	password text,
-	facebook_id number_string UNIQUE,
+	facebook_id bigint UNIQUE,
 	google_id openid_sub UNIQUE,
 	role roles NOT NULL DEFAULT 'member'::roles,
 	CONSTRAINT users_password_empty_for_3rd_party CHECK (
 		CASE WHEN password IS NULL THEN
-			COALESCE(facebook_id, google_id) IS NOT NULL
+			COALESCE(facebook_id::text, google_id) IS NOT NULL
 		ELSE
 			TRUE
 		END
@@ -201,7 +200,7 @@ BEGIN
 	INSERT INTO access.verification_codes (user_id, code, used_at) VALUES (
 		new.id,
 		format('%s:%s', encode(gen_random_bytes(25), 'hex'), encode(digest(new.id::text, 'sha1'), 'hex')),
-		CASE WHEN COALESCE(new.facebook_id, new.google_id) IS NOT NULL THEN now() ELSE NULL END
+		CASE WHEN COALESCE(new.facebook_id::text, new.google_id) IS NOT NULL THEN now() ELSE NULL END
 	);
 
 	RETURN new;
@@ -210,7 +209,7 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION users_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
-	IF new.username IS NULL AND COALESCE(new.facebook_id, new.google_id) IS NOT NULL THEN
+	IF new.username IS NULL AND COALESCE(new.facebook_id::text, new.google_id) IS NOT NULL THEN
 		new.username = random_username(new.email);
 	END IF;
 

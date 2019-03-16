@@ -27,7 +27,7 @@ final class OAuthEntranceTest extends TestCase\Runtime {
 					'id' => 1,
 					'username' => 'new',
 					'password' => null,
-					'facebook_id' => '123',
+					'facebook_id' => 123,
 					'google_id' => null,
 				],
 			),
