@@ -18,9 +18,7 @@ final class Put implements Application\View {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	/**
-	 * @var Access\User
-	 */
+	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
 	public function __construct(Application\Request $request, Storage\Connection $connection, Access\User $user) {
@@ -35,7 +33,7 @@ final class Put implements Application\View {
 	public function response(array $parameters): Application\Response {
 		(new Access\RegisteredUser(
 			(int) $this->user->id(),
-			$this->connection
+			$this->connection,
 		))->edit(
 			(new Constraint\StructuredJson(
 				new \SplFileInfo(self::SCHEMA),

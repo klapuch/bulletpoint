@@ -6,9 +6,7 @@ namespace Bulletpoint\Schema\User;
 use Klapuch\Storage;
 
 final class Structure {
-	/**
-	 * @var Storage\Connection
-	 */
+	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
 	public function __construct(Storage\Connection $connection) {

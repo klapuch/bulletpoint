@@ -49,7 +49,7 @@ final class RegisteredUser implements User {
 			$this->connection,
 			(new Sql\PreparedUpdate(new Sql\AnsiUpdate('users')))
 				->set($properties)
-				->where('id = :id', ['id' => $this->id()])
+				->where('id = :id', ['id' => $this->id()]),
 		))->execute();
 	}
 
@@ -67,7 +67,7 @@ final class RegisteredUser implements User {
 			(new Sql\AnsiSelect(['1']))
 				->from(['users'])
 				->where(sprintf('%s = :value', $column), ['value' => $value])
-				->where('id != :id', ['id' => $this->id])
+				->where('id != :id', ['id' => $this->id]),
 		))->field();
 	}
 }

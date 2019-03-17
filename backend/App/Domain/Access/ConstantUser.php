@@ -30,6 +30,5 @@ final class ConstantUser implements User {
 	}
 
 	public function edit(array $properties): void {
-
 	}
 }

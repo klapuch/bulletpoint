@@ -13,6 +13,5 @@ final class Guest implements User {
 	}
 
 	public function edit(array $properties): void {
-
 	}
 }

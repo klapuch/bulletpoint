@@ -24,6 +24,5 @@ final class FakeUser implements User {
 	}
 
 	public function edit(array $properties): void {
-
 	}
 }
