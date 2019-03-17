@@ -15,4 +15,10 @@ interface User {
 	 * @return array
 	 */
 	public function properties(): array;
+
+	/**
+	 * @throws \UnexpectedValueException
+	 * @param mixed[] $properties
+	 */
+	public function edit(array $properties): void;
 }

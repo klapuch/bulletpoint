@@ -26,6 +26,7 @@ CREATE FUNCTION constant.sources_type() RETURNS text[] AS $BODY$SELECT ARRAY['we
 CREATE FUNCTION constant.bulletpoint_ratings_point_range() RETURNS integer[] AS $BODY$SELECT ARRAY[-1, 0, 1];$BODY$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.theme_tags_limit() RETURNS integer AS $BODY$SELECT 4;$BODY$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.roles() RETURNS text[] AS $BODY$SELECT ARRAY['member', 'admin'];$BODY$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.username_min_length() RETURNS integer AS $BODY$SELECT 3$BODY$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.username_max_length() RETURNS integer AS $BODY$SELECT 25$BODY$ LANGUAGE sql IMMUTABLE;
 
 -- types
@@ -36,7 +37,7 @@ CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
 CREATE DOMAIN sources_type AS text CHECK (VALUE = ANY(constant.sources_type()));
 CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_ratings_point_range() @> ARRAY[VALUE]);
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
-CREATE DOMAIN usernames AS citext CHECK (VALUE ~ format('^[a-zA-Z0-9_]{3,%s}$', constant.username_max_length()));
+CREATE DOMAIN usernames AS citext CHECK (VALUE ~ format('^[a-zA-Z0-9_]{%s,%s}$', constant.username_min_length(), constant.username_max_length()));
 CREATE DOMAIN openid_sub AS text CHECK (VALUE ~ '^.{1,255}$');
 
 -- schema audit

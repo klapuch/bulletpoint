@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain\Access;
 
+use Klapuch\Sql;
 use Klapuch\Storage;
 
 final class RegisteredUser implements User {
@@ -38,6 +39,15 @@ final class RegisteredUser implements User {
 		if ($this->registered($this->id))
 			return (string) $this->id;
 		throw new \UnexpectedValueException('The user has not been registered yet');
+	}
+
+	public function edit(array $properties): void {
+		(new Storage\BuiltQuery(
+			$this->connection,
+			(new Sql\PreparedUpdate(new Sql\AnsiUpdate('users')))
+				->set($properties)
+				->where('id = :id', ['id' => $this->id()])
+		))->execute();
 	}
 
 	private function registered(int $id): bool {

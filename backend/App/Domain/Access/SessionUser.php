@@ -21,4 +21,8 @@ final class SessionUser implements User {
 	public function properties(): array {
 		return ['expiration' => (int) ini_get('session.gc_maxlifetime')] + $this->origin->properties();
 	}
+
+	public function edit(array $properties): void {
+		$this->origin->edit($properties);
+	}
 }
