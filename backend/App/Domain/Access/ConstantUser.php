@@ -28,4 +28,7 @@ final class ConstantUser implements User {
 			'strcasecmp',
 		);
 	}
+
+	public function edit(array $properties): void {
+	}
 }

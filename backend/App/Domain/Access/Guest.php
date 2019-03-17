@@ -11,4 +11,7 @@ final class Guest implements User {
 	public function properties(): array {
 		return ['role' => 'guest'];
 	}
+
+	public function edit(array $properties): void {
+	}
 }

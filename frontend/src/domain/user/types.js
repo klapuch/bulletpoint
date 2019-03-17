@@ -5,3 +5,15 @@ export type MeType = {|
   role: RoleType,
   email: string
 |};
+export type PostedUserType = {|
+  +username: string,
+|};
+export type FetchedUserType = {|
+  +username: ?string,
+|};
+export type ErrorUserType = {|
+  +username: ?string,
+|};
+export const fromFetchedToPosted = (user: FetchedUserType) => ({
+  username: user.username || '',
+});

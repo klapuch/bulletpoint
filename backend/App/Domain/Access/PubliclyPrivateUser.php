@@ -31,4 +31,8 @@ final class PubliclyPrivateUser implements User {
 			[$this->id()],
 		))->row();
 	}
+
+	public function edit(array $properties): void {
+		$this->origin->edit($properties);
+	}
 }

@@ -22,4 +22,7 @@ final class FakeUser implements User {
 	public function properties(): array {
 		return $this->properties;
 	}
+
+	public function edit(array $properties): void {
+	}
 }

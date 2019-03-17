@@ -2,6 +2,7 @@
 
 function t(string $identifier, string ...$params): string {
 	$translations = [
+		'access.username.exists' => ['cs' => 'Uživatelské jméno "%s" již existuje.', 'en' => 'Username "%s" already exists.'],
 		'access.bad.email' => ['cs' => 'Email "%s" neexistuje', 'en' => 'Email "%s" does not exist'],
 		'access.bad.password' => ['cs' => 'Špatné heslo', 'en' => 'Wrong password'],
 		'access.bad.username' => ['cs' => 'Uživatelské jméno "%s" neexistuje', 'en' => 'Username "%s" does not exist'],
