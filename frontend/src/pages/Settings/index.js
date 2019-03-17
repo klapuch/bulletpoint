@@ -1,13 +1,18 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import Form from '../../domain/user/components/Form';
-import type {PostedUserType} from "../../domain/user/types";
-import { getUsername } from "../../domain/user";
-import * as user from "../../domain/user/endpoints";
-import {connect} from "react-redux";
-import * as message from "../../ui/message/actions";
+import type { PostedUserType } from '../../domain/user/types';
+import { getUsername } from '../../domain/user';
+import * as user from '../../domain/user/endpoints';
+import * as message from '../../ui/message/actions';
 
-class Settings extends React.Component {
+type Props = {|
+  +edit: (PostedUserType, () => (void)) => (void),
+  +history: Object,
+|};
+
+class Settings extends React.Component<Props> {
   handleSubmit = (postedUser: PostedUserType) => {
     this.props.edit(
       postedUser,
@@ -32,7 +37,7 @@ class Settings extends React.Component {
 const mapDispatchToProps = dispatch => ({
   edit: (
     postedUser: PostedUserType,
-    next: (void),
+    next: () => (void),
   ) => dispatch(user.edit(postedUser, () => {
     dispatch(message.receivedSuccess('Uživatelské jméno bylo změneno'));
     next();

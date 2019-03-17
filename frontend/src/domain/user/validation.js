@@ -1,7 +1,7 @@
 // @flow
 import memoize from 'memoizee';
 import * as validation from '../../validation';
-import type { PostedThemeType, PostedUserType, ErrorUserType } from './types';
+import type { PostedUserType, ErrorUserType } from './types';
 
 const UNKNOWN = 'UNKNOWN';
 

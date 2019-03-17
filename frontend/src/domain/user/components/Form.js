@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type {PostedCredentialsType, ErrorUserType, PostedUserType} from '../types';
+import type { ErrorUserType, PostedUserType } from '../types';
 import * as validation from '../validation';
 
 type EventType = {|
@@ -13,6 +13,7 @@ type EventType = {|
 
 type Props = {|
   +onSubmit: (PostedUserType) => (void),
+  +user: PostedUserType,
 |};
 type State = {|
   user: PostedUserType,
