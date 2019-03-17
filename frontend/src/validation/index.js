@@ -12,6 +12,7 @@ export const NOT_USERNAME = 'NOT_USERNAME';
 export const NOT_URL = 'NOT_URL';
 export const MIN_6_CHARS = 'MIN_6_CHARS';
 export const MAX_CHARS = 'MAX_CHARS';
+export const MIN_CHARS = 'MIN_CHARS';
 export const MAX_ITEMS = 'MAX_ITEMS';
 
 export const required = (value: ?mixed): Error => (
@@ -48,6 +49,10 @@ export const password = (value: ?string): Error => {
 
 export const maxChars = (value: ?string, chars: number): Error => (
   trim(value).length >= chars ? MAX_CHARS : null
+);
+
+export const minChars = (value: ?string, chars: number): Error => (
+  trim(value).length < chars ? MIN_CHARS : null
 );
 
 export const maxItems = (value: Array<*>, items: number): Error => (

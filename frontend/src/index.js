@@ -23,7 +23,7 @@ const history = createBrowserHistory();
 history.listen((location) => {
   if (session.exists()) {
     const token = session.getValue();
-    user.fetchMe(token, me => session.updateCredentials(me))
+    user.reload(token)
       .then(() => {
         if (session.expired()) {
           reSignIn(token, () => history.push('/sign/in', { state: { from: location } }));
