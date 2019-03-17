@@ -4,7 +4,7 @@ import type { FetchedThemeType } from '../types';
 import Star from '../../../components/Star';
 import * as user from '../../user';
 import Detail from './Detail';
-import Titles from './Titles';
+import Names from './Names';
 
 type Props = {|
   +theme: FetchedThemeType,
@@ -14,7 +14,7 @@ const Header = ({ theme, onStarClick }: Props) => (
   <>
     <div>
       {user.isLoggedIn() && <Star active={theme.is_starred} onClick={onStarClick} />}
-      <Titles theme={theme} />
+      <Names theme={theme} />
     </div>
     <Detail theme={theme} />
   </>

@@ -13,7 +13,7 @@ const Title = styled.h1`
 type Props = {|
   +theme: FetchedThemeType,
 |};
-const Titles = ({ theme }: Props) => (
+const Names = ({ theme }: Props) => (
   <>
     <Title>{theme.name}</Title>
     <Options theme={theme} />
@@ -27,4 +27,4 @@ const Titles = ({ theme }: Props) => (
   </>
 );
 
-export default Titles;
+export default Names;
