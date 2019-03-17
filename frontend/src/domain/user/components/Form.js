@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type { ErrorUserType, PostedUserType } from '../types';
+import type { ErrorUserType, FetchedUserType, PostedUserType } from '../types';
 import * as validation from '../validation';
+import { fromFetchedToPosted } from '../types';
 
 type EventType = {|
   +target: {|
@@ -13,7 +14,7 @@ type EventType = {|
 
 type Props = {|
   +onSubmit: (PostedUserType) => (void),
-  +user: PostedUserType,
+  +user: FetchedUserType,
 |};
 type State = {|
   user: PostedUserType,
@@ -35,7 +36,7 @@ class Form extends React.Component<Props, State> {
   }
 
   reload = () => {
-    this.setState({ user: this.props.user });
+    this.setState({ user: fromFetchedToPosted(this.props.user) });
   };
 
   onChange = ({ target: { name, value } }: EventType) => {

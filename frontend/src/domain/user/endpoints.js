@@ -11,9 +11,13 @@ export const fetchMe = (token: string, next: (MeType) => (Promise<any>|void)) =>
     .then(next)
 );
 
-export const reload = (token: ?string) => (
-  fetchMe(token || session.getValue(), me => session.updateCredentials(me))
-);
+export const reload = (token: ?string) => {
+  const userToken = token || session.getValue();
+  if (userToken !== null && typeof userToken !== 'undefined') {
+    return fetchMe(userToken, me => session.updateCredentials(me));
+  }
+  return Promise.resolve();
+};
 
 export const edit = (
   properties: Object,

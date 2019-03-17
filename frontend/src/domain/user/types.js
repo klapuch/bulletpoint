@@ -9,8 +9,11 @@ export type PostedUserType = {|
   +username: string,
 |};
 export type FetchedUserType = {|
-  +username: string,
+  +username: ?string,
 |};
 export type ErrorUserType = {|
   +username: ?string,
 |};
+export const fromFetchedToPosted = (user: FetchedUserType) => ({
+  username: user.username || '',
+});
