@@ -35,6 +35,21 @@ final class RegisteredUserTest extends TestCase\Runtime {
 		Assert::same($username, 'COOL');
 	}
 
+	public function testPassingOnSameUsername(): void {
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'users', ['username' => 'abc']))->try();
+		Assert::noError(function () use ($id): void {
+			(new Access\RegisteredUser($id, $this->connection))->edit(['username' => 'abc']);
+		});
+	}
+
+	public function testThrowingOnEditingToExistingUsername(): void {
+		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'users', ['username' => 'abc']))->try();
+		(new Fixtures\SamplePostgresData($this->connection, 'users', ['username' => 'taken']))->try();
+		Assert::exception(function () use ($id): void {
+			(new Access\RegisteredUser($id, $this->connection))->edit(['username' => 'taken']);
+		}, \UnexpectedValueException::class, 'Username "taken" already exists.');
+	}
+
 	public function testThrowingOnNotRegisteredUser(): void {
 		$user = new Access\RegisteredUser(1, $this->connection);
 		Assert::exception(static function() use ($user) {
@@ -44,7 +59,7 @@ final class RegisteredUserTest extends TestCase\Runtime {
 			$user->properties();
 		}, \UnexpectedValueException::class, 'The user has not been registered yet');
 		Assert::exception(static function() use ($user) {
-			$user->edit([]);
+			$user->edit(['username' => '']);
 		}, \UnexpectedValueException::class, 'The user has not been registered yet');
 	}
 }

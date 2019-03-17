@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Endpoint\User\Me;
+namespace Bulletpoint\Endpoint\Users\Me;
 
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain\Access;

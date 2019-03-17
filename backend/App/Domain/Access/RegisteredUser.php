@@ -42,6 +42,9 @@ final class RegisteredUser implements User {
 	}
 
 	public function edit(array $properties): void {
+		if ($this->exists('username', $properties['username'])) {
+			throw new \UnexpectedValueException(t('access.username.exists', $properties['username']));
+		}
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\PreparedUpdate(new Sql\AnsiUpdate('users')))
@@ -55,6 +58,16 @@ final class RegisteredUser implements User {
 			$this->connection,
 			'SELECT EXISTS(SELECT 1 FROM users WHERE id = :id)',
 			['id' => $id],
+		))->field();
+	}
+
+	private function exists(string $column, string $value): bool {
+		return (bool) (new Storage\BuiltQuery(
+			$this->connection,
+			(new Sql\AnsiSelect(['1']))
+				->from(['users'])
+				->where(sprintf('%s = :value', $column), ['value' => $value])
+				->where('id != :id', ['id' => $this->id])
 		))->field();
 	}
 }

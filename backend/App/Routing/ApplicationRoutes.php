@@ -143,6 +143,12 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($user, ['member', 'admin']),
 				);
 			},
+			'users/me [PUT]' => function() use ($request, $user): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Users\Me\Put($request, $this->connection, $user),
+					new Http\ChosenRole($user, ['member', 'admin']),
+				);
+			},
 		];
 	}
 }
