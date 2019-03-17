@@ -7,6 +7,7 @@ import Options from './Options';
 
 const Title = styled.h1`
   display: inline-block;
+  margin-bottom: 0;
 `;
 
 type Props = {|
@@ -16,11 +17,13 @@ const Titles = ({ theme }: Props) => (
   <>
     <Title>{theme.name}</Title>
     <Options theme={theme} />
-    {!isEmpty(theme.alternative_names) && (
-      <small>
-        {`(${theme.alternative_names.join(', ')})`}
-      </small>
-    )}
+    <div>
+      {!isEmpty(theme.alternative_names) && (
+        <small>
+          {theme.alternative_names.join(', ')}
+        </small>
+      )}
+    </div>
   </>
 );
 
