@@ -1,17 +1,7 @@
 // @flow
 import React from 'react';
-import className from 'classnames';
-import { intersection, isEmpty } from 'lodash';
+import Box from './Box';
 import type { FetchedBulletpointType, PointType } from '../types';
-import InnerContent from './InnerContent';
-
-const isHighlighted = (
-  id: Array<number>,
-  referencedThemeId: Array<number>,
-  comparedThemeId: Array<number>,
-) => (
-  !isEmpty(intersection(id, [...referencedThemeId, ...comparedThemeId]))
-);
 
 type Props = {|
   +highlights?: Array<number>,
@@ -29,25 +19,14 @@ const Boxes = ({
 }: Props) => (
   <ul className="list-group">
     {bulletpoints.map(bulletpoint => (
-      <li
+      <Box
+        bulletpoint={bulletpoint}
         key={`bulletpoint-${bulletpoint.id}`}
-        className={className(
-          'list-group-item',
-          isHighlighted(
-            highlights,
-            bulletpoint.referenced_theme_id,
-            bulletpoint.compared_theme_id,
-          ) && 'active',
-        )}
-      >
-        <InnerContent
-          onRatingChange={onRatingChange}
-          onEditClick={onEditClick}
-          onDeleteClick={onDeleteClick}
-        >
-          {bulletpoint}
-        </InnerContent>
-      </li>
+        onRatingChange={onRatingChange}
+        onEditClick={onEditClick}
+        onDeleteClick={onDeleteClick}
+        highlights={highlights}
+      />
     ))}
   </ul>
 );
