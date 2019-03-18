@@ -2,6 +2,11 @@
 	font-family: 'Open Sans', sans-serif !important;
 }
 
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+	background-color: #0f0f0f;
+	border-color: #282828;
+}
+
 body, html {
 	height: 100%;
 	color: #fff !important;

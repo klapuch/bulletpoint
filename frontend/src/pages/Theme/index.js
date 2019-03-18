@@ -3,8 +3,6 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
-import { Link } from 'react-router-dom';
-import getSlug from 'speakingurl';
 import * as bulletpoint from '../../domain/bulletpoint/endpoints';
 import * as bulletpoints from '../../domain/bulletpoint/selects';
 import * as contributedBulletpoint from '../../domain/contributed_bulletpoint/endpoints';
@@ -22,12 +20,14 @@ import Boxes from '../../domain/bulletpoint/components/Boxes';
 import Header from '../../domain/theme/components/Header';
 import { FORM_TYPE_ADD, FORM_TYPE_DEFAULT, FORM_TYPE_EDIT } from '../../domain/bulletpoint/components/Form/types';
 import AddButton from '../../domain/bulletpoint/components/Form/AddButton';
+import RelatedThemes from './sections/RelatedThemes';
 
 type State = {|
   formType: FormTypes,
   bulletpointId: number|null,
 |};
 type Props = {|
+  +history: Object,
   +addBulletpoint: (themeId: number, PostedBulletpointType, (void) => (void)) => (Promise<any>),
   +editBulletpoint: (
     themeId: number,
@@ -124,6 +124,7 @@ class Theme extends React.Component<Props, State> {
     if (this.props.fetching) {
       return <Loader />;
     }
+    const { match: { params: { id } }, history: { location: { state } } } = this.props;
     return (
       <SlugRedirect {...this.props} name={this.props.theme.name}>
         <Helmet><title>{this.props.theme.name}</title></Helmet>
@@ -132,6 +133,11 @@ class Theme extends React.Component<Props, State> {
           <div className="col-sm-8">
             <h2 id="bulletpoints">Bulletpointy</h2>
             <Boxes
+              highlights={
+                typeof state !== 'undefined' && state.highlightedBulletpointIds
+                  ? state.highlightedBulletpointIds
+                  : []
+              }
               bulletpoints={this.props.bulletpoints}
               onRatingChange={this.handleBulletpointRatingChange}
               onEditClick={user.isAdmin() ? this.handleEditClick : undefined}
@@ -174,21 +180,10 @@ class Theme extends React.Component<Props, State> {
                 onSubmit={this.handleSubmit}
               />
             )}
-            {!isEmpty(this.props.theme.related_themes_id) && (
-              <>
-                <h2 id="related_themes">Související témata</h2>
-                <div className="well">
-                  {this.props.theme.related_themes.map((relatedTheme, order) => (
-                    <React.Fragment key={order}>
-                      {order === 0 ? '' : ', '}
-                      <Link key={order} to={`/themes/${relatedTheme.id}/${getSlug(relatedTheme.name)}`}>
-                        {relatedTheme.name}
-                      </Link>
-                    </React.Fragment>
-                  ))}
-                </div>
-              </>
-            )}
+            <RelatedThemes
+              themeId={parseInt(id, 10)}
+              relatedThemes={this.props.theme.related_themes}
+            />
           </div>
         </div>
         <br />
