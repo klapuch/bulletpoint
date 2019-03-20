@@ -50,7 +50,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 				} catch (\UnexpectedValueException $e) {
 					throw new \Exception(sprintf('JSON schema %s is not valid', $file->getPathname()), 0, $e);
 				}
-				file_put_contents($file->getPathname(), $schema);
+				file_put_contents($file->getPathname(), $schema . "\n");
 			}
 		};
 
