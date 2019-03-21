@@ -48,7 +48,7 @@ services:
       container_name: bulletpoint-nginx
       working_dir: /var/www/bulletpoint/backend
       volumes:
-          - ./:/var/www/bulletpoint:ro
+          - ./:/var/www/bulletpoint
       ports:
         - 80:80
         - 443:443
