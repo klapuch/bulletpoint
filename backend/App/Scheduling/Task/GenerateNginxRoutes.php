@@ -24,7 +24,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 	public function fulfill(): void {
 		file_put_contents(
 			$this->destination->getPathname(),
-			$this->locations($this->source->read()),
+			$this->locations($this->source->read()) . "\n",
 		);
 	}
 

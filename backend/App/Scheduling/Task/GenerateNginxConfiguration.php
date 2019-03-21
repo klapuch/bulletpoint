@@ -27,6 +27,7 @@ final class GenerateNginxConfiguration implements Scheduling\Job {
 				add_header Content-Length 0;
 				return 204;
 			}
+
 			CONF,
 		);
 	}
