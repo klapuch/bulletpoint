@@ -16,18 +16,17 @@ final class RemoveTrashFiles implements Scheduling\Job {
 	}
 
 	public function fulfill(): void {
-		(new Storage\Transaction($this->connection))->start(function () {
+		(new Storage\Transaction($this->connection))->start(function (): void {
 			$filenames = (new Storage\TypedQuery(
 				$this->connection,
 				'DELETE FROM filesystem.trash RETURNING filename',
 			))->rows();
-			foreach (
-				array_merge(
-					$filenames,
-					array_map(static function (string $filename): string {
-						return sprintf('resize_w50h50/%s', $filename);
-					}, $filenames)
-				) as $filename) {
+			foreach (array_merge(
+				$filenames,
+				array_map(static function (string $filename): string {
+					return sprintf('resize_w50h50/%s', $filename);
+				}, $filenames),
+			) as $filename) {
 				Utils\FileSystem::delete(__DIR__ . '/../../../data/' . $filename);
 			}
 		});

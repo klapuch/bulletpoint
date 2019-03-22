@@ -30,7 +30,7 @@ final class OAuthEntranceTest extends TestCase\Runtime {
 					'password' => null,
 					'facebook_id' => 123,
 					'google_id' => null,
-					'avatar_path' => Expect::type('string'),
+					'avatar_filename' => Expect::type('string'),
 				],
 			),
 			(new Access\OAuthEntrance(
