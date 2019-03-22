@@ -5,6 +5,7 @@ namespace Bulletpoint\Scheduling\Task;
 
 use Klapuch\Configuration;
 use Klapuch\Scheduling;
+use PHP_CodeSniffer\Tokenizers\PHP;
 
 final class GenerateNginxRoutes implements Scheduling\Job {
 	/** @var \Klapuch\Configuration\Source */
@@ -38,10 +39,11 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 						array_filter(
 							[
 								sprintf('fastcgi_param ROUTE_NAME "%s";', $name),
-								$this->routerParams($block['params'] ?? []),
+								self::routerParams($block['params'] ?? []),
 								'	include php.conf;',
-								$this->limitExcept($block['methods']),
-								$this->preflight($block['methods']),
+								self::limitExcept($block['methods']),
+								self::preflight($block['methods']),
+								self::lines($block['line'] ?? []),
 							],
 						),
 					);
@@ -57,13 +59,19 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 		);
 	}
 
-	private function preflight(array $methods): string {
+	private static function lines(array $lines): string {
+		if ($lines === [])
+			return '';
+		return "\t" . implode(PHP_EOL, $lines);
+	}
+
+	private static function preflight(array $methods): string {
 		if (in_array('OPTIONS', $methods, true))
 			return '';
 		return '	include preflight.conf;';
 	}
 
-	private function limitExcept(array $methods): string {
+	private static function limitExcept(array $methods): string {
 		$except = implode(' ', array_unique(array_merge($methods, ['OPTIONS'])));
 		return <<<CONF
 			limit_except {$except} {
@@ -72,7 +80,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 		CONF;
 	}
 
-	private function routerParams(array $params): string {
+	private static function routerParams(array $params): string {
 		if ($params === [])
 			return '';
 		$query = implode(
@@ -89,7 +97,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 		CONF;
 	}
 
-	private function location(array $params, string $sample): string {
+	private static function location(array $params, string $sample): string {
 		return sprintf(
 			'location %s',
 			str_replace(
