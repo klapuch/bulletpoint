@@ -30,19 +30,19 @@ final class UploadedAvatars implements Avatars {
 
 	public function save(): void {
 		(new Storage\Transaction($this->connection))->start(function (): void {
-			$path = self::path($this->user->id(), 'png');
+			$filename = self::filename($this->user->id(), 'png');
 			(new Storage\BuiltQuery(
 				$this->connection,
 				(new Sql\AnsiUpdate('users'))
-					->set(['avatar_path' => '?'], [self::BASE_PATH . DIRECTORY_SEPARATOR . $path])
+					->set(['avatar_filename' => '?'], [self::BASE_PATH . DIRECTORY_SEPARATOR . $filename])
 					->where('id = ?', [$this->user->id()]),
 			))->execute();
 			Image::fromString($this->request->body()->serialization())
-				->save(self::PATH . DIRECTORY_SEPARATOR . $path);
+				->save(self::PATH . DIRECTORY_SEPARATOR . $filename);
 		});
 	}
 
-	private static function path(string $id, string $extension): string {
+	private static function filename(string $id, string $extension): string {
 		return sprintf('%s.%s', bin2hex(random_bytes(15)) . $id, $extension);
 	}
 }

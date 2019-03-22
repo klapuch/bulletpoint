@@ -29,7 +29,7 @@ CREATE FUNCTION constant.theme_tags_limit() RETURNS integer AS $BODY$SELECT 4;$B
 CREATE FUNCTION constant.roles() RETURNS text[] AS $BODY$SELECT ARRAY['member', 'admin'];$BODY$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.username_min_length() RETURNS integer AS $BODY$SELECT 3$BODY$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.username_max_length() RETURNS integer AS $BODY$SELECT 25$BODY$ LANGUAGE sql IMMUTABLE;
-CREATE FUNCTION constant.default_avatar_path() RETURNS text AS $BODY$SELECT 'images/avatars/0.png';$BODY$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.default_avatar_filename() RETURNS text AS $BODY$SELECT 'images/avatars/0.png';$BODY$ LANGUAGE sql IMMUTABLE;
 
 -- types
 CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
@@ -112,7 +112,7 @@ $BODY$ LANGUAGE sql IMMUTABLE;
 -- schema filesystem
 CREATE TABLE filesystem.trash (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	path text NOT NULL UNIQUE
+	filename character varying (255) NOT NULL UNIQUE
 );
 
 -- schema public
@@ -147,8 +147,8 @@ CREATE TABLE users (
 	facebook_id bigint UNIQUE,
 	google_id openid_sub UNIQUE,
 	role roles NOT NULL DEFAULT 'member'::roles,
-	avatar_path text NOT NULL DEFAULT constant.default_avatar_path(),
-	CONSTRAINT users_avatar_path_format CHECK (avatar_path ~ '^images/avatars/[a-f0-9]+\.[a-z]{3,4}$'),
+	avatar_filename character varying (255) NOT NULL DEFAULT constant.default_avatar_filename(),
+	CONSTRAINT users_avatar_filename_format CHECK (avatar_filename ~ '^images/avatars/[a-f0-9]+\.[a-z]{3,4}$'),
 	CONSTRAINT users_password_empty_for_3rd_party CHECK (
 		CASE WHEN password IS NULL THEN
 			COALESCE(facebook_id::text, google_id) IS NOT NULL
@@ -158,7 +158,7 @@ CREATE TABLE users (
 	)
 );
 
-CREATE INDEX users_avatar_path ON users USING btree (avatar_path);
+CREATE INDEX users_avatar_filename ON users USING btree (avatar_filename);
 
 
 CREATE FUNCTION random_username(in_email text) RETURNS text STRICT AS $BODY$
@@ -227,8 +227,8 @@ BEGIN
 
 	<<l_avatars>>
 	BEGIN
-		IF TG_OP IN ('UPDATE', 'DELETE') AND old.avatar_path != constant.default_avatar_path() THEN
-			INSERT INTO filesystem.trash (path) VALUES (old.avatar_path);
+		IF TG_OP IN ('UPDATE', 'DELETE') AND old.avatar_filename != constant.default_avatar_filename() THEN
+			INSERT INTO filesystem.trash (filename) VALUES (old.avatar_filename);
 		END IF;
 	END l_avatars;
 
@@ -249,12 +249,12 @@ BEGIN
 	<<l_avatars>>
 	BEGIN
 		IF (
-			new.avatar_path != constant.default_avatar_path()
+			new.avatar_filename != constant.default_avatar_filename()
 			AND (
-				EXISTS (SELECT 1 FROM filesystem.trash WHERE path = new.avatar_path)
-				OR EXISTS (SELECT 1 FROM users WHERE avatar_path = new.avatar_path)
+				EXISTS (SELECT 1 FROM filesystem.trash WHERE filename = new.avatar_filename)
+				OR EXISTS (SELECT 1 FROM users WHERE avatar_filename = new.avatar_filename)
 			)) THEN
-			RAISE EXCEPTION USING MESSAGE = format('Avatar "%s" already exists', new.avatar_path);
+			RAISE EXCEPTION USING MESSAGE = format('Avatar "%s" already exists', new.avatar_filename);
 		END IF;
 	END l_avatars;
 
