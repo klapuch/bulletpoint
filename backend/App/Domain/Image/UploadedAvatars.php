@@ -13,19 +13,13 @@ final class UploadedAvatars implements Avatars {
 	private const BASE_PATH = 'images/avatars';
 	private const PATH = __DIR__ . '/../../../data/' . self::BASE_PATH;
 
-	/**
-	 * @var Access\User
-	 */
+	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
-	/**
-	 * @var Application\Request
-	 */
+	/** @var \Klapuch\Application\Request */
 	private $request;
 
-	/**
-	 * @var Storage\Connection
-	 */
+	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
 	public function __construct(Access\User $user, Application\Request $request, Storage\Connection $connection) {
@@ -41,8 +35,8 @@ final class UploadedAvatars implements Avatars {
 				$this->connection,
 				(new Sql\AnsiUpdate('users'))
 					->set(['avatar_path' => '?'], [self::BASE_PATH . DIRECTORY_SEPARATOR . $path])
-					->where('id = ?', [$this->user->id()])
-				))->execute();
+					->where('id = ?', [$this->user->id()]),
+			))->execute();
 			Image::fromString($this->request->body()->serialization())
 				->save(self::PATH . DIRECTORY_SEPARATOR . $path);
 		});

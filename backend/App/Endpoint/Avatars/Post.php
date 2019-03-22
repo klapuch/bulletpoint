@@ -15,9 +15,7 @@ final class Post implements Application\View {
 	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
-	/**
-	 * @var Application\Request
-	 */
+	/** @var \Klapuch\Application\Request */
 	private $request;
 
 	public function __construct(Storage\Connection $connection, Application\Request $request, Access\User $user) {
