@@ -15,16 +15,22 @@ final class Post implements Application\View {
 	/** @var \Bulletpoint\Domain\Access\User */
 	private $user;
 
-	public function __construct(Storage\Connection $connection, Access\User $user) {
+	/**
+	 * @var Application\Request
+	 */
+	private $request;
+
+	public function __construct(Storage\Connection $connection, Application\Request $request, Access\User $user) {
 		$this->connection = $connection;
 		$this->user = $user;
+		$this->request = $request;
 	}
 
 	/**
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Image\UploadedAvatars($this->user))->save();
+		(new Image\UploadedAvatars($this->user, $this->request, $this->connection))->save();
 		return new Application\EmptyResponse();
 	}
 }
