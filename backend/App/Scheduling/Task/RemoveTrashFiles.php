@@ -8,7 +8,7 @@ use Klapuch\Storage;
 use Nette\Utils;
 
 final class RemoveTrashFiles implements Scheduling\Job {
-	private const SIZES = ['w50h50'];
+	private const SIZES = ['w60h80', 'w50h50'];
 
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
