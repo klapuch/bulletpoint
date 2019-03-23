@@ -168,7 +168,7 @@ DECLARE
 	v_step integer;
 	v_attempts CONSTANT integer = 999;
 BEGIN
-	v_local_part = (string_to_array(in_email, '@'))[1];
+	v_local_part = split_part(in_email, '@', 1);
 
 	IF v_local_part = in_email THEN
 		RAISE EXCEPTION USING MESSAGE = format('Passed value "%s" is not email', in_email);
