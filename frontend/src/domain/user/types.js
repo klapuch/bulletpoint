@@ -3,7 +3,8 @@ export type RoleType = 'member' | 'admin' | 'guest';
 export type MeType = {|
   username: string,
   role: RoleType,
-  email: string
+  email: string,
+  avatar_filename: string,
 |};
 export type PostedUserType = {|
   +username: string,

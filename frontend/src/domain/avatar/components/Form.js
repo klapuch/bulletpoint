@@ -3,21 +3,14 @@ import React from 'react';
 import { last } from 'lodash';
 import ImageUploader from 'react-images-upload';
 
-type TargetType = {|
-  target: {|
-    name: string,
-    files: Array<*>,
-  |},
-|};
-
 const initState = {
-  avatar: '',
+  avatar: null,
 };
 type Props = {|
-  +onSubmit: (FormData) => (void),
+  +onSubmit: (File) => (Promise<any>),
 |};
 type State = {|
-  avatar: string,
+  avatar: File|null,
 |};
 class Form extends React.Component<Props, State> {
   state = initState;
@@ -27,9 +20,12 @@ class Form extends React.Component<Props, State> {
   };
 
   handleSubmit = () => {
-    const formData = new FormData();
-    formData.append('avatar', this.state.avatar);
-    this.props.onSubmit(this.state.avatar).then(() => this.setState(initState));
+    const { avatar } = this.state;
+    if (avatar !== null) {
+      const formData = new FormData();
+      formData.append('avatar', avatar);
+      this.props.onSubmit(avatar).then(() => this.setState(initState));
+    }
   };
 
   render() {
@@ -62,7 +58,8 @@ class Form extends React.Component<Props, State> {
             <button type="button" onClick={this.handleSubmit} className="btn btn-success">
               Nahrát
             </button>
-          </div>)}
+          </div>
+        )}
       </form>
     );
   }

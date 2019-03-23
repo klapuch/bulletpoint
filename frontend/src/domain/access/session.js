@@ -54,7 +54,14 @@ export const getTtl = (): ?number => {
 
 export const getMe = (): MeType => {
   const cookie = parse(window.document.cookie);
-  return !cookie || !cookie[ME_NAME] ? { username: '', email: '', role: 'guest' } : JSON.parse(atob(cookie[ME_NAME]));
+  return !cookie || !cookie[ME_NAME]
+    ? {
+      username: '',
+      email: '',
+      role: 'guest',
+      avatar_filename: '',
+    }
+    : JSON.parse(atob(cookie[ME_NAME]));
 };
 
 export const exists = (): boolean => getValue() !== null;

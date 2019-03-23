@@ -13,7 +13,7 @@ export function getUsername(): ?string {
 }
 
 export function getAvatar(width: number, height: number): ?string {
-  const filename = isLoggedIn() ? `${process.env.REACT_APP_STATIC}/${session.getMe().avatar_filename}` : null;
+  const filename = isLoggedIn() ? `${process.env.REACT_APP_STATIC || ''}/${session.getMe().avatar_filename}` : null;
   if (filename === null) {
     return null;
   }

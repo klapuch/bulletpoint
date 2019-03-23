@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import UserForm from '../../domain/user/components/Form';
 import type { PostedUserType } from '../../domain/user/types';
-import {getAvatar, getUsername} from '../../domain/user';
+import { getAvatar, getUsername } from '../../domain/user';
 import * as user from '../../domain/user/endpoints';
 import * as avatar from '../../domain/avatar/endpoints';
 import * as message from '../../ui/message/actions';
@@ -24,7 +24,7 @@ class Settings extends React.Component<Props> {
     );
   };
 
-  handleSubmitAvatar = (file: FormData) => (
+  handleSubmitAvatar = (file: File) => (
     avatar.upload(file).then(() => {
       user.reload().then(() => this.props.history.push('/settings'));
     })
@@ -38,7 +38,7 @@ class Settings extends React.Component<Props> {
         </div>
         <UserForm user={{ username: getUsername() }} onSubmit={this.handleSubmitSetting} />
         <div className="row">
-          <img src={getAvatar(100, 100)} alt={getUsername()} className="img-thumbnail"/>
+          <img src={getAvatar(100, 100)} alt={getUsername()} className="img-thumbnail" />
           <AvatarForm onSubmit={this.handleSubmitAvatar} />
         </div>
       </>
