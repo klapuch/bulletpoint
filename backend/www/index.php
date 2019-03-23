@@ -6,19 +6,19 @@ require __DIR__ . '/../vendor/autoload.php';
 use Bulletpoint\Configuration\ApplicationConfiguration;
 use Bulletpoint\Routing\ApplicationRoutes;
 use Klapuch\Application;
+use Klapuch\Encryption;
 use Klapuch\Output;
 use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri;
-use Klapuch\Encryption;
 
 $uri = new Uri\CachedUri(
 	new Uri\BaseUrl(
 		$_SERVER['SCRIPT_NAME'],
 		$_SERVER['REQUEST_URI'],
 		$_SERVER['SERVER_NAME'],
-		isset($_SERVER['HTTPS']) ? 'https' : 'http'
-	)
+		isset($_SERVER['HTTPS']) ? 'https' : 'http',
+	),
 );
 
 $configuration = (new ApplicationConfiguration())->read();
@@ -35,17 +35,17 @@ echo (new class(
 						new Storage\SafePDO(
 							$configuration['DATABASE']['dsn'],
 							$configuration['DATABASE']['user'],
-							$configuration['DATABASE']['password']
-						)
+							$configuration['DATABASE']['password'],
+						),
 					),
-					$redis
+					$redis,
 				),
 				$uri,
-				new Encryption\PasswordHash()
-			)
+				new Encryption\PasswordHash(),
+			),
 		),
 		$uri,
-		$_SERVER['REQUEST_METHOD']
+		$_SERVER['REQUEST_METHOD'],
 	),
 	new Tracy\Logger(__DIR__ . '/../logs')
 ) implements Output\Template {
@@ -74,24 +74,24 @@ echo (new class(
 					(new Routing\TypedMask(
 						new Routing\CombinedMask(
 							new Routing\NginxMask(),
-							new Routing\CommonMask()
-						)
-					))->parameters()
-				)
+							new Routing\CommonMask(),
+						),
+					))->parameters(),
+				),
 			))->render();
 		} catch (\Throwable $e) {
 			$this->logger->log($e);
 			if ($e instanceof \UnexpectedValueException) {
 				return (new Application\RawTemplate(
-					new Bulletpoint\Response\JsonError($e)
+					new Bulletpoint\Response\JsonError($e),
 				))->render();
 			}
 			return (new Application\RawTemplate(
 				new Bulletpoint\Response\JsonError(
 					new \UnexpectedValueException(),
 					[],
-					HTTP_INTERNAL_SERVER_ERROR
-				)
+					HTTP_INTERNAL_SERVER_ERROR,
+				),
 			))->render();
 		}
 	}

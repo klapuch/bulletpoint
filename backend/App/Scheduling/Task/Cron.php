@@ -38,6 +38,14 @@ final class Cron implements Scheduling\Job {
 				'PT1H',
 				$this->connection,
 			),
+			new Scheduling\RepeatedJob(
+				new Scheduling\MarkedJob(
+					new RemoveTrashFiles($this->connection),
+					$this->connection,
+				),
+				'PT10M',
+				$this->connection,
+			),
 		))->fulfill();
 	}
 

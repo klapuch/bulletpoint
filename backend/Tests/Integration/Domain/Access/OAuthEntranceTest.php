@@ -8,6 +8,7 @@ use Bulletpoint\TestCase;
 use Klapuch\Http;
 use Nette\Utils\Json;
 use Tester\Assert;
+use Tester\Expect;
 
 require __DIR__ . '/../../../bootstrap.php';
 
@@ -29,6 +30,7 @@ final class OAuthEntranceTest extends TestCase\Runtime {
 					'password' => null,
 					'facebook_id' => 123,
 					'google_id' => null,
+					'avatar_filename' => Expect::type('string'),
 				],
 			),
 			(new Access\OAuthEntrance(

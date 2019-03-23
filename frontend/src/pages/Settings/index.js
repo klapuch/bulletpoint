@@ -1,11 +1,13 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import Form from '../../domain/user/components/Form';
+import UserForm from '../../domain/user/components/Form';
 import type { PostedUserType } from '../../domain/user/types';
-import { getUsername } from '../../domain/user';
+import { getAvatar, getUsername } from '../../domain/user';
 import * as user from '../../domain/user/endpoints';
+import * as avatar from '../../domain/avatar/endpoints';
 import * as message from '../../ui/message/actions';
+import AvatarForm from '../../domain/avatar/components/Form';
 
 type Props = {|
   +edit: (PostedUserType, () => (void)) => (void),
@@ -13,7 +15,7 @@ type Props = {|
 |};
 
 class Settings extends React.Component<Props> {
-  handleSubmit = (postedUser: PostedUserType) => {
+  handleSubmitSetting = (postedUser: PostedUserType) => {
     this.props.edit(
       postedUser,
       () => {
@@ -22,13 +24,23 @@ class Settings extends React.Component<Props> {
     );
   };
 
+  handleSubmitAvatar = (file: FormData) => (
+    avatar.upload(file).then(() => {
+      user.reload().then(() => this.props.history.push('/settings'));
+    })
+  );
+
   render() {
     return (
       <>
         <div className="row">
           <h1>Nastavení</h1>
         </div>
-        <Form user={{ username: getUsername() }} onSubmit={this.handleSubmit} />
+        <UserForm user={{ username: getUsername() }} onSubmit={this.handleSubmitSetting} />
+        <div className="row">
+          <img src={getAvatar(100, 100)} alt={getUsername()} className="img-thumbnail" />
+          <AvatarForm onSubmit={this.handleSubmitAvatar} />
+        </div>
       </>
     );
   }

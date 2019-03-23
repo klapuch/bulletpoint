@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 function t(string $identifier, string ...$params): string {
 	$translations = [

@@ -17,6 +17,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 -- schemas (globals)
 CREATE SCHEMA audit;
 CREATE SCHEMA access;
+CREATE SCHEMA filesystem;
 
 -- constants
 CREATE SCHEMA constant;
@@ -28,6 +29,7 @@ CREATE FUNCTION constant.theme_tags_limit() RETURNS integer AS $BODY$SELECT 4;$B
 CREATE FUNCTION constant.roles() RETURNS text[] AS $BODY$SELECT ARRAY['member', 'admin'];$BODY$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.username_min_length() RETURNS integer AS $BODY$SELECT 3$BODY$ LANGUAGE sql IMMUTABLE;
 CREATE FUNCTION constant.username_max_length() RETURNS integer AS $BODY$SELECT 25$BODY$ LANGUAGE sql IMMUTABLE;
+CREATE FUNCTION constant.default_avatar_filename() RETURNS text AS $BODY$SELECT 'images/avatars/0.png';$BODY$ LANGUAGE sql IMMUTABLE;
 
 -- types
 CREATE TYPE operations AS ENUM ('INSERT', 'UPDATE', 'DELETE');
@@ -106,6 +108,14 @@ $BODY$ LANGUAGE sql IMMUTABLE;
 
 
 -- tables
+
+-- schema filesystem
+CREATE TABLE filesystem.trash (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	filename character varying (255) NOT NULL UNIQUE
+);
+
+-- schema public
 CREATE TABLE "references" (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	url text NOT NULL
@@ -137,6 +147,8 @@ CREATE TABLE users (
 	facebook_id bigint UNIQUE,
 	google_id openid_sub UNIQUE,
 	role roles NOT NULL DEFAULT 'member'::roles,
+	avatar_filename character varying (255) NOT NULL DEFAULT constant.default_avatar_filename(),
+	CONSTRAINT users_avatar_filename_format CHECK (avatar_filename ~ '^images/avatars/[a-f0-9]+\.[a-z]{3,4}$'),
 	CONSTRAINT users_password_empty_for_3rd_party CHECK (
 		CASE WHEN password IS NULL THEN
 			COALESCE(facebook_id::text, google_id) IS NOT NULL
@@ -145,6 +157,9 @@ CREATE TABLE users (
 		END
 	)
 );
+
+CREATE INDEX users_avatar_filename ON users USING btree (avatar_filename);
+
 
 CREATE FUNCTION random_username(in_email text) RETURNS text STRICT AS $BODY$
 DECLARE
@@ -196,13 +211,30 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE ROWS 1;
 
-CREATE FUNCTION users_trigger_row_ai() RETURNS trigger AS $BODY$
+CREATE FUNCTION users_trigger_row_aiud() RETURNS trigger AS $BODY$
 BEGIN
-	INSERT INTO access.verification_codes (user_id, code, used_at) VALUES (
-		new.id,
-		format('%s:%s', encode(gen_random_bytes(25), 'hex'), encode(digest(new.id::text, 'sha1'), 'hex')),
-		CASE WHEN COALESCE(new.facebook_id::text, new.google_id) IS NOT NULL THEN now() ELSE NULL END
-	);
+	<<l_registration>>
+	BEGIN
+		IF TG_OP = 'INSERT' THEN
+			INSERT INTO access.verification_codes (user_id, code, used_at) VALUES (
+				new.id,
+				format('%s:%s', encode(gen_random_bytes(25), 'hex'), encode(digest(new.id::text, 'sha1'), 'hex')),
+				CASE WHEN COALESCE(new.facebook_id::text, new.google_id) IS NOT NULL THEN now() ELSE NULL END
+			);
+		END IF;
+	END l_registration;
+
+
+	<<l_avatars>>
+	BEGIN
+		IF (
+			TG_OP IN ('UPDATE', 'DELETE')
+			AND old.avatar_filename != constant.default_avatar_filename()
+			AND old.avatar_filename != new.avatar_filename
+		) THEN
+			INSERT INTO filesystem.trash (filename) VALUES (old.avatar_filename);
+		END IF;
+	END l_avatars;
 
 	RETURN new;
 END;
@@ -210,18 +242,37 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION users_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
-	IF new.username IS NULL AND COALESCE(new.facebook_id::text, new.google_id) IS NOT NULL THEN
-		new.username = random_username(new.email);
-	END IF;
+	<<l_registration>>
+	BEGIN
+		IF new.username IS NULL AND COALESCE(new.facebook_id::text, new.google_id) IS NOT NULL THEN
+			new.username = random_username(new.email);
+		END IF;
+	END l_registration;
+
+
+	<<l_avatars>>
+	BEGIN
+		IF (
+			new.avatar_filename != constant.default_avatar_filename()
+			AND old.avatar_filename != new.avatar_filename
+			AND (
+				EXISTS (SELECT 1 FROM filesystem.trash WHERE filename = new.avatar_filename)
+				OR EXISTS (SELECT 1 FROM users WHERE avatar_filename = new.avatar_filename)
+			)) THEN
+			RAISE EXCEPTION USING
+				MESSAGE = format('Avatar "%s" already exists', new.avatar_filename),
+				ERRCODE = 23505;
+		END IF;
+	END l_avatars;
 
 	RETURN new;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE TRIGGER users_row_ai_trigger
-	AFTER INSERT
+CREATE TRIGGER users_row_aiud_trigger
+	AFTER INSERT OR UPDATE OR DELETE
 	ON users
-	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_ai();
+	FOR EACH ROW EXECUTE PROCEDURE users_trigger_row_aiud();
 
 CREATE TRIGGER users_row_biu_trigger
 	BEFORE INSERT OR UPDATE

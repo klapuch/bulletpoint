@@ -43,6 +43,12 @@ final class ApplicationRoutes implements Routing\Routes {
 			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS),
 		))->enter($request->headers());
 		return [
+			'avatars [POST]' => function() use ($user): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Avatars\Post($this->connection, $user),
+					new Http\ChosenRole($user, ['admin', 'member']),
+				);
+			},
 			'themes/{id} [GET]' => function(): Application\View {
 				return new Endpoint\Theme\Get($this->connection);
 			},

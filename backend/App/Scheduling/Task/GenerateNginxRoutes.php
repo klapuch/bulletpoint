@@ -42,6 +42,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 								'	include php.conf;',
 								$this->limitExcept($block['methods']),
 								$this->preflight($block['methods']),
+								$this->lines($block['line'] ?? []),
 							],
 						),
 					);
@@ -55,6 +56,12 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 				$source,
 			),
 		);
+	}
+
+	private function lines(array $lines): string {
+		if ($lines === [])
+			return '';
+		return "\t" . implode("\n\t", $lines);
 	}
 
 	private function preflight(array $methods): string {
