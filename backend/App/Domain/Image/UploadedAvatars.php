@@ -29,6 +29,9 @@ final class UploadedAvatars implements Avatars {
 	}
 
 	public function save(): void {
+		// TODO: try catch
+		// TODO: test for the same name as filesystem
+		// TODO: fix extension
 		(new Storage\Transaction($this->connection))->start(function (): void {
 			$filename = self::filename($this->user->id(), 'png');
 			(new Storage\BuiltQuery(

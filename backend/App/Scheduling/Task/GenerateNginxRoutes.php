@@ -59,6 +59,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 	}
 
 	private function lines(array $lines): string {
+		// todo: try more lines
 		if ($lines === [])
 			return '';
 		return "\t" . implode(PHP_EOL, $lines);

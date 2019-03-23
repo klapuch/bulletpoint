@@ -16,6 +16,8 @@ final class RemoveTrashFiles implements Scheduling\Job {
 	}
 
 	public function fulfill(): void {
+		// todo: try again
+		// todo: extract sizes
 		(new Storage\Transaction($this->connection))->start(function (): void {
 			$filenames = (new Storage\TypedQuery(
 				$this->connection,

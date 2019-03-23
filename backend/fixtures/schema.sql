@@ -248,6 +248,7 @@ BEGIN
 
 	<<l_avatars>>
 	BEGIN
+		-- todo: test raising
 		IF (
 			new.avatar_filename != constant.default_avatar_filename()
 			AND (
