@@ -41,7 +41,7 @@ final class UploadedAvatars implements Avatars {
 				Image::fromString($this->request->body()->serialization())
 					->save(self::PATH . DIRECTORY_SEPARATOR . $filename);
 			});
-		} catch(\Nette\InvalidArgumentException $e) {
+		} catch(\Nette\InvalidArgumentException | \Nette\Utils\ImageException $e) {
 			throw new \UnexpectedValueException($e->getMessage(), 0, $e);
 		}
 	}
