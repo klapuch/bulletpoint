@@ -38,9 +38,9 @@ class Settings extends React.Component<Props> {
         </div>
         <UserForm user={{ username: getUsername() }} onSubmit={this.handleSubmitSetting} />
         <div className="row">
-          <img src={`${getAvatar()}?w=100&h=100`} alt={getUsername()} className="img-thumbnail"/>
+          <img src={getAvatar(100, 100)} alt={getUsername()} className="img-thumbnail"/>
+          <AvatarForm onSubmit={this.handleSubmitAvatar} />
         </div>
-        <AvatarForm onSubmit={this.handleSubmitAvatar} />
       </>
     );
   }

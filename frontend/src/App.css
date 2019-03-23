@@ -25,12 +25,7 @@ html {
 	margin: 0 auto -60px;
 }
 
-p {
-	font-size: 13pt !important;
-}
-
 .form-control {
-	font-size: 15px !important;
 	color: #000 !important;
 }
 
