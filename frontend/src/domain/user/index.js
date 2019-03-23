@@ -12,6 +12,10 @@ export function getUsername(): ?string {
   return isLoggedIn() ? session.getMe().username : null;
 }
 
+export function getAvatar(): ?string {
+  return isLoggedIn() ? `${process.env.REACT_APP_STATIC}/${session.getMe().avatar_filename}` : null;
+}
+
 export function getEmail(): ?string {
   return isLoggedIn() ? session.getMe().email : null;
 }

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import ImageUploader from 'react-images-upload';
 
 type TargetType = {|
   target: {|
@@ -8,6 +9,9 @@ type TargetType = {|
   |},
 |};
 
+const initState = {
+  avatar: '',
+};
 type Props = {|
   +onSubmit: (FormData) => (void),
 |};
@@ -15,28 +19,39 @@ type State = {|
   avatar: string,
 |};
 class Form extends React.Component<Props, State> {
-  state = {
-    avatar: '',
-  };
+  state = initState;
 
-  handleChange = ({ target: { name, files } }: TargetType) => {
-    this.setState({ [name]: files[0] });
+  handleChange = (files: Array<File>) => {
+    this.setState({ avatar: files[0] });
   };
 
   handleSubmit = () => {
     const formData = new FormData();
     formData.append('avatar', this.state.avatar);
-    this.props.onSubmit(this.state.avatar);
+    this.props.onSubmit(this.state.avatar).then(() => this.setState(initState));
   };
 
   render() {
+    const MEGABYTE = 1048576;
+    const FILESIZE_LIMIT = 2 * MEGABYTE;
     const { avatar } = this.state;
     return (
       <form className="form-horizontal">
-        <div className="form-group">
-          <label className="btn btn-default">
-            <input type="file" name="avatar" hidden onChange={this.handleChange} />
-          </label>
+        <div className="form-group" style={{ width: 200 }}>
+          <ImageUploader
+            fileContainerStyle={{ backgroundColor: '#18191d' }}
+            labelClass="text-center"
+            errorClass="text-center"
+            withIcon={false}
+            withPreview={false}
+            buttonText="Vyber obrázek"
+            fileSizeError="Maximální velikost obrázku jsou 2 MB."
+            fileTypeError="Soubor musí být obrázek."
+            label="Maximální velikost obrázku jsou 2 MB."
+            onChange={this.handleChange}
+            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+            maxFileSize={FILESIZE_LIMIT}
+          />
         </div>
         {avatar && (
           <div className="form-group">
