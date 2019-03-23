@@ -29,20 +29,21 @@ final class UploadedAvatars implements Avatars {
 	}
 
 	public function save(): void {
-		// TODO: try catch
-		// TODO: test for the same name as filesystem
-		// TODO: fix extension
-		(new Storage\Transaction($this->connection))->start(function (): void {
-			$filename = self::filename($this->user->id(), 'png');
-			(new Storage\BuiltQuery(
-				$this->connection,
-				(new Sql\AnsiUpdate('users'))
-					->set(['avatar_filename' => '?'], [self::BASE_PATH . DIRECTORY_SEPARATOR . $filename])
-					->where('id = ?', [$this->user->id()]),
-			))->execute();
-			Image::fromString($this->request->body()->serialization())
-				->save(self::PATH . DIRECTORY_SEPARATOR . $filename);
-		});
+		try {
+			(new Storage\Transaction($this->connection))->start(function (): void {
+				$filename = self::filename($this->user->id(), 'jpg');
+				(new Storage\BuiltQuery(
+					$this->connection,
+					(new Sql\AnsiUpdate('users'))
+						->set(['avatar_filename' => '?'], [self::BASE_PATH . DIRECTORY_SEPARATOR . $filename])
+						->where('id = ?', [$this->user->id()]),
+					))->execute();
+				Image::fromString($this->request->body()->serialization())
+					->save(self::PATH . DIRECTORY_SEPARATOR . $filename);
+			});
+		} catch(\Nette\InvalidArgumentException $e) {
+			throw new \UnexpectedValueException($e->getMessage(), $e);
+		}
 	}
 
 	private static function filename(string $id, string $extension): string {

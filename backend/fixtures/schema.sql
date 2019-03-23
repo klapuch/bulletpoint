@@ -227,7 +227,11 @@ BEGIN
 
 	<<l_avatars>>
 	BEGIN
-		IF TG_OP IN ('UPDATE', 'DELETE') AND old.avatar_filename != constant.default_avatar_filename() THEN
+		IF (
+			TG_OP IN ('UPDATE', 'DELETE')
+			AND old.avatar_filename != constant.default_avatar_filename()
+			AND old.avatar_filename != new.avatar_filename
+		) THEN
 			INSERT INTO filesystem.trash (filename) VALUES (old.avatar_filename);
 		END IF;
 	END l_avatars;
@@ -248,14 +252,16 @@ BEGIN
 
 	<<l_avatars>>
 	BEGIN
-		-- todo: test raising
 		IF (
 			new.avatar_filename != constant.default_avatar_filename()
+			AND old.avatar_filename != new.avatar_filename
 			AND (
 				EXISTS (SELECT 1 FROM filesystem.trash WHERE filename = new.avatar_filename)
 				OR EXISTS (SELECT 1 FROM users WHERE avatar_filename = new.avatar_filename)
 			)) THEN
-			RAISE EXCEPTION USING MESSAGE = format('Avatar "%s" already exists', new.avatar_filename);
+			RAISE EXCEPTION USING
+				MESSAGE = format('Avatar "%s" already exists', new.avatar_filename),
+				ERRCODE = 23505;
 		END IF;
 	END l_avatars;
 
