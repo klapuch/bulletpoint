@@ -2,8 +2,11 @@ FROM nginx:alpine
 
 COPY nginx.dev.conf /etc/nginx/nginx.conf
 
-COPY bulletpoint.dev.conf /etc/nginx/sites-available/bulletpoint.conf
-COPY bulletpoint.dev.conf /etc/nginx/sites-enabled/bulletpoint.conf
+COPY api.dev.conf /etc/nginx/sites-available/api.conf
+COPY api.dev.conf /etc/nginx/sites-enabled/api.conf
+
+COPY static.dev.conf /etc/nginx/sites-available/static.conf
+COPY static.dev.conf /etc/nginx/sites-enabled/static.conf
 
 COPY php.conf /etc/nginx/php.conf
 COPY routes.conf /etc/nginx/routes.conf
