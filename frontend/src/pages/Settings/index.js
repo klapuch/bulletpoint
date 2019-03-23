@@ -24,7 +24,7 @@ class Settings extends React.Component<Props> {
     );
   };
 
-  handleSubmitAvatar = (file: File) => (
+  handleSubmitAvatar = (file: FormData) => (
     avatar.upload(file).then(() => {
       user.reload().then(() => this.props.history.push('/settings'));
     })

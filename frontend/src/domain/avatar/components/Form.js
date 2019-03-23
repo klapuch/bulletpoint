@@ -7,7 +7,7 @@ const initState = {
   avatar: null,
 };
 type Props = {|
-  +onSubmit: (File) => (Promise<any>),
+  +onSubmit: (FormData) => (Promise<any>),
 |};
 type State = {|
   avatar: File|null,
@@ -20,12 +20,9 @@ class Form extends React.Component<Props, State> {
   };
 
   handleSubmit = () => {
-    const { avatar } = this.state;
-    if (avatar !== null) {
-      const formData = new FormData();
-      formData.append('avatar', avatar);
-      this.props.onSubmit(avatar).then(() => this.setState(initState));
-    }
+    const formData = new FormData();
+    formData.append('avatar', this.state.avatar);
+    this.props.onSubmit(formData).then(() => this.setState(initState));
   };
 
   render() {
