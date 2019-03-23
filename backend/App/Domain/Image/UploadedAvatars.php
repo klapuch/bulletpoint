@@ -37,12 +37,12 @@ final class UploadedAvatars implements Avatars {
 					(new Sql\AnsiUpdate('users'))
 						->set(['avatar_filename' => '?'], [self::BASE_PATH . DIRECTORY_SEPARATOR . $filename])
 						->where('id = ?', [$this->user->id()]),
-					))->execute();
+				))->execute();
 				Image::fromString($this->request->body()->serialization())
 					->save(self::PATH . DIRECTORY_SEPARATOR . $filename);
 			});
 		} catch(\Nette\InvalidArgumentException $e) {
-			throw new \UnexpectedValueException($e->getMessage(), $e);
+			throw new \UnexpectedValueException($e->getMessage(), 0, $e);
 		}
 	}
 

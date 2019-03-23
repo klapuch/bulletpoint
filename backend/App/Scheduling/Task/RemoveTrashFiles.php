@@ -24,7 +24,7 @@ final class RemoveTrashFiles implements Scheduling\Job {
 					$this->connection,
 					'DELETE FROM filesystem.trash RETURNING filename',
 				))->rows(),
-				'filename'
+				'filename',
 			);
 			foreach (array_merge($filenames, self::cache($filenames)) as $filename) {
 				Utils\FileSystem::delete(__DIR__ . '/../../../data/' . $filename);
