@@ -11,6 +11,7 @@
             <file name="App/Domain/Access/FakeUser.php"/>
             <file name="App/Domain/Access/FakeEntrance.php"/>
             <file name="App/Domain/FakeThemes.php"/>
+            <file name="App/Dataset/RestFilter.php"/>
         </ignoreFiles>
         <ignoreFiles>
             <directory name="vendor" />

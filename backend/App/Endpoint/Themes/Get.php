@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Endpoint\Themes;
 
 use Bulletpoint\Constraint;
+use Bulletpoint\Dataset\RestFilter;
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Response;
@@ -15,6 +16,9 @@ use Klapuch\UI;
 use Klapuch\Uri\Uri;
 
 final class Get implements Application\View {
+	private const ALLOWED_FILTERS = [
+		'is_starred',
+	];
 	private const SORTS = [
 		'created_at',
 	];
@@ -34,24 +38,26 @@ final class Get implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		$parameters['tag_id'] = array_map('intval', array_filter(explode(',', (string) ($parameters['tag_id'] ?? '')), 'strlen'));
-		if ($parameters['tag_id'] !== [] && isset($parameters['q'])) {
+		$tags = array_map('intval', array_filter(explode(',', (string) ($parameters['tag_id'] ?? '')), 'strlen'));
+		$q = $parameters['q'] ?? null;
+		unset($parameters['tag_id'], $parameters['q']);
+		if ($tags !== [] && $q !== null) {
 			$themes = new Domain\SearchTaggedThemes(
 				new Domain\FakeThemes(),
-				(string) $parameters['q'],
-				$parameters['tag_id'],
+				(string) $q,
+				$tags,
 				$this->connection,
 			);
-		} elseif ($parameters['tag_id'] !== []) {
+		} elseif ($tags !== []) {
 			$themes = new Domain\TaggedThemes(
 				new Domain\FakeThemes(),
-				$parameters['tag_id'],
+				$tags,
 				$this->connection,
 			);
-		} elseif (isset($parameters['q'])) {
+		} elseif ($q !== null) {
 			$themes = new Domain\SearchedThemes(
 				new Domain\FakeThemes(),
-				(string) $parameters['q'],
+				(string) $q,
 				$this->connection,
 			);
 		} else {
@@ -61,7 +67,7 @@ final class Get implements Application\View {
 			);
 		}
 		$themes = new Domain\PublicThemes($themes);
-		$count = $themes->count(new Dataset\EmptySelection());
+		$count = $themes->count(new RestFilter($parameters, self::ALLOWED_FILTERS));
 		return new Response\PaginatedResponse(
 			new Response\JsonResponse(
 				new Application\PlainResponse(
@@ -72,6 +78,7 @@ final class Get implements Application\View {
 						...iterator_to_array(
 							$themes->all(
 								new Dataset\CombinedSelection(
+									new RestFilter($parameters, self::ALLOWED_FILTERS),
 									new Constraint\AllowedSort(
 										new Dataset\RestSort($parameters['sort']),
 										self::SORTS,
