@@ -9,9 +9,7 @@ use Klapuch\Storage;
  * User which can be publicly shown
  */
 final class PublicUser implements User {
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	private $id;
 
 	/** @var \Klapuch\Storage\Connection */
