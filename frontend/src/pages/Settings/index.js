@@ -31,12 +31,16 @@ class Settings extends React.Component<Props> {
   );
 
   render() {
+    const username = getUsername();
+    if (username === null) {
+      return null;
+    }
     return (
       <>
         <div className="row">
           <h1>Nastavení</h1>
         </div>
-        <UserForm user={{ username: getUsername() }} onSubmit={this.handleSubmitSetting} />
+        <UserForm user={{ username, avatar_filename: '' }} onSubmit={this.handleSubmitSetting} />
         <div className="row">
           <img src={getAvatar(100, 100)} alt={getUsername()} className="img-thumbnail" />
           <AvatarForm onSubmit={this.handleSubmitAvatar} />

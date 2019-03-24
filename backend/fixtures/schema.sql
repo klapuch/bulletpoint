@@ -780,7 +780,7 @@ CREATE VIEW web.tagged_themes AS
 
 CREATE VIEW web.bulletpoints AS
 	SELECT
-		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id,
+		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id, bulletpoints.created_at,
 		sources.link AS source_link, sources.type AS source_type,
 			bulletpoint_ratings.up AS up_rating,
 			abs(bulletpoint_ratings.down) AS down_rating,

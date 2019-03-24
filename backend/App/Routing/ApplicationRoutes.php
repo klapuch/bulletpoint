@@ -155,6 +155,9 @@ final class ApplicationRoutes implements Routing\Routes {
 					new Http\ChosenRole($user, ['member', 'admin']),
 				);
 			},
+			'users/{id} [GET]' => function(): Application\View {
+				return new Endpoint\User\Get($this->connection);
+			},
 		];
 	}
 }

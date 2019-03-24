@@ -20,9 +20,12 @@ class Form extends React.Component<Props, State> {
   };
 
   handleSubmit = () => {
-    const formData = new FormData();
-    formData.append('avatar', this.state.avatar);
-    this.props.onSubmit(formData).then(() => this.setState(initState));
+    const { avatar } = this.state;
+    if (avatar !== null) {
+      const formData = new FormData();
+      formData.append('avatar', avatar);
+      this.props.onSubmit(formData).then(() => this.setState(initState));
+    }
   };
 
   render() {

@@ -8,7 +8,7 @@ export function getRole(): ?RoleType {
   return isLoggedIn() ? session.getMe().role : null;
 }
 
-export function getUsername(): ?string {
+export function getUsername(): string|null {
   return isLoggedIn() ? session.getMe().username : null;
 }
 

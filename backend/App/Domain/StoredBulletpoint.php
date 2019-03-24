@@ -40,6 +40,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'down_rating',
 				'user_rating',
 				'user_id',
+				'created_at',
 			]))->from(['web.bulletpoints'])
 				->where('id = :id', ['id' => $this->id]),
 		))->row();
@@ -51,6 +52,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'referenced_theme_id' => $row['referenced_theme_id'],
 				'compared_theme_id' => $row['compared_theme_id'],
 				'content' => $row['content'],
+				'created_at' => $row['created_at'],
 				'rating' => [
 					'up' => $row['up_rating'],
 					'down' => $row['down_rating'],

@@ -24,10 +24,12 @@ final class Get implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		$bulletpoints = new Domain\ThemeBulletpoints(
-			$parameters['theme_id'],
-			$this->connection,
-			new Access\FakeUser(),
+		$bulletpoints = new Domain\PublicBulletpoints(
+			new Domain\ThemeBulletpoints(
+				$parameters['theme_id'],
+				$this->connection,
+				new Access\FakeUser(),
+			),
 		);
 		return new Response\JsonResponse(
 			new Application\PlainResponse(

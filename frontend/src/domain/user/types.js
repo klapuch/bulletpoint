@@ -10,7 +10,8 @@ export type PostedUserType = {|
   +username: string,
 |};
 export type FetchedUserType = {|
-  +username: ?string,
+  +username: string,
+  +avatar_filename: string,
 |};
 export type ErrorUserType = {|
   +username: ?string,

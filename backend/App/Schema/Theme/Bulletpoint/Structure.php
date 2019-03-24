@@ -75,6 +75,7 @@ final class Structure {
 					'minLength' => 1,
 					'maxLength' => 255,
 				],
+				'created_at' => ['type' => 'string', 'format' => 'date-time'],
 				'theme_id' => ['type' => 'number'],
 				'referenced_theme_id' => [
 					'type' => 'array',
@@ -85,7 +86,7 @@ final class Structure {
 					'items' => ['type' => 'number'],
 				],
 			],
-			'required' => ['id', 'source', 'user_id', 'rating', 'content', 'theme_id', 'compared_theme_id', 'referenced_theme_id'],
+			'required' => ['id', 'source', 'user_id', 'rating', 'content', 'theme_id', 'compared_theme_id', 'referenced_theme_id', 'created_at'],
 			'type' => 'object',
 		];
 	}
