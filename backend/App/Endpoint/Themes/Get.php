@@ -21,6 +21,7 @@ final class Get implements Application\View {
 	];
 	private const SORTS = [
 		'created_at',
+		'starred_at',
 	];
 
 	/** @var \Klapuch\Storage\Connection */
