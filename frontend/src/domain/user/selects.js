@@ -9,14 +9,14 @@ export const fetched = (id: number, state: Object): boolean => (
 export const getById = (
   id: number,
   state: Object,
-): FetchedUserType|Object => (!isEmpty(state.user[id]) ? state.user[id].payload : {});
+): ?FetchedUserType => (!isEmpty(state.user[id]) ? state.user[id].payload : undefined);
 
 export const isFetching = (
   id: number,
   state: Object,
-): boolean => isEmpty(getById(id, state)) || getById(id, state).fetching;
+): boolean => isEmpty(state.user[id]) || state.user[id].fetching;
 
 // todo: extract
 export const getAvatar = (user: FetchedUserType, width: number, height: number) => (
-  `${process.env.REACT_APP_STATIC}/${user.avatar_filename}?w=${width}&h=${height}`
+  `${process.env.REACT_APP_STATIC || ''}/${user.avatar_filename}?w=${width}&h=${height}`
 );

@@ -1,6 +1,6 @@
 // @flow
 import * as session from '../access/session';
-import type { RoleType } from './types';
+import type {MeType, RoleType} from './types';
 
 export const isLoggedIn = (): bool => session.exists();
 
@@ -8,7 +8,7 @@ export function getRole(): ?RoleType {
   return isLoggedIn() ? session.getMe().role : null;
 }
 
-export function getUsername(): ?string {
+export function getUsername(): string|null {
   return isLoggedIn() ? session.getMe().username : null;
 }
 

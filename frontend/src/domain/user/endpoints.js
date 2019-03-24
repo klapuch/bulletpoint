@@ -32,7 +32,6 @@ export const edit = (
 
 export const fetchSingle = (
   userId: number,
-  next: () => (void),
 ) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (users.fetched(userId, getState())) {
     return Promise.resolve();
@@ -41,6 +40,5 @@ export const fetchSingle = (
   return axios.get(`/users/${userId}`)
     .then(response => response.data)
     .then(user => dispatch(receivedSingle(userId, user)))
-    .then(next)
     .catch(error => dispatch(message.receivedApiError(error)));
 };
