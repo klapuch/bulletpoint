@@ -1,17 +1,15 @@
 // @flow
 export type RoleType = 'member' | 'admin' | 'guest';
-export type MeType = {|
-  username: string,
-  role: RoleType,
-  email: string,
-  avatar_filename: string,
-|};
-export type PostedUserType = {|
-  +username: string,
-|};
-export type FetchedUserType = {|
+export type FetchedUserType = {
   +username: string,
   +avatar_filename: string,
+};
+export type MeType = FetchedUserType & {
+  +role: RoleType,
+  +email: string,
+};
+export type PostedUserType = {|
+  +username: string,
 |};
 export type ErrorUserType = {|
   +username: ?string,

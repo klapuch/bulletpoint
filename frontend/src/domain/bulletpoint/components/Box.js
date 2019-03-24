@@ -10,6 +10,7 @@ import InnerContent from './InnerContent';
 import * as users from '../../user/selects';
 import * as user from '../../user/endpoints';
 import type { FetchedUserType } from '../../user/types';
+import { getAvatar } from '../../user';
 
 const Date = styled.p`
   margin: 0;
@@ -122,7 +123,7 @@ class Box extends React.Component<Props, State> {
               <div className="col-sm-2">
                 <Date>{moment(bulletpoint.created_at).format('DD.MM.YYYY')}</Date>
                 <div className="well well-sm" style={{ display: 'inline-block', marginBottom: 0 }}>
-                  <img src={users.getAvatar(userInfo, 50, 50)} alt={userInfo.username} className="img-rounded" />
+                  <img src={getAvatar(userInfo, 50, 50)} alt={userInfo.username} className="img-rounded" />
                   <Username>{userInfo.username}</Username>
                 </div>
               </div>

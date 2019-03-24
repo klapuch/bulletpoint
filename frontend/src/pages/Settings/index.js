@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import UserForm from '../../domain/user/components/Form';
 import type { PostedUserType } from '../../domain/user/types';
-import { getAvatar, getUsername } from '../../domain/user';
+import { getAvatar, getMe } from '../../domain/user';
 import * as user from '../../domain/user/endpoints';
 import * as avatar from '../../domain/avatar/endpoints';
 import * as message from '../../ui/message/actions';
@@ -31,8 +31,8 @@ class Settings extends React.Component<Props> {
   );
 
   render() {
-    const username = getUsername();
-    if (username === null) {
+    const me = getMe();
+    if (me === null) {
       return null;
     }
     return (
@@ -40,9 +40,9 @@ class Settings extends React.Component<Props> {
         <div className="row">
           <h1>Nastavení</h1>
         </div>
-        <UserForm user={{ username, avatar_filename: '' }} onSubmit={this.handleSubmitSetting} />
+        <UserForm user={me} onSubmit={this.handleSubmitSetting} />
         <div className="row">
-          <img src={getAvatar(100, 100)} alt={getUsername()} className="img-thumbnail" />
+          <img src={getAvatar(me, 100, 100)} alt={me.username} className="img-thumbnail" />
           <AvatarForm onSubmit={this.handleSubmitAvatar} />
         </div>
       </>

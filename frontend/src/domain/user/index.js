@@ -1,6 +1,6 @@
 // @flow
 import * as session from '../access/session';
-import type { RoleType } from './types';
+import type { FetchedUserType, MeType, RoleType } from './types';
 
 export const isLoggedIn = (): bool => session.exists();
 
@@ -12,12 +12,12 @@ export function getUsername(): string|null {
   return isLoggedIn() ? session.getMe().username : null;
 }
 
-export function getAvatar(width: number, height: number): ?string {
-  const filename = isLoggedIn() ? `${process.env.REACT_APP_STATIC || ''}/${session.getMe().avatar_filename}` : null;
-  if (filename === null) {
-    return null;
-  }
-  return `${filename}?w=${width}&h=${height}`;
+export function getMe(): MeType|null {
+  return isLoggedIn() ? session.getMe() : null;
+}
+
+export function getAvatar(user: FetchedUserType, width: number, height: number): string {
+  return `${process.env.REACT_APP_STATIC || ''}/${user.avatar_filename}?w=${width}&h=${height}`;
 }
 
 export function getEmail(): ?string {
