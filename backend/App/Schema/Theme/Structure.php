@@ -21,6 +21,7 @@ final class Structure {
 				'id' => ['type' => 'number'],
 				'user_id' => ['type' => 'number'],
 				'is_starred' => ['type' => 'boolean'],
+				'starred_at' => ['type' => ['string', 'null'], 'format' => 'date-time'],
 				'tags' => [
 					'type' => 'array',
 					'items' => [
@@ -55,7 +56,7 @@ final class Structure {
 				],
 				'created_at' => ['type' => 'string', 'format' => 'date-time'],
 			],
-			'required' => ['tags', 'name', 'reference', 'is_starred', 'related_themes_id'],
+			'required' => ['tags', 'name', 'reference', 'is_starred', 'starred_at', 'related_themes_id'],
 			'type' => 'object',
 		];
 	}

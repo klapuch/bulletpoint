@@ -681,6 +681,7 @@ CREATE VIEW web.themes AS
 		users.id AS user_id,
 		COALESCE(json_theme_alternative_names.alternative_names, '[]') AS alternative_names,
 		user_starred_themes.id IS NOT NULL AS is_starred,
+		user_starred_themes.starred_at,
 		array_to_json(ARRAY(SELECT related_themes(themes.id)))::jsonb AS related_themes_id
 	FROM public.themes
 	JOIN users ON users.id = themes.user_id

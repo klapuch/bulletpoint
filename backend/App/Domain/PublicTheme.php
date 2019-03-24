@@ -17,6 +17,11 @@ final class PublicTheme implements Theme {
 		return $this->origin->print($format)
 			->adjusted('created_at', static function(string $datetime): string {
 				return (new \DateTime($datetime))->format(\DateTime::ATOM);
+			})
+			->adjusted('starred_at', static function(?string $datetime): ?string {
+				if ($datetime === null)
+					return null;
+				return (new \DateTime($datetime))->format(\DateTime::ATOM);
 			});
 	}
 
