@@ -1,6 +1,6 @@
 // @flow
 
-import type {FetchedUserType} from "./types";
+import type { FetchedUserType } from './types';
 
 export const RECEIVED_USER = 'RECEIVED_USER';
 export const REQUESTED_USER = 'REQUESTED_USER';

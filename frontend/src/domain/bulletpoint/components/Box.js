@@ -2,13 +2,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import className from 'classnames';
-import {connect} from "react-redux";
+import { connect } from 'react-redux';
 import { intersection, isEmpty } from 'lodash';
 import moment from 'moment';
 import type { FetchedBulletpointType, PointType } from '../types';
 import InnerContent from './InnerContent';
-import * as users from "../../user/selects";
-import * as user from "../../user/endpoints";
+import * as users from '../../user/selects';
+import * as user from '../../user/endpoints';
+import type { FetchedUserType } from '../../user/types';
 
 const Date = styled.p`
   margin: 0;
@@ -49,6 +50,9 @@ type Props = {|
   +onRatingChange?: (id: number, point: PointType) => (void),
   +onEditClick?: (number) => (void),
   +onDeleteClick?: (number) => (void),
+  +fetchUser: (number) => (void),
+  +getUser: (number) => (FetchedUserType),
+  +isFetching: (number) => boolean,
 |};
 type State = {|
   more: boolean,
@@ -149,7 +153,7 @@ class Box extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   getUser: (id: number) => users.getById(id, state),
   isFetching: (id: number) => users.isFetching(id, state),
 });
