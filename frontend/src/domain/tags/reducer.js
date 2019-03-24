@@ -6,34 +6,26 @@ import {
 import type { FetchedTagType } from './types';
 
 type State = {|
-  +all: {|
-    fetching: boolean,
-    payload: Array<FetchedTagType|Object>,
-  |},
+  fetching: boolean,
+  payload: Array<FetchedTagType>,
 |};
 const init = {
-  all: {
-    fetching: true,
-    payload: [],
-  },
+  fetching: true,
+  payload: [],
 };
 export default (state: State = init, action: Object): State => {
   switch (action.type) {
     case RECEIVED_TAGS:
       return {
         ...state,
-        all: {
-          payload: action.tags,
-          fetching: action.fetching,
-        },
+        payload: action.tags,
+        fetching: action.fetching,
       };
     case REQUESTED_TAGS:
       return {
         ...state,
-        all: {
-          fetching: action.fetching,
-          payload: [],
-        },
+        fetching: action.fetching,
+        payload: [],
       };
     default:
       return state;
