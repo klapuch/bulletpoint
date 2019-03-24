@@ -40,6 +40,17 @@ final class Cron implements Scheduling\Job {
 			),
 			new Scheduling\RepeatedJob(
 				new Scheduling\MarkedJob(
+					new RefreshMaterializedView(
+						$this->connection,
+						'user_tag_rank_reputations',
+					),
+					$this->connection,
+				),
+				'PT1H',
+				$this->connection,
+			),
+			new Scheduling\RepeatedJob(
+				new Scheduling\MarkedJob(
 					new RemoveTrashFiles($this->connection),
 					$this->connection,
 				),

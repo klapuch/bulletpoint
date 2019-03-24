@@ -164,6 +164,9 @@ final class ApplicationRoutes implements Routing\Routes {
 			'users/{id} [GET]' => function(): Application\View {
 				return new Endpoint\User\Get($this->connection);
 			},
+			'users/{id}/tags [GET]' => function(): Application\View {
+				return new Endpoint\User\Tags\Get($this->connection);
+			},
 		];
 	}
 }

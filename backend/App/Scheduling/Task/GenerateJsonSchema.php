@@ -95,6 +95,9 @@ final class GenerateJsonSchema implements Scheduling\Job {
 		$schemas->save($tags->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tags/schema/post.json'));
 		$schemas->save($tags->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tags/schema/get.json'));
 		$schemas->save($tags->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/StarredTags/schema/get.json'));
+
+		$userTags = new Schema\User\Tag\Structure();
+		$schemas->save($userTags->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/User/Tags/schema/get.json'));
 	}
 
 	public function name(): string {
