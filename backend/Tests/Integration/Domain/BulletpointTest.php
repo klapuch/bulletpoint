@@ -24,14 +24,16 @@ final class BulletpointTest extends TestCase\Runtime {
 		(new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints'))->try();
 		['id' => $id] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints', ['content' => 'TEST']))->try();
 		$bulletpoint = (new Misc\TestingFormat(
-			(new Domain\ExistingBulletpoint(
-				new Domain\StoredBulletpoint(
+			(new Domain\PublicBulletpoint(
+				new Domain\ExistingBulletpoint(
+					new Domain\StoredBulletpoint(
+						$id,
+						$this->connection,
+						new Access\FakeUser(),
+					),
 					$id,
 					$this->connection,
-					new Access\FakeUser(),
 				),
-				$id,
-				$this->connection,
 			))->print(new Output\Json()),
 		))->raw();
 		Assert::same($id, $bulletpoint['id']);
