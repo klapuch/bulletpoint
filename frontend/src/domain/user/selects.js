@@ -1,0 +1,16 @@
+// @flow
+import {isEmpty} from 'lodash';
+import type {FetchedUserType} from "./types";
+
+export const fetched = (id: number, state: Object): boolean => (
+  !isEmpty(state.user[id]) && !isEmpty(state.user[id].payload)
+);
+
+export const isFetching = (id: number, state: Object): boolean => isEmpty(getById(id, state)) || getById(id, state).fetching;
+
+export const getById = (id: number, state: Object): FetchedUserType|Object => !isEmpty(state.user[id]) ? state.user[id].payload : {};
+
+// todo: extract
+export const getAvatar = (user: FetchedUserType, width: number, height: number) => (
+  `${process.env.REACT_APP_STATIC}/${user.avatar_filename}?w=${width}&h=${height}`
+);

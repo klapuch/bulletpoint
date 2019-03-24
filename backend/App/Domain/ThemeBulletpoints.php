@@ -39,6 +39,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 				'down_rating',
 				'user_rating',
 				'user_id',
+				'created_at',
 			]))->from(['web.bulletpoints'])
 				->where('theme_id = :theme_id', ['theme_id' => $this->theme]),
 		))->rows();

@@ -63,6 +63,10 @@
             "minLength": 1,
             "maxLength": 255
         },
+        "created_at": {
+            "type": "string",
+            "format": "date-time"
+        },
         "theme_id": {
             "type": "number"
         },
@@ -87,7 +91,8 @@
         "content",
         "theme_id",
         "compared_theme_id",
-        "referenced_theme_id"
+        "referenced_theme_id",
+        "created_at"
     ],
     "type": "object"
 }
