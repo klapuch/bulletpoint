@@ -8,8 +8,6 @@ use Klapuch\Storage;
 use Nette\Utils;
 
 final class RemoveTrashFiles implements Scheduling\Job {
-	private const SIZES = ['w60h80', 'w50h50', 'w100h100'];
-
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
@@ -26,20 +24,25 @@ final class RemoveTrashFiles implements Scheduling\Job {
 				))->rows(),
 				'filename',
 			);
-			foreach (array_merge($filenames, self::cache($filenames)) as $filename) {
-				Utils\FileSystem::delete(__DIR__ . '/../../../data/' . $filename);
-			}
+			self::removeOriginals($filenames);
+			self::removeResizes($filenames);
 		});
 	}
 
-	private static function cache(array $filenames): array {
-		$sizes = [];
+	private static function removeOriginals(array $filenames): void {
 		foreach ($filenames as $filename) {
-			foreach (self::SIZES as $size) {
-				$sizes[] = sprintf('resize_%s/%s', $size, $filename);
+			Utils\FileSystem::delete(__DIR__ . '/../../../data/' . $filename);
+		}
+	}
+
+	private function removeResizes(array $filenames): void {
+		foreach (glob(__DIR__ . '/../../../data/cache/resize_*/images/**/*.*') as $cachedFilename) {
+			foreach ($filenames as $filename) {
+				if (Utils\Strings::contains($cachedFilename, $filename)) {
+					Utils\FileSystem::delete($cachedFilename);
+				}
 			}
 		}
-		return $sizes;
 	}
 
 	public function name(): string {
