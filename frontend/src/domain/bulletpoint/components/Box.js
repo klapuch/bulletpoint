@@ -10,6 +10,14 @@ import InnerContent from './InnerContent';
 import * as users from "../../user/selects";
 import * as user from "../../user/endpoints";
 
+const Date = styled.p`
+  margin: 0;
+`;
+
+const Username = styled.p`
+  margin: 0;
+`;
+
 const Separator = styled.hr`
   margin-top: 8px;
   margin-bottom: 0;
@@ -17,30 +25,23 @@ const Separator = styled.hr`
   border-top: 1px solid #282828;
 `;
 
-const MoreButton = styled.span`
+const InfoButton = styled.span`
   float: right;
-  margin-right: -14px;
-  margin-top: 14px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: initial;
+  margin-bottom: 2px;
+`;
+
+const MoreButton = styled(InfoButton)`
   color: #7e7e7e;
-  cursor: pointer;
 `;
 
-const LessButton = styled.span`
-  float: right;
-  margin-right: -14px;
-  margin-top: 14px;
+const LessButton = styled(InfoButton)`
   color: #ffffff;
-  cursor: pointer;
 `;
-
-const isHighlighted = (
-  id: Array<number>,
-  referencedThemeId: Array<number>,
-  comparedThemeId: Array<number>,
-) => (
-  !isEmpty(intersection(id, [...referencedThemeId, ...comparedThemeId]))
-);
-
 
 type Props = {|
   +bulletpoint: FetchedBulletpointType,
@@ -58,10 +59,19 @@ class Box extends React.Component<Props, State> {
   };
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    if (this.state.more && this.state.more !== prevState.more) {
+    const { more } = this.state;
+    if (more && more !== prevState.more) {
       this.props.fetchUser(this.props.bulletpoint.user_id);
     }
   }
+
+  isHighlighted = (
+    id: Array<number>,
+    referencedThemeId: Array<number>,
+    comparedThemeId: Array<number>,
+  ) => (
+    !isEmpty(intersection(id, [...referencedThemeId, ...comparedThemeId]))
+  );
 
   showMore = (more: boolean) => {
     this.setState({ more });
@@ -70,24 +80,24 @@ class Box extends React.Component<Props, State> {
   render() {
     const {
       bulletpoint,
+      bulletpoint: { user_id: bulletpointUserId },
       highlights = [],
       onRatingChange,
       onEditClick,
       onDeleteClick,
     } = this.props;
     const { more } = this.state;
-    const { bulletpoint: { user_id: bulletpointUserId } } = this.props;
     const userInfo = this.props.getUser(bulletpointUserId);
-    if (more && (this.props.isFetching(bulletpointUserId) || isEmpty(userInfo))) {
+    if (more && this.props.isFetching(bulletpointUserId)) {
       return null;
     }
 
     return (
       <li
-        style={{ height: more ? 300 : 'initial' }}
+        style={{ height: more ? 205 : 'initial', position: 'relative' }}
         className={className(
           'list-group-item',
-          isHighlighted(
+          this.isHighlighted(
             highlights,
             bulletpoint.referenced_theme_id,
             bulletpoint.compared_theme_id,
@@ -106,9 +116,11 @@ class Box extends React.Component<Props, State> {
             <Separator />
             <div className="row">
               <div className="col-sm-2">
-                <small>{moment(bulletpoint.created_at).format('DD.MM.YYYY')}</small>
-                <img src={users.getAvatar(userInfo, 50, 50)} />
-                <p>{userInfo.username}</p>
+                <Date>{moment(bulletpoint.created_at).format('DD.MM.YYYY')}</Date>
+                <div className="well well-sm" style={{ display: 'inline-block', marginBottom: 0 }}>
+                  <img src={users.getAvatar(userInfo, 50, 50)} alt={userInfo.username} className="img-rounded" />
+                  <Username>{userInfo.username}</Username>
+                </div>
               </div>
             </div>
           </>
