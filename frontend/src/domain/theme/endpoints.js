@@ -97,8 +97,9 @@ export const fetchRecent = (
 
 export const fetchStarred = (
   pagination: PaginationType,
+  tagId: ?number,
 ) => (dispatch: (mixed) => Object) => (
-  dispatch(fetchAll({ is_starred: 'true', sort: '-starred_at' }, pagination))
+  dispatch(fetchAll({ is_starred: 'true', tag_id: tagId, sort: '-starred_at' }, pagination))
 );
 
 export const fetchSearches = (keyword: string) => (dispatch: (mixed) => Object) => (

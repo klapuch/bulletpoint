@@ -674,6 +674,13 @@ CREATE TRIGGER bulletpoint_ratings_row_aiud_trigger
 -- views
 CREATE SCHEMA web;
 
+CREATE VIEW web.starred_tags AS
+	SELECT DISTINCT tags.id, tags.name, user_starred_themes.user_id
+	FROM user_starred_themes
+	JOIN theme_tags ON theme_tags.theme_id = user_starred_themes.theme_id
+	JOIN tags ON tags.id = theme_tags.tag_id;
+
+
 CREATE VIEW web.themes AS
 	SELECT
 		themes.id, themes.name, json_tags.tags, themes.created_at,

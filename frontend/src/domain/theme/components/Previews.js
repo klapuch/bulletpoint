@@ -5,12 +5,13 @@ import Preview from './Preview';
 
 type Props = {|
   +themes: Array<FetchedThemeType>,
+  +tagLink: (number, string) => string,
 |};
-const Previews = ({ themes }: Props) => (
+const Previews = ({ themes, tagLink }: Props) => (
   // $FlowFixMe Not sure why
   themes.map(theme => (
     <React.Fragment key={theme.id}>
-      <Preview>{theme}</Preview>
+      <Preview tagLink={tagLink}>{theme}</Preview>
       <hr />
     </React.Fragment>
   ))

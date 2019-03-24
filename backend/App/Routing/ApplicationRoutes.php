@@ -76,6 +76,12 @@ final class ApplicationRoutes implements Routing\Routes {
 			'tags [GET]' => function(): Application\View {
 				return new Endpoint\Tags\Get($this->connection);
 			},
+			'starred_tags [GET]' => function() use ($user): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\StarredTags\Get($this->connection, $user),
+					new Http\ChosenRole($user, ['member', 'admin']),
+				);
+			},
 			'tags [POST]' => function() use ($request): Application\View {
 				return new Endpoint\Tags\Post($this->connection, $request);
 			},

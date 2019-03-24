@@ -103,7 +103,7 @@ class Themes extends React.Component<Props> {
           <title>{this.getTitle()}</title>
         </Helmet>
         <h1>{this.getHeader()}</h1>
-        <Previews themes={themes} />
+        <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />
         <Pager
           total={this.props.total}
           pagination={this.props.pagination}

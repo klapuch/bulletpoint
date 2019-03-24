@@ -7,8 +7,9 @@ import type { FetchedThemeType } from '../types';
 
 type Props = {|
   +children: FetchedThemeType,
+  +tagLink: (number, string) => string,
 |};
-const Preview = ({ children: theme }: Props) => (
+const Preview = ({ children: theme, tagLink }: Props) => (
   <>
     <Link className="no-link" to={`/themes/${theme.id}/${getSlug(theme.name)}`}>
       <h2>{theme.name}</h2>
@@ -18,7 +19,7 @@ const Preview = ({ children: theme }: Props) => (
         {theme.alternative_names.join(', ')}
       </small>
     </div>
-    <Labels tags={theme.tags} />
+    <Labels tags={theme.tags} link={tagLink} />
   </>
 );
 

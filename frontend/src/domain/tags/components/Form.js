@@ -1,8 +1,15 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type { ErrorTagType, PostedTagType, TargetType } from '../types';
+import type { ErrorTagType, PostedTagType } from '../types';
 import * as validation from '../validation';
+
+type TargetType = {|
+  target: {|
+    name: string,
+    value: string,
+  |},
+|};
 
 type Props = {|
   +onSubmit: (PostedTagType) => (any),

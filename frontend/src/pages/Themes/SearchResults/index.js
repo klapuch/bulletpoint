@@ -53,7 +53,9 @@ class Themes extends React.Component<Props> {
         </h3>
         )}
         <br />
-        {isEmpty(themes) ? <h2>Žádné shody</h2> : <Previews themes={themes} />}
+        {isEmpty(themes)
+          ? <h2>Žádné shody</h2>
+          : <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />}
       </>
     );
   }

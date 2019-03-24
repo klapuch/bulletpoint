@@ -11,9 +11,10 @@ const SpacyLabel = styled.span`
 type Props = {|
   +children: string,
   +id: number,
+  +link: (number, string) => string,
 |};
-const Label = ({ children, id }: Props) => (
-  <Link className="no-link" to={`/themes/tag/${id}/${getSlug(children)}`}>
+const Label = ({ children, id, link }: Props) => (
+  <Link className="no-link" to={link(id, getSlug(children))}>
     <SpacyLabel className="label label-default">{children}</SpacyLabel>
   </Link>
 );
