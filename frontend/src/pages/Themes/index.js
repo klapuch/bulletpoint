@@ -122,11 +122,11 @@ const mapStateToProps = state => ({
   pagination: getSourcePagination(SOURCE_NAME, state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchRecentThemes: (pagination: PaginationType) => dispatch(theme.allRecent(pagination)),
+  fetchRecentThemes: (pagination: PaginationType) => dispatch(theme.fetchRecent(pagination)),
   fetchTaggedThemes: (
     tag: number,
     pagination: PaginationType,
-  ) => dispatch(theme.allByTag(tag, pagination)),
+  ) => dispatch(theme.fetchByTag(tag, pagination)),
   initPaging: (
     paging: PaginationType,
   ) => dispatch(receivedInit(SOURCE_NAME, paging)),

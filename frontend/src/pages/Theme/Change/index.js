@@ -59,8 +59,8 @@ const mapStateToProps = (state, { match: { params: { id } } }) => ({
   fetching: tags.allFetching(state) || themes.singleFetching(id, state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchTags: () => dispatch(tag.all()),
-  fetchSingle: (id: number) => dispatch(theme.single(id)),
+  fetchTags: () => dispatch(tag.fetchAll()),
+  fetchSingle: (id: number) => dispatch(theme.fetchSingle(id)),
   changeTheme: (
     id: number,
     postedTheme: PostedThemeType,

@@ -5,7 +5,7 @@ import { fetchedAll } from './selects';
 import type { PostedTagType } from './types';
 import { receivedApiError } from '../../ui/message/actions';
 
-export const all = () => (dispatch: (mixed) => Object, getState: () => Object) => {
+export const fetchAll = () => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (fetchedAll(getState())) return;
   dispatch(requestedAll());
   axios.get('tags')

@@ -202,7 +202,7 @@ const mapStateToProps = (state, { match: { params: { id: themeId } } }) => ({
   getBulletpointById: (id: number) => bulletpoints.getById(themeId, id, state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchTheme: (id: number) => dispatch(theme.single(id)),
+  fetchTheme: (id: number) => dispatch(theme.fetchSingle(id)),
   deleteBulletpoint: (
     themeId: number,
     bulletpointId: number,
@@ -227,12 +227,14 @@ const mapDispatchToProps = dispatch => ({
     postedBulletpoint: PostedBulletpointType,
     next: (void) => (void),
   ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint, next)),
-  fetchBulletpoints: (themeId: number) => dispatch(bulletpoint.all(themeId)),
+  fetchBulletpoints: (themeId: number) => dispatch(bulletpoint.fetchAll(themeId)),
   starOrUnstar: (
     themeId: number,
     isStarred: boolean,
   ) => theme.starOrUnstar(themeId, isStarred, () => dispatch(theme.updateSingle(themeId))),
-  fetchContributedBulletpoints: (themeId: number) => dispatch(contributedBulletpoint.all(themeId)),
+  fetchContributedBulletpoints: (
+    themeId: number,
+  ) => dispatch(contributedBulletpoint.fetchAll(themeId)),
   changeBulletpointRating: (
     themeId: number,
     bulletpointId: number,

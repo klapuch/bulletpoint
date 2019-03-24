@@ -65,6 +65,6 @@ const mapStateToProps = (state, { location: { search } }) => ({
   fetching: themes.allFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchThemes: (keyword: string) => dispatch(theme.allSearched(keyword)),
+  fetchThemes: (keyword: string) => dispatch(theme.fetchSearches(keyword)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Themes);

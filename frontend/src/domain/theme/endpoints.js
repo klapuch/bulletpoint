@@ -16,7 +16,7 @@ import type { FetchedThemeType, PostedThemeType } from './types';
 import type { PaginationType } from '../../api/dataset/PaginationType';
 import type { FetchedTagType } from '../tags/types';
 
-export const single = (
+export const fetchSingle = (
   id: number,
   flat: boolean = false,
 ) => (dispatch: (mixed) => Object, getState: () => Object) => {
@@ -29,7 +29,7 @@ export const single = (
     .then(() => themes.getById(id, getState()).related_themes_id)
     .then((themeIds: Array<number>) => {
       if (flat === false) {
-        forEach(themeIds, themeId => dispatch(single(themeId, true)));
+        forEach(themeIds, themeId => dispatch(fetchSingle(themeId, true)));
       }
     });
 };
@@ -65,7 +65,7 @@ export const change = (
     .then(next);
 };
 
-const all = (
+const fetchAll = (
   params: Object,
   pagination: PaginationType = { page: 1, perPage: 10 },
 ) => (dispatch: (mixed) => Object) => {
@@ -82,27 +82,27 @@ const all = (
     .then(response => dispatch(receivedAll(response.data, response.headers)));
 };
 
-export const allByTag = (
+export const fetchByTag = (
   tag: ?number,
   pagination: PaginationType,
 ) => (dispatch: (mixed) => Object) => (
-  dispatch(all({ tag_id: tag }, pagination))
+  dispatch(fetchAll({ tag_id: tag }, pagination))
 );
 
-export const allRecent = (
+export const fetchRecent = (
   pagination: PaginationType,
 ) => (dispatch: (mixed) => Object) => (
-  dispatch(all({ sort: '-created_at' }, pagination))
+  dispatch(fetchAll({ sort: '-created_at' }, pagination))
 );
 
 export const fetchStarred = (
   pagination: PaginationType,
 ) => (dispatch: (mixed) => Object) => (
-  dispatch(all({ is_starred: 'true' }, pagination))
+  dispatch(fetchAll({ is_starred: 'true' }, pagination))
 );
 
-export const allSearched = (keyword: string) => (dispatch: (mixed) => Object) => (
-  dispatch(all({ q: keyword }, { page: 1, perPage: 20 }))
+export const fetchSearches = (keyword: string) => (dispatch: (mixed) => Object) => (
+  dispatch(fetchAll({ q: keyword }, { page: 1, perPage: 20 }))
 );
 
 const toReactSelectSearches = (themes: Array<FetchedThemeType>, except: Array<number>) => (
@@ -110,13 +110,13 @@ const toReactSelectSearches = (themes: Array<FetchedThemeType>, except: Array<nu
     .map(theme => ({ label: theme.name, value: theme.id }))
 );
 
-export const allReactSelectSearches = (keyword: string, except: Array<number>): Promise<any> => (
+export const fetchReactSelectSearches = (keyword: string, except: Array<number>): Promise<any> => (
   axios.get('/themes', { params: { q: keyword } })
     .then(response => response.data)
     .then(themes => toReactSelectSearches(themes, except))
 );
 
-export const allReactSelectTagSearches = (
+export const fetchReactSelectTagSearches = (
   keyword: string,
   tags: Array<FetchedTagType>,
   except: Array<number>,

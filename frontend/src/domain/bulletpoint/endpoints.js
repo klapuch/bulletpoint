@@ -21,7 +21,7 @@ export const rate = (
     .then(next)
 );
 
-export const all = (
+export const fetchAll = (
   themeId: number,
 ) => (dispatch: (mixed) => Object, getState: () => Object) => {
   if (bulletpoints.fetchedAll(themeId, getState())) {
@@ -39,7 +39,7 @@ export const all = (
             ...themeBulletpoint.referenced_theme_id,
             ...themeBulletpoint.compared_theme_id,
           ].forEach(referencedThemeId => (
-            dispatch(theme.single(referencedThemeId))
+            dispatch(theme.fetchSingle(referencedThemeId))
           ))
         ),
       );

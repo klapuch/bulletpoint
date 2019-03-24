@@ -1,7 +1,7 @@
 // $FlowFixMe ok
 import AsyncSelect from 'react-select/lib/Async';
 import React from 'react';
-import { allReactSelectSearches } from '../../../../theme/endpoints';
+import { fetchReactSelectSearches } from '../../../../theme/endpoints';
 import type { ReferencedThemesType } from '../types';
 import type { FetchedThemeType } from '../../../../theme/types';
 
@@ -20,7 +20,7 @@ const ReferencedThemes = ({ theme: sourceTheme, onSelectChange, themes }: Props)
           isClearable
           value={{ value: theme.id, label: theme.name }}
           onChange={(select, options) => onSelectChange(select, options, i)}
-          loadOptions={keyword => allReactSelectSearches(keyword, [sourceTheme.id])}
+          loadOptions={keyword => fetchReactSelectSearches(keyword, [sourceTheme.id])}
           styles={{ option: base => ({ ...base, color: '#000' }) }}
         />
       </div>

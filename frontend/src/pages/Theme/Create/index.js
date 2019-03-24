@@ -46,6 +46,6 @@ const mapStateToProps = state => ({
   fetching: tags.allFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
-  fetchTags: () => dispatch(tag.all()),
+  fetchTags: () => dispatch(tag.fetchAll()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Create);
