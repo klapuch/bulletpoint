@@ -29,7 +29,7 @@ const Pager = ({
     onPageChange(page);
   };
 
-  if (isFirstPage && isLastPage) {
+  if (total === 0 || (isFirstPage && isLastPage)) {
     return null;
   }
 

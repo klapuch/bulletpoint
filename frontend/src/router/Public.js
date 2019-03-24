@@ -50,6 +50,7 @@ const Public = ({
                         </a>
                         <ul className="dropdown-menu" role="menu">
                           <NavItem exact to="/themes/recent">Nedávno přidaná</NavItem>
+                          {user.isLoggedIn() && <NavItem exact to="/themes/starred">Oblíbená témata</NavItem>}
                         </ul>
                       </li>
                     )}

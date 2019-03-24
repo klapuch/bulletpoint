@@ -95,6 +95,12 @@ export const allRecent = (
   dispatch(all({ sort: '-created_at' }, pagination))
 );
 
+export const fetchStarred = (
+  pagination: PaginationType,
+) => (dispatch: (mixed) => Object) => (
+  dispatch(all({ is_starred: 'true' }, pagination))
+);
+
 export const allSearched = (keyword: string) => (dispatch: (mixed) => Object) => (
   dispatch(all({ q: keyword }, { page: 1, perPage: 20 }))
 );
