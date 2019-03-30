@@ -19,7 +19,7 @@ final class TagsTest extends TestCase\Runtime {
 		$tags = new Domain\StoredTags($this->connection);
 		$tags->add('ABC');
 		$tags->add('DEF');
-		Assert::same([1 => ['name' => 'ABC', 'id' => 1], ['name' => 'DEF', 'id' => 2]], $tags->all());
+		Assert::same([['name' => 'ABC', 'id' => 1], ['name' => 'DEF', 'id' => 2]], $tags->all());
 	}
 
 	public function testThrowingOnDuplicity(): void {

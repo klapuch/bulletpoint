@@ -23,14 +23,13 @@ final class StarredTags implements Tags {
 	}
 
 	public function all(): array {
-		$tags = (new Storage\BuiltQuery(
+		return (new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\AnsiSelect(['id', 'name']))
 				->from(['web.starred_tags'])
 				->where('user_id = :user_id', ['user_id' => $this->user->id()])
 				->orderBy(['name' => 'ASC']),
 		))->rows();
-		return (array) array_combine(array_column($tags, 'id'), $tags);
 	}
 
 	public function add(string $name): void {

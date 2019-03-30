@@ -15,13 +15,12 @@ final class StoredTags implements Tags {
 	}
 
 	public function all(): array {
-		$tags = (new Storage\BuiltQuery(
+		return (new Storage\BuiltQuery(
 			$this->connection,
 			(new Sql\AnsiSelect(['id', 'name']))
 				->from(['tags'])
 				->orderBy(['id' => 'ASC']),
 		))->rows();
-		return (array) array_combine(array_column($tags, 'id'), $tags);
 	}
 
 	/**
