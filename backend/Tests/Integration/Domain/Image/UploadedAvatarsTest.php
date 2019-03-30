@@ -16,11 +16,16 @@ require __DIR__ . '/../../../bootstrap.php';
  * @testCase
  */
 final class UploadedAvatarsTest extends TestCase\Runtime {
-	use TestCase\TemplateDatabase;
+	use TestCase\TemplateDatabase {
+		tearDown as databaseTeardown;
+	}
 
-	public function testMarchingFilenameWithFilesystem(): void {
+	public function testMatchingDatabaseFilenameWithFilesystemName(): void {
 		['id' => $user] = (new Fixtures\SamplePostgresData($this->connection, 'users'))->try();
 		$_FILES['avatar']['tmp_name'] = __DIR__ . '/fixtures/avatar.png';
+		$_FILES['avatar']['error'] = UPLOAD_ERR_OK;
+		$_FILES['avatar']['size'] = 100;
+		$_FILES['avatar']['name'] = 'avatar.png';
 		(new Domain\Image\UploadedAvatars(
 			new Access\FakeUser((string) $user),
 			$this->connection,
@@ -35,10 +40,32 @@ final class UploadedAvatarsTest extends TestCase\Runtime {
 	 */
 	public function testThrowingOnNotImage(): void {
 		$_FILES['avatar']['tmp_name'] = __DIR__ . '/fixtures/text.txt';
+		$_FILES['avatar']['error'] = UPLOAD_ERR_OK;
+		$_FILES['avatar']['size'] = 100;
+		$_FILES['avatar']['name'] = 'text.txt';
 		(new Domain\Image\UploadedAvatars(
 			new Access\FakeUser((string) 1),
 			$this->connection,
 		))->save();
+	}
+
+	/**
+	 * @throws \UnexpectedValueException File was not successfully uploaded
+	 */
+	public function testThrowingOnNotSuccessfulUpload(): void {
+		$_FILES['avatar']['tmp_name'] = __DIR__ . '/fixtures/text.txt';
+		$_FILES['avatar']['error'] = UPLOAD_ERR_NO_FILE;
+		$_FILES['avatar']['size'] = 100;
+		$_FILES['avatar']['name'] = 'text.txt';
+		(new Domain\Image\UploadedAvatars(
+			new Access\FakeUser((string) 1),
+			$this->connection,
+		))->save();
+	}
+
+	protected function tearDown(): void {
+		$this->databaseTeardown();
+		copy(__DIR__ . '/fixtures/avatar.sample.png', __DIR__ . '/fixtures/avatar.png');
 	}
 }
 

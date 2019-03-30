@@ -6,7 +6,7 @@ namespace Bulletpoint\Domain\Image;
 use Bulletpoint\Domain\Access;
 use Klapuch\Sql;
 use Klapuch\Storage;
-use Nette\Utils\Image;
+use Nette\Http\FileUpload;
 
 final class UploadedAvatars implements Avatars {
 	private const BASE_PATH = 'images/avatars';
@@ -24,37 +24,42 @@ final class UploadedAvatars implements Avatars {
 	}
 
 	public function save(): void {
-		try {
-			(new Storage\Transaction($this->connection))->start(function (): void {
-				$filename = self::filename($this->user->id(), self::extension($_FILES['avatar']['tmp_name']));
-				(new Storage\BuiltQuery(
-					$this->connection,
-					(new Sql\AnsiUpdate('users'))
-						->set(['avatar_filename' => '?'], [self::BASE_PATH . DIRECTORY_SEPARATOR . $filename])
-						->where('id = ?', [$this->user->id()]),
-				))->execute();
-				Image::fromFile($_FILES['avatar']['tmp_name'])->save(self::PATH . DIRECTORY_SEPARATOR . $filename);
-			});
-		} catch(\Nette\InvalidArgumentException | \Nette\Utils\ImageException $e) {
-			throw new \UnexpectedValueException($e->getMessage(), 0, $e);
-		}
+		(new Storage\Transaction($this->connection))->start(function (): void {
+			$upload = self::check(new FileUpload($_FILES['avatar']));
+			$filename = self::filename($this->user->id(), self::extension($upload));
+			(new Storage\BuiltQuery(
+				$this->connection,
+				(new Sql\AnsiUpdate('users'))
+					->set(['avatar_filename' => '?'], [self::BASE_PATH . DIRECTORY_SEPARATOR . $filename])
+					->where('id = ?', [$this->user->id()]),
+			))->execute();
+			$upload->move(self::PATH . DIRECTORY_SEPARATOR . $filename);
+		});
+	}
+
+	private function check(FileUpload $upload): FileUpload {
+		if (!$upload->isOk())
+			throw new \UnexpectedValueException('File was not successfully uploaded');
+		elseif (!$upload->isImage())
+			throw new \UnexpectedValueException('File is not an image');
+		return $upload;
 	}
 
 	private static function filename(string $id, string $extension): string {
 		return sprintf('%s.%s', bin2hex(random_bytes(15)) . $id, $extension);
 	}
 
-	private function extension(string $filename): string {
+	private static function extension(FileUpload $upload): string {
 		static $mimeExtensions = [
 			'image/gif' => 'gif',
 			'image/jpeg' => 'jpg',
 			'image/png' => 'png',
 			'image/webp' => 'webp',
 		];
-		$extension = $mimeExtensions[finfo_file(finfo_open(FILEINFO_MIME_TYPE), $filename)] ?? null;
-		if ($extension !== null) {
-			return $extension;
+		$extension = $mimeExtensions[$upload->getContentType()] ?? null;
+		if ($extension === null) {
+			throw new \UnexpectedValueException('File is not an image');
 		}
-		throw new \UnexpectedValueException('File is not an image');
+		return $extension;
 	}
 }
