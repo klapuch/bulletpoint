@@ -994,7 +994,7 @@ CREATE TYPE job_statuses AS ENUM (
 );
 
 CREATE TABLE log.cron_jobs (
-	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	marked_at timestamp with time zone NOT NULL DEFAULT now(),
 	name text NOT NULL,
 	self_id integer,
