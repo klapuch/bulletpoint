@@ -30,7 +30,7 @@
     "klapuch/validation": "^2.6.3",
     "klapuch/iterator": "^1.1.2",
     "klapuch/routing": "^0.0.14",
-    "klapuch/dataset": "^0.0.1",
+    "klapuch/dataset": "~0.0.1",
     "klapuch/scheduling": "^0.0.1",
     "klapuch/encryption": "^2.1",
     "klapuch/ui": "^0.0.4",

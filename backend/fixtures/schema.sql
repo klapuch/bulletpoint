@@ -429,11 +429,11 @@ CREATE TABLE user_starred_themes (
 );
 
 CREATE MATERIALIZED VIEW user_tag_rank_reputations AS
-	SELECT tags.id, tags.name, user_id, reputation, dense_rank() OVER (PARTITION BY tag_id ORDER BY reputation DESC) AS rank
+	SELECT tags.id AS tag_id, tags.name, user_id, reputation, dense_rank() OVER (PARTITION BY tag_id ORDER BY reputation DESC) AS rank
 	FROM user_tag_reputations
 	JOIN tags ON user_tag_reputations.tag_id = tags.id
 	ORDER BY rank ASC, reputation DESC;
-CREATE UNIQUE INDEX user_tag_rank_reputations_id_user_id_uidx ON user_tag_rank_reputations(id, user_id);
+CREATE UNIQUE INDEX user_tag_rank_reputations_tag_id_user_id_uidx ON user_tag_rank_reputations(tag_id, user_id);
 
 CREATE MATERIALIZED VIEW starred_themes AS
 	SELECT theme_id, count(*) AS stars

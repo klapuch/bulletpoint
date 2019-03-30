@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1825f33126bfeb6cac3820b8efe38f27",
+    "content-hash": "41922d8284f3a21a05501f6a5e3aafdb",
     "packages": [
         {
             "name": "justinrainbow/json-schema",
@@ -180,21 +180,21 @@
         },
         {
             "name": "klapuch/dataset",
-            "version": "0.0.1",
+            "version": "0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Dataset.git",
-                "reference": "e450e141eacc8357a35ce1b77f6e0c42b224a120"
+                "reference": "18d85f40822660e4263c0c3224790676978182a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/e450e141eacc8357a35ce1b77f6e0c42b224a120",
-                "reference": "e450e141eacc8357a35ce1b77f6e0c42b224a120",
+                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/18d85f40822660e4263c0c3224790676978182a1",
+                "reference": "18d85f40822660e4263c0c3224790676978182a1",
                 "shasum": ""
             },
             "require": {
                 "klapuch/sql": "*",
-                "php": ">=7.2"
+                "php": ">=7.3"
             },
             "require-dev": {
                 "consistence/coding-standard": "^3.0",
@@ -226,7 +226,7 @@
             ],
             "description": "Operations applicable to datasets",
             "homepage": "https://www.github.com/klapuch/Dataset",
-            "time": "2019-01-01T14:52:07+00:00"
+            "time": "2019-03-30T13:35:42+00:00"
         },
         {
             "name": "klapuch/encryption",
