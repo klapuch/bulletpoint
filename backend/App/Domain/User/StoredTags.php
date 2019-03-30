@@ -24,7 +24,8 @@ final class StoredTags implements Tags {
 			$this->connection,
 			(new Sql\AnsiSelect(['id', 'name', 'reputation', 'rank']))
 				->from(['user_tag_rank_reputations'])
-				->where('user_id = :user_id', ['user_id' => $this->user->id()]),
+				->where('user_id = :user_id', ['user_id' => $this->user->id()])
+				->orderBy(['rank' => 'ASC', 'reputation' => 'DESC']),
 		))->rows();
 	}
 }
