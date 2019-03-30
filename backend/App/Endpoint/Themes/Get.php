@@ -39,7 +39,7 @@ final class Get implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		$tags = array_map('intval', array_filter(explode(',', (string) ($parameters['tag_id'] ?? '')), 'strlen'));
+		$tags = array_map('intval', array_filter((array) ($parameters['tag_id'] ?? []), 'strlen'));
 		$q = $parameters['q'] ?? null;
 		unset($parameters['tag_id'], $parameters['q']);
 		if ($tags !== [] && $q !== null) {

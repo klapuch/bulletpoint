@@ -55,7 +55,7 @@ final class GetTest extends TestCase\Runtime {
 		$response = (new Endpoint\Themes\Get(
 			$this->connection,
 			new FakeUri(),
-		))->response(['tag_id' => sprintf('%s,%s', $tag1, $tag2), 'sort' => '', 'page' => 1, 'per_page' => 2]);
+		))->response(['tag_id' => [$tag1, $tag2], 'sort' => '', 'page' => 1, 'per_page' => 2]);
 		Assert::count(2, json_decode($response->body()->serialization()));
 		Assert::same(HTTP_OK, $response->status());
 	}
