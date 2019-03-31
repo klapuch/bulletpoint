@@ -86,7 +86,7 @@ export const fetchByTag = (
   tag: ?number,
   pagination: PaginationType,
 ) => (dispatch: (mixed) => Object) => (
-  dispatch(fetchAll({ tag_id: tag }, pagination))
+  dispatch(fetchAll({ tag_id: [tag] }, pagination))
 );
 
 export const fetchRecent = (
@@ -99,7 +99,7 @@ export const fetchStarred = (
   pagination: PaginationType,
   tagId: ?number,
 ) => (dispatch: (mixed) => Object) => (
-  dispatch(fetchAll({ is_starred: 'true', tag_id: tagId, sort: '-starred_at' }, pagination))
+  dispatch(fetchAll({ is_starred: 'true', tag_id: [tagId], sort: '-starred_at' }, pagination))
 );
 
 export const fetchSearches = (keyword: string) => (dispatch: (mixed) => Object) => (
@@ -122,7 +122,7 @@ export const fetchReactSelectTagSearches = (
   tags: Array<FetchedTagType>,
   except: Array<number>,
 ): Promise<any> => (
-  axios.get('/themes', { params: { q: keyword, tag_id: tags.map(tag => tag.id).join(',') } })
+  axios.get('/themes', { params: { q: keyword, tag_id: tags.map(tag => tag.id) } })
     .then(response => response.data)
     .then(themes => toReactSelectSearches(themes, except))
 );
