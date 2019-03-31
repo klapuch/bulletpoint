@@ -9,8 +9,11 @@ import type { FetchedBulletpointType, PointType } from '../types';
 import InnerContent from './InnerContent';
 import * as users from '../../user/selects';
 import * as user from '../../user/endpoints';
-import type { FetchedUserType } from '../../user/types';
+import * as themes from '../../theme/selects';
+import type { FetchedUserTagType, FetchedUserType } from '../../user/types';
 import { getAvatar } from '../../user';
+import type { FetchedTagType } from '../../tags/types';
+import UserLabels from '../../tags/components/UserLabels';
 
 const Date = styled.p`
   margin: 0;
@@ -51,9 +54,12 @@ type Props = {|
   +onRatingChange?: (id: number, point: PointType) => (void),
   +onEditClick?: (number) => (void),
   +onDeleteClick?: (number) => (void),
-  +fetchUser: (number) => (void),
-  +getUser: (number) => (FetchedUserType),
-  +isFetching: (number) => boolean,
+  +fetchUser: () => (void),
+  +fetchTags: (Array<FetchedTagType>) => (void),
+  +getUser: () => (FetchedUserType),
+  +getThemeTags: () => (Array<FetchedTagType>),
+  +getTags: () => (Array<FetchedUserTagType>),
+  +isFetching: () => boolean,
 |};
 type State = {|
   more: boolean,
@@ -66,7 +72,8 @@ class Box extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props, prevState: State) {
     const { more } = this.state;
     if (more && more !== prevState.more) {
-      this.props.fetchUser(this.props.bulletpoint.user_id);
+      this.props.fetchUser();
+      this.props.fetchTags(this.props.getThemeTags());
     }
   }
 
@@ -85,17 +92,17 @@ class Box extends React.Component<Props, State> {
   render() {
     const {
       bulletpoint,
-      bulletpoint: { user_id: bulletpointUserId },
       highlights = [],
       onRatingChange,
       onEditClick,
       onDeleteClick,
     } = this.props;
     const { more } = this.state;
-    const userInfo = this.props.getUser(bulletpointUserId);
-    if (more && this.props.isFetching(bulletpointUserId)) {
+    if (more && this.props.isFetching()) {
       return null;
     }
+
+    const userInfo = this.props.getUser();
 
     return (
       <li
@@ -125,6 +132,7 @@ class Box extends React.Component<Props, State> {
                 <div className="well well-sm" style={{ display: 'inline-block', marginBottom: 0 }}>
                   <img src={getAvatar(userInfo, 50, 50)} alt={userInfo.username} className="img-rounded" />
                   <Username>{userInfo.username}</Username>
+                  <UserLabels tags={this.props.getTags()} link={(id, slug) => `/themes/tag/${id}/${slug}`} />
                 </div>
               </div>
             </div>
@@ -154,11 +162,20 @@ class Box extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => ({
-  getUser: (id: number) => users.getById(id, state),
-  isFetching: (id: number) => users.isFetching(id, state),
+const mapStateToProps = (state, { bulletpoint: { user_id, theme_id } }) => ({
+  getUser: () => users.getById(user_id, state),
+  getTags: () => users.getSelectedTags(
+    user_id,
+    themes.getById(theme_id, state).tags.map(tag => tag.id),
+    state,
+  ),
+  getThemeTags: () => themes.getById(theme_id, state).tags,
+  isFetching: () => users.isFetching(user_id, state) || users.isFetchingTags(user_id, state),
 });
-const mapDispatchToProps = dispatch => ({
-  fetchUser: (id: number) => dispatch(user.fetchSingle(id)),
+const mapDispatchToProps = (dispatch, { bulletpoint: { user_id } }) => ({
+  fetchUser: () => dispatch(user.fetchSingle(user_id)),
+  fetchTags: (
+    tags: Array<FetchedTagType>,
+  ) => dispatch(user.fetchTags(user_id, tags.map(tag => tag.id))),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Box);

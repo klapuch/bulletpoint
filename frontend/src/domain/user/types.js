@@ -17,3 +17,9 @@ export type ErrorUserType = {|
 export const fromFetchedToPosted = (user: FetchedUserType) => ({
   username: user.username || '',
 });
+export type FetchedUserTagType = {
+  +tag_id: number,
+  +name: string,
+  +rank: number,
+  +reputation: number,
+};
