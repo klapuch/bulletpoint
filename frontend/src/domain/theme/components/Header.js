@@ -8,7 +8,7 @@ import Names from './Names';
 
 type Props = {|
   +theme: FetchedThemeType,
-  +onStarClick: (boolean) => (void),
+  +onStarClick: (boolean) => (Promise<any>),
 |};
 const Header = ({ theme, onStarClick }: Props) => (
   <>

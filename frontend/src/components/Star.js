@@ -12,12 +12,12 @@ const Resized = styled.span`
 
 type Props = {|
   +active: boolean,
-  +onClick: (boolean) => (void),
+  +onClick: (boolean) => (Promise<any>),
 |};
 type State = {|
   active: boolean,
 |};
-export default class Star extends React.Component<Props, State> {
+export default class extends React.Component<Props, State> {
   state = {
     active: false,
   };
@@ -27,8 +27,12 @@ export default class Star extends React.Component<Props, State> {
   }
 
   mark = () => {
+    this.setState({ active: true });
+  };
+
+  unmark = () => {
     if (!this.props.active) {
-      this.setState((prevState: State) => ({ active: !prevState.active }));
+      this.setState({ active: false });
     }
   };
 
@@ -38,9 +42,12 @@ export default class Star extends React.Component<Props, State> {
       <Resized
         onFocus={this.mark}
         onMouseOver={this.mark}
-        onBlur={this.mark}
-        onMouseOut={this.mark}
-        onClick={() => this.props.onClick(!this.props.active)}
+        onBlur={this.unmark}
+        onMouseOut={this.unmark}
+        onClick={
+          () => this.props.onClick(!this.props.active)
+            .then(() => this.setState({ active: !this.props.active }))
+        }
         className={classNames('glyphicon', active ? 'glyphicon-star' : 'glyphicon-star-empty')}
         aria-hidden="true"
       />
