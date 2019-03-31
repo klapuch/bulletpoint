@@ -14,13 +14,12 @@ use Klapuch\Output;
 use Klapuch\Storage;
 
 final class Get implements Application\View {
-	private const ALLOWED_FILTERS = [
-		'tag_id',
-	];
+	private const ALLOWED_FILTERS = ['tag_id'];
 	private const SORTS = [
 		'reputation',
 		'rank',
 	];
+	private const PARAMETERS = ['id'];
 
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
@@ -33,8 +32,6 @@ final class Get implements Application\View {
 		if (isset($parameters['tag_id'])) {
 			$parameters['tag_id'] = array_map('intval', array_filter((array) ($parameters['tag_id'] ?? []), 'strlen'));
 		}
-		$id = $parameters['id'];
-		unset($parameters['id']);
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
 				(new Output\JsonPrintedObjects(
@@ -44,10 +41,10 @@ final class Get implements Application\View {
 					...iterator_to_array(
 						(new User\StoredTags(
 							$this->connection,
-							new Access\RegisteredUser($id, $this->connection),
+							new Access\RegisteredUser($parameters['id'], $this->connection),
 						))->all(
 							new Dataset\CombinedSelection(
-								new RestFilter($parameters, self::ALLOWED_FILTERS),
+								new RestFilter($parameters, self::ALLOWED_FILTERS, self::PARAMETERS),
 								new Constraint\AllowedSort(
 									new Dataset\RestSort($parameters['sort']),
 									self::SORTS,

@@ -16,12 +16,14 @@ use Klapuch\UI;
 use Klapuch\Uri\Uri;
 
 final class Get implements Application\View {
-	private const ALLOWED_FILTERS = [
-		'is_starred',
-	];
+	private const ALLOWED_FILTERS = ['is_starred'];
 	private const SORTS = [
 		'created_at',
 		'starred_at',
+	];
+	private const PARAMETERS = [
+		'q',
+		'tag_id',
 	];
 
 	/** @var \Klapuch\Storage\Connection */
@@ -41,7 +43,6 @@ final class Get implements Application\View {
 	public function response(array $parameters): Application\Response {
 		$tags = array_map('intval', array_filter((array) ($parameters['tag_id'] ?? []), 'strlen'));
 		$q = $parameters['q'] ?? null;
-		unset($parameters['tag_id'], $parameters['q']);
 		if ($tags !== [] && $q !== null) {
 			$themes = new Domain\SearchTaggedThemes(
 				new Domain\FakeThemes(),
@@ -68,7 +69,7 @@ final class Get implements Application\View {
 			);
 		}
 		$themes = new Domain\PublicThemes($themes);
-		$count = $themes->count(new RestFilter($parameters, self::ALLOWED_FILTERS));
+		$count = $themes->count(new RestFilter($parameters, self::ALLOWED_FILTERS, self::PARAMETERS));
 		return new Response\PaginatedResponse(
 			new Response\JsonResponse(
 				new Application\PlainResponse(
@@ -79,7 +80,7 @@ final class Get implements Application\View {
 						...iterator_to_array(
 							$themes->all(
 								new Dataset\CombinedSelection(
-									new RestFilter($parameters, self::ALLOWED_FILTERS),
+									new RestFilter($parameters, self::ALLOWED_FILTERS, self::PARAMETERS),
 									new Constraint\AllowedSort(
 										new Dataset\RestSort($parameters['sort']),
 										self::SORTS,
