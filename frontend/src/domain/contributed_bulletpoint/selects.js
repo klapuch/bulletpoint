@@ -5,10 +5,10 @@ import * as bulletpoints from '../bulletpoint/selects';
 
 export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpointType> => {
   if (
-    state.themeContributedBulletpoints.all[theme]
-    && state.themeContributedBulletpoints.all[theme].payload
+    state.themeContributedBulletpoints[theme]
+    && state.themeContributedBulletpoints[theme].payload
   ) {
-    return state.themeContributedBulletpoints.all[theme].payload
+    return state.themeContributedBulletpoints[theme].payload
       .map(bulletpoint => bulletpoints.withReferencedTheme(bulletpoint, state))
       .map(bulletpoint => bulletpoints.withComparedTheme(bulletpoint, state));
   }
@@ -22,14 +22,14 @@ const referencedThemesFetching = (theme: number, state: Object): boolean => (
 );
 export const fetchedAll = (theme: number, state: Object): boolean => (
   !isEmpty(
-    state.themeContributedBulletpoints.all[theme]
-      ? state.themeContributedBulletpoints.all[theme].payload
+    state.themeContributedBulletpoints[theme]
+      ? state.themeContributedBulletpoints[theme].payload
       : {},
   )
 );
 export const allFetching = (theme: number, state: Object): boolean => (
-  state.themeContributedBulletpoints.all[theme]
-    ? state.themeContributedBulletpoints.all[theme].fetching
+  state.themeContributedBulletpoints[theme]
+    ? state.themeContributedBulletpoints[theme].fetching
       || referencedThemesFetching(theme, state)
     : referencedThemesFetching(theme, state)
 );
