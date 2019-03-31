@@ -19,18 +19,14 @@ export const isFetching = (
 export const isFetchingTags = (
   id: number,
   state: Object,
-): boolean => (
-  isEmpty(state.user[id])
-    || isEmpty(state.user[id].tags)
-    || state.user[id].tags.fetching
-);
+): boolean => isEmpty(state.user[id].tags) || state.user[id].tags.fetching;
 
 const getTags = (
   id: number,
   tagIds: Array<number>,
   state: Object,
 ): Array<FetchedUserTagType> => (
-  !isEmpty(state.user[id]) && !isEmpty(state.user[id].tags)
+  !isEmpty(state.user[id].tags)
     ? state.user[id].tags.payload
     : []
 );
