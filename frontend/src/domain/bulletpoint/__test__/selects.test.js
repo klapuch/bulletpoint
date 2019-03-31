@@ -1,12 +1,12 @@
 import { fetchedAll, relatedThemesFetching } from '../selects';
 
 test('empty as not fetchedAll', () => {
-  expect(fetchedAll(1, { themeBulletpoints: { all: { 1: { payload: {} } } } })).toBe(false);
-  expect(fetchedAll(1, { themeBulletpoints: { all: { 1: {} } } })).toBe(false);
+  expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: {} } } })).toBe(false);
+  expect(fetchedAll(1, { themeBulletpoints: { 1: {} } })).toBe(false);
 });
 
 test('fetchedAll as not empty', () => {
-  expect(fetchedAll(1, { themeBulletpoints: { all: { 1: { payload: { foo: 'bar' } } } } })).toBe(true);
+  expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: { foo: 'bar' } } } })).toBe(true);
 });
 
 test('relatedThemesFetching', () => {

@@ -26,8 +26,8 @@ export const withComparedTheme = (
   ],
 });
 export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpointType> => {
-  if (state.themeBulletpoints.all[theme] && state.themeBulletpoints.all[theme].payload) {
-    return state.themeBulletpoints.all[theme].payload
+  if (state.themeBulletpoints[theme] && state.themeBulletpoints[theme].payload) {
+    return state.themeBulletpoints[theme].payload
       .map(bulletpoint => withReferencedTheme(bulletpoint, state))
       .map(bulletpoint => withComparedTheme(bulletpoint, state));
   }
@@ -53,11 +53,11 @@ const comparedThemesFetching = (theme: number, state: Object): boolean => (
   )
 );
 export const fetchedAll = (theme: number, state: Object): boolean => (
-  !isEmpty(state.themeBulletpoints.all[theme] ? state.themeBulletpoints.all[theme].payload : {})
+  !isEmpty(state.themeBulletpoints[theme] ? state.themeBulletpoints[theme].payload : {})
 );
 export const allFetching = (theme: number, state: Object): boolean => (
-  state.themeBulletpoints.all[theme]
-    ? state.themeBulletpoints.all[theme].fetching
+  state.themeBulletpoints[theme]
+    ? state.themeBulletpoints[theme].fetching
       || referencedThemesFetching(theme, state)
       || comparedThemesFetching(theme, state)
     : referencedThemesFetching(theme, state)

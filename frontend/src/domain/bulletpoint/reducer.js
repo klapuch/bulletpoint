@@ -7,66 +7,48 @@ import {
   RECEIVED_THEME_BULLETPOINT_UPDATE,
 } from './actions';
 
-type State = {|
-  +all: Object,
-|};
-const init = {
-  all: {},
-};
-export default (state: State = init, action: Object): State => {
+export default (state: Object = {}, action: Object): Object => {
   switch (action.type) {
     case RECEIVED_THEME_BULLETPOINTS:
       return {
         ...state,
-        all: {
-          ...state.all,
-          [action.theme]: {
-            payload: action.bulletpoints,
-            fetching: action.fetching,
-          },
+        [action.theme]: {
+          payload: action.bulletpoints,
+          fetching: action.fetching,
         },
       };
     case REQUESTED_THEME_BULLETPOINTS:
       return {
         ...state,
-        all: {
-          ...state.all,
-          [action.theme]: {
-            fetching: action.fetching,
-          },
+        [action.theme]: {
+          payload: [],
+          fetching: action.fetching,
         },
       };
     case INVALIDATED_THEME_BULLETPOINTS:
       return {
         ...state,
-        all: {
-          ...state.all,
-          [action.theme]: {
-            fetching: true,
-          },
+        [action.theme]: {
+          payload: [],
+          fetching: true,
         },
       };
     case RECEIVED_THEME_BULLETPOINT_UPDATE:
       return {
         ...state,
-        all: {
-          ...state.all,
-          [action.theme]: {
-            payload: state.all[action.theme].payload.map(bulletpoint => (
-              bulletpoint.id === action.bulletpoint ? action.replacement : bulletpoint
-            )),
-            fetching: action.fetching,
-          },
+        [action.theme]: {
+          payload: state.all[action.theme].payload.map(bulletpoint => (
+            bulletpoint.id === action.bulletpoint ? action.replacement : bulletpoint
+          )),
+          fetching: action.fetching,
         },
       };
     case REQUESTED_THEME_BULLETPOINT_UPDATE:
       return {
         ...state,
-        all: {
-          ...state.all,
-          [action.theme]: {
-            fetching: action.fetching,
-          },
+        [action.theme]: {
+          payload: [],
+          fetching: action.fetching,
         },
       };
     default:
