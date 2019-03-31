@@ -79,7 +79,7 @@ final class PlPgSqlCheck implements Scheduling\Job {
 		SQL;
 		return (new Storage\TypedQuery(
 			$this->connection,
-			sprintf($sql, self::in(array_keys($this->ignores->read()))),
+			sprintf($sql, $this->in(array_keys($this->ignores->read()))),
 		))->rows();
 	}
 
@@ -97,7 +97,7 @@ final class PlPgSqlCheck implements Scheduling\Job {
 		SQL;
 		return (new Storage\TypedQuery(
 			$this->connection,
-			sprintf($sql, self::in(array_keys($this->ignores->read()))),
+			sprintf($sql, $this->in(array_keys($this->ignores->read()))),
 		))->rows();
 	}
 
