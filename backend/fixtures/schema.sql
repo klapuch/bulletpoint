@@ -678,6 +678,17 @@ CREATE TRIGGER bulletpoint_ratings_row_aiud_trigger
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoint_ratings_trigger_row_aiud();
 
 
+CREATE TABLE bulletpoint_groups (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	bulletpoint_id integer NOT NULL UNIQUE,
+	root_bulletpoint_id integer NOT NULL,
+	grouped_at timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT bulletpoint_groups_bulletpoint_not_in_self CHECK (bulletpoint_id != root_bulletpoint_id),
+	CONSTRAINT bulletpoint_groups_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT bulletpoint_groups_root_bulletpoint_id FOREIGN KEY (root_bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+
 -- views
 CREATE SCHEMA web;
 
@@ -802,7 +813,8 @@ CREATE VIEW web.bulletpoints AS
 			(bulletpoint_ratings.up + bulletpoint_ratings.down) AS total_rating,
 		bulletpoint_ratings.user_rating,
 		COALESCE(bulletpoint_referenced_themes.referenced_theme_id, '[]') AS referenced_theme_id,
-		COALESCE(bulletpoint_theme_comparisons.compared_theme_id, '[]') AS compared_theme_id
+		COALESCE(bulletpoint_theme_comparisons.compared_theme_id, '[]') AS compared_theme_id,
+		bulletpoint_groups.root_bulletpoint_id
 	FROM public.public_bulletpoints AS bulletpoints
 	-- TODO: will be pre-counted
 	JOIN (
@@ -830,6 +842,7 @@ CREATE VIEW web.bulletpoints AS
 		FROM public.bulletpoint_theme_comparisons
 		GROUP BY bulletpoint_id
 	) AS bulletpoint_theme_comparisons ON bulletpoint_theme_comparisons.bulletpoint_id = bulletpoints.id
+	LEFT JOIN bulletpoint_groups ON bulletpoint_groups.bulletpoint_id = bulletpoints.id
 	ORDER BY total_rating DESC, bulletpoint_reputations.reputation DESC, length(bulletpoints.content) ASC, created_at DESC, id DESC;
 
 CREATE FUNCTION web.bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
@@ -865,6 +878,10 @@ BEGIN
 		RETURNING id INTO v_bulletpoint_id;
 	ELSE
 		RAISE EXCEPTION USING MESSAGE = format('Trigger for table "%s" is not defined.', TG_TABLE_NAME);
+	END IF;
+
+	IF new.root_bulletpoint_id IS NOT NULL THEN
+		INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (v_bulletpoint_id, new.root_bulletpoint_id);
 	END IF;
 
 	INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
@@ -905,6 +922,10 @@ BEGIN
 	SET link = new.source_link, type = new.source_type
 	WHERE id = v_source_id;
 
+	IF new.root_bulletpoint_id IS NOT NULL AND old.root_bulletpoint_id != new.root_bulletpoint_id THEN
+		INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (new.id, new.root_bulletpoint_id)
+		ON CONFLICT (bulletpoint_id) DO UPDATE SET root_bulletpoint_id = EXCLUDED.root_bulletpoint_id;
+	END IF;
 
 	<<l_referenced_themes>>
 	DECLARE
@@ -957,7 +978,8 @@ SELECT
 	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id,
 	sources.link AS source_link, sources.type AS source_type,
 	COALESCE(bulletpoint_referenced_themes.referenced_theme_id, '[]') AS referenced_theme_id,
-	COALESCE(bulletpoint_theme_comparisons.compared_theme_id, '[]') AS compared_theme_id
+	COALESCE(bulletpoint_theme_comparisons.compared_theme_id, '[]') AS compared_theme_id,
+	bulletpoint_groups.root_bulletpoint_id
 	FROM public.contributed_bulletpoints
 	LEFT JOIN public.sources ON sources.id = contributed_bulletpoints.source_id
 	LEFT JOIN (
@@ -970,6 +992,7 @@ SELECT
 		FROM public.bulletpoint_theme_comparisons
 		GROUP BY bulletpoint_id
 	) AS bulletpoint_theme_comparisons ON bulletpoint_theme_comparisons.bulletpoint_id = contributed_bulletpoints.id
+	LEFT JOIN bulletpoint_groups ON bulletpoint_groups.bulletpoint_id = contributed_bulletpoints.id
 	ORDER BY contributed_bulletpoints.created_at DESC, length(contributed_bulletpoints.content) ASC;
 
 CREATE TRIGGER contributed_bulletpoints_trigger_row_ii

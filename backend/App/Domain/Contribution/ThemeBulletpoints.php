@@ -34,6 +34,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 				'theme_id',
 				'referenced_theme_id',
 				'compared_theme_id',
+				'root_bulletpoint_id',
 				'source_link',
 				'source_type',
 			]))->from(['web.contributed_bulletpoints'])
@@ -62,6 +63,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 					'source_type' => ':source_type',
 					'source_link' => ':source_link',
 					'user_id' => ':user_id',
+					'root_bulletpoint_id' => ':root_bulletpoint_id',
 				],
 				[
 					'content' => $bulletpoint['content'],
@@ -70,6 +72,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 					'compared_theme_id' => Json::encode($bulletpoint['compared_theme_id']), // TODO: use array
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
+					'root_bulletpoint_id' => $bulletpoint['group']['root_bulletpoint_id'],
 					'user_id' => $this->user->id(),
 				],
 			)),

@@ -85,8 +85,15 @@ final class Structure {
 					'type' => 'array',
 					'items' => ['type' => 'number'],
 				],
+				'group' => [
+					'type' => 'object',
+					'properties' => [
+						'root_bulletpoint_id' => ['type' => ['null', 'number']],
+					],
+					'required' => ['root_bulletpoint_id'],
+				],
 			],
-			'required' => ['id', 'source', 'user_id', 'rating', 'content', 'theme_id', 'compared_theme_id', 'referenced_theme_id', 'created_at'],
+			'required' => ['id', 'source', 'user_id', 'rating', 'content', 'theme_id', 'compared_theme_id', 'referenced_theme_id', 'created_at', 'group'],
 			'type' => 'object',
 		];
 	}
@@ -99,10 +106,11 @@ final class Structure {
 			'properties' => [
 				'content' => $get['properties']['content'],
 				'source' => $get['properties']['source'],
+				'group' => $get['properties']['group'],
 				'referenced_theme_id' => $get['properties']['referenced_theme_id'],
 				'compared_theme_id' => $get['properties']['compared_theme_id'],
 			],
-			'required' => ['content', 'source', 'referenced_theme_id', 'compared_theme_id'],
+			'required' => ['content', 'source', 'referenced_theme_id', 'compared_theme_id', 'group'],
 			'type' => 'object',
 		];
 	}

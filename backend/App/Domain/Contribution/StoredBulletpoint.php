@@ -37,6 +37,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'source_link',
 				'source_type',
 				'content',
+				'root_bulletpoint_id',
 			]))->from(['web.contributed_bulletpoints'])
 				->where('id = :id', ['id' => $this->id])
 				->where('user_id = :user_id', ['user_id' => $this->id]),
@@ -49,6 +50,9 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'referenced_theme_id' => $row['referenced_theme_id'],
 				'compared_theme_id' => $row['compared_theme_id'],
 				'content' => $row['content'],
+				'group' => [
+					'root_bulletpoint_id' => $row['root_bulletpoint_id'],
+				],
 				'source' => [
 					'link' => $row['source_link'],
 					'type' => $row['source_type'],
@@ -67,6 +71,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'compared_theme_id' => Json::encode($bulletpoint['compared_theme_id']), // TODO: use array
 				'source_link' => $bulletpoint['source']['link'],
 				'source_type' => $bulletpoint['source']['type'],
+				'root_bulletpoint_id'  => $bulletpoint['group']['root_bulletpoint_id'],
 			])->where('id = :id', ['id' => $this->id])
 				->where('user_id = :user_id', ['user_id' => $this->user->id()]),
 		))->execute();

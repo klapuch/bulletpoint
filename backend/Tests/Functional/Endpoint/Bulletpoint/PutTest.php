@@ -29,6 +29,9 @@ final class PutTest extends TestCase\Runtime {
 					'link' => 'https://www.wikipedia.com',
 					'type' => 'web',
 				],
+				'group' => [
+					'root_bulletpoint_id' => null,
+				],
 			])),
 			$this->connection,
 		))->response(['id' => $id]);
@@ -45,6 +48,9 @@ final class PutTest extends TestCase\Runtime {
 				'source' => [
 					'link' => null,
 					'type' => 'head',
+				],
+				'group' => [
+					'root_bulletpoint_id' => null,
 				],
 			])),
 			$this->connection,
@@ -63,6 +69,9 @@ final class PutTest extends TestCase\Runtime {
 					'source' => [
 						'link' => null,
 						'type' => 'web',
+					],
+					'group' => [
+						'root_bulletpoint_id' => null,
 					],
 				])),
 				$this->connection,

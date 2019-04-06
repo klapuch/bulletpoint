@@ -29,6 +29,20 @@
                 "type"
             ]
         },
+        "group": {
+            "type": "object",
+            "properties": {
+                "root_bulletpoint_id": {
+                    "type": [
+                        "null",
+                        "number"
+                    ]
+                }
+            },
+            "required": [
+                "root_bulletpoint_id"
+            ]
+        },
         "referenced_theme_id": {
             "type": "array",
             "items": {
@@ -46,7 +60,8 @@
         "content",
         "source",
         "referenced_theme_id",
-        "compared_theme_id"
+        "compared_theme_id",
+        "group"
     ],
     "type": "object"
 }

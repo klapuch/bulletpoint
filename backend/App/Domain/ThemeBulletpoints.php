@@ -38,6 +38,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 				'up_rating',
 				'down_rating',
 				'user_rating',
+				'root_bulletpoint_id',
 				'user_id',
 				'created_at',
 			]))->from(['web.bulletpoints'])

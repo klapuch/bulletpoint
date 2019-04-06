@@ -31,6 +31,9 @@ final class PutTest extends TestCase\Runtime {
 					'link' => 'https://www.wikipedia.com',
 					'type' => 'web',
 				],
+				'group' => [
+					'root_bulletpoint_id' => null,
+				],
 			])),
 			$this->connection,
 			new Access\FakeUser((string) $userId),
