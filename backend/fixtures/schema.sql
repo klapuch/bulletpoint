@@ -64,7 +64,7 @@ BEGIN
 		CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN row_to_json(new) ELSE NULL END
 	);
 
-	RETURN CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
+	RETURN CASE TG_OP WHEN 'DELETE' THEN old ELSE new END;
 END;
 $BODY$ LANGUAGE plpgsql;
 
@@ -661,7 +661,7 @@ CREATE FUNCTION bulletpoint_ratings_trigger_row_aiud() RETURNS trigger AS $BODY$
 DECLARE
 	r bulletpoint_ratings;
 BEGIN
-	r = CASE WHEN TG_OP = 'DELETE' THEN old ELSE new END;
+	r = CASE TG_OP WHEN 'DELETE' THEN old ELSE new END;
 
 	PERFORM update_user_tag_reputation(bulletpoints.user_id, theme_tags.tag_id, r.point)
 	FROM public_bulletpoints AS bulletpoints
@@ -813,7 +813,7 @@ CREATE VIEW web.bulletpoints AS
 			COALESCE(user_bulletpoint_ratings.user_rating, 0) AS user_rating
 		FROM public.bulletpoint_ratings
 		LEFT JOIN (
-			SELECT bulletpoint_id, CASE WHEN user_id = globals_get_user() THEN point ELSE 0 END AS user_rating
+			SELECT bulletpoint_id, CASE user_id WHEN globals_get_user() THEN point ELSE 0 END AS user_rating
 			FROM public.bulletpoint_ratings
 			WHERE user_id = globals_get_user()
 		) AS user_bulletpoint_ratings ON user_bulletpoint_ratings.bulletpoint_id = bulletpoint_ratings.bulletpoint_id
