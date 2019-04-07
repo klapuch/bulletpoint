@@ -48,6 +48,12 @@ const LessButton = styled(InfoButton)`
   color: #ffffff;
 `;
 
+const GroupExpand = styled.span`
+  font-size: 20px;
+  margin: 9px;
+  cursor: pointer;
+`;
+
 type Props = {|
   +bulletpoint: FetchedBulletpointType,
   +highlights?: Array<number>,
@@ -60,13 +66,16 @@ type Props = {|
   +getThemeTags: () => (Array<FetchedTagType>),
   +getTags: () => (Array<FetchedUserTagType>),
   +isFetching: () => boolean,
+  +onExpand: (number) => (void),
 |};
 type State = {|
   more: boolean,
+  expand: boolean,
 |};
 class Box extends React.Component<Props, State> {
   state = {
     more: false,
+    expand: false,
   };
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -89,6 +98,11 @@ class Box extends React.Component<Props, State> {
     this.setState({ more });
   };
 
+  expand = () => {
+    this.setState({ expand: true });
+    this.props.onExpand(this.props.bulletpoint.id);
+  };
+
   render() {
     const {
       bulletpoint,
@@ -97,7 +111,7 @@ class Box extends React.Component<Props, State> {
       onEditClick,
       onDeleteClick,
     } = this.props;
-    const { more } = this.state;
+    const { more, expand } = this.state;
     if (more && this.props.isFetching()) {
       return null;
     }
@@ -105,59 +119,61 @@ class Box extends React.Component<Props, State> {
     const userInfo = this.props.getUser();
 
     return (
-      <li
-        style={{ height: more ? 205 : 'initial', position: 'relative' }}
-        className={className(
-          'list-group-item',
-          this.isHighlighted(
-            highlights,
-            bulletpoint.referenced_theme_id,
-            bulletpoint.compared_theme_id,
-          ) && 'active',
-        )}
-      >
-        <InnerContent
-          onRatingChange={onRatingChange}
-          onEditClick={onEditClick}
-          onDeleteClick={onDeleteClick}
+      <>
+        <li
+          style={{ height: more ? 205 : 'initial', position: 'relative' }}
+          className={className(
+            'list-group-item',
+            this.isHighlighted(
+              highlights,
+              bulletpoint.referenced_theme_id,
+              bulletpoint.compared_theme_id,
+            ) && 'active',
+          )}
         >
-          {bulletpoint}
-        </InnerContent>
-        {(more && !isEmpty(userInfo)) && (
-          <>
-            <Separator />
-            <div className="row">
-              <div className="col-sm-2">
-                <Date>{moment(bulletpoint.created_at).format('DD.MM.YYYY')}</Date>
-                <div className="well well-sm" style={{ display: 'inline-block', marginBottom: 0 }}>
-                  <img src={getAvatar(userInfo, 50, 50)} alt={userInfo.username} className="img-rounded" />
-                  <Username>{userInfo.username}</Username>
-                  <UserLabels tags={this.props.getTags()} link={(id, slug) => `/themes/tag/${id}/${slug}`} />
+          <InnerContent
+            onRatingChange={onRatingChange}
+            onEditClick={onEditClick}
+            onDeleteClick={onDeleteClick}
+          >
+            {bulletpoint}
+          </InnerContent>
+          {(more && !isEmpty(userInfo)) && (
+            <>
+              <Separator />
+              <div className="row">
+                <div className="col-sm-2">
+                  <Date>{moment(bulletpoint.created_at).format('DD.MM.YYYY')}</Date>
+                  <div className="well well-sm" style={{ display: 'inline-block', marginBottom: 0 }}>
+                    <img src={getAvatar(userInfo, 50, 50)} alt={userInfo.username} className="img-rounded" />
+                    <Username>{userInfo.username}</Username>
+                    <UserLabels tags={this.props.getTags()} link={(id, slug) => `/themes/tag/${id}/${slug}`} />
+                  </div>
                 </div>
               </div>
-            </div>
-          </>
-        )}
-        {more
-          ? (
-            <LessButton
-              title="méně"
-              onClick={() => this.showMore(false)}
-              className="glyphicon glyphicon-chevron-up"
-              aria-hidden="true"
-            />
-          )
-          : (
-            <MoreButton
-              title="více"
-              onClick={() => this.showMore(true)}
-              className="glyphicon glyphicon-chevron-down"
-              aria-hidden="true"
-            />
-          )
-        }
-
-      </li>
+            </>
+          )}
+          {more
+            ? (
+              <LessButton
+                title="méně"
+                onClick={() => this.showMore(false)}
+                className="glyphicon glyphicon-chevron-up"
+                aria-hidden="true"
+              />
+            )
+            : (
+              <MoreButton
+                title="více"
+                onClick={() => this.showMore(true)}
+                className="glyphicon glyphicon-chevron-down"
+                aria-hidden="true"
+              />
+            )
+          }
+        </li>
+        {!expand && bulletpoint.group.children_bulletpoints.length !== 0 && <div className="text-center"><GroupExpand onClick={this.expand} className="glyphicon glyphicon glyphicon-option-horizontal" aria-hidden="true" /></div>}
+      </>
     );
   }
 }

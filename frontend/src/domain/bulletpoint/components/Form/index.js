@@ -42,6 +42,9 @@ const initState = {
       link: '',
       type: 'web',
     },
+    group: {
+      root_bulletpoint_id: null,
+    },
   },
   errors: validation.initErrors,
 };

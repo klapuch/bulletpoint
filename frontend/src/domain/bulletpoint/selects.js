@@ -3,6 +3,36 @@ import { isEmpty, first, flatten } from 'lodash';
 import * as themes from '../theme/selects';
 import type { FetchedBulletpointType } from './types';
 
+export const withChildrenGroups = (
+  bulletpoints: Array<FetchedBulletpointType>,
+  exceptBulletpointId: ?number = undefined,
+): Array<FetchedBulletpointType> => (
+  bulletpoints.map((bulletpoint) => {
+    if (exceptBulletpointId === bulletpoint.group.root_bulletpoint_id) {
+      return {
+        ...bulletpoint,
+        group: {
+          children_bulletpoints: [],
+          root_bulletpoint_id: null,
+        },
+      };
+    } else {
+      return {
+        ...bulletpoint,
+        group: {
+          ...bulletpoint.group,
+          children_bulletpoints: bulletpoints.filter(
+            b => b.group.root_bulletpoint_id === bulletpoint.id,
+          ),
+        },
+      };
+    }
+  }).filter(
+    bulletpoint => bulletpoint.group.children_bulletpoints.length > 0
+      || bulletpoint.group.root_bulletpoint_id === null,
+  )
+);
+
 export const withReferencedTheme = (
   bulletpoint: FetchedBulletpointType,
   state: Object,
@@ -29,10 +59,24 @@ export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpoi
   if (state.themeBulletpoints[theme] && state.themeBulletpoints[theme].payload) {
     return state.themeBulletpoints[theme].payload
       .map(bulletpoint => withReferencedTheme(bulletpoint, state))
-      .map(bulletpoint => withComparedTheme(bulletpoint, state));
+      .map(bulletpoint => withComparedTheme(bulletpoint, state))
+      .map(bulletpoint => ({
+        ...bulletpoint,
+        group: { ...bulletpoint.group, children_bulletpoints: [] },
+      }));
   }
   return [];
 };
+export const getByThemeGrouped = (theme: number, state: Object): Array<FetchedBulletpointType> => (
+  withChildrenGroups(getByTheme(theme, state))
+);
+export const getByThemeExpanded = (
+  theme: number,
+  expandBulletpointId: number|null,
+  state: Object,
+): Array<FetchedBulletpointType> => (
+  withChildrenGroups(getByTheme(theme, state), expandBulletpointId)
+);
 export const relatedThemesFetching = (
   state: Object,
   themeIds: Array<Array<number>>,
@@ -43,13 +87,13 @@ export const relatedThemesFetching = (
 const referencedThemesFetching = (theme: number, state: Object): boolean => (
   relatedThemesFetching(
     state,
-    getByTheme(theme, state).map(bulletpoint => bulletpoint.referenced_theme_id),
+    getByThemeGrouped(theme, state).map(bulletpoint => bulletpoint.referenced_theme_id),
   )
 );
 const comparedThemesFetching = (theme: number, state: Object): boolean => (
   relatedThemesFetching(
     state,
-    getByTheme(theme, state).map(bulletpoint => bulletpoint.compared_theme_id),
+    getByThemeGrouped(theme, state).map(bulletpoint => bulletpoint.compared_theme_id),
   )
 );
 export const fetchedAll = (theme: number, state: Object): boolean => (
@@ -69,7 +113,7 @@ export const getById = (
 ): FetchedBulletpointType|Object => (
   withComparedTheme(
     withReferencedTheme(
-      first(getByTheme(theme, state).filter(single => single.id === bulletpoint)),
+      first(getByThemeGrouped(theme, state).filter(single => single.id === bulletpoint)),
       state,
     ),
     state,

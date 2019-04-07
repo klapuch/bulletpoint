@@ -25,6 +25,7 @@ import RelatedThemes from './sections/RelatedThemes';
 type State = {|
   formType: FormTypes,
   bulletpointId: number|null,
+  expandBulletpointId: number|null,
 |};
 type Props = {|
   +history: Object,
@@ -51,10 +52,12 @@ type Props = {|
   +getBulletpointById: (number) => FetchedBulletpointType,
   +match: Object,
   +theme: FetchedThemeType,
+  +getBulletpoints: (number|null) => (Array<FetchedBulletpointType>),
 |};
 const initState = {
   formType: FORM_TYPE_DEFAULT,
   bulletpointId: null,
+  expandBulletpointId: null,
 };
 class Theme extends React.Component<Props, State> {
   state = initState;
@@ -120,11 +123,16 @@ class Theme extends React.Component<Props, State> {
 
   handleCancelClick = () => this.setState(initState);
 
+  handleExpand = (expandBulletpointId: number) => {
+    this.setState({ expandBulletpointId });
+  };
+
   render() {
     if (this.props.fetching) {
       return <Loader />;
     }
     const { match: { params: { id } }, history: { location: { state } } } = this.props;
+    const bulletpoints = this.props.getBulletpoints(this.state.expandBulletpointId);
     return (
       <SlugRedirect {...this.props} name={this.props.theme.name}>
         <Helmet><title>{this.props.theme.name}</title></Helmet>
@@ -133,12 +141,13 @@ class Theme extends React.Component<Props, State> {
           <div className="col-sm-8">
             <h2 id="bulletpoints">Bulletpointy</h2>
             <Boxes
+              onExpand={this.handleExpand}
               highlights={
                 typeof state !== 'undefined' && state.highlightedBulletpointIds
                   ? state.highlightedBulletpointIds
                   : []
               }
-              bulletpoints={this.props.bulletpoints}
+              bulletpoints={bulletpoints}
               onRatingChange={this.handleBulletpointRatingChange}
               onEditClick={user.isAdmin() ? this.handleEditClick : undefined}
               onDeleteClick={user.isAdmin() ? this.handleDeleteClick : undefined}
@@ -147,13 +156,14 @@ class Theme extends React.Component<Props, State> {
               <>
                 <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
                 <Boxes
+                  onExpand={this.handleExpand}
                   bulletpoints={this.props.contributedBulletpoints}
                   onDeleteClick={this.handleDeleteClick}
                 />
               </>
             )}
             {user.isLoggedIn() && (
-              this.props.bulletpoints.map(bulletpoint => (
+              bulletpoints.map(bulletpoint => (
                 <Form
                   key={bulletpoint.id}
                   theme={this.props.theme}
@@ -194,7 +204,11 @@ class Theme extends React.Component<Props, State> {
 
 const mapStateToProps = (state, { match: { params: { id: themeId } } }) => ({
   theme: themes.getById(themeId, state),
-  bulletpoints: bulletpoints.getByTheme(themeId, state),
+  getBulletpoints: (expandBulletpointId: number|null) => (
+    expandBulletpointId === null
+      ? bulletpoints.getByThemeGrouped(themeId, state)
+      : bulletpoints.getByThemeExpanded(themeId, expandBulletpointId, state)
+  ),
   contributedBulletpoints: contributedBulletpoints.getByTheme(themeId, state),
   fetching: themes.singleFetching(themeId, state)
     || bulletpoints.allFetching(themeId, state)

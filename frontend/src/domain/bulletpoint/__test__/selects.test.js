@@ -1,4 +1,4 @@
-import { fetchedAll, relatedThemesFetching } from '../selects';
+import { fetchedAll, relatedThemesFetching, withChildrenGroups } from '../selects';
 
 test('empty as not fetchedAll', () => {
   expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: {} } } })).toBe(false);
@@ -51,4 +51,27 @@ test('relatedThemesFetching', () => {
   },
   [[1, 2], [3]])).toBe(false);
   expect(relatedThemesFetching({}, [])).toBe(false);
+});
+
+test('from parents to children', () => {
+  expect(
+    withChildrenGroups([
+      { id: 1, group: { root_bulletpoint_id: null } },
+      { id: 2, group: { root_bulletpoint_id: null } },
+      { id: 3, group: { root_bulletpoint_id: 1 } },
+      { id: 5, group: { root_bulletpoint_id: 1 } },
+    ]),
+  ).toEqual([
+    {
+      id: 1,
+      group: {
+        root_bulletpoint_id: null,
+        children_bulletpoints: [
+          { id: 3, group: { root_bulletpoint_id: 1 } },
+          { id: 5, group: { root_bulletpoint_id: 1 } },
+        ],
+      },
+    },
+    { id: 2, group: { root_bulletpoint_id: null, children_bulletpoints: [] } },
+  ]);
 });

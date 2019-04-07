@@ -17,6 +17,10 @@ export type FetchedBulletpointType = {|
     +total: number,
     +user: PointType,
   |},
+  +group: {|
+    +root_bulletpoint_id: number|null,
+    +children_bulletpoints: Array<FetchedBulletpointType>,
+  |},
   +created_at: string,
   +content: string,
   +theme_id: number,
@@ -29,6 +33,9 @@ export type PostedBulletpointType = {|
   +source: {|
     +link: string,
     +type: SourceType,
+  |},
+  +group: {|
+    +root_bulletpoint_id: number|null,
   |},
   +content: string,
   +referenced_theme_id: Array<number>,

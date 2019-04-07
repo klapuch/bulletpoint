@@ -9,10 +9,12 @@ type Props = {|
   +onRatingChange?: (id: number, point: PointType) => (void),
   +onEditClick?: (number) => (void),
   +onDeleteClick?: (number) => (void),
+  +onExpand: (number) => (void),
 |};
 const Boxes = ({
   highlights = [],
   bulletpoints,
+  onExpand,
   onRatingChange,
   onEditClick,
   onDeleteClick,
@@ -23,6 +25,7 @@ const Boxes = ({
         bulletpoint={bulletpoint}
         key={`bulletpoint-${bulletpoint.id}`}
         onRatingChange={onRatingChange}
+        onExpand={onExpand}
         onEditClick={onEditClick}
         onDeleteClick={onDeleteClick}
         highlights={highlights}
