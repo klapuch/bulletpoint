@@ -41,6 +41,9 @@ INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, c
 INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (7, 14, 1, 'Soulad mezi verbálním a neverbálním chování', '2019-02-10 23:30:04.547761+01');
 INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (8, 15, 1, '2x více cukru', now());
 INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (8, 16, 1, 'Obsahuje 2-3× méně [[kofeinu]]', now());
+INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (2, 17, 1, 'Java', now());
+INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (2, 18, 1, 'C#', now());
+INSERT INTO public.public_bulletpoints (theme_id, source_id, user_id, content, created_at) VALUES (2, 19, 1, '[[PHP]]', now());
 
 INSERT INTO public.sources (link, type) VALUES (NULL, 'head');
 INSERT INTO public.sources (link, type) VALUES ('https://wikipedia.org/wiki/PHP', 'web');
@@ -58,12 +61,16 @@ INSERT INTO public.sources (link, type) VALUES ('https://cs.m.wikipedia.org/wiki
 INSERT INTO public.sources (link, type) VALUES ('http://www.psychologie-ovlivnovani.cz/', 'web');
 INSERT INTO public.sources (link, type) VALUES ('https://www.coffeespot.cz/rozdily-kava-arabica-robusta', 'web');
 INSERT INTO public.sources (link, type) VALUES ('https://www.coffeespot.cz/rozdily-kava-arabica-robusta', 'web');
+INSERT INTO public.sources (link, type) VALUES ('https://en.wikipedia.org/wiki/Java_(programming_language)', 'web');
+INSERT INTO public.sources (link, type) VALUES ('https://en.wikipedia.org/wiki/C_Sharp_(programming_language)', 'web');
+INSERT INTO public.sources (link, type) VALUES ('https://en.wikipedia.org/wiki/PHP', 'web');
 
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (3, 2);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (5, 4);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (8, 5);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (9, 4);
 INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (15, 9);
+INSERT INTO bulletpoint_referenced_themes(bulletpoint_id, theme_id) VALUES (18, 1);
 
 INSERT INTO public.tags (name) VALUES ('programovací jazyk');
 INSERT INTO public.tags (name) VALUES ('IT');
@@ -92,6 +99,9 @@ INSERT INTO contributed_bulletpoints (theme_id, source_id, user_id, content) VAL
 
 INSERT INTO bulletpoint_theme_comparisons (theme_id, bulletpoint_id) VALUES (10, 14);
 INSERT INTO bulletpoint_theme_comparisons (theme_id, bulletpoint_id) VALUES (10, 15);
+
+INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (17, 16);
+INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (18, 16);
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY bulletpoint_reputations;
 REFRESH MATERIALIZED VIEW CONCURRENTLY starred_themes;
