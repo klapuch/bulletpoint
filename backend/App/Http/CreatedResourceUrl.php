@@ -76,7 +76,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 			throw new \UnexpectedValueException($this->format($lost));
 		return array_map(
 			static function(string $placeholder) use ($parameters): string {
-				return $parameters[$placeholder];
+				return (string) $parameters[$placeholder];
 			},
 			$placeholders,
 		);

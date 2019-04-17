@@ -32,7 +32,7 @@ class Form extends React.Component<Props, State> {
     errors: initStateErrors,
   };
 
-  onChange = ({ target: { name, value } }: EventType) => {
+  handleChange = ({ target: { name, value } }: EventType) => {
     this.setState(prevState => ({
       credentials: {
         ...prevState.credentials,
@@ -41,7 +41,7 @@ class Form extends React.Component<Props, State> {
     }));
   };
 
-  onSubmit = (event: { ...EventType, preventDefault: () => (void) }) => {
+  handleSubmit = (event: { ...EventType, preventDefault: () => (void) }) => {
     event.preventDefault();
     if (validation.anyErrors(this.state.credentials)) {
       this.setState(prevState => ({
@@ -64,16 +64,16 @@ class Form extends React.Component<Props, State> {
       <form className="form-horizontal">
         <div className={classNames('form-group', errors.login && 'has-error')}>
           <label htmlFor="login">E-mail nebo uživatelské jméno</label>
-          <input name="login" value={credentials.login} onChange={this.onChange} className="form-control" />
+          <input name="login" value={credentials.login} onChange={this.handleChange} className="form-control" />
           {errors.login && <span className="help-block">{validation.toMessage(errors, 'login')}</span>}
         </div>
         <div className={classNames('form-group', errors.password && 'has-error')}>
           <label htmlFor="password">Heslo</label>
-          <input type="password" value={credentials.password} name="password" onChange={this.onChange} className="form-control" />
+          <input type="password" value={credentials.password} name="password" onChange={this.handleChange} className="form-control" />
           {errors.password && <span className="help-block">{validation.toMessage(errors, 'password')}</span>}
         </div>
         <div className="form-group">
-          <button type="button" onClick={this.onSubmit} name="enter" className="btn btn-success">
+          <button type="button" onClick={this.handleSubmit} name="enter" className="btn btn-success">
             Přihlásit se
           </button>
         </div>

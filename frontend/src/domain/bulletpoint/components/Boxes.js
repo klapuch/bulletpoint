@@ -9,7 +9,7 @@ type Props = {|
   +onRatingChange?: (id: number, point: PointType) => (void),
   +onEditClick?: (number) => (void),
   +onDeleteClick?: (number) => (void),
-  +onExpand: (number) => (void),
+  +onExpand?: (number) => (void),
 |};
 const Boxes = ({
   highlights = [],

@@ -2,42 +2,28 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-import getSlug from 'speakingurl';
-import * as tag from '../../../domain/tags/endpoints';
-import * as tags from '../../../domain/tags/selects';
 import * as theme from '../../../domain/theme/endpoints';
 import * as themes from '../../../domain/theme/selects';
-import Form from '../../../domain/theme/components/Form';
 import Loader from '../../../ui/Loader';
-import type { FetchedThemeType, PostedThemeType } from '../../../domain/theme/types';
-import type { FetchedTagType } from '../../../domain/tags/types';
+import type { FetchedThemeType } from '../../../domain/theme/types';
+import Form from '../../../domain/theme/components/ChangeHttpForm';
 
 type Props = {|
-  +changeTheme: (number, PostedThemeType, () => (void)) => (void),
-  +fetchSingle: (number) => (void),
-  +fetchTags: () => (void),
+  +fetchSingle: () => (void),
   +fetching: boolean,
   +history: Object,
   +match: Object,
-  +tags: Array<FetchedTagType>,
   +theme: FetchedThemeType,
 |};
 class Create extends React.Component<Props> {
   componentDidMount(): void {
-    const { match: { params: { id } } } = this.props;
-    this.props.fetchTags();
-    this.props.fetchSingle(id);
+    this.props.fetchSingle();
   }
-
-  handleSubmit = (theme: PostedThemeType) => {
-    const { match: { params: { id } } } = this.props;
-    this.props.changeTheme(id, theme, () => this.props.history.push(`/themes/${id}/${getSlug(theme.name)}`));
-  };
 
   getTitle = (name: string) => `Úprava tématu "${name}"`;
 
   render() {
-    const { fetching, tags, theme } = this.props;
+    const { fetching, theme } = this.props;
     if (fetching) {
       return <Loader />;
     }
@@ -47,24 +33,17 @@ class Create extends React.Component<Props> {
           <title>{this.getTitle(theme.name)}</title>
         </Helmet>
         <h1>{this.getTitle(theme.name)}</h1>
-        <Form theme={theme} tags={tags} onSubmit={this.handleSubmit} />
+        <Form {...this.props} />
       </>
     );
   }
 }
 
 const mapStateToProps = (state, { match: { params: { id } } }) => ({
-  tags: tags.getAll(state),
   theme: themes.getById(id, state),
-  fetching: tags.allFetching(state) || themes.singleFetching(id, state),
+  fetching: themes.singleFetching(id, state),
 });
-const mapDispatchToProps = dispatch => ({
-  fetchTags: () => dispatch(tag.fetchAll()),
-  fetchSingle: (id: number) => dispatch(theme.fetchSingle(id)),
-  changeTheme: (
-    id: number,
-    postedTheme: PostedThemeType,
-    next: () => (void),
-  ) => dispatch(theme.change(id, postedTheme, next)),
+const mapDispatchToProps = (dispatch, { match: { params: { id } } }) => ({
+  fetchSingle: () => dispatch(theme.fetchSingle(id)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Create);

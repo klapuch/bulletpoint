@@ -10,11 +10,9 @@ import Loader from '../../../ui/Loader';
 import type { FetchedThemeType } from '../../../domain/theme/types';
 import Previews from '../../../domain/theme/components/Previews';
 import type { PaginationType } from '../../../api/dataset/PaginationType';
-import { receivedInit, receivedReset, turnPage } from '../../../api/dataset/actions';
-import { getSourcePagination } from '../../../api/dataset/selects';
-import Pager from '../../../components/Pager';
 import Labels from '../../../domain/tags/components/Labels';
 import type { FetchedTagType } from '../../../domain/tags/types';
+import ActivePager from '../../../components/ActivePager';
 
 type Props = {|
   +location: {|
@@ -23,31 +21,32 @@ type Props = {|
   +tags: Array<FetchedTagType>,
   +themes: Array<FetchedThemeType>,
   +total: number,
-  +pagination: PaginationType,
   +fetching: boolean,
   +fetchStarred: (PaginationType, ?number) => (void),
-  +initPaging: (PaginationType) => (void),
-  +resetPaging: (PaginationType) => (void),
-  +turnPage: (number, PaginationType) => (void),
   +fetchTags: () => (void),
 |};
-class StarredThemes extends React.Component<Props> {
+type State = {|
+  reset: boolean,
+|};
+
+const PER_PAGE = 5;
+
+class StarredThemes extends React.Component<Props, State> {
+  state = {
+    reset: false,
+  };
+
   componentDidMount(): void {
-    this.reload();
+    this.handleReload({ page: 1, perPage: PER_PAGE });
   }
 
   componentDidUpdate(prevProps: Props) {
     const { location: { search } } = this.props;
     if (prevProps.location.search !== search) {
-      this.reload(pagination => this.props.resetPaging(pagination));
+      this.handleReload({ page: 1, perPage: PER_PAGE })
+        .then(() => this.setState({ reset: true }));
     }
   }
-
-  handleChangePage = (page: number) => {
-    Promise.resolve()
-      .then(() => this.props.turnPage(page, this.props.pagination))
-      .then(() => this.reload());
-  };
 
   getTagId = (): ?number => {
     const { location: { search } } = this.props;
@@ -58,16 +57,9 @@ class StarredThemes extends React.Component<Props> {
     return parseInt(tagId, 10);
   };
 
-  reload(onResetPaging?: (PaginationType) => (void)) {
-    const PER_PAGE = 5;
-    Promise.resolve()
-      .then(() => (typeof onResetPaging === 'undefined'
-        ? this.props.initPaging
-        : this.props.resetPaging))
-      .then(initPaging => initPaging({ page: 1, perPage: PER_PAGE }))
-      .then(() => this.props.fetchStarred(this.props.pagination, this.getTagId()))
-      .then(() => this.props.fetchTags());
-  }
+  handleReload = (pagination: PaginationType): Promise<any> => Promise.resolve()
+    .then(() => this.props.fetchStarred(pagination, this.getTagId()))
+    .then(this.props.fetchTags);
 
   render() {
     const {
@@ -88,10 +80,12 @@ class StarredThemes extends React.Component<Props> {
           <>
             {typeof this.getTagId() === 'undefined' && <Labels tags={tags} link={id => `?tag_id=${id}`} />}
             <Previews themes={themes} tagLink={id => `?tag_id=${id}`} />
-            <Pager
+            <ActivePager
+              name="themes/starred"
+              perPage={PER_PAGE}
+              reset={this.state.reset}
+              onReload={this.handleReload}
               total={total}
-              pagination={this.props.pagination}
-              onPageChange={this.handleChangePage}
             />
           </>
         )}
@@ -100,13 +94,11 @@ class StarredThemes extends React.Component<Props> {
   }
 }
 
-const SOURCE_NAME = 'themes/starred';
 const mapStateToProps = state => ({
   total: themes.getTotal(state),
   themes: themes.getAll(state),
   tags: tags.getStarred(state),
   fetching: themes.allFetching(state) || tags.starredFetching(state),
-  pagination: getSourcePagination(SOURCE_NAME, state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchTags: () => dispatch(tag.fetchStarred()),
@@ -114,15 +106,5 @@ const mapDispatchToProps = dispatch => ({
     pagination: PaginationType,
     tagId: ?number,
   ) => dispatch(theme.fetchStarred(pagination, tagId)),
-  initPaging: (
-    paging: PaginationType,
-  ) => dispatch(receivedInit(SOURCE_NAME, paging)),
-  resetPaging: (
-    paging: PaginationType,
-  ) => dispatch(receivedReset(SOURCE_NAME, paging)),
-  turnPage: (
-    page: number,
-    current: PaginationType,
-  ) => dispatch(turnPage(SOURCE_NAME, page, current)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(StarredThemes);

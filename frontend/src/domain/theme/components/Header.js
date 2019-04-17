@@ -1,19 +1,18 @@
 // @flow
 import React from 'react';
 import type { FetchedThemeType } from '../types';
-import Star from '../../../components/Star';
 import * as user from '../../user';
 import Detail from './Detail';
 import Names from './Names';
+import HttpStar from '../../../components/HttpStar';
 
 type Props = {|
   +theme: FetchedThemeType,
-  +onStarClick: (boolean) => (Promise<any>),
 |};
-const Header = ({ theme, onStarClick }: Props) => (
+const Header = ({ theme }: Props) => (
   <>
     <div>
-      {user.isLoggedIn() && <Star active={theme.is_starred} onClick={onStarClick} />}
+      {user.isLoggedIn() && <HttpStar themeId={theme.id} />}
       <Names theme={theme} />
     </div>
     <Detail theme={theme} />

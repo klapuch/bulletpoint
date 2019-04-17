@@ -32,14 +32,10 @@ class Form extends React.Component<Props, State> {
   };
 
   componentDidMount(): void {
-    this.reload();
+    this.setState({ user: fromFetchedToPosted(this.props.user) });
   }
 
-  reload = () => {
-    this.setState({ user: fromFetchedToPosted(this.props.user) });
-  };
-
-  onChange = ({ target: { name, value } }: EventType) => {
+  handleOnChange = ({ target: { name, value } }: EventType) => {
     this.setState(prevState => ({
       user: {
         ...prevState.user,
@@ -48,7 +44,7 @@ class Form extends React.Component<Props, State> {
     }));
   };
 
-  onSubmit = (event: { ...EventType, preventDefault: () => (void) }) => {
+  handleSubmit = (event: { ...EventType, preventDefault: () => (void) }) => {
     event.preventDefault();
     if (validation.anyErrors(this.state.user)) {
       this.setState(prevState => ({
@@ -67,11 +63,11 @@ class Form extends React.Component<Props, State> {
       <form className="form-horizontal">
         <div className={classNames('form-group', errors.username && 'has-error')}>
           <label htmlFor="username">Uživatelské jméno</label>
-          <input name="username" value={user.username} onChange={this.onChange} className="form-control" />
+          <input name="username" value={user.username} onChange={this.handleOnChange} className="form-control" />
           {errors.username && <span className="help-block">{validation.toMessage(errors, 'username')}</span>}
         </div>
         <div className="form-group">
-          <button type="button" onClick={this.onSubmit} name="enter" className="btn btn-success">
+          <button type="button" onClick={this.handleSubmit} name="enter" className="btn btn-success">
             Upravit
           </button>
         </div>

@@ -66,7 +66,7 @@ type Props = {|
   +getThemeTags: () => (Array<FetchedTagType>),
   +getTags: () => (Array<FetchedUserTagType>),
   +isFetching: () => boolean,
-  +onExpand: (number) => (void),
+  +onExpand?: (number) => (void),
 |};
 type State = {|
   more: boolean,
@@ -99,8 +99,11 @@ class Box extends React.Component<Props, State> {
   };
 
   expand = () => {
-    this.setState({ expand: true });
-    this.props.onExpand(this.props.bulletpoint.id);
+    const { onExpand, bulletpoint: { id } } = this.props;
+    if (typeof onExpand !== 'undefined') {
+      this.setState({ expand: true });
+      onExpand(id);
+    }
   };
 
   render() {

@@ -1,5 +1,4 @@
 // @flow
-
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
@@ -26,15 +25,15 @@ export default class extends React.Component<Props, State> {
     this.setState({ active: this.props.active });
   }
 
-  mark = () => {
-    this.setState({ active: true });
-  };
+  mark = () => this.setState({ active: true });
 
   unmark = () => {
     if (!this.props.active) {
       this.setState({ active: false });
     }
   };
+
+  handleClick = () => this.props.onClick(!this.props.active);
 
   render() {
     const { active } = this.state;
@@ -44,10 +43,7 @@ export default class extends React.Component<Props, State> {
         onMouseOver={this.mark}
         onBlur={this.unmark}
         onMouseOut={this.unmark}
-        onClick={
-          () => this.props.onClick(!this.props.active)
-            .then(() => this.setState({ active: !this.props.active }))
-        }
+        onClick={this.handleClick}
         className={classNames('glyphicon', active ? 'glyphicon-star' : 'glyphicon-star-empty')}
         aria-hidden="true"
       />

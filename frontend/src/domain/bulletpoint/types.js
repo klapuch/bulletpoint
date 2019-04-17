@@ -50,5 +50,5 @@ export type ErrorBulletpointType = {|
   +referenced_themes: ?string,
 |};
 export const fromFetchedToPosted = (bulletpoint: FetchedBulletpointType) => (
-  omit(bulletpoint, ['id', 'rating', 'theme_id', 'referenced_theme', 'compared_theme', 'user_id'])
+  omit(bulletpoint, ['id', 'rating', 'theme_id', 'referenced_theme', 'compared_theme', 'user_id', 'created_at'])
 );

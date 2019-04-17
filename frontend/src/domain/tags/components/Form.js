@@ -27,7 +27,7 @@ const initState = {
 export default class extends React.Component<Props, State> {
   state = initState;
 
-  onChange = ({ target: { name, value } }: TargetType) => {
+  handleChange = ({ target: { name, value } }: TargetType) => {
     const input = { [name]: value };
     this.setState(prevState => ({
       tag: {
@@ -61,7 +61,7 @@ export default class extends React.Component<Props, State> {
               id="name"
               name="name"
               value={tag.name}
-              onChange={this.onChange}
+              onChange={this.handleChange}
             />
             {errors.name && <span className="help-block">{validation.toMessage(errors, 'name')}</span>}
           </div>

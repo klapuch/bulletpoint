@@ -20,19 +20,12 @@ type Props = {|
 |};
 class Themes extends React.Component<Props> {
   componentDidMount(): void {
-    const { params: { q } } = this.props;
-    this.props.fetchThemes(q);
+    this.props.fetchThemes(this.props.params.q);
   }
 
-  getHeader = () => {
-    const { params: { q } } = this.props;
-    return <>Výsledky hledání pro &quot;<strong>{q}</strong>&quot;</>;
-  };
+  getHeader = () => <>Výsledky hledání pro &quot;<strong>{this.props.params.q}</strong>&quot;</>;
 
-  getTitle = () => {
-    const { params: { q } } = this.props;
-    return `Výsledky hledání pro "${q}"`;
-  };
+  getTitle = () => `Výsledky hledání pro "${this.props.params.q}"`;
 
   render() {
     const { themes, fetching } = this.props;
@@ -46,11 +39,11 @@ class Themes extends React.Component<Props> {
         </Helmet>
         <h1>{this.getHeader()}</h1>
         {themes.length !== 0 && (
-        <h3>
-          <small>
-            {`Počet výsledků: ${themes.length}`}
-          </small>
-        </h3>
+          <h3>
+            <small>
+              {`Počet výsledků: ${themes.length}`}
+            </small>
+          </h3>
         )}
         <br />
         {isEmpty(themes)
