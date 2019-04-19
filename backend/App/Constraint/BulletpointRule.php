@@ -31,7 +31,7 @@ final class BulletpointRule implements Validation\Rule {
 	 * @return array
 	 */
 	public function apply($subject): array {
-		return array_replace_recursive(
+		return (array) array_replace_recursive(
 			[
 				'source' => [
 					'link' => $subject['source']['type'] === 'web'

@@ -2441,16 +2441,16 @@
         },
         {
             "name": "pepakriz/phpstan-exception-rules",
-            "version": "v0.7.1",
+            "version": "v0.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pepakriz/phpstan-exception-rules.git",
-                "reference": "7608f8f714b9f4fa5c29e4d847e8255b4cd9bd77"
+                "reference": "d15eba3400fe2665b634ac6c55f6c64ed1e7b408"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pepakriz/phpstan-exception-rules/zipball/7608f8f714b9f4fa5c29e4d847e8255b4cd9bd77",
-                "reference": "7608f8f714b9f4fa5c29e4d847e8255b4cd9bd77",
+                "url": "https://api.github.com/repos/pepakriz/phpstan-exception-rules/zipball/d15eba3400fe2665b634ac6c55f6c64ed1e7b408",
+                "reference": "d15eba3400fe2665b634ac6c55f6c64ed1e7b408",
                 "shasum": ""
             },
             "require": {
@@ -2485,7 +2485,7 @@
                 "MIT"
             ],
             "description": "Exception rules for PHPStan",
-            "time": "2019-03-27T14:31:35+00:00"
+            "time": "2019-04-16T15:47:42+00:00"
         },
         {
             "name": "php-cs-fixer/diff",
@@ -3289,16 +3289,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.4.1",
+            "version": "3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "5b4333b4010625d29580eb4a41f1e53251be6baa"
+                "reference": "b8a7362af1cc1aadb5bd36c3defc4dda2cf5f0a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/5b4333b4010625d29580eb4a41f1e53251be6baa",
-                "reference": "5b4333b4010625d29580eb4a41f1e53251be6baa",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/b8a7362af1cc1aadb5bd36c3defc4dda2cf5f0a8",
+                "reference": "b8a7362af1cc1aadb5bd36c3defc4dda2cf5f0a8",
                 "shasum": ""
             },
             "require": {
@@ -3336,20 +3336,20 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2019-03-19T03:22:27+00:00"
+            "time": "2019-04-10T23:49:02+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v4.2.5",
+            "version": "v4.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "24206aff3efe6962593297e57ef697ebb220e384"
+                "reference": "e2840bb38bddad7a0feaf85931e38fdcffdb2f81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/24206aff3efe6962593297e57ef697ebb220e384",
-                "reference": "24206aff3efe6962593297e57ef697ebb220e384",
+                "url": "https://api.github.com/repos/symfony/console/zipball/e2840bb38bddad7a0feaf85931e38fdcffdb2f81",
+                "reference": "e2840bb38bddad7a0feaf85931e38fdcffdb2f81",
                 "shasum": ""
             },
             "require": {
@@ -3408,7 +3408,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-01T07:32:59+00:00"
+            "time": "2019-04-08T14:23:48+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -3480,16 +3480,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v4.2.5",
+            "version": "v4.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "267b7002c1b70ea80db0833c3afe05f0fbde580a"
+                "reference": "e45135658bd6c14b61850bf131c4f09a55133f69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/267b7002c1b70ea80db0833c3afe05f0fbde580a",
-                "reference": "267b7002c1b70ea80db0833c3afe05f0fbde580a",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/e45135658bd6c14b61850bf131c4f09a55133f69",
+                "reference": "e45135658bd6c14b61850bf131c4f09a55133f69",
                 "shasum": ""
             },
             "require": {
@@ -3525,7 +3525,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-02-23T15:42:05+00:00"
+            "time": "2019-04-06T13:51:08+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -3686,16 +3686,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.2.5",
+            "version": "3.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "d8411dc510f948dea463953d87a71d65e12fade8"
+                "reference": "6e010d9db95275725e5ad6409c387eb173091f72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/d8411dc510f948dea463953d87a71d65e12fade8",
-                "reference": "d8411dc510f948dea463953d87a71d65e12fade8",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/6e010d9db95275725e5ad6409c387eb173091f72",
+                "reference": "6e010d9db95275725e5ad6409c387eb173091f72",
                 "shasum": ""
             },
             "require": {
@@ -3762,7 +3762,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2019-04-01T20:34:44+00:00"
+            "time": "2019-04-12T15:32:35+00:00"
         },
         {
             "name": "webmozart/assert",

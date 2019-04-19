@@ -23,7 +23,7 @@ final class ThemeRule implements Validation\Rule {
 	 * @return array
 	 */
 	public function apply($subject): array {
-		return array_replace_recursive(
+		return (array) array_replace_recursive(
 			[
 				'reference' => [
 					'url' => (new Validation\FriendlyRule(
