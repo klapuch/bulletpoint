@@ -37,7 +37,7 @@ export default (state: Object = {}, action: Object): Object => {
       return {
         ...state,
         [action.theme]: {
-          payload: state.all[action.theme].payload.map(bulletpoint => (
+          payload: state[action.theme].payload.map(bulletpoint => (
             bulletpoint.id === action.bulletpoint ? action.replacement : bulletpoint
           )),
           fetching: action.fetching,

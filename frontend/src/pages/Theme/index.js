@@ -5,18 +5,18 @@ import { connect } from 'react-redux';
 import * as theme from '../../domain/theme/endpoints';
 import * as themes from '../../domain/theme/selects';
 import * as user from '../../domain/user';
-import AdminBoxes from '../../domain/bulletpoint/components/AdminBoxes';
-import GuestBoxes from '../../domain/bulletpoint/components/GuestBoxes';
+import DetailBoxes from '../../domain/bulletpoint/components/DetailBoxes';
 import Header from '../../domain/theme/components/Header';
 import HttpEditForms from '../../domain/bulletpoint/components/Form/HttpEditForms';
 import HttpAddForm from '../../domain/bulletpoint/components/Form/HttpAddForm';
 import Loader from '../../ui/Loader';
 import RelatedThemes from './sections/RelatedThemes';
 import SlugRedirect from '../../router/SlugRedirect';
-import UserBoxes from '../../domain/bulletpoint/components/UserBoxes';
+import ContributionBoxes from '../../domain/bulletpoint/components/ContributionBoxes';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import type { FormTypes } from '../../domain/bulletpoint/components/Form/types';
 import { FORM_TYPE_ADD, FORM_TYPE_DEFAULT, FORM_TYPE_EDIT } from '../../domain/bulletpoint/components/Form/types';
+import AddButton from '../../domain/bulletpoint/components/Form/AddButton';
 
 type State = {|
   formType: FormTypes,
@@ -49,9 +49,13 @@ class Theme extends React.Component<Props, State> {
 
   handleAddClick = () => this.setState({ formType: FORM_TYPE_ADD });
 
-  handleEditClick = (id: number) => this.setState({ formType: FORM_TYPE_EDIT, bulletpointId: id });
+  handleEditClick = (id: number) => {
+    this.setState({ formType: FORM_TYPE_EDIT, bulletpointId: id });
+  };
 
   handleCancelClick = () => this.setState(initState);
+
+  handleFormTypeChange = (formType: FormTypes) => this.setState({ formType });
 
   reload = () => {
     this.setState(initState);
@@ -59,6 +63,7 @@ class Theme extends React.Component<Props, State> {
   };
 
   render() {
+    const { formType } = this.state;
     const { fetching, match: { params: { id } }, theme } = this.props;
     if (fetching) {
       return <Loader />;
@@ -70,30 +75,29 @@ class Theme extends React.Component<Props, State> {
         <div className="row">
           <div className="col-sm-8">
             <h2 id="bulletpoints">Bulletpointy</h2>
-            {user.isAdmin() && (
-              <AdminBoxes
-                history={this.props.history}
-                themeId={id}
-                onEditClick={this.handleEditClick}
-              />
-            )}
-            {!user.isLoggedIn() && <GuestBoxes themeId={id} history={this.props.history} />}
-            {user.isLoggedIn() && !user.isAdmin() && (<UserBoxes history={this.props.history} />)}
+            <DetailBoxes
+              history={this.props.history}
+              themeId={id}
+              onEditClick={this.handleEditClick}
+            />
+            {user.isMember() && (<ContributionBoxes themeId={id} />)}
             {user.isLoggedIn() && (
               <HttpEditForms
                 themeId={id}
-                onAddClick={this.handleAddClick}
                 onCancelClick={this.handleCancelClick}
                 bulletpointId={this.state.bulletpointId}
-                formType={this.state.formType}
+                onFormTypeChange={this.handleFormTypeChange}
+                formType={formType}
               />
             )}
-            {user.isLoggedIn() && (
+            {![FORM_TYPE_ADD, FORM_TYPE_EDIT].includes(formType)
+              && <AddButton onClick={this.handleAddClick} />}
+            {user.isLoggedIn() && formType === FORM_TYPE_ADD && (
               <HttpAddForm
                 themeId={id}
-                onAddClick={this.handleAddClick}
                 onCancelClick={this.handleCancelClick}
-                formType={this.state.formType}
+                onFormTypeChange={this.handleFormTypeChange}
+                formType={formType}
               />
             )}
             <RelatedThemes

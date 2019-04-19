@@ -6,27 +6,15 @@ import type { FetchedBulletpointType } from '../types';
 import Boxes from './Boxes';
 import * as contributedBulletpoints from '../../contributed_bulletpoint/selects';
 import * as contributedBulletpoint from '../../contributed_bulletpoint/endpoints';
+import ContributionBox from './ContributionBox';
 
 type Props = {|
   +fetching: boolean,
   +contributedBulletpoints: Array<FetchedBulletpointType>,
   +themeId: number,
-  +fetchContributedBulletpoints: (number) => (void),
-  +deleteOne: (
-    themeId: number,
-    bulletpointId: number,
-    next: (void) => (void),
-  ) => (void),
+  +fetchContributedBulletpoints: () => (void),
 |};
-type State = {|
-  expandBulletpointId: number|null,
-|};
-const initState = {
-  expandBulletpointId: null,
-};
-class UserBoxes extends React.Component<Props, State> {
-  state = initState;
-
+class ContributionBoxes extends React.Component<Props> {
   componentDidMount(): void {
     this.reload();
   }
@@ -39,29 +27,21 @@ class UserBoxes extends React.Component<Props, State> {
   }
 
   reload = () => {
-    this.props.fetchContributedBulletpoints(this.props.themeId);
-  };
-
-  handleDeleteClick = (bulletpointId: number) => {
-    if (window.confirm('Opravdu chceš tento bulletpoint smazat?')) {
-      this.props.deleteOne(this.props.themeId, bulletpointId, this.reload);
-    }
+    this.props.fetchContributedBulletpoints();
   };
 
   render() {
     const { fetching, contributedBulletpoints } = this.props;
-    if (fetching) {
-      return null;
-    }
-    if (isEmpty(contributedBulletpoints)) {
+    if (fetching || isEmpty(contributedBulletpoints)) {
       return null;
     }
     return (
       <>
         <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
         <Boxes
+          box={ContributionBox}
           bulletpoints={contributedBulletpoints}
-          onDeleteClick={this.handleDeleteClick}
+          onDeleteClick={this.reload}
         />
       </>
     );
@@ -72,15 +52,8 @@ const mapStateToProps = (state, { themeId }) => ({
   contributedBulletpoints: contributedBulletpoints.getByTheme(themeId, state),
   fetching: contributedBulletpoints.allFetching(themeId, state),
 });
-const mapDispatchToProps = dispatch => ({
-  fetchContributedBulletpoints: (
-    themeId: number,
-  ) => dispatch(contributedBulletpoint.fetchAll(themeId)),
-  deleteOne: (
-    themeId: number,
-    bulletpointId: number,
-    next: (void) => (void),
-  ) => dispatch(contributedBulletpoint.deleteOne(themeId, bulletpointId, next)),
+const mapDispatchToProps = (dispatch, { themeId }) => ({
+  fetchContributedBulletpoints: () => dispatch(contributedBulletpoint.fetchAll(themeId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserBoxes);
+export default connect(mapStateToProps, mapDispatchToProps)(ContributionBoxes);

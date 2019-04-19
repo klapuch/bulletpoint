@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 
@@ -13,40 +13,28 @@ type Props = {|
   +active: boolean,
   +onClick: (boolean) => (Promise<any>),
 |};
-type State = {|
-  active: boolean,
-|};
-export default class extends React.Component<Props, State> {
-  state = {
-    active: false,
-  };
+export default function (props: Props) {
+  const [active, setActive] = useState(props.active);
 
-  componentDidMount(): void {
-    this.setState({ active: this.props.active });
-  }
+  const mark = () => setActive(true);
 
-  mark = () => this.setState({ active: true });
-
-  unmark = () => {
-    if (!this.props.active) {
-      this.setState({ active: false });
+  const unmark = () => {
+    if (!props.active) {
+      setActive(false);
     }
   };
 
-  handleClick = () => this.props.onClick(!this.props.active);
+  const handleClick = () => props.onClick(!props.active);
 
-  render() {
-    const { active } = this.state;
-    return (
-      <Resized
-        onFocus={this.mark}
-        onMouseOver={this.mark}
-        onBlur={this.unmark}
-        onMouseOut={this.unmark}
-        onClick={this.handleClick}
-        className={classNames('glyphicon', active ? 'glyphicon-star' : 'glyphicon-star-empty')}
-        aria-hidden="true"
-      />
-    );
-  }
+  return (
+    <Resized
+      onFocus={mark}
+      onMouseOver={mark}
+      onBlur={unmark}
+      onMouseOut={unmark}
+      onClick={handleClick}
+      className={classNames('glyphicon', active ? 'glyphicon-star' : 'glyphicon-star-empty')}
+      aria-hidden="true"
+    />
+  );
 }

@@ -5,13 +5,15 @@ import type { FetchedBulletpointType } from '../types';
 import Boxes from './Boxes';
 import * as bulletpoints from '../selects';
 import * as bulletpoint from '../endpoints';
+import DetailBox from './DetailBox';
 
 type Props = {|
   +fetching: boolean,
   +history: Object,
   +themeId: number,
   +getBulletpoints: (number|null) => (Array<FetchedBulletpointType>),
-  +fetchBulletpoints: (number) => (void),
+  +fetchBulletpoints: () => (void),
+  +onEditClick?: (number) => (void),
 |};
 type State = {|
   expandBulletpointId: number|null,
@@ -19,7 +21,7 @@ type State = {|
 const initState = {
   expandBulletpointId: null,
 };
-class GuestBoxes extends React.Component<Props, State> {
+class DetailBoxes extends React.Component<Props, State> {
   state = initState;
 
   componentDidMount(): void {
@@ -34,26 +36,28 @@ class GuestBoxes extends React.Component<Props, State> {
   }
 
   reload = () => {
-    this.props.fetchBulletpoints(this.props.themeId);
+    this.props.fetchBulletpoints();
   };
 
-  handleExpand = (expandBulletpointId: number) => this.setState({ expandBulletpointId });
+  handleExpandClick = (expandBulletpointId: number) => this.setState({ expandBulletpointId });
 
   render() {
     const { fetching, history: { location: { state } } } = this.props;
     if (fetching) {
       return null;
     }
-    const bulletpoints = this.props.getBulletpoints(this.state.expandBulletpointId);
     return (
       <Boxes
-        onExpand={this.handleExpand}
+        box={DetailBox}
+        onExpandClick={this.handleExpandClick}
+        onEditClick={this.props.onEditClick}
+        onDeleteClick={this.reload}
         highlights={
           typeof state !== 'undefined' && state.highlightedBulletpointIds
             ? state.highlightedBulletpointIds
             : []
         }
-        bulletpoints={bulletpoints}
+        bulletpoints={this.props.getBulletpoints(this.state.expandBulletpointId)}
       />
     );
   }
@@ -67,8 +71,8 @@ const mapStateToProps = (state, { themeId }) => ({
   ),
   fetching: bulletpoints.allFetching(themeId, state),
 });
-const mapDispatchToProps = dispatch => ({
-  fetchBulletpoints: (themeId: number) => dispatch(bulletpoint.fetchAll(themeId)),
+const mapDispatchToProps = (dispatch, { themeId }) => ({
+  fetchBulletpoints: () => dispatch(bulletpoint.fetchAll(themeId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GuestBoxes);
+export default connect(mapStateToProps, mapDispatchToProps)(DetailBoxes);

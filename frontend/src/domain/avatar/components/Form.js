@@ -12,7 +12,7 @@ type Props = {|
 type State = {|
   avatar: File|null,
 |};
-class Form extends React.Component<Props, State> {
+export default class extends React.Component<Props, State> {
   state = initState;
 
   handleChange = (files: Array<File>) => {
@@ -64,5 +64,3 @@ class Form extends React.Component<Props, State> {
     );
   }
 }
-
-export default Form;

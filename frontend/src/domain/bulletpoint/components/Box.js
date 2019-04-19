@@ -2,17 +2,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import className from 'classnames';
-import { connect } from 'react-redux';
 import { intersection, isEmpty } from 'lodash';
 import moment from 'moment';
 import type { FetchedBulletpointType, PointType } from '../types';
 import InnerContent from './InnerContent';
-import * as users from '../../user/selects';
-import * as user from '../../user/endpoints';
-import * as themes from '../../theme/selects';
 import type { FetchedUserTagType, FetchedUserType } from '../../user/types';
 import { getAvatar } from '../../user';
-import type { FetchedTagType } from '../../tags/types';
 import UserLabels from '../../tags/components/UserLabels';
 
 const Date = styled.p`
@@ -57,34 +52,23 @@ const GroupExpand = styled.span`
 type Props = {|
   +bulletpoint: FetchedBulletpointType,
   +highlights?: Array<number>,
-  +onRatingChange?: (id: number, point: PointType) => (void),
+  +onRatingChange?: (point: PointType) => (void),
   +onEditClick?: (number) => (void),
-  +onDeleteClick?: (number) => (void),
-  +fetchUser: () => (void),
-  +fetchTags: (Array<FetchedTagType>) => (void),
-  +getUser: () => (FetchedUserType),
-  +getThemeTags: () => (Array<FetchedTagType>),
-  +getTags: () => (Array<FetchedUserTagType>),
-  +isFetching: () => boolean,
-  +onExpand?: (number) => (void),
+  +onDeleteClick?: () => (void),
+  +getUser?: () => (FetchedUserType),
+  +getTags?: () => (Array<FetchedUserTagType>),
+  +onExpandClick?: (number) => (void),
+  +onMoreClick?: () => (void),
 |};
 type State = {|
   more: boolean,
   expand: boolean,
 |};
-class Box extends React.Component<Props, State> {
+export default class extends React.Component<Props, State> {
   state = {
     more: false,
     expand: false,
   };
-
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    const { more } = this.state;
-    if (more && more !== prevState.more) {
-      this.props.fetchUser();
-      this.props.fetchTags(this.props.getThemeTags());
-    }
-  }
 
   isHighlighted = (
     id: Array<number>,
@@ -95,14 +79,18 @@ class Box extends React.Component<Props, State> {
   );
 
   showMore = (more: boolean) => {
-    this.setState({ more });
+    this.setState({ more }, () => {
+      const { onMoreClick } = this.props;
+      if (typeof onMoreClick !== 'undefined') {
+        onMoreClick();
+      }
+    });
   };
 
-  expand = () => {
-    const { onExpand, bulletpoint: { id } } = this.props;
-    if (typeof onExpand !== 'undefined') {
-      this.setState({ expand: true });
-      onExpand(id);
+  handleExpand = () => {
+    const { onExpandClick, bulletpoint: { id } } = this.props;
+    if (typeof onExpandClick !== 'undefined') {
+      this.setState({ expand: true }, () => onExpandClick(id));
     }
   };
 
@@ -113,13 +101,11 @@ class Box extends React.Component<Props, State> {
       onRatingChange,
       onEditClick,
       onDeleteClick,
+      getUser,
+      getTags,
     } = this.props;
     const { more, expand } = this.state;
-    if (more && this.props.isFetching()) {
-      return null;
-    }
-
-    const userInfo = this.props.getUser();
+    const user = more && typeof getUser !== 'undefined' ? getUser() : null;
 
     return (
       <>
@@ -141,60 +127,40 @@ class Box extends React.Component<Props, State> {
           >
             {bulletpoint}
           </InnerContent>
-          {(more && !isEmpty(userInfo)) && (
+          {(more && user !== null) && (
             <>
               <Separator />
               <div className="row">
                 <div className="col-sm-2">
                   <Date>{moment(bulletpoint.created_at).format('DD.MM.YYYY')}</Date>
                   <div className="well well-sm" style={{ display: 'inline-block', marginBottom: 0 }}>
-                    <img src={getAvatar(userInfo, 50, 50)} alt={userInfo.username} className="img-rounded" />
-                    <Username>{userInfo.username}</Username>
-                    <UserLabels tags={this.props.getTags()} link={(id, slug) => `/themes/tag/${id}/${slug}`} />
+                    <img src={getAvatar(user, 50, 50)} alt={user.username} className="img-rounded" />
+                    <Username>{user.username}</Username>
+                    {getTags && <UserLabels tags={getTags()} link={(id, slug) => `/themes/tag/${id}/${slug}`} />}
                   </div>
                 </div>
               </div>
             </>
           )}
-          {more
-            ? (
-              <LessButton
-                title="méně"
-                onClick={() => this.showMore(false)}
-                className="glyphicon glyphicon-chevron-up"
-                aria-hidden="true"
-              />
-            )
-            : (
-              <MoreButton
-                title="více"
-                onClick={() => this.showMore(true)}
-                className="glyphicon glyphicon-chevron-down"
-                aria-hidden="true"
-              />
-            )
-          }
+          {more && !isEmpty(user) && (
+            <LessButton
+              title="méně"
+              onClick={() => this.showMore(false)}
+              className="glyphicon glyphicon-chevron-up"
+              aria-hidden="true"
+            />
+          )}
+          {!more && !isEmpty(user) && (
+            <MoreButton
+              title="více"
+              onClick={() => this.showMore(true)}
+              className="glyphicon glyphicon-chevron-down"
+              aria-hidden="true"
+            />
+          )}
         </li>
-        {!expand && bulletpoint.group.children_bulletpoints.length !== 0 && <div className="text-center"><GroupExpand onClick={this.expand} className="glyphicon glyphicon glyphicon-option-horizontal" aria-hidden="true" /></div>}
+        {!expand && !isEmpty(bulletpoint.group.children_bulletpoints) && bulletpoint.group.children_bulletpoints.length !== 0 && <div className="text-center"><GroupExpand onClick={this.handleExpand} className="glyphicon glyphicon glyphicon-option-horizontal" aria-hidden="true" /></div>}
       </>
     );
   }
 }
-
-const mapStateToProps = (state, { bulletpoint: { user_id, theme_id } }) => ({
-  getUser: () => users.getById(user_id, state),
-  getTags: () => users.getSelectedTags(
-    user_id,
-    themes.getById(theme_id, state).tags.map(tag => tag.id),
-    state,
-  ),
-  getThemeTags: () => themes.getById(theme_id, state).tags,
-  isFetching: () => users.isFetching(user_id, state) || users.isFetchingTags(user_id, state),
-});
-const mapDispatchToProps = (dispatch, { bulletpoint: { user_id } }) => ({
-  fetchUser: () => dispatch(user.fetchSingle(user_id)),
-  fetchTags: (
-    tags: Array<FetchedTagType>,
-  ) => dispatch(user.fetchTags(user_id, tags.map(tag => tag.id))),
-});
-export default connect(mapStateToProps, mapDispatchToProps)(Box);

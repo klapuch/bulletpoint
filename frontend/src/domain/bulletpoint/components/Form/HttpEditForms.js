@@ -12,18 +12,16 @@ import type { FormTypes } from './types';
 import type { FetchedThemeType } from '../../../theme/types';
 
 type Props = {|
-  +fetchTheme: (number) => (void),
-  +themeId: number,
-  +fetchBulletpoints: (number) => (void),
+  +fetchTheme: () => (void),
+  +fetchBulletpoints: () => (void),
   +theme: FetchedThemeType,
   +formType: FormTypes,
   +getBulletpoints: () => (Array<FetchedBulletpointType>),
   +fetching: boolean,
   +bulletpointId: number,
   +onCancelClick: () => (void),
+  +onFormTypeChange: (FormTypes) => (void),
   +editBulletpoint: (
-    themeId: number,
-    bulletpointId: number,
     PostedBulletpointType,
     next: (void) => (void),
   ) => (Promise<any>),
@@ -34,27 +32,29 @@ class HttpEditForms extends React.Component<Props> {
   }
 
   reload = () => {
-    this.props.fetchTheme(this.props.themeId);
-    this.props.fetchBulletpoints(this.props.themeId);
+    this.props.fetchTheme();
+    this.props.fetchBulletpoints();
   };
 
-  handleSubmit = (bulletpoint: PostedBulletpointType) => {
-    const { themeId, bulletpointId } = this.props;
-    return this.props.editBulletpoint(themeId, bulletpointId, bulletpoint, this.reload);
-  };
+  handleSubmit = (bulletpoint: PostedBulletpointType) => (
+    this.props.editBulletpoint(bulletpoint, this.reload)
+      .then(() => this.props.onFormTypeChange(FORM_TYPE_DEFAULT))
+  );
 
   render() {
     const {
-      theme, bulletpointId, formType, fetching,
+      theme,
+      bulletpointId,
+      formType,
+      fetching,
     } = this.props;
     if (fetching) {
       return null;
     }
-    const bulletpoints = this.props.getBulletpoints();
     return (
       <>
         {
-          bulletpoints.map(bulletpoint => (
+          this.props.getBulletpoints().map(bulletpoint => (
             <Form
               key={bulletpoint.id}
               theme={theme}
@@ -78,12 +78,10 @@ const mapStateToProps = (state, { themeId }) => ({
   getBulletpoints: () => (bulletpoints.getByTheme(themeId, state)),
   fetching: bulletpoints.allFetching(themeId, state) || themes.singleFetching(themeId, state),
 });
-const mapDispatchToProps = dispatch => ({
-  fetchTheme: (id: number) => dispatch(theme.fetchSingle(id)),
-  fetchBulletpoints: (themeId: number) => dispatch(bulletpoint.fetchAll(themeId)),
+const mapDispatchToProps = (dispatch, { themeId, bulletpointId }) => ({
+  fetchTheme: () => dispatch(theme.fetchSingle(themeId)),
+  fetchBulletpoints: () => dispatch(bulletpoint.fetchAll(themeId)),
   editBulletpoint: (
-    themeId: number,
-    bulletpointId: number,
     postedBulletpoint: PostedBulletpointType,
     next: (void) => (void),
   ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint, next)),

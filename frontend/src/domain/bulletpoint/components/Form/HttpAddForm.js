@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { FORM_TYPE_ADD, FORM_TYPE_EDIT } from './types';
-import AddButton from './AddButton';
+import { FORM_TYPE_ADD, FORM_TYPE_DEFAULT } from './types';
 import Form from './index';
 import * as themes from '../../../theme/selects';
 import * as bulletpoints from '../../selects';
@@ -15,15 +14,14 @@ import type { FetchedThemeType } from '../../../theme/types';
 import type { FormTypes } from './types';
 
 type Props = {|
-  +fetchTheme: (number) => (void),
-  +themeId: number,
-  +fetchBulletpoints: (number) => (void),
+  +fetchTheme: () => (void),
+  +fetchBulletpoints: () => (void),
+  +fetchContributedBulletpoints: () => (void),
   +theme: FetchedThemeType,
-  +formType: FormTypes,
   +fetching: boolean,
   +onCancelClick: () => (void),
-  +addBulletpoint: (themeId: number, PostedBulletpointType, (void) => (void)) => (Promise<any>),
-  onAddClick: () => (void),
+  +onFormTypeChange: (FormTypes) => (void),
+  +addBulletpoint: (PostedBulletpointType, (void) => (void)) => (Promise<any>),
 |};
 class HttpAddForm extends React.Component<Props> {
   componentDidMount(): void {
@@ -31,33 +29,28 @@ class HttpAddForm extends React.Component<Props> {
   }
 
   reload = () => {
-    this.props.fetchTheme(this.props.themeId);
-    this.props.fetchBulletpoints(this.props.themeId);
+    this.props.fetchTheme();
+    this.props.fetchBulletpoints();
+    this.props.fetchContributedBulletpoints();
   };
 
-  handleSubmit = (bulletpoint: PostedBulletpointType) => {
-    const { themeId } = this.props;
-    return this.props.addBulletpoint(themeId, bulletpoint, this.reload);
-  };
+  handleSubmit = (bulletpoint: PostedBulletpointType) => (
+    this.props.addBulletpoint(bulletpoint, this.reload)
+      .then(() => this.props.onFormTypeChange(FORM_TYPE_DEFAULT))
+  );
 
   render() {
-    const { theme, formType, fetching } = this.props;
+    const { theme, fetching } = this.props;
     if (fetching) {
       return null;
     }
     return (
-      <>
-        {![FORM_TYPE_ADD, FORM_TYPE_EDIT].includes(formType)
-          && <AddButton onClick={this.props.onAddClick} />}
-        {formType === FORM_TYPE_ADD && (
-          <Form
-            theme={theme}
-            onCancelClick={this.props.onCancelClick}
-            type={FORM_TYPE_ADD}
-            onSubmit={this.handleSubmit}
-          />
-        )}
-      </>
+      <Form
+        theme={theme}
+        onCancelClick={this.props.onCancelClick}
+        type={FORM_TYPE_ADD}
+        onSubmit={this.handleSubmit}
+      />
     );
   }
 }
@@ -67,11 +60,11 @@ const mapStateToProps = (state, { themeId }) => ({
   getBulletpoints: () => (bulletpoints.getByTheme(themeId, state)),
   fetching: bulletpoints.allFetching(themeId, state) || themes.singleFetching(themeId, state),
 });
-const mapDispatchToProps = dispatch => ({
-  fetchTheme: (id: number) => dispatch(theme.fetchSingle(id)),
-  fetchBulletpoints: (themeId: number) => dispatch(bulletpoint.fetchAll(themeId)),
+const mapDispatchToProps = (dispatch, { themeId }) => ({
+  fetchTheme: () => dispatch(theme.fetchSingle(themeId)),
+  fetchBulletpoints: () => dispatch(bulletpoint.fetchAll(themeId)),
+  fetchContributedBulletpoints: () => dispatch(contributedBulletpoint.fetchAll(themeId)),
   addBulletpoint: (
-    themeId: number,
     postedBulletpoint: PostedBulletpointType,
     next: (void) => (void),
   ) => dispatch(
@@ -80,7 +73,6 @@ const mapDispatchToProps = dispatch => ({
       : contributedBulletpoint.add(themeId, postedBulletpoint, next),
   ),
   editBulletpoint: (
-    themeId: number,
     bulletpointId: number,
     postedBulletpoint: PostedBulletpointType,
     next: (void) => (void),

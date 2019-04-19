@@ -5,24 +5,29 @@ import type { FetchedBulletpointType, PointType } from '../types';
 
 type Props = {|
   +children: FetchedBulletpointType,
-  +onRatingChange?: (id: number, point: PointType) => (void),
+  +onRatingChange?: (point: PointType) => (void),
 |};
 const Rating = ({
-  children, onRatingChange,
+  children,
+  onRatingChange,
 }: Props) => (
   <>
+    {onRatingChange && (
     <DownButton
       rated={children.rating.user === -1}
-      onClick={onRatingChange ? () => onRatingChange(children.id, -1) : () => {}}
+      onClick={onRatingChange ? () => onRatingChange(-1) : () => {}}
     >
       {children.rating.down}
     </DownButton>
+    )}
+    {onRatingChange && (
     <UpButton
       rated={children.rating.user === 1}
-      onClick={onRatingChange ? () => onRatingChange(children.id, 1) : () => {}}
+      onClick={onRatingChange ? () => onRatingChange(1) : () => {}}
     >
       {children.rating.up}
     </UpButton>
+    )}
   </>
 );
 

@@ -19,7 +19,7 @@ const Button = ({
 }: { ...Props, type: 'success' | 'danger' }) => (
   <RateButton
     className={classNames('badge', 'badge-guest', `alert-${type}`, !user.isLoggedIn() || rated ? '' : 'opposite-rating')}
-    onClick={user.isLoggedIn() ? onClick : () => null}
+    onClick={onClick}
   >
     {children}
     <span className="glyphicon glyphicon-thumbs-up" aria-hidden="true" />

@@ -106,8 +106,11 @@ final class ApplicationRoutes implements Routing\Routes {
 			'bulletpoints/{id} [GET]' => function(): Application\View {
 				return new Endpoint\Bulletpoint\Get($this->connection);
 			},
-			'bulletpoints/{id} [DELETE]' => function(): Application\View {
-				return new Endpoint\Bulletpoint\Delete($this->connection);
+			'bulletpoints/{id} [DELETE]' => function() use ($user): Application\View {
+				return new AuthenticatedView(
+					new Endpoint\Bulletpoint\Delete($this->connection),
+					new Http\ChosenRole($user, ['admin']),
+				);
 			},
 			'bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(
@@ -125,7 +128,10 @@ final class ApplicationRoutes implements Routing\Routes {
 				return new Endpoint\ContributedBulletpoint\Get($this->connection, $user);
 			},
 			'contributed_bulletpoints/{id} [DELETE]' => function() use ($user): Application\View {
-				return new Endpoint\ContributedBulletpoint\Delete($this->connection, $user);
+				return new AuthenticatedView(
+					new Endpoint\ContributedBulletpoint\Delete($this->connection, $user),
+					new Http\ChosenRole($user, ['admin', 'member']),
+				);
 			},
 			'contributed_bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
 				return new AuthenticatedView(

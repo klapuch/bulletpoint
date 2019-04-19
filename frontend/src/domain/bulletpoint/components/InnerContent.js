@@ -8,17 +8,23 @@ import Details from './Details';
 
 type Props = {|
   +children: FetchedBulletpointType,
-  +onRatingChange?: (id: number, point: PointType) => (void),
-  +onEditClick?: (id: number) => (void),
-  +onDeleteClick?: (id: number) => (void),
+  +onRatingChange?: (point: PointType) => (void),
+  +onEditClick?: (number) => (void),
+  +onDeleteClick?: () => (void),
 |};
 const InnerContent = ({
-  children, onRatingChange, onEditClick, onDeleteClick,
+  children,
+  onRatingChange,
+  onEditClick,
+  onDeleteClick,
 }: Props) => (
   <>
     <Rating onRatingChange={onRatingChange}>{children}</Rating>
     {format.withComparisons(format.replaceMatches(children), children)}
-    <Options onDeleteClick={onDeleteClick} onEditClick={onEditClick}>{children}</Options>
+    <Options
+      onDeleteClick={onDeleteClick}
+      onEditClick={onEditClick ? () => onEditClick(children.id) : undefined}
+    />
     <br />
     <Details>{children}</Details>
   </>
