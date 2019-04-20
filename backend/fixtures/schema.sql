@@ -707,13 +707,48 @@ CREATE TABLE bulletpoint_groups (
 	CONSTRAINT bulletpoint_groups_root_bulletpoint_id FOREIGN KEY (root_bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE FUNCTION bulletpoint_group_successor(in_root_bulletpoint_id integer) RETURNS SETOF integer AS $BODY$
+CREATE FUNCTION bulletpoint_group_successor(in_root_bulletpoint_id integer, include_self boolean DEFAULT FALSE) RETURNS SETOF integer AS $BODY$
 BEGIN
 	RETURN QUERY SELECT id FROM web.bulletpoints
-	WHERE id IN (SELECT bulletpoint_id FROM bulletpoint_groups WHERE root_bulletpoint_id = in_root_bulletpoint_id)
+	WHERE id IN (
+		SELECT bulletpoint_id
+		FROM bulletpoint_groups
+		WHERE root_bulletpoint_id = in_root_bulletpoint_id
+		UNION ALL
+		SELECT CASE include_self WHEN TRUE THEN in_root_bulletpoint_id ELSE NULL END
+	)
 	LIMIT 1;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE ROWS 1;
+
+CREATE FUNCTION bulletpoint_groups_trigger_row_ai() RETURNS trigger AS $BODY$
+DECLARE
+	v_successor_root_bulletpoint_id integer;
+BEGIN
+	SELECT bulletpoint_group_successor(new.root_bulletpoint_id, include_self := TRUE) INTO v_successor_root_bulletpoint_id;
+
+	IF v_successor_root_bulletpoint_id != new.root_bulletpoint_id THEN
+		WITH deleted_group AS (
+			DELETE FROM bulletpoint_groups
+			WHERE bulletpoint_id = new.bulletpoint_id
+			RETURNING root_bulletpoint_id
+		)
+		INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id)
+		SELECT root_bulletpoint_id, new.bulletpoint_id FROM deleted_group;
+
+		UPDATE bulletpoint_groups
+		SET root_bulletpoint_id = v_successor_root_bulletpoint_id
+		WHERE root_bulletpoint_id = new.root_bulletpoint_id;
+	END IF;
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER bulletpoint_groups_row_ai_trigger
+	AFTER INSERT
+	ON bulletpoint_groups
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoint_groups_trigger_row_ai();
 
 
 -- views
