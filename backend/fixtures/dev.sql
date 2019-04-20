@@ -100,8 +100,8 @@ INSERT INTO contributed_bulletpoints (theme_id, source_id, user_id, content) VAL
 INSERT INTO bulletpoint_theme_comparisons (theme_id, bulletpoint_id) VALUES (10, 14);
 INSERT INTO bulletpoint_theme_comparisons (theme_id, bulletpoint_id) VALUES (10, 15);
 
-INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (17, 16);
-INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (18, 16);
+INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (16, 17);
+INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (18, 17);
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY bulletpoint_reputations;
 REFRESH MATERIALIZED VIEW CONCURRENTLY starred_themes;
