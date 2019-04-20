@@ -507,6 +507,25 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE FUNCTION bulletpoints_trigger_row_bd() RETURNS trigger AS $BODY$
+DECLARE
+	v_successor_root_bulletpoint_id integer;
+BEGIN
+	SELECT bulletpoint_group_successor(old.id) INTO v_successor_root_bulletpoint_id;
+
+	UPDATE bulletpoint_groups
+	SET root_bulletpoint_id = v_successor_root_bulletpoint_id
+	WHERE root_bulletpoint_id = old.id AND bulletpoint_id != v_successor_root_bulletpoint_id;
+
+	RETURN old;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER bulletpoints_row_bd_trigger
+	BEFORE DELETE
+	ON bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoints_trigger_row_bd();
+
 CREATE TRIGGER bulletpoints_row_ai_trigger
 	AFTER INSERT
 	ON bulletpoints
@@ -687,6 +706,14 @@ CREATE TABLE bulletpoint_groups (
 	CONSTRAINT bulletpoint_groups_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT bulletpoint_groups_root_bulletpoint_id FOREIGN KEY (root_bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
+
+CREATE FUNCTION bulletpoint_group_successor(in_root_bulletpoint_id integer) RETURNS SETOF integer AS $BODY$
+BEGIN
+	RETURN QUERY SELECT id FROM web.bulletpoints
+	WHERE id IN (SELECT bulletpoint_id FROM bulletpoint_groups WHERE root_bulletpoint_id = in_root_bulletpoint_id)
+	LIMIT 1;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE ROWS 1;
 
 
 -- views
