@@ -89,7 +89,8 @@ class Theme extends React.Component<Props, State> {
                 formType={formType}
               />
             )}
-            {![FORM_TYPE_ADD, FORM_TYPE_EDIT].includes(formType)
+            {user.isLoggedIn()
+              && ![FORM_TYPE_ADD, FORM_TYPE_EDIT].includes(formType)
               && <AddButton onClick={this.handleAddClick} />}
             {user.isLoggedIn() && formType === FORM_TYPE_ADD && (
               <AddHttpForm
