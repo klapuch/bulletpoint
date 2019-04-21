@@ -58,6 +58,7 @@ final class StoredThemes implements Themes {
 					'created_at',
 					'is_starred',
 					'starred_at',
+					'is_empty',
 				]))->from(['web.themes']),
 				$selection,
 			),

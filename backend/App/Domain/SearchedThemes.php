@@ -44,6 +44,7 @@ final class SearchedThemes implements Themes {
 						'themes.is_starred',
 						'themes.starred_at',
 						'themes.related_themes_id',
+						'themes.is_empty',
 					]),
 					$this->keyword,
 				),

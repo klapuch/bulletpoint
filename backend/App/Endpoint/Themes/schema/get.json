@@ -11,6 +11,9 @@
         "is_starred": {
             "type": "boolean"
         },
+        "is_empty": {
+            "type": "boolean"
+        },
         "starred_at": {
             "type": [
                 "string",
@@ -73,7 +76,8 @@
         "reference",
         "is_starred",
         "starred_at",
-        "related_themes_id"
+        "related_themes_id",
+        "is_empty"
     ],
     "type": "object"
 }

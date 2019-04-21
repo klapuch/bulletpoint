@@ -769,7 +769,8 @@ CREATE VIEW web.themes AS
 		COALESCE(json_theme_alternative_names.alternative_names, '[]') AS alternative_names,
 		user_starred_themes.id IS NOT NULL AS is_starred,
 		user_starred_themes.starred_at,
-		array_to_json(ARRAY(SELECT related_themes(themes.id)))::jsonb AS related_themes_id
+		array_to_json(ARRAY(SELECT related_themes(themes.id)))::jsonb AS related_themes_id,
+		unique_theme_bulletpoints.theme_id IS NULL AS is_empty
 	FROM public.themes
 	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id
@@ -784,7 +785,11 @@ CREATE VIEW web.themes AS
 		FROM theme_alternative_names
 		GROUP BY theme_id
 	) AS json_theme_alternative_names ON json_theme_alternative_names.theme_id = themes.id
-	LEFT JOIN user_starred_themes ON user_starred_themes.theme_id = themes.id AND user_starred_themes.user_id = globals_get_user();
+	LEFT JOIN user_starred_themes ON user_starred_themes.theme_id = themes.id AND user_starred_themes.user_id = globals_get_user()
+	LEFT JOIN (
+		SELECT DISTINCT theme_id
+		FROM bulletpoints
+	) AS unique_theme_bulletpoints ON unique_theme_bulletpoints.theme_id = public.themes.id;
 
 CREATE FUNCTION web.themes_trigger_row_ii() RETURNS trigger AS $BODY$
 DECLARE
