@@ -12,22 +12,18 @@ const Rating = ({
   onRatingChange,
 }: Props) => (
   <>
-    {onRatingChange && (
     <DownButton
       rated={children.rating.user === -1}
       onClick={onRatingChange ? () => onRatingChange(-1) : () => {}}
     >
       {children.rating.down}
     </DownButton>
-    )}
-    {onRatingChange && (
     <UpButton
       rated={children.rating.user === 1}
       onClick={onRatingChange ? () => onRatingChange(1) : () => {}}
     >
       {children.rating.up}
     </UpButton>
-    )}
   </>
 );
 

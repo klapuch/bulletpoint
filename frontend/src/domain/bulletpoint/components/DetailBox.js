@@ -30,10 +30,9 @@ type State = {|
   expand: boolean,
 |};
 class DetailBox extends React.Component<Props, State> {
-  handleMoreClick = () => {
-    this.props.fetchUser();
-    this.props.fetchTags(this.props.getThemeTags());
-  };
+  handleMoreClick = () => Promise.resolve()
+    .then(this.props.fetchUser)
+    .then(() => this.props.fetchTags(this.props.getThemeTags()));
 
   handleDeleteClick = () => {
     if (window.confirm('Opravdu chceš tento bulletpoint smazat?')) {

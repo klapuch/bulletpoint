@@ -8,7 +8,7 @@ import type { FetchedBulletpointType, PointType } from '../types';
 import InnerContent from './InnerContent';
 import type { FetchedUserTagType, FetchedUserType } from '../../user/types';
 import { getAvatar } from '../../user';
-import UserLabels from '../../tags/components/UserLabels';
+import UserBadges from '../../tags/components/UserBadges';
 
 const Date = styled.p`
   margin: 0;
@@ -49,6 +49,39 @@ const GroupExpand = styled.span`
   cursor: pointer;
 `;
 
+type MoreInfoProps = {|
+  +bulletpoint: FetchedBulletpointType,
+  +getUser?: () => (FetchedUserType),
+  +getTags?: () => (Array<FetchedUserTagType>),
+  +more: boolean,
+|};
+const MoreInfo = ({
+  getUser, getTags, bulletpoint, more,
+}: MoreInfoProps) => {
+  if (!more) {
+    return null;
+  }
+  const user = typeof getUser !== 'undefined' ? getUser() : null;
+  if (user === null) {
+    return null;
+  }
+  return (
+    <>
+      <Separator />
+      <div className="row">
+        <div className="col-sm-2">
+          <Date>{moment(bulletpoint.created_at).format('DD.MM.YYYY')}</Date>
+          <div className="well well-sm" style={{ display: 'inline-block', marginBottom: 0 }}>
+            <img src={getAvatar(user, 50, 50)} alt={user.username} className="img-rounded" />
+            <Username>{user.username}</Username>
+            {getTags && <UserBadges tags={getTags()} link={(id, slug) => `/themes/tag/${id}/${slug}`} />}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 type Props = {|
   +bulletpoint: FetchedBulletpointType,
   +highlights?: Array<number>,
@@ -58,7 +91,7 @@ type Props = {|
   +getUser?: () => (FetchedUserType),
   +getTags?: () => (Array<FetchedUserTagType>),
   +onExpandClick?: (number) => (void),
-  +onMoreClick?: () => (void),
+  +onMoreClick?: () => (Promise<any>),
 |};
 type State = {|
   more: boolean,
@@ -79,12 +112,10 @@ export default class extends React.Component<Props, State> {
   );
 
   showMore = (more: boolean) => {
-    this.setState({ more }, () => {
-      const { onMoreClick } = this.props;
-      if (typeof onMoreClick !== 'undefined') {
-        onMoreClick();
-      }
-    });
+    const { onMoreClick } = this.props;
+    if (typeof onMoreClick !== 'undefined') {
+      onMoreClick().then(() => this.setState({ more }));
+    }
   };
 
   handleExpand = () => {
@@ -105,7 +136,6 @@ export default class extends React.Component<Props, State> {
       getTags,
     } = this.props;
     const { more, expand } = this.state;
-    const user = more && typeof getUser !== 'undefined' ? getUser() : null;
 
     return (
       <>
@@ -127,22 +157,13 @@ export default class extends React.Component<Props, State> {
           >
             {bulletpoint}
           </InnerContent>
-          {(more && user !== null) && (
-            <>
-              <Separator />
-              <div className="row">
-                <div className="col-sm-2">
-                  <Date>{moment(bulletpoint.created_at).format('DD.MM.YYYY')}</Date>
-                  <div className="well well-sm" style={{ display: 'inline-block', marginBottom: 0 }}>
-                    <img src={getAvatar(user, 50, 50)} alt={user.username} className="img-rounded" />
-                    <Username>{user.username}</Username>
-                    {getTags && <UserLabels tags={getTags()} link={(id, slug) => `/themes/tag/${id}/${slug}`} />}
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-          {more && !isEmpty(user) && (
+          <MoreInfo
+            getUser={getUser}
+            getTags={getTags}
+            more={more}
+            bulletpoint={bulletpoint}
+          />
+          {more && (
             <LessButton
               title="méně"
               onClick={() => this.showMore(false)}
@@ -150,7 +171,7 @@ export default class extends React.Component<Props, State> {
               aria-hidden="true"
             />
           )}
-          {!more && !isEmpty(user) && (
+          {!more && (
             <MoreButton
               title="více"
               onClick={() => this.showMore(true)}
