@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import type { FetchedBulletpointType } from '../types';
 import Boxes from './Boxes';
+import FakeBoxes from './FakeBoxes';
 import * as bulletpoints from '../selects';
 import * as bulletpoint from '../endpoints';
 import DetailBox from './DetailBox';
@@ -44,7 +45,7 @@ class DetailBoxes extends React.Component<Props, State> {
   render() {
     const { fetching, history: { location: { state } } } = this.props;
     if (fetching) {
-      return null;
+      return <FakeBoxes>{3}</FakeBoxes>;
     }
     return (
       <Boxes
