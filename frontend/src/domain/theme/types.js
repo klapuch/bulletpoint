@@ -11,6 +11,7 @@ export type FetchedThemeType = {|
   related_themes: Array<FetchedThemeType>,
   +name: string,
   +created_at: string,
+  +is_empty: boolean,
   +reference: {|
     +url: string,
   |}

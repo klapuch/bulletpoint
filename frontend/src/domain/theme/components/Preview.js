@@ -12,7 +12,12 @@ type Props = {|
 const Preview = ({ children: theme, tagLink }: Props) => (
   <>
     <Link className="no-link" to={`/themes/${theme.id}/${getSlug(theme.name)}`}>
-      <h2>{theme.name}</h2>
+      <h2
+        title={theme.is_empty ? 'Téma bez bulletpointu' : null}
+        style={{ color: theme.is_empty ? '#505050' : null }}
+      >
+        {theme.name}
+      </h2>
     </Link>
     <div>
       <small>
