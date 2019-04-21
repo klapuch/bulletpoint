@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash';
 import memoizee from 'memoizee';
 import type { FetchedThemeType } from './types';
 
-const isSingleAvailable = (id: number, state: Object) => (
+export const fetchedSingle = (id: number, state: Object): boolean => (
   state.theme.single[id] && !isEmpty(state.theme.single[id].payload)
 );
 
@@ -15,22 +15,18 @@ export const withRelatedThemes = (
   // eslint-disable-next-line
   related_themes: theme.related_themes_id.map(id => (
     // $FlowFixMe
-    isSingleAvailable(id, state) ? state.theme.single[id].payload : {}
+    fetchedSingle(id, state) ? state.theme.single[id].payload : {}
   )),
 });
 
 export const getById = (id: number, state: Object): FetchedThemeType|Object => (
-  isSingleAvailable(id, state)
+  fetchedSingle(id, state)
     ? withRelatedThemes(state.theme.single[id].payload, state)
     : {}
 );
 
-export const fetchedSingle = (id: number, state: Object): boolean => (
-  state.theme.single[id] ? !isEmpty(state.theme.single[id].payload) : false
-);
-
 export const isFetching = (id: number, state: Object): boolean => (
-  state.theme.single[id] ? state.theme.single[id].fetching : true
+  isEmpty(state.theme.single[id]) || state.theme.single[id].fetching
 );
 
 export const isAllFetching = (state: Object): boolean => state.theme.all.fetching;

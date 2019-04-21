@@ -1,5 +1,5 @@
 // @flow
-import { isEmpty, first, flatten } from 'lodash';
+import { isEmpty, flatten } from 'lodash';
 import * as themes from '../theme/selects';
 import type { FetchedBulletpointType } from './types';
 
@@ -97,25 +97,11 @@ const comparedThemesFetching = (theme: number, state: Object): boolean => (
   )
 );
 export const fetchedAll = (theme: number, state: Object): boolean => (
-  state.themeBulletpoints[theme] ? !isEmpty(state.themeBulletpoints[theme].payload) : false
+  state.themeBulletpoints[theme] && !isEmpty(state.themeBulletpoints[theme].payload)
 );
 export const isFetching = (theme: number, state: Object): boolean => (
-  state.themeBulletpoints[theme]
-    ? state.themeBulletpoints[theme].fetching
-      || referencedThemesFetching(theme, state)
-      || comparedThemesFetching(theme, state)
-    : false
-);
-export const getById = (
-  theme: number,
-  bulletpoint: number,
-  state: Object,
-): FetchedBulletpointType|Object => (
-  withComparedTheme(
-    withReferencedTheme(
-      first(getByThemeGrouped(theme, state).filter(single => single.id === bulletpoint)),
-      state,
-    ),
-    state,
-  )
+  isEmpty(state.themeBulletpoints[theme])
+  || state.themeBulletpoints[theme].fetching
+  || referencedThemesFetching(theme, state)
+  || comparedThemesFetching(theme, state)
 );
