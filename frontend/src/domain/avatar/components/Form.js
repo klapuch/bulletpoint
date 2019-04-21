@@ -3,21 +3,19 @@ import React from 'react';
 import { last } from 'lodash';
 import ImageUploader from 'react-images-upload';
 
-const initState = {
-  avatar: null,
-};
 type Props = {|
   +onSubmit: (FormData) => (Promise<any>),
 |};
 type State = {|
   avatar: File|null,
 |};
+const initState = {
+  avatar: null,
+};
 export default class extends React.Component<Props, State> {
   state = initState;
 
-  handleChange = (files: Array<File>) => {
-    this.setState({ avatar: last(files) });
-  };
+  handleChange = (files: Array<File>) => this.setState({ avatar: last(files) });
 
   handleSubmit = () => {
     const { avatar } = this.state;

@@ -38,13 +38,14 @@ export default class extends React.Component<Props, State> {
   };
 
   handleSubmit = () => {
-    if (validation.anyErrors(this.state.tag)) {
+    const { tag } = this.state;
+    if (validation.anyErrors(tag)) {
       this.setState(prevState => ({
         ...prevState,
         errors: validation.errors(prevState.tag),
       }));
     } else {
-      this.props.onSubmit(this.state.tag);
+      this.props.onSubmit(tag);
     }
   };
 

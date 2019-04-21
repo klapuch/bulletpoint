@@ -43,12 +43,12 @@ export const updateSingle = (
     .then(payload => dispatch(receivedUpdateSingle(payload)));
 };
 
-export const create = (theme: PostedThemeType, next: (number) => (void)) => {
+export const create = (theme: PostedThemeType, next: (number) => (void)) => (
   axios.post('/themes', theme)
     .then(response => response.headers)
     .then(headers => response.extractedLocationId(headers.location))
-    .then(next);
-};
+    .then(next)
+);
 
 export const starOrUnstar = (themeId: number, isStarred: boolean, next: (number) => (void)) => (
   axios.patch(`/themes/${themeId}`, { is_starred: isStarred })
@@ -59,11 +59,11 @@ export const change = (
   id: number,
   theme: PostedThemeType,
   next: () => (void),
-) => (dispatch: (mixed) => Object) => {
+) => (dispatch: (mixed) => Object) => (
   axios.put(`/themes/${id}`, theme)
     .then(() => dispatch(invalidatedSingle(id)))
-    .then(next);
-};
+    .then(next)
+);
 
 const fetchAll = (
   params: Object,

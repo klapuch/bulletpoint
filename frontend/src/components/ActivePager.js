@@ -26,11 +26,9 @@ class ActivePager extends React.Component<Props> {
     }
   }
 
-  handleChangePage = (page: number) => {
-    Promise.resolve()
-      .then(() => this.props.turnPage(page, this.props.pagination))
-      .then(() => this.props.onReload(this.props.pagination));
-  };
+  handleChangePage = (page: number) => Promise.resolve()
+    .then(() => this.props.turnPage(page, this.props.pagination))
+    .then(() => this.props.onReload(this.props.pagination));
 
   render() {
     const { total, pagination } = this.props;

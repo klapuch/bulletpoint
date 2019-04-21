@@ -16,7 +16,7 @@ type TargetType = {|
 |};
 
 type Props = {|
-  +onSubmit: (PostedThemeType) => (void),
+  +onSubmit: (PostedThemeType) => (Promise<any>),
   +tags: Array<FetchedTagType>,
   +theme?: ?FetchedThemeType,
 |};
@@ -29,18 +29,19 @@ const initStateErrors = {
   tags: null,
   reference_url: null,
 };
-class Form extends React.Component<Props, State> {
-  state = {
-    theme: {
-      name: '',
-      alternative_names: [],
-      tags: [],
-      reference: {
-        url: '',
-      },
+const initState = {
+  theme: {
+    name: '',
+    alternative_names: [],
+    tags: [],
+    reference: {
+      url: '',
     },
-    errors: initStateErrors,
-  };
+  },
+  errors: initStateErrors,
+};
+class Form extends React.Component<Props, State> {
+  state = initState;
 
   componentDidMount(): void {
     if (!isEmpty(this.props.theme)) {
@@ -85,14 +86,15 @@ class Form extends React.Component<Props, State> {
   };
 
   handleSubmit = () => {
-    if (validation.anyErrors(this.state.theme)) {
+    const { theme } = this.state;
+    if (validation.anyErrors(theme)) {
       this.setState(prevState => ({
         ...prevState,
         errors: validation.errors(prevState.theme),
       }));
     } else {
-      this.props.onSubmit(this.state.theme);
-      this.setState(prevState => ({ ...prevState, errors: initStateErrors }));
+      this.props.onSubmit(theme)
+        .then(() => this.setState(prevState => ({ ...prevState, errors: initStateErrors })));
     }
   };
 

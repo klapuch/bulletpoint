@@ -13,7 +13,7 @@ type Props = {|
   +history: Object,
   +match: Object,
   +fetching: boolean,
-  +changeTheme: (number, PostedThemeType, () => (void)) => (void),
+  +changeTheme: (number, PostedThemeType, () => (void)) => (Promise<any>),
   +theme: FetchedThemeType,
   +fetchTags: () => (void),
   +tags: Array<FetchedTagType>,
@@ -25,7 +25,11 @@ class ChangeHttpForm extends React.Component<Props> {
 
   handleSubmit = (theme: PostedThemeType) => {
     const { match: { params: { id } } } = this.props;
-    this.props.changeTheme(id, theme, () => this.props.history.push(`/themes/${id}/${getSlug(theme.name)}`));
+    return this.props.changeTheme(
+      id,
+      theme,
+      () => this.props.history.push(`/themes/${id}/${getSlug(theme.name)}`),
+    );
   };
 
   render() {

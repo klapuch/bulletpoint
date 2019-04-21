@@ -11,7 +11,7 @@ const MoveButton = styled.a`
 type Props = {|
   pagination: PaginationType,
   total: number,
-  onPageChange: (number) => (void),
+  onPageChange: (number) => (Promise<any>),
 |};
 const Pager = ({
   pagination,

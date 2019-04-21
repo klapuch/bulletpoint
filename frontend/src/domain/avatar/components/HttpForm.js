@@ -9,7 +9,7 @@ type Props = {|
   +history: Object,
 |};
 export default class extends React.Component<Props> {
-  handleSubmitAvatar = (file: FormData) => (
+  handleSubmit = (file: FormData) => (
     avatar.upload(file).then(() => {
       user.reload().then(() => this.props.history.push('/settings'));
     })
@@ -23,7 +23,7 @@ export default class extends React.Component<Props> {
     return (
       <>
         <img src={getAvatar(me, 100, 100)} alt={me.username} className="img-thumbnail" />
-        <AvatarForm onSubmit={this.handleSubmitAvatar} />
+        <AvatarForm onSubmit={this.handleSubmit} />
       </>
     );
   }

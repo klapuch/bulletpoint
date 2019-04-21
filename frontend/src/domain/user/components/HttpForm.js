@@ -8,18 +8,18 @@ import * as message from '../../../ui/message/actions';
 import { getMe } from '../index';
 
 type Props = {|
-  +edit: (PostedUserType, () => (void)) => (void),
+  +edit: (PostedUserType, () => (void)) => (Promise<any>),
   +history: Object,
 |};
 class HttpForm extends React.Component<Props> {
-  handleSubmitSetting = (postedUser: PostedUserType) => {
+  handleSubmit = (postedUser: PostedUserType) => (
     this.props.edit(
       postedUser,
       () => {
         user.reload().then(() => this.props.history.push('/settings'));
       },
-    );
-  };
+    )
+  );
 
   render() {
     const me = getMe();
@@ -27,7 +27,7 @@ class HttpForm extends React.Component<Props> {
       return null;
     }
     return (
-      <Form user={me} onSubmit={this.handleSubmitSetting} />
+      <Form user={me} onSubmit={this.handleSubmit} />
     );
   }
 }

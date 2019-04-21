@@ -4,7 +4,7 @@ import type { FetchedThemeType } from '../types';
 import * as user from '../../user';
 import Detail from './Detail';
 import Names from './Names';
-import HttpStar from '../../../components/HttpStar';
+import ThemeStar from '../../../components/ThemeStar';
 
 type Props = {|
   +theme: FetchedThemeType,
@@ -12,7 +12,7 @@ type Props = {|
 const Header = ({ theme }: Props) => (
   <>
     <div>
-      {user.isLoggedIn() && <HttpStar themeId={theme.id} />}
+      {user.isLoggedIn() && <ThemeStar theme={theme} />}
       <Names theme={theme} />
     </div>
     <Detail theme={theme} />

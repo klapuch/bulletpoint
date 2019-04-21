@@ -13,7 +13,7 @@ type EventType = {|
 |};
 
 type Props = {|
-  +onSubmit: (PostedUserType) => (void),
+  +onSubmit: (PostedUserType) => (Promise<any>),
   +user: FetchedUserType,
 |};
 type State = {|
@@ -23,13 +23,14 @@ type State = {|
 const initStateErrors = {
   username: null,
 };
+const initState = {
+  user: {
+    username: '',
+  },
+  errors: initStateErrors,
+};
 class Form extends React.Component<Props, State> {
-  state = {
-    user: {
-      username: '',
-    },
-    errors: initStateErrors,
-  };
+  state = initState;
 
   componentDidMount(): void {
     this.setState({ user: fromFetchedToPosted(this.props.user) });
@@ -46,14 +47,15 @@ class Form extends React.Component<Props, State> {
 
   handleSubmit = (event: { ...EventType, preventDefault: () => (void) }) => {
     event.preventDefault();
-    if (validation.anyErrors(this.state.user)) {
+    const { user } = this.state;
+    if (validation.anyErrors(user)) {
       this.setState(prevState => ({
         ...prevState,
         errors: validation.errors(prevState.user),
       }));
     } else {
-      this.props.onSubmit(this.state.user);
-      this.setState(prevState => ({ ...prevState, errors: initStateErrors }));
+      this.props.onSubmit(user)
+        .then(() => this.setState(prevState => ({ ...prevState, errors: initStateErrors })));
     }
   };
 
