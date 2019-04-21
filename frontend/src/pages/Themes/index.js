@@ -113,7 +113,7 @@ class Themes extends React.Component<Props, State> {
 const mapStateToProps = state => ({
   total: themes.getTotal(state),
   themes: themes.getAll(state),
-  fetching: themes.allFetching(state),
+  fetching: themes.isAllFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchRecentThemes: (pagination: PaginationType) => dispatch(theme.fetchRecent(pagination)),

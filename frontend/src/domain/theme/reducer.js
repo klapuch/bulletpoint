@@ -91,6 +91,7 @@ export default (state: State = init, action: Object): State => {
       return {
         ...state,
         single: {
+          ...state.single,
           [action.id]: {
             payload: {},
             fetching: true,

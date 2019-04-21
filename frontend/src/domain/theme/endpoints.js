@@ -28,7 +28,7 @@ export const fetchSingle = (
     .then(response => dispatch(receivedSingle(id, response.data)))
     .then(() => themes.getById(id, getState()).related_themes_id)
     .then((themeIds: Array<number>) => {
-      if (flat === false) {
+      if (!flat) {
         forEach(themeIds, themeId => dispatch(fetchSingle(themeId, true)));
       }
     });
@@ -58,11 +58,9 @@ export const starOrUnstar = (themeId: number, isStarred: boolean, next: (number)
 export const change = (
   id: number,
   theme: PostedThemeType,
-  next: () => (void),
 ) => (dispatch: (mixed) => Object) => (
   axios.put(`/themes/${id}`, theme)
     .then(() => dispatch(invalidatedSingle(id)))
-    .then(next)
 );
 
 const fetchAll = (

@@ -7,8 +7,8 @@ import * as themes from '../../domain/theme/selects';
 import * as user from '../../domain/user';
 import DetailBoxes from '../../domain/bulletpoint/components/DetailBoxes';
 import Header from '../../domain/theme/components/Header';
-import HttpEditForms from '../../domain/bulletpoint/components/Form/HttpEditForms';
-import HttpAddForm from '../../domain/bulletpoint/components/Form/HttpAddForm';
+import EditHttpForms from '../../domain/bulletpoint/components/Form/EditHttpForms';
+import AddHttpForm from '../../domain/bulletpoint/components/Form/AddHttpForm';
 import Loader from '../../ui/Loader';
 import RelatedThemes from './sections/RelatedThemes';
 import SlugRedirect from '../../router/SlugRedirect';
@@ -58,8 +58,7 @@ class Theme extends React.Component<Props, State> {
   handleFormTypeChange = (formType: FormTypes) => this.setState({ formType });
 
   reload = () => {
-    this.setState(initState);
-    this.props.fetchTheme();
+    this.setState(initState, this.props.fetchTheme);
   };
 
   render() {
@@ -82,7 +81,7 @@ class Theme extends React.Component<Props, State> {
             />
             {user.isMember() && (<ContributionBoxes themeId={id} />)}
             {user.isLoggedIn() && (
-              <HttpEditForms
+              <EditHttpForms
                 themeId={id}
                 onCancelClick={this.handleCancelClick}
                 bulletpointId={this.state.bulletpointId}
@@ -93,7 +92,7 @@ class Theme extends React.Component<Props, State> {
             {![FORM_TYPE_ADD, FORM_TYPE_EDIT].includes(formType)
               && <AddButton onClick={this.handleAddClick} />}
             {user.isLoggedIn() && formType === FORM_TYPE_ADD && (
-              <HttpAddForm
+              <AddHttpForm
                 themeId={id}
                 onCancelClick={this.handleCancelClick}
                 onFormTypeChange={this.handleFormTypeChange}
@@ -114,7 +113,7 @@ class Theme extends React.Component<Props, State> {
 
 const mapStateToProps = (state, { match: { params: { id: themeId } } }) => ({
   theme: themes.getById(themeId, state),
-  fetching: themes.singleFetching(themeId, state),
+  fetching: themes.isFetching(themeId, state),
 });
 const mapDispatchToProps = (dispatch, { match: { params: { id: themeId } } }) => ({
   fetchTheme: () => dispatch(theme.fetchSingle(themeId)),

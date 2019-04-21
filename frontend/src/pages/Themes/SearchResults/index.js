@@ -57,7 +57,7 @@ class Themes extends React.Component<Props> {
 const mapStateToProps = (state, { location: { search } }) => ({
   params: { q: null, ...qs.parse(search, { ignoreQueryPrefix: true }) },
   themes: themes.getAll(state),
-  fetching: themes.allFetching(state),
+  fetching: themes.isAllFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchThemes: (keyword: string) => dispatch(theme.fetchSearches(keyword)),

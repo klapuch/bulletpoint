@@ -69,7 +69,7 @@ const mapStateToProps = (state, { themeId }) => ({
       ? bulletpoints.getByThemeGrouped(themeId, state)
       : bulletpoints.getByThemeExpanded(themeId, expandBulletpointId, state)
   ),
-  fetching: bulletpoints.allFetching(themeId, state),
+  fetching: bulletpoints.isFetching(themeId, state),
 });
 const mapDispatchToProps = (dispatch, { themeId }) => ({
   fetchBulletpoints: () => dispatch(bulletpoint.fetchAll(themeId)),

@@ -41,7 +41,7 @@ class Create extends React.Component<Props> {
 
 const mapStateToProps = (state, { match: { params: { id } } }) => ({
   theme: themes.getById(id, state),
-  fetching: themes.singleFetching(id, state),
+  fetching: themes.isFetching(id, state),
 });
 const mapDispatchToProps = (dispatch, { match: { params: { id } } }) => ({
   fetchSingle: () => dispatch(theme.fetchSingle(id)),

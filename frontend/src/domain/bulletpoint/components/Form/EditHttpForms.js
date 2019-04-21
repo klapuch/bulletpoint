@@ -26,7 +26,7 @@ type Props = {|
     next: (void) => (void),
   ) => (Promise<any>),
 |};
-class HttpEditForms extends React.Component<Props> {
+class EditHttpForms extends React.Component<Props> {
   componentDidMount(): void {
     this.reload();
   }
@@ -76,7 +76,7 @@ class HttpEditForms extends React.Component<Props> {
 const mapStateToProps = (state, { themeId }) => ({
   theme: themes.getById(themeId, state),
   getBulletpoints: () => (bulletpoints.getByTheme(themeId, state)),
-  fetching: bulletpoints.allFetching(themeId, state) || themes.singleFetching(themeId, state),
+  fetching: bulletpoints.isFetching(themeId, state) || themes.isFetching(themeId, state),
 });
 const mapDispatchToProps = (dispatch, { themeId, bulletpointId }) => ({
   fetchTheme: () => dispatch(theme.fetchSingle(themeId)),
@@ -86,4 +86,4 @@ const mapDispatchToProps = (dispatch, { themeId, bulletpointId }) => ({
     next: (void) => (void),
   ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint, next)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(HttpEditForms);
+export default connect(mapStateToProps, mapDispatchToProps)(EditHttpForms);

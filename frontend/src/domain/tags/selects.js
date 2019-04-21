@@ -5,7 +5,7 @@ import type { FetchedTagType } from './types';
 export const fetchedAll = (
   state: Object,
 ): boolean => !isEmpty(state.tags.all.payload);
-export const allFetching = (
+export const isFetching = (
   state: Object,
 ): boolean => state.tags.all.fetching;
 export const getAll = (
@@ -15,7 +15,7 @@ export const getAll = (
 export const fetchedStarred = (
   state: Object,
 ): boolean => !isEmpty(state.tags.starred.payload);
-export const starredFetching = (
+export const isStarredFetching = (
   state: Object,
 ): boolean => state.tags.starred.fetching;
 export const getStarred = (

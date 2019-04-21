@@ -81,7 +81,7 @@ export const relatedThemesFetching = (
   state: Object,
   themeIds: Array<Array<number>>,
 ): boolean => flatten(themeIds)
-  .map(relatedThemeId => themes.singleFetching(relatedThemeId, state))
+  .map(relatedThemeId => themes.isFetching(relatedThemeId, state))
   .filter(Boolean)
   .length > 0;
 const referencedThemesFetching = (theme: number, state: Object): boolean => (
@@ -97,14 +97,14 @@ const comparedThemesFetching = (theme: number, state: Object): boolean => (
   )
 );
 export const fetchedAll = (theme: number, state: Object): boolean => (
-  !isEmpty(state.themeBulletpoints[theme] ? state.themeBulletpoints[theme].payload : {})
+  state.themeBulletpoints[theme] ? !isEmpty(state.themeBulletpoints[theme].payload) : false
 );
-export const allFetching = (theme: number, state: Object): boolean => (
+export const isFetching = (theme: number, state: Object): boolean => (
   state.themeBulletpoints[theme]
     ? state.themeBulletpoints[theme].fetching
       || referencedThemesFetching(theme, state)
       || comparedThemesFetching(theme, state)
-    : referencedThemesFetching(theme, state)
+    : false
 );
 export const getById = (
   theme: number,

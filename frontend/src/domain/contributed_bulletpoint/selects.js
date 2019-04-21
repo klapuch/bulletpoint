@@ -27,7 +27,7 @@ export const fetchedAll = (theme: number, state: Object): boolean => (
       : {},
   )
 );
-export const allFetching = (theme: number, state: Object): boolean => (
+export const isFetching = (theme: number, state: Object): boolean => (
   state.themeContributedBulletpoints[theme]
     ? state.themeContributedBulletpoints[theme].fetching
       || referencedThemesFetching(theme, state)

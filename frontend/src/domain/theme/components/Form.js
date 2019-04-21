@@ -93,8 +93,10 @@ class Form extends React.Component<Props, State> {
         errors: validation.errors(prevState.theme),
       }));
     } else {
-      this.props.onSubmit(theme)
-        .then(() => this.setState(prevState => ({ ...prevState, errors: initStateErrors })));
+      this.setState(
+        prevState => ({ ...prevState, errors: initStateErrors }),
+        () => this.props.onSubmit(theme),
+      );
     }
   };
 

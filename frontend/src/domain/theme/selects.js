@@ -25,19 +25,15 @@ export const getById = (id: number, state: Object): FetchedThemeType|Object => (
     : {}
 );
 
-export const requestedSingle = (id: number, state: Object): boolean => !!state.theme.single[id];
-
 export const fetchedSingle = (id: number, state: Object): boolean => (
-  requestedSingle(id, state) || (
-    state.theme.single[id] ? !isEmpty(state.theme.single[id].payload) : false
-  )
+  state.theme.single[id] ? !isEmpty(state.theme.single[id].payload) : false
 );
 
-export const singleFetching = (id: number, state: Object): boolean => (
+export const isFetching = (id: number, state: Object): boolean => (
   state.theme.single[id] ? state.theme.single[id].fetching : true
 );
 
-export const allFetching = (state: Object): boolean => state.theme.all.fetching;
+export const isAllFetching = (state: Object): boolean => state.theme.all.fetching;
 
 export const getAll = (state: Object): Array<Object> => state.theme.all.payload;
 

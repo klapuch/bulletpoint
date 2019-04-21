@@ -98,7 +98,7 @@ const mapStateToProps = state => ({
   total: themes.getTotal(state),
   themes: themes.getAll(state),
   tags: tags.getStarred(state),
-  fetching: themes.allFetching(state) || tags.starredFetching(state),
+  fetching: themes.isAllFetching(state) || tags.isStarredFetching(state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchTags: () => dispatch(tag.fetchStarred()),

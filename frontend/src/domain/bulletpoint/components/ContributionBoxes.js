@@ -50,7 +50,7 @@ class ContributionBoxes extends React.Component<Props> {
 
 const mapStateToProps = (state, { themeId }) => ({
   contributedBulletpoints: contributedBulletpoints.getByTheme(themeId, state),
-  fetching: contributedBulletpoints.allFetching(themeId, state),
+  fetching: contributedBulletpoints.isFetching(themeId, state),
 });
 const mapDispatchToProps = (dispatch, { themeId }) => ({
   fetchContributedBulletpoints: () => dispatch(contributedBulletpoint.fetchAll(themeId)),

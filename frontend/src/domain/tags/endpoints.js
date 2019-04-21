@@ -8,16 +8,20 @@ import type { PostedTagType } from './types';
 import { receivedApiError } from '../../ui/message/actions';
 
 export const fetchAll = () => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (fetchedAll(getState())) return;
+  if (fetchedAll(getState())) {
+    return Promise.resolve();
+  }
   dispatch(requestedAll());
-  axios.get('tags')
+  return axios.get('tags')
     .then(response => dispatch(receivedAll(response.data)));
 };
 
 export const fetchStarred = () => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (fetchedStarred(getState())) return;
+  if (fetchedStarred(getState())) {
+    return Promise.resolve();
+  }
   dispatch(requestedStarred());
-  axios.get('starred_tags')
+  return axios.get('starred_tags')
     .then(response => dispatch(receivedStarred(response.data)));
 };
 

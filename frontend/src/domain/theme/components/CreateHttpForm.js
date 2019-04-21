@@ -43,6 +43,6 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   tags: tags.getAll(state),
-  fetching: tags.allFetching(state),
+  fetching: tags.isFetching(state),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(ChangeHttpForm);

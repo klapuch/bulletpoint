@@ -9,6 +9,7 @@ import type { PostedBulletpointType } from '../../types';
 import * as bulletpoint from '../../endpoints';
 import * as user from '../../../user';
 import * as contributedBulletpoint from '../../../contributed_bulletpoint/endpoints';
+import * as contributedBulletpoints from '../../../contributed_bulletpoint/selects';
 import * as theme from '../../../theme/endpoints';
 import type { FetchedThemeType } from '../../../theme/types';
 import type { FormTypes } from './types';
@@ -23,7 +24,7 @@ type Props = {|
   +onFormTypeChange: (FormTypes) => (void),
   +addBulletpoint: (PostedBulletpointType, (void) => (void)) => (Promise<any>),
 |};
-class HttpAddForm extends React.Component<Props> {
+class AddHttpForm extends React.Component<Props> {
   componentDidMount(): void {
     this.reload();
   }
@@ -58,7 +59,9 @@ class HttpAddForm extends React.Component<Props> {
 const mapStateToProps = (state, { themeId }) => ({
   theme: themes.getById(themeId, state),
   getBulletpoints: () => (bulletpoints.getByTheme(themeId, state)),
-  fetching: bulletpoints.allFetching(themeId, state) || themes.singleFetching(themeId, state),
+  fetching: bulletpoints.isFetching(themeId, state)
+    || themes.isFetching(themeId, state)
+    || contributedBulletpoints.isFetching(themeId, state),
 });
 const mapDispatchToProps = (dispatch, { themeId }) => ({
   fetchTheme: () => dispatch(theme.fetchSingle(themeId)),
@@ -78,4 +81,4 @@ const mapDispatchToProps = (dispatch, { themeId }) => ({
     next: (void) => (void),
   ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint, next)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(HttpAddForm);
+export default connect(mapStateToProps, mapDispatchToProps)(AddHttpForm);
