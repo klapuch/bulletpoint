@@ -140,7 +140,7 @@ export default class extends React.Component<Props, State> {
     return (
       <>
         <li
-          style={{ height: more ? 205 : 'initial', position: 'relative' }}
+          style={{ height: more ? 205 : null, position: 'relative' }}
           className={className(
             'list-group-item',
             this.isHighlighted(
