@@ -8,6 +8,11 @@ export const receivedApiError = (error: Object) => ({
   content: error.response.data.message,
 });
 
+export const receivedError = (error: string) => ({
+  type: RECEIVED_API_ERROR,
+  content: error,
+});
+
 export const receivedSuccess = (content: string) => ({
   type: RECEIVED_SUCCESS,
   content,

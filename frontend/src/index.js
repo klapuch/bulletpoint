@@ -15,7 +15,7 @@ import * as serviceWorker from './serviceWorker';
 import withSettings from './api/connection';
 import * as session from './domain/access/session';
 import * as user from './domain/user/endpoints';
-import { reSignIn } from './domain/sign/endpoints';
+import * as sign from './domain/sign/endpoints';
 
 axios.defaults = withSettings(axios.defaults);
 
@@ -26,13 +26,11 @@ history.listen((location) => {
     user.reload(token)
       .then(() => {
         if (session.expired()) {
-          reSignIn(token, () => history.push('/sign/in', { state: { from: location } }));
+          return sign.reSignIn(token);
         }
+        return Promise.resolve();
       })
-      .catch(() => {
-        session.destroy();
-        history.push('/sign/in', { state: { from: location } });
-      });
+      .catch(() => history.push('/sign/in', { state: { from: location } }));
   }
 });
 

@@ -22,7 +22,7 @@ type Props = {|
   +fetching: boolean,
   +onCancelClick: () => (void),
   +onFormTypeChange: (FormTypes) => (void),
-  +addBulletpoint: (PostedBulletpointType, (void) => (void)) => (Promise<any>),
+  +addBulletpoint: (PostedBulletpointType) => (Promise<void>),
 |};
 class AddHttpForm extends React.Component<Props> {
   componentDidMount(): void {
@@ -36,8 +36,9 @@ class AddHttpForm extends React.Component<Props> {
   };
 
   handleSubmit = (bulletpoint: PostedBulletpointType) => (
-    this.props.addBulletpoint(bulletpoint, this.reload)
+    this.props.addBulletpoint(bulletpoint)
       .then(() => this.props.onFormTypeChange(FORM_TYPE_DEFAULT))
+      .then(this.reload)
   );
 
   render() {
@@ -67,18 +68,14 @@ const mapDispatchToProps = (dispatch, { themeId }) => ({
   fetchTheme: () => dispatch(theme.fetchSingle(themeId)),
   fetchBulletpoints: () => dispatch(bulletpoint.fetchAll(themeId)),
   fetchContributedBulletpoints: () => dispatch(contributedBulletpoint.fetchAll(themeId)),
-  addBulletpoint: (
-    postedBulletpoint: PostedBulletpointType,
-    next: (void) => (void),
-  ) => dispatch(
+  addBulletpoint: (postedBulletpoint: PostedBulletpointType) => dispatch(
     user.isAdmin()
-      ? bulletpoint.add(themeId, postedBulletpoint, next)
-      : contributedBulletpoint.add(themeId, postedBulletpoint, next),
+      ? bulletpoint.add(themeId, postedBulletpoint)
+      : contributedBulletpoint.add(themeId, postedBulletpoint),
   ),
   editBulletpoint: (
     bulletpointId: number,
     postedBulletpoint: PostedBulletpointType,
-    next: (void) => (void),
-  ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint, next)),
+  ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(AddHttpForm);

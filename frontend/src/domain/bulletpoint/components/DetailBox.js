@@ -10,6 +10,7 @@ import * as themes from '../../theme/selects';
 import type { FetchedUserTagType, FetchedUserType } from '../../user/types';
 import type { FetchedTagType } from '../../tags/types';
 import * as bulletpoint from '../endpoints';
+import * as message from '../../../ui/message/actions';
 
 type Props = {|
   +bulletpoint: FetchedBulletpointType,
@@ -23,7 +24,8 @@ type Props = {|
   +changeRating: (PointType) => (void),
   +getTags: () => (Array<FetchedUserTagType>),
   +onExpandClick?: (number) => (void),
-  +deleteOne: (next?: (void) => (void)) => (void),
+  +deleteOne: () => (Promise<void>),
+  +receivedError: (string),
 |};
 type State = {|
   more: boolean,
@@ -32,11 +34,13 @@ type State = {|
 class DetailBox extends React.Component<Props, State> {
   handleMoreClick = () => Promise.resolve()
     .then(this.props.fetchUser)
-    .then(() => this.props.fetchTags(this.props.getThemeTags()));
+    .then(() => this.props.fetchTags(this.props.getThemeTags()))
+    // $FlowFixMe correct string from endpoint.js
+    .catch(this.props.receivedError);
 
   handleDeleteClick = () => {
     if (window.confirm('Opravdu chceš tento bulletpoint smazat?')) {
-      this.props.deleteOne(this.props.onDeleteClick);
+      this.props.deleteOne().then(this.props.onDeleteClick);
     }
   };
 
@@ -72,17 +76,13 @@ const mapStateToProps = (state, { bulletpoint: { user_id, theme_id } }) => ({
   getThemeTags: () => themes.getById(theme_id, state).tags,
 });
 const mapDispatchToProps = (dispatch, { bulletpoint: { id, user_id, theme_id } }) => ({
+  receivedError: error => dispatch(message.receivedError(error)),
   fetchUser: () => dispatch(user.fetchSingle(user_id)),
   fetchTags: (
     tags: Array<FetchedTagType>,
   ) => dispatch(user.fetchTags(user_id, tags.map(tag => tag.id))),
-  deleteOne: (
-    next: (void) => (void),
-  ) => dispatch(bulletpoint.deleteOne(theme_id, id, next)),
-  changeRating: (point: PointType) => bulletpoint.rate(
-    id,
-    point,
-    () => dispatch(bulletpoint.updateSingle(theme_id, id)),
-  ),
+  deleteOne: () => dispatch(bulletpoint.deleteOne(theme_id, id)),
+  changeRating: (point: PointType) => bulletpoint.rate(id, point)
+    .then(() => dispatch(bulletpoint.updateSingle(theme_id, id))),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(DetailBox);

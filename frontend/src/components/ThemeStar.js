@@ -22,8 +22,7 @@ class ThemeStar extends React.PureComponent<Props> {
 }
 
 const mapDispatchToProps = (dispatch, { theme: { id } }) => ({
-  starOrUnstar: (
-    isStarred: boolean,
-  ) => theme.starOrUnstar(id, isStarred, () => dispatch(theme.updateSingle(id))),
+  starOrUnstar: (isStarred: boolean) => theme.starOrUnstar(id, isStarred)
+    .then(() => dispatch(theme.updateSingle(id))),
 });
 export default connect(null, mapDispatchToProps)(ThemeStar);

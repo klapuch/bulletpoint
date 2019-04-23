@@ -1,28 +1,41 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import type { PostedUserType } from '../types';
+import type { MeType, PostedUserType } from '../types';
 import * as user from '../endpoints';
 import Form from './Form';
 import * as message from '../../../ui/message/actions';
 import { getMe } from '../index';
 
 type Props = {|
-  +edit: (PostedUserType, () => (void)) => (Promise<any>),
-  +history: Object,
+  +edit: (PostedUserType) => (Promise<any>),
+  +receivedError: (string),
 |};
-class HttpForm extends React.Component<Props> {
-  handleSubmit = (postedUser: PostedUserType) => (
-    this.props.edit(
-      postedUser,
-      () => {
-        user.reload().then(() => this.props.history.push('/settings'));
-      },
-    )
-  );
+type State = {|
+  me: MeType|null,
+|};
+const initState = {
+  me: null,
+};
+class HttpForm extends React.Component<Props, State> {
+  state = initState;
+
+  componentDidMount(): void {
+    this.reload();
+  }
+
+  handleSubmit = (postedUser: PostedUserType) => this.props.edit(postedUser)
+    .then(user.reload)
+    .then(this.reload)
+    // $FlowFixMe correct string from endpoint.js
+    .catch(this.props.receivedError);
+
+  reload = () => {
+    this.setState({ me: getMe() });
+  };
 
   render() {
-    const me = getMe();
+    const { me } = this.state;
     if (me === null) {
       return null;
     }
@@ -33,12 +46,8 @@ class HttpForm extends React.Component<Props> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  edit: (
-    postedUser: PostedUserType,
-    next: () => (void),
-  ) => dispatch(user.edit(postedUser, () => {
-    dispatch(message.receivedSuccess('Uživatelské jméno bylo změneno'));
-    next();
-  })),
+  receivedError: error => dispatch(message.receivedError(error)),
+  edit: (postedUser: PostedUserType) => user.edit(postedUser)
+    .then(() => dispatch(message.receivedSuccess('Uživatelské jméno bylo změneno'))),
 });
 export default connect(null, mapDispatchToProps)(HttpForm);

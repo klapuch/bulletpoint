@@ -43,16 +43,14 @@ export const updateSingle = (
     .then(payload => dispatch(receivedUpdateSingle(payload)));
 };
 
-export const create = (theme: PostedThemeType, next: (number) => (void)) => (
+export const create = (theme: PostedThemeType) => (
   axios.post('/themes', theme)
     .then(response => response.headers)
     .then(headers => response.extractedLocationId(headers.location))
-    .then(next)
 );
 
-export const starOrUnstar = (themeId: number, isStarred: boolean, next: (number) => (void)) => (
+export const starOrUnstar = (themeId: number, isStarred: boolean) => (
   axios.patch(`/themes/${themeId}`, { is_starred: isStarred })
-    .then(next)
 );
 
 export const change = (

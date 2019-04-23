@@ -21,10 +21,7 @@ type Props = {|
   +bulletpointId: number,
   +onCancelClick: () => (void),
   +onFormTypeChange: (FormTypes) => (void),
-  +editBulletpoint: (
-    PostedBulletpointType,
-    next: (void) => (void),
-  ) => (Promise<any>),
+  +editBulletpoint: (PostedBulletpointType) => (Promise<void>),
 |};
 class EditHttpForms extends React.Component<Props> {
   componentDidMount(): void {
@@ -37,8 +34,9 @@ class EditHttpForms extends React.Component<Props> {
   };
 
   handleSubmit = (bulletpoint: PostedBulletpointType) => (
-    this.props.editBulletpoint(bulletpoint, this.reload)
+    this.props.editBulletpoint(bulletpoint)
       .then(() => this.props.onFormTypeChange(FORM_TYPE_DEFAULT))
+      .then(this.reload)
   );
 
   render() {
@@ -83,7 +81,6 @@ const mapDispatchToProps = (dispatch, { themeId, bulletpointId }) => ({
   fetchBulletpoints: () => dispatch(bulletpoint.fetchAll(themeId)),
   editBulletpoint: (
     postedBulletpoint: PostedBulletpointType,
-    next: (void) => (void),
-  ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint, next)),
+  ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(EditHttpForms);

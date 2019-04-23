@@ -2,14 +2,16 @@
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 import * as sign from '../../../domain/sign/endpoints';
+import * as message from '../../../ui/message/actions';
 
 type Props = {|
-  +signOut: (() => (void)) => (void),
+  +signOut: () => (Promise<void>),
   +history: Object,
 |};
 class Out extends React.PureComponent<Props> {
   componentWillMount() {
-    this.props.signOut(() => this.props.history.push('/sign/in'));
+    this.props.signOut()
+      .then(this.props.history.push('/sign/in'));
   }
 
   render() {
@@ -18,6 +20,7 @@ class Out extends React.PureComponent<Props> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  signOut: (next: () => (void)) => dispatch(sign.signOut(next)),
+  signOut: () => dispatch(sign.signOut())
+    .then(() => dispatch(message.receivedSuccess('Byl jsi odhlášen.'))),
 });
 export default connect(null, mapDispatchToProps)(Out);

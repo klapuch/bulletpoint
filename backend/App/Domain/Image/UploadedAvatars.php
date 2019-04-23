@@ -39,9 +39,9 @@ final class UploadedAvatars implements Avatars {
 
 	private function check(FileUpload $upload): FileUpload {
 		if (!$upload->isOk())
-			throw new \UnexpectedValueException('File was not successfully uploaded');
+			throw new \UnexpectedValueException(t('avatars.file.not.successfully.uploaded'));
 		elseif (!$upload->isImage())
-			throw new \UnexpectedValueException('File is not an image');
+			throw new \UnexpectedValueException(t('avatars.file.not.image'));
 		return $upload;
 	}
 
@@ -58,7 +58,7 @@ final class UploadedAvatars implements Avatars {
 		];
 		$extension = $mimeExtensions[$upload->getContentType()] ?? null;
 		if ($extension === null) {
-			throw new \UnexpectedValueException('File is not an image');
+			throw new \UnexpectedValueException(t('avatars.file.not.image'));
 		}
 		return $extension;
 	}

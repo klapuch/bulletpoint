@@ -15,10 +15,8 @@ import type { PostedBulletpointType, PointType } from './types';
 export const rate = (
   bulletpoint: number,
   point: PointType,
-  next: () => (void),
 ) => (
   axios.patch(`/bulletpoints/${bulletpoint}`, { rating: { user: point } })
-    .then(next)
 );
 
 export const fetchAll = (
@@ -50,32 +48,26 @@ export const fetchAll = (
 export const add = (
   theme: number,
   bulletpoint: PostedBulletpointType,
-  next: (void) => (void),
 ) => (dispatch: (mixed) => Object) => (
   axios.post(`/themes/${theme}/bulletpoints`, bulletpoint)
     .then(() => dispatch(invalidatedAll(theme)))
-    .then(next)
 );
 
 export const deleteOne = (
   theme: number,
   bulletpoint: number,
-  next: (void) => (void),
 ) => (dispatch: (mixed) => Object) => {
   axios.delete(`/bulletpoints/${bulletpoint}`)
-    .then(() => dispatch(invalidatedAll(theme)))
-    .then(next);
+    .then(() => dispatch(invalidatedAll(theme)));
 };
 
 export const edit = (
   theme: number,
   id: number,
   bulletpoint: PostedBulletpointType,
-  next: (void) => (void),
 ) => (dispatch: (mixed) => Object) => (
   axios.put(`/bulletpoints/${id}`, bulletpoint)
     .then(() => dispatch(invalidatedAll(theme)))
-    .then(next)
 );
 
 export const updateSingle = (
