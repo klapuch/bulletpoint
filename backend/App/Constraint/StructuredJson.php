@@ -69,6 +69,6 @@ final class StructuredJson implements Validation\Rule {
 	 * @return array
 	 */
 	private function forOutput($subject): array {
-		return Json::decode(Json::encode($subject), true);
+		return Json::decode(Json::encode($subject), Json::FORCE_ARRAY);
 	}
 }
