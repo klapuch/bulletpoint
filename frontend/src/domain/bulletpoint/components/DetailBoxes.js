@@ -42,7 +42,6 @@ class DetailBoxes extends React.Component<Props, State> {
     }
   }
 
-
   reload = () => {
     const { history: { location: { state } } } = this.props;
     this.setState(prevState => ({
