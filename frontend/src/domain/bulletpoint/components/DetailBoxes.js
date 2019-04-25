@@ -48,7 +48,7 @@ class DetailBoxes extends React.Component<Props, State> {
   render() {
     const { fetching, theme, history: { location: { state } } } = this.props;
     if (fetching) {
-      return <FakeBoxes isEmpty={theme.is_empty}>{3}</FakeBoxes>;
+      return <FakeBoxes show={!theme.is_empty}>{3}</FakeBoxes>;
     }
     return (
       <Boxes

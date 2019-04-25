@@ -5,10 +5,10 @@ import FakeBox from './FakeBox';
 
 type Props = {|
   +children: number,
-  +isEmpty: boolean,
+  +show: boolean,
 |};
-export default function ({ children, isEmpty }: Props) {
-  if (isEmpty) {
+export default function ({ children, show }: Props) {
+  if (!show) {
     return null;
   }
   return (

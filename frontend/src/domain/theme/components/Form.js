@@ -46,7 +46,7 @@ class Form extends React.Component<Props, State> {
   componentDidMount(): void {
     if (!isEmpty(this.props.theme)) {
       const {
-        // $FlowFixMe Checked via isEmpty
+        // $FlowFixMe Checked via show
         name, tags, reference, alternative_names,
       } = this.props.theme;
       this.setState({
