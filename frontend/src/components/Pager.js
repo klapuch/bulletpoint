@@ -2,7 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import type { PaginationType } from '../api/dataset/PaginationType';
+import type { PaginationType } from '../api/dataset/components/PaginationType';
 
 const MoveButton = styled.a`
   cursor: pointer;

@@ -1,5 +1,5 @@
 // @flow
-import type { PaginationType } from './PaginationType';
+import type { PaginationType } from './components/PaginationType';
 
 export const getSourcePagination = (
   source: string,

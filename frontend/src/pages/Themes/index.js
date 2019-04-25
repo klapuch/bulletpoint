@@ -9,8 +9,8 @@ import Loader from '../../ui/Loader';
 import SlugRedirect from '../../router/SlugRedirect';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import Previews from '../../domain/theme/components/Previews';
-import type { PaginationType } from '../../api/dataset/PaginationType';
-import ActivePager from '../../api/dataset/ActivePager';
+import type { PaginationType } from '../../api/dataset/components/PaginationType';
+import ActivePager from '../../api/dataset/components/ActivePager';
 
 type Props = {|
   +params: {|

@@ -9,10 +9,10 @@ import * as tag from '../../../domain/tags/endpoints';
 import Loader from '../../../ui/Loader';
 import type { FetchedThemeType } from '../../../domain/theme/types';
 import Previews from '../../../domain/theme/components/Previews';
-import type { PaginationType } from '../../../api/dataset/PaginationType';
+import type { PaginationType } from '../../../api/dataset/components/PaginationType';
 import Labels from '../../../domain/tags/components/Labels';
 import type { FetchedTagType } from '../../../domain/tags/types';
-import ActivePager from '../../../api/dataset/ActivePager';
+import ActivePager from '../../../api/dataset/components/ActivePager';
 
 type Props = {|
   +location: {|

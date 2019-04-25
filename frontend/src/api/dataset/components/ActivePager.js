@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import Pager from '../../components/Pager';
+import Pager from '../../../components/Pager';
 import type { PaginationType } from './PaginationType';
-import { receivedInit, receivedReset, turnPage } from './actions';
-import { getSourcePagination } from './selects';
+import { receivedInit, receivedReset, turnPage } from '../actions';
+import { getSourcePagination } from '../selects';
 
 type Props = {|
   +reset: boolean,

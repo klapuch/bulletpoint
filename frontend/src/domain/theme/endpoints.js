@@ -13,7 +13,7 @@ import {
 import * as themes from './selects';
 import * as response from '../../api/response';
 import type { FetchedThemeType, PostedThemeType } from './types';
-import type { PaginationType } from '../../api/dataset/PaginationType';
+import type { PaginationType } from '../../api/dataset/components/PaginationType';
 import type { FetchedTagType } from '../tags/types';
 
 export const fetchSingle = (
