@@ -7,6 +7,8 @@ import FakeBoxes from './FakeBoxes';
 import * as bulletpoints from '../selects';
 import * as bulletpoint from '../endpoints';
 import DetailBox from './DetailBox';
+import * as themes from '../../theme/selects';
+import type { FetchedThemeType } from '../../theme/types';
 
 type Props = {|
   +fetching: boolean,
@@ -15,6 +17,7 @@ type Props = {|
   +getBulletpoints: (number|null) => (Array<FetchedBulletpointType>),
   +fetchBulletpoints: () => (void),
   +onEditClick?: (number) => (void),
+  +theme: FetchedThemeType,
 |};
 type State = {|
   expandBulletpointId: number|null,
@@ -43,9 +46,9 @@ class DetailBoxes extends React.Component<Props, State> {
   handleExpandClick = (expandBulletpointId: number) => this.setState({ expandBulletpointId });
 
   render() {
-    const { fetching, history: { location: { state } } } = this.props;
+    const { fetching, theme, history: { location: { state } } } = this.props;
     if (fetching) {
-      return <FakeBoxes>{3}</FakeBoxes>;
+      return <FakeBoxes isEmpty={theme.is_empty}>{3}</FakeBoxes>;
     }
     return (
       <Boxes
@@ -70,6 +73,7 @@ const mapStateToProps = (state, { themeId }) => ({
       ? bulletpoints.getByThemeGrouped(themeId, state)
       : bulletpoints.getByThemeExpanded(themeId, expandBulletpointId, state)
   ),
+  theme: themes.getById(themeId, state),
   fetching: bulletpoints.isFetching(themeId, state),
 });
 const mapDispatchToProps = (dispatch, { themeId }) => ({
