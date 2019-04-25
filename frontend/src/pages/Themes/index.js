@@ -10,7 +10,7 @@ import SlugRedirect from '../../router/SlugRedirect';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import Previews from '../../domain/theme/components/Previews';
 import type { PaginationType } from '../../api/dataset/PaginationType';
-import ActivePager from '../../components/ActivePager';
+import ActivePager from '../../api/dataset/ActivePager';
 
 type Props = {|
   +params: {|

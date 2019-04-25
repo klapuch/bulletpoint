@@ -4,7 +4,7 @@ import type { FetchedThemeType } from '../types';
 import * as user from '../../user';
 import Detail from './Detail';
 import Names from './Names';
-import ThemeStar from '../../../components/ThemeStar';
+import ThemeStar from './ThemeStar';
 
 type Props = {|
   +theme: FetchedThemeType,

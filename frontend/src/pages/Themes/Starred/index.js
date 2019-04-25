@@ -12,7 +12,7 @@ import Previews from '../../../domain/theme/components/Previews';
 import type { PaginationType } from '../../../api/dataset/PaginationType';
 import Labels from '../../../domain/tags/components/Labels';
 import type { FetchedTagType } from '../../../domain/tags/types';
-import ActivePager from '../../../components/ActivePager';
+import ActivePager from '../../../api/dataset/ActivePager';
 
 type Props = {|
   +location: {|

@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import Star from './Star';
-import * as theme from '../domain/theme/endpoints';
-import type { FetchedThemeType } from '../domain/theme/types';
+import Star from '../../../components/Star';
+import * as theme from '../endpoints';
+import type { FetchedThemeType } from '../types';
 
 type Props = {|
   +starOrUnstar: (boolean) => (Promise<any>),
