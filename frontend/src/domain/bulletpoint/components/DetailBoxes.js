@@ -40,7 +40,7 @@ class DetailBoxes extends React.Component<Props, State> {
   }
 
   reload = () => {
-    this.props.fetchBulletpoints();
+    this.setState(initState, this.props.fetchBulletpoints);
   };
 
   handleExpandClick = (expandBulletpointId: number) => this.setState({ expandBulletpointId });
