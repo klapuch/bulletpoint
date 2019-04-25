@@ -4,8 +4,7 @@ import type { FetchedBulletpointType } from '../bulletpoint/types';
 import * as bulletpoints from '../bulletpoint/selects';
 
 export const fetchedAll = (theme: number, state: Object): boolean => (
-  state.themeContributedBulletpoints[theme]
-  && !isEmpty(state.themeContributedBulletpoints[theme].payload)
+  !isEmpty(state.themeContributedBulletpoints[theme])
 );
 export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpointType> => {
   if (fetchedAll(theme, state)) {

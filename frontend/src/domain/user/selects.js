@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash';
 import type { FetchedUserTagType, FetchedUserType } from './types';
 
 export const fetched = (id: number, state: Object): boolean => (
-  !isEmpty(state.user[id]) && !isEmpty(state.user[id].payload)
+  !isEmpty(state.user[id])
 );
 
 export const getById = (

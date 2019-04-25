@@ -56,7 +56,7 @@ export const withComparedTheme = (
   ],
 });
 export const fetchedAll = (theme: number, state: Object): boolean => (
-  state.themeBulletpoints[theme] && !isEmpty(state.themeBulletpoints[theme].payload)
+  !isEmpty(state.themeBulletpoints[theme])
 );
 export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpointType> => {
   if (fetchedAll(theme, state)) {

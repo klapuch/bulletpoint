@@ -1,7 +1,7 @@
 import { fetchedAll, relatedThemesFetching, withChildrenGroups } from '../selects';
 
 test('empty as not fetchedAll', () => {
-  expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: {} } } })).toBe(false);
+  expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: {} } } })).toBe(true);
   expect(fetchedAll(1, { themeBulletpoints: { 1: {} } })).toBe(false);
 });
 
