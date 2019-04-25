@@ -3,26 +3,28 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Star from '../../../components/Star';
 import * as theme from '../endpoints';
-import type { FetchedThemeType } from '../types';
+import * as themes from '../selects';
 
 type Props = {|
   +starOrUnstar: (boolean) => (Promise<any>),
-  +theme: FetchedThemeType,
+  +isStarred: boolean,
 |};
 class ThemeStar extends React.PureComponent<Props> {
   render() {
-    const { theme } = this.props;
+    const { isStarred } = this.props;
     return (
       <Star
-        active={theme.is_starred}
+        active={isStarred}
         onClick={this.props.starOrUnstar}
       />
     );
   }
 }
 
-const mapDispatchToProps = (dispatch, { theme: { id } }) => ({
-  starOrUnstar: (isStarred: boolean) => theme.starOrUnstar(id, isStarred)
-    .then(() => dispatch(theme.updateSingle(id))),
+const mapStateToProps = (state, { theme: { id } }) => ({
+  isStarred: themes.isStarred(id, state),
 });
-export default connect(null, mapDispatchToProps)(ThemeStar);
+const mapDispatchToProps = (dispatch, { theme: { id } }) => ({
+  starOrUnstar: (starred: boolean) => dispatch(theme.starOrUnstar(id, starred)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(ThemeStar);

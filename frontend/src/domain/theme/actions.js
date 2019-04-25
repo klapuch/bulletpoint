@@ -10,6 +10,8 @@ export const REQUESTED_THEMES = 'REQUESTED_THEMES';
 export const RECEIVED_INVALIDATED_THEME = 'RECEIVED_INVALIDATED_THEME';
 export const REQUESTED_THEME_UPDATE = 'REQUESTED_THEME_UPDATE';
 export const RECEIVED_THEME_UPDATE = 'RECEIVED_THEME_UPDATE';
+export const REQUESTED_THEME_STAR_CHANGE = 'REQUESTED_THEME_STAR_CHANGE';
+export const RECEIVED_THEME_STAR_CHANGE = 'RECEIVED_THEME_STAR_CHANGE';
 
 export const invalidatedSingle = (id: number) => ({
   type: RECEIVED_INVALIDATED_THEME,
@@ -51,5 +53,19 @@ export const receivedUpdateSingle = (replacement: FetchedThemeType) => ({
   type: RECEIVED_THEME_UPDATE,
   theme: replacement.id,
   replacement,
+  fetching: false,
+});
+
+export const requestedStarChange = (theme: number, starred: boolean) => ({
+  type: REQUESTED_THEME_STAR_CHANGE,
+  theme,
+  starred,
+  fetching: true,
+});
+
+export const receivedStarChange = (theme: number, starred: boolean) => ({
+  type: RECEIVED_THEME_STAR_CHANGE,
+  theme,
+  starred,
   fetching: false,
 });

@@ -9,6 +9,8 @@ import {
   requestedSingle,
   receivedUpdateSingle,
   requestedUpdateSingle,
+  requestedStarChange,
+  receivedStarChange,
 } from './actions';
 import * as themes from './selects';
 import * as response from '../../api/response';
@@ -37,7 +39,7 @@ export const fetchSingle = (
 export const updateSingle = (
   themeId: number,
 ) => (dispatch: (mixed) => Object) => {
-  requestedUpdateSingle(themeId);
+  dispatch(requestedUpdateSingle(themeId));
   axios.get(`/themes/${themeId}`)
     .then(response => response.data)
     .then(payload => dispatch(receivedUpdateSingle(payload)));
@@ -49,9 +51,18 @@ export const create = (theme: PostedThemeType) => (
     .then(headers => response.extractedLocationId(headers.location))
 );
 
-export const starOrUnstar = (themeId: number, isStarred: boolean) => (
-  axios.patch(`/themes/${themeId}`, { is_starred: isStarred })
-);
+export const starOrUnstar = (
+  themeId: number,
+  is_starred: boolean,
+) => (dispatch: (mixed) => Object) => {
+  dispatch(requestedStarChange(themeId, is_starred));
+  return axios.patch(`/themes/${themeId}`, { is_starred })
+    .then(() => axios.get(`/themes/${themeId}`))
+    .then(response => response.data)
+    .then(theme => theme.is_starred)
+    .then(starred => dispatch(receivedStarChange(themeId, starred)))
+    .catch(() => dispatch(receivedStarChange(themeId, !is_starred)));
+};
 
 export const change = (
   id: number,

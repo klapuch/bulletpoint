@@ -7,6 +7,8 @@ import {
   RECEIVED_INVALIDATED_THEME,
   RECEIVED_THEME_UPDATE,
   REQUESTED_THEME_UPDATE,
+  REQUESTED_THEME_STAR_CHANGE,
+  RECEIVED_THEME_STAR_CHANGE,
 } from './actions';
 
 type State = {|
@@ -15,6 +17,7 @@ type State = {|
     payload: Array<Object>,
     fetching: boolean,
   |},
+  +stars: Object,
   +total: number,
 |};
 const init = {
@@ -23,6 +26,7 @@ const init = {
     payload: [],
     fetching: true,
   },
+  stars: {},
   total: 0,
 };
 export default (state: State = init, action: Object): State => {
@@ -83,6 +87,28 @@ export default (state: State = init, action: Object): State => {
         single: {
           ...state.single,
           [action.theme]: {
+            fetching: action.fetching,
+          },
+        },
+      };
+    case REQUESTED_THEME_STAR_CHANGE:
+      return {
+        ...state,
+        stars: {
+          ...state.stars,
+          [action.theme]: {
+            starred: action.starred,
+            fetching: action.fetching,
+          },
+        },
+      };
+    case RECEIVED_THEME_STAR_CHANGE:
+      return {
+        ...state,
+        stars: {
+          ...state.stars,
+          [action.theme]: {
+            starred: action.starred,
             fetching: action.fetching,
           },
         },
