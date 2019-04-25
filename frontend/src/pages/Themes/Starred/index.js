@@ -13,6 +13,7 @@ import type { PaginationType } from '../../../api/dataset/components/PaginationT
 import Labels from '../../../domain/tags/components/Labels';
 import type { FetchedTagType } from '../../../domain/tags/types';
 import ActivePager from '../../../api/dataset/components/ActivePager';
+import { getSourcePagination } from '../../../api/dataset/selects';
 
 type Props = {|
   +location: {|
@@ -24,12 +25,14 @@ type Props = {|
   +fetching: boolean,
   +fetchStarred: (PaginationType, ?number) => (void),
   +fetchTags: () => (void),
+  +pagination: PaginationType,
 |};
 type State = {|
   reset: boolean,
 |};
 
 const PER_PAGE = 5;
+const PAGINATION_NAME = 'themes/starred';
 
 class StarredThemes extends React.Component<Props, State> {
   state = {
@@ -37,7 +40,7 @@ class StarredThemes extends React.Component<Props, State> {
   };
 
   componentDidMount(): void {
-    this.handleReload({ page: 1, perPage: PER_PAGE });
+    this.handleReload(this.props.pagination);
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -81,7 +84,7 @@ class StarredThemes extends React.Component<Props, State> {
             {typeof this.getTagId() === 'undefined' && <Labels tags={tags} link={id => `?tag_id=${id}`} />}
             <Previews themes={themes} tagLink={id => `?tag_id=${id}`} />
             <ActivePager
-              name="themes/starred"
+              name={PAGINATION_NAME}
               perPage={PER_PAGE}
               reset={this.state.reset}
               onReload={this.handleReload}
@@ -99,6 +102,7 @@ const mapStateToProps = state => ({
   themes: themes.getAll(state),
   tags: tags.getStarred(state),
   fetching: themes.isAllFetching(state) || tags.isStarredFetching(state),
+  pagination: getSourcePagination(PAGINATION_NAME, { page: 1, perPage: PER_PAGE }, state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchTags: () => dispatch(tag.fetchStarred()),

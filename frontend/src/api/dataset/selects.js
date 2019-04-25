@@ -3,7 +3,8 @@ import type { PaginationType } from './components/PaginationType';
 
 export const getSourcePagination = (
   source: string,
+  init: PaginationType,
   state: Object,
 ): PaginationType => (
-  state.dataset[source] ? state.dataset[source].pagination : { page: 1, perPage: 10 }
+  state.dataset[source] ? state.dataset[source].pagination : init
 );

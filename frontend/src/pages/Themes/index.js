@@ -11,6 +11,7 @@ import type { FetchedThemeType } from '../../domain/theme/types';
 import Previews from '../../domain/theme/components/Previews';
 import type { PaginationType } from '../../api/dataset/components/PaginationType';
 import ActivePager from '../../api/dataset/components/ActivePager';
+import { getSourcePagination } from '../../api/dataset/selects';
 
 type Props = {|
   +params: {|
@@ -30,12 +31,14 @@ type Props = {|
   +initPaging: (PaginationType) => (void),
   +resetPaging: (PaginationType) => (void),
   +turnPage: (number, PaginationType) => (void),
+  +pagination: PaginationType,
 |};
 type State = {|
   reset: boolean,
 |};
 
 const PER_PAGE = 5;
+const PAGINATION_NAME = 'themes/';
 
 class Themes extends React.Component<Props, State> {
   state = {
@@ -43,7 +46,7 @@ class Themes extends React.Component<Props, State> {
   };
 
   componentDidMount(): void {
-    this.handleReload({ page: 1, perPage: PER_PAGE });
+    this.handleReload(this.props.pagination);
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -100,7 +103,7 @@ class Themes extends React.Component<Props, State> {
         <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />
         <ActivePager
           perPage={PER_PAGE}
-          name="themes/"
+          name={PAGINATION_NAME}
           reset={this.state.reset}
           total={total}
           onReload={this.handleReload}
@@ -114,6 +117,7 @@ const mapStateToProps = state => ({
   total: themes.getTotal(state),
   themes: themes.getAll(state),
   fetching: themes.isAllFetching(state),
+  pagination: getSourcePagination(PAGINATION_NAME, { page: 1, perPage: PER_PAGE }, state),
 });
 const mapDispatchToProps = dispatch => ({
   fetchRecentThemes: (pagination: PaginationType) => dispatch(theme.fetchRecent(pagination)),

@@ -18,10 +18,10 @@ type Props = {|
 |};
 class ActivePager extends React.Component<Props> {
   componentDidMount(): void {
-    const { reset, perPage } = this.props;
+    const { reset, perPage, pagination } = this.props;
     if (reset) {
       this.props.resetPaging({ page: 1, perPage });
-    } else {
+    } else if (pagination.page === 1) {
       this.props.initPaging({ page: 1, perPage });
     }
   }
@@ -42,8 +42,8 @@ class ActivePager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, { name }) => ({
-  pagination: getSourcePagination(name, state),
+const mapStateToProps = (state, { name, perPage }) => ({
+  pagination: getSourcePagination(name, { page: 1, perPage }, state),
 });
 const mapDispatchToProps = (dispatch, { name }) => ({
   turnPage: (
