@@ -1,4 +1,67 @@
-import { fetchedAll, relatedThemesFetching, withChildrenGroups } from '../selects';
+import {
+  fetchedAll, relatedThemesFetching, withChildrenGroups, orderByExpandBulletpoint,
+} from '../selects';
+
+test('ordering by expand - first root', () => {
+  expect(orderByExpandBulletpoint(
+    [
+      { id: 1, group: { root_bulletpoint_id: null } },
+      { id: 2, group: { root_bulletpoint_id: 1 } },
+      { id: 4, group: { root_bulletpoint_id: null } },
+      { id: 3, group: { root_bulletpoint_id: 1 } },
+    ],
+    1,
+  )).toEqual(
+    [
+      { id: 1, group: { root_bulletpoint_id: null } },
+      { id: 2, group: { root_bulletpoint_id: 1 } },
+      { id: 3, group: { root_bulletpoint_id: 1 } },
+      { id: 4, group: { root_bulletpoint_id: null } },
+    ],
+  );
+});
+
+test('ordering by expand - root between', () => {
+  expect(orderByExpandBulletpoint(
+    [
+      { id: 5, group: { root_bulletpoint_id: null } },
+      { id: 1, group: { root_bulletpoint_id: null } },
+      { id: 2, group: { root_bulletpoint_id: 1 } },
+      { id: 4, group: { root_bulletpoint_id: null } },
+      { id: 3, group: { root_bulletpoint_id: 1 } },
+    ],
+    1,
+  )).toEqual(
+    [
+      { id: 5, group: { root_bulletpoint_id: null } },
+      { id: 1, group: { root_bulletpoint_id: null } },
+      { id: 2, group: { root_bulletpoint_id: 1 } },
+      { id: 3, group: { root_bulletpoint_id: 1 } },
+      { id: 4, group: { root_bulletpoint_id: null } },
+    ],
+  );
+});
+
+test('ordering by expand - nullable expand', () => {
+  expect(orderByExpandBulletpoint(
+    [
+      { id: 5, group: { root_bulletpoint_id: null } },
+      { id: 1, group: { root_bulletpoint_id: null } },
+      { id: 2, group: { root_bulletpoint_id: 1 } },
+      { id: 4, group: { root_bulletpoint_id: null } },
+      { id: 3, group: { root_bulletpoint_id: 1 } },
+    ],
+    null,
+  )).toEqual(
+    [
+      { id: 5, group: { root_bulletpoint_id: null } },
+      { id: 1, group: { root_bulletpoint_id: null } },
+      { id: 2, group: { root_bulletpoint_id: 1 } },
+      { id: 4, group: { root_bulletpoint_id: null } },
+      { id: 3, group: { root_bulletpoint_id: 1 } },
+    ],
+  );
+});
 
 test('empty as not fetchedAll', () => {
   expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: {} } } })).toBe(true);

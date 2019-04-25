@@ -3,6 +3,25 @@ import { isEmpty, flatten } from 'lodash';
 import * as themes from '../theme/selects';
 import type { FetchedBulletpointType } from './types';
 
+export const orderByExpandBulletpoint = (
+  bulletpoints: Array<FetchedBulletpointType>,
+  bulletpointId: number|null,
+) => {
+  if (bulletpointId === null) {
+    return bulletpoints;
+  }
+  const only = bulletpoints.filter(b => b.group.root_bulletpoint_id === bulletpointId);
+  const clear = bulletpoints.filter(b => b.group.root_bulletpoint_id !== bulletpointId);
+  const first = clear.findIndex(b => b.id === bulletpointId);
+  const before = clear.filter((b, index) => index <= first);
+  const after = clear.filter((b, index) => index > first);
+  return [
+    ...before,
+    ...only,
+    ...after,
+  ];
+};
+
 export const withChildrenGroups = (
   bulletpoints: Array<FetchedBulletpointType>,
   exceptBulletpointId: ?number = undefined,
@@ -78,7 +97,10 @@ export const getByThemeExpanded = (
   expandBulletpointId: number|null,
   state: Object,
 ): Array<FetchedBulletpointType> => (
-  withChildrenGroups(getByTheme(theme, state), expandBulletpointId)
+  orderByExpandBulletpoint(
+    withChildrenGroups(getByTheme(theme, state), expandBulletpointId),
+    expandBulletpointId,
+  )
 );
 export const relatedThemesFetching = (
   state: Object,
