@@ -21,15 +21,16 @@ axios.defaults = withSettings(axios.defaults);
 
 const history = createBrowserHistory();
 history.listen((location) => {
-  if (session.exists()) {
-    const token = session.getValue();
-    user.reload(token)
+  const token = session.getValue();
+  if (token !== null && location.pathname !== '/sign/out') {
+    user.refresh(token)
       .then(() => {
         if (session.expired()) {
           return sign.reSignIn(token);
         }
         return Promise.resolve();
       })
+      .catch(session.destroy)
       .catch(() => history.push('/sign/in', { state: { from: location } }));
   }
 });

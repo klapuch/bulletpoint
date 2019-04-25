@@ -11,7 +11,7 @@ type Props = {|
 class Out extends React.PureComponent<Props> {
   componentWillMount() {
     this.props.signOut()
-      .then(this.props.history.push('/sign/in'));
+      .then(() => this.props.history.push('/sign/in'));
   }
 
   render() {

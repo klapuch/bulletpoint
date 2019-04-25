@@ -16,12 +16,10 @@ export const fetchMe = (token: string): Promise<MeType> => (
     .then(response => response.data)
 );
 
-export const reload = (token: ?string) => {
+export const refresh = (token: ?string) => {
   const userToken = token || session.getValue();
   if (userToken !== null && typeof userToken !== 'undefined') {
-    return fetchMe(userToken)
-      .then(me => session.updateCredentials(me))
-      .catch(session.destroy);
+    return fetchMe(userToken).then(me => session.updateCredentials(me));
   }
   return Promise.resolve();
 };

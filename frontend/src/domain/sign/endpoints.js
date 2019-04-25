@@ -42,8 +42,5 @@ export const reSignIn = (token: ?string) => {
   const onCreatedToken = login => Promise.resolve()
     .then(() => fetchMe(login.token))
     .then(me => session.start({ expiration: login.expiration, value: login.token }, me));
-  return tokens.refresh(token)
-    .then(onCreatedToken)
-    .catch(session.destroy)
-    .then(Promise.reject);
+  return tokens.refresh(token).then(onCreatedToken);
 };

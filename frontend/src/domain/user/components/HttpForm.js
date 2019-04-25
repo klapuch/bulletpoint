@@ -25,7 +25,7 @@ class HttpForm extends React.Component<Props, State> {
   }
 
   handleSubmit = (postedUser: PostedUserType) => this.props.edit(postedUser)
-    .then(user.reload)
+    .then(user.refresh)
     .then(this.reload)
     // $FlowFixMe correct string from endpoint.js
     .catch(this.props.receivedError);
