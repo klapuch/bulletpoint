@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
 import type { FetchedBulletpointType } from '../types';
 import Boxes from './Boxes';
 import FakeBoxes from './FakeBoxes';
@@ -21,9 +22,11 @@ type Props = {|
 |};
 type State = {|
   expandBulletpointId: number|null,
+  highlightedBulletpointIds: Array<number>,
 |};
 const initState = {
   expandBulletpointId: null,
+  highlightedBulletpointIds: [],
 };
 class DetailBoxes extends React.Component<Props, State> {
   state = initState;
@@ -39,14 +42,24 @@ class DetailBoxes extends React.Component<Props, State> {
     }
   }
 
+
   reload = () => {
-    this.setState(initState, this.props.fetchBulletpoints);
+    const { history: { location: { state } } } = this.props;
+    this.setState(prevState => ({
+      ...prevState,
+      expandBulletpointId: null,
+      highlightedBulletpointIds: isEmpty(state) ? [] : state.highlightedBulletpointIds || [],
+    }), () => {
+      this.props.fetchBulletpoints();
+      this.props.history.location.state = {};
+    });
   };
 
   handleExpandClick = (expandBulletpointId: number) => this.setState({ expandBulletpointId });
 
   render() {
-    const { fetching, theme, history: { location: { state } } } = this.props;
+    const { fetching, theme } = this.props;
+    const { highlightedBulletpointIds } = this.state;
     if (fetching) {
       return <FakeBoxes show={!theme.is_empty}>{3}</FakeBoxes>;
     }
@@ -56,11 +69,7 @@ class DetailBoxes extends React.Component<Props, State> {
         onExpandClick={this.handleExpandClick}
         onEditClick={this.props.onEditClick}
         onDeleteClick={this.reload}
-        highlights={
-          typeof state !== 'undefined' && state.highlightedBulletpointIds
-            ? state.highlightedBulletpointIds
-            : []
-        }
+        highlights={highlightedBulletpointIds}
         bulletpoints={this.props.getBulletpoints(this.state.expandBulletpointId)}
       />
     );
