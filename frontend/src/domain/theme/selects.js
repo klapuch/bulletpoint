@@ -4,7 +4,7 @@ import memoizee from 'memoizee';
 import type { FetchedThemeType } from './types';
 
 export const fetchedSingle = (id: number, state: Object): boolean => (
-  state.theme.single[id] && !isEmpty(state.theme.single[id].payload)
+  !isEmpty(state.theme.single[id]) && !isEmpty(state.theme.single[id].payload)
 );
 
 export const withRelatedThemes = (
