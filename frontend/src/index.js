@@ -6,6 +6,7 @@ import logger from 'redux-logger';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import { createBrowserHistory } from 'history';
+import axiosRetry from 'axios-retry';
 import 'jquery/src/jquery';
 import 'bootstrap/dist/js/bootstrap.min';
 import './App.css';
@@ -18,6 +19,8 @@ import * as user from './domain/user/endpoints';
 import * as sign from './domain/sign/endpoints';
 
 axios.defaults = withSettings(axios.defaults);
+
+axiosRetry(axios, { retries: 3 });
 
 const history = createBrowserHistory();
 history.listen((location) => {
