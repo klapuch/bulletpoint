@@ -7,7 +7,7 @@ import { receivedInit, receivedReset, turnPage } from '../actions';
 import { getSourcePagination } from '../selects';
 
 type Props = {|
-  +reset: boolean,
+  +reset?: boolean,
   +total: number,
   +onReload: (PaginationType) => (Promise<any>),
   +initPaging: (PaginationType) => (void),
@@ -18,7 +18,7 @@ type Props = {|
 |};
 class ActivePager extends React.Component<Props> {
   componentDidMount(): void {
-    const { reset, perPage, pagination } = this.props;
+    const { reset = false, perPage, pagination } = this.props;
     if (reset) {
       this.props.resetPaging({ page: 1, perPage });
     } else if (pagination.page === 1) {

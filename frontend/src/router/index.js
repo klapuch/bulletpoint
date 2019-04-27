@@ -8,6 +8,7 @@ import Public from './Public';
 import Private from './Private';
 import Theme from '../pages/Theme';
 import Themes from '../pages/Themes';
+import TaggedThemes from '../pages/Themes/TaggedThemes';
 import StarredThemes from '../pages/Themes/Starred';
 import ThemesSearchResults from '../pages/Themes/SearchResults';
 import CreateTheme from '../pages/Theme/Create';
@@ -34,7 +35,7 @@ export default ({ history }: Props) => (
       <Private path="/settings" component={Settings} title={() => <Title>Nastavení</Title>} />
       <Private path="/themes/create" component={CreateTheme} title={() => <Title>Nové téma</Title>} />
       <Private path="/themes/:id([0-9]+)/change" component={ChangeTheme} title={() => <Title />} />
-      <Public path="/themes/tag/:tag([0-9]+)/:slug?" component={Themes} title={() => <Title />} />
+      <Public path="/themes/tag/:tag([0-9]+)/:slug?" component={TaggedThemes} title={() => <Title />} />
       <Public path="/themes/search" component={ThemesSearchResults} title={() => <Title />} />
       <Public path="/themes/recent" component={Themes} title={() => <Title>Nedávno přidaná témata</Title>} />
       <Private path="/themes/starred" component={StarredThemes} title={() => <Title>Oblíbená témata</Title>} />
