@@ -13,6 +13,7 @@ use Klapuch\Encryption;
 use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri\Uri;
+use Sentry;
 
 /**
  * Routes for whole application
@@ -42,6 +43,9 @@ final class ApplicationRoutes implements Routing\Routes {
 			),
 			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS),
 		))->enter($request->headers());
+		Sentry\configureScope(static function (Sentry\State\Scope $scope) use ($user): void {
+			$scope->setUser($user->properties());
+		});
 		return [
 			'avatars [POST]' => function() use ($user): Application\View {
 				return new AuthenticatedView(

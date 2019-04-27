@@ -12,6 +12,11 @@ use Klapuch\Routing;
 use Klapuch\Storage;
 use Klapuch\Uri;
 
+Sentry\init([
+	'dsn' => 'https://7fdbd2012f66406dbba931907ca95a9d@sentry.io/1447942',
+	'environment' => $_SERVER['BULLETPOINT_ENV'],
+]);
+
 $uri = new Uri\CachedUri(
 	new Uri\BaseUrl(
 		$_SERVER['SCRIPT_NAME'],
@@ -81,6 +86,7 @@ echo (new class(
 			))->render();
 		} catch (\Throwable $e) {
 			$this->logger->log($e);
+			\Sentry\captureException($e);
 			if ($e instanceof \UnexpectedValueException) {
 				return (new Application\RawTemplate(
 					new Bulletpoint\Response\JsonError($e),

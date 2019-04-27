@@ -17,6 +17,7 @@ import withSettings from './api/connection';
 import * as session from './domain/access/session';
 import * as user from './domain/user/endpoints';
 import * as sign from './domain/sign/endpoints';
+import ErrorBoundary from './api/ErrorBoundary';
 
 axios.defaults = withSettings(axios.defaults);
 
@@ -44,9 +45,11 @@ const reduxMiddleWares = [
 ].filter(Boolean);
 
 ReactDOM.render(
-  <Provider store={createStore(combineReducers, applyMiddleware(...reduxMiddleWares))}>
-    <Router history={history} />
-  </Provider>,
+  <ErrorBoundary>
+    <Provider store={createStore(combineReducers, applyMiddleware(...reduxMiddleWares))}>
+      <Router history={history} />
+    </Provider>
+  </ErrorBoundary>,
   document.getElementById('root'),
 );
 
