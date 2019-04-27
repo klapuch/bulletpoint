@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FORM_TYPE_DEFAULT } from './types';
-import Form from './index';
+import Form from './DefaultForm';
 import * as themes from '../../../theme/selects';
 import * as bulletpoints from '../../selects';
 import type { FetchedBulletpointType, PostedBulletpointType } from '../../types';

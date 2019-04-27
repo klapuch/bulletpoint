@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Form from '../../../domain/theme/components/CreateHttpForm';
+import Form from '../../../domain/theme/components/Form/CreateHttpForm';
 
 type Props = {|
   +history: Object,

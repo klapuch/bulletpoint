@@ -8,8 +8,8 @@ import Loader from '../../../ui/Loader';
 import SlugRedirect from '../../../router/SlugRedirect';
 import type { FetchedThemeType } from '../../../domain/theme/types';
 import Previews from '../../../domain/theme/components/Previews';
-import type { PaginationType } from '../../../api/dataset/components/PaginationType';
-import ActivePager from '../../../api/dataset/components/ActivePager';
+import type { PaginationType } from '../../../api/dataset/types';
+import ActivePager from '../../../api/dataset/components/Paging/ActivePager';
 import { getSourcePagination } from '../../../api/dataset/selects';
 
 type Props = {|

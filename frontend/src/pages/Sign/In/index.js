@@ -8,7 +8,7 @@ import Form from '../../../domain/sign/components/Form';
 import * as sign from '../../../domain/sign/endpoints';
 import type { PostedCredentialsType, PostedProviderCredentialsType, ProviderTypes } from '../../../domain/sign/types';
 import { FACEBOOK_PROVIDER, GOOGLE_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
-import SocialLoginButton from '../../../components/SocialLoginButton';
+import LoginButton from '../../../domain/sign/components/Social/LoginButton';
 import * as message from '../../../ui/message/actions';
 
 type Props = {|
@@ -74,9 +74,9 @@ class In extends React.Component<Props, State> {
             fields="email"
             callback={this.handleFacebookLogin}
             render={renderProps => (
-              <SocialLoginButton provider="facebook" onClick={renderProps.onClick}>
+              <LoginButton provider="facebook" onClick={renderProps.onClick}>
                 Login with facebook
-              </SocialLoginButton>
+              </LoginButton>
             )}
           />
           <br />
@@ -86,9 +86,9 @@ class In extends React.Component<Props, State> {
             onSuccess={this.handleGoogleLogin}
             onFailure={this.handleGoogleLogin}
             render={renderProps => (
-              <SocialLoginButton provider="google" onClick={renderProps.onClick}>
+              <LoginButton provider="google" onClick={renderProps.onClick}>
                 Login with Google&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </SocialLoginButton>
+              </LoginButton>
             )}
           />
         </div>

@@ -6,7 +6,7 @@ import * as theme from '../../../domain/theme/endpoints';
 import * as themes from '../../../domain/theme/selects';
 import Loader from '../../../ui/Loader';
 import type { FetchedThemeType } from '../../../domain/theme/types';
-import Form from '../../../domain/theme/components/ChangeHttpForm';
+import Form from '../../../domain/theme/components/Form/ChangeHttpForm';
 
 type Props = {|
   +fetchSingle: () => (void),

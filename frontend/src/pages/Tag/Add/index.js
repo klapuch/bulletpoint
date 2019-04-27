@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Form from '../../../domain/tags/components/HttpForm';
+import Form from '../../../domain/tags/components/Form/HttpForm';
 
 type Props = {|
   +history: Object,

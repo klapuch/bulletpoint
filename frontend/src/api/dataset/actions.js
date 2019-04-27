@@ -1,5 +1,5 @@
 // @flow
-import type { PaginationType } from './components/PaginationType';
+import type { PaginationType } from './types';
 
 export const RECEIVED_PAGINATION = 'RECEIVED_PAGINATION';
 export const RECEIVED_INIT_PAGING = 'RECEIVED_INIT_PAGING';

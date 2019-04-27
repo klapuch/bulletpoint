@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import UserForm from '../../domain/user/components/HttpForm';
-import AvatarForm from '../../domain/avatar/components/HttpForm';
+import UserForm from '../../domain/user/components/Form/HttpForm';
+import AvatarForm from '../../domain/avatar/components/Form/HttpForm';
 
 type Props = {|
   +history: Object,

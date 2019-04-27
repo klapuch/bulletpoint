@@ -5,18 +5,18 @@ import { connect } from 'react-redux';
 import * as theme from '../../domain/theme/endpoints';
 import * as themes from '../../domain/theme/selects';
 import * as user from '../../domain/user';
-import DetailBoxes from '../../domain/bulletpoint/components/DetailBoxes';
+import DetailBoxes from '../../domain/bulletpoint/components/Box/Default/DetailBoxes';
 import Header from '../../domain/theme/components/Header';
 import EditHttpForms from '../../domain/bulletpoint/components/Form/EditHttpForms';
 import AddHttpForm from '../../domain/bulletpoint/components/Form/AddHttpForm';
 import Loader from '../../ui/Loader';
 import RelatedThemes from './sections/RelatedThemes';
 import SlugRedirect from '../../router/SlugRedirect';
-import ContributionBoxes from '../../domain/bulletpoint/components/ContributionBoxes';
+import ContributionBoxes from '../../domain/bulletpoint/components/Box/Contribution/ContributionBoxes';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import type { FormTypes } from '../../domain/bulletpoint/components/Form/types';
 import { FORM_TYPE_ADD, FORM_TYPE_DEFAULT, FORM_TYPE_EDIT } from '../../domain/bulletpoint/components/Form/types';
-import AddButton from '../../domain/bulletpoint/components/Form/AddButton';
+import AddButton from '../../domain/bulletpoint/components/Form/Button/AddButton';
 
 type State = {|
   formType: FormTypes,
