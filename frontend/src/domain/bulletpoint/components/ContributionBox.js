@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { FetchedBulletpointType } from '../types';
-import Box from './Box';
+import DefaultBox from './DefaultBox';
 import * as contributedBulletpoints from '../../contributed_bulletpoint/endpoints';
 
 type Props = {|
@@ -23,7 +23,7 @@ class ContributionBox extends React.Component<Props, State> {
 
   render() {
     return (
-      <Box
+      <DefaultBox
         bulletpoint={this.props.bulletpoint}
         onDeleteClick={this.handleDeleteClick}
       />

@@ -56,10 +56,10 @@ export const add = (
 export const deleteOne = (
   theme: number,
   bulletpoint: number,
-) => (dispatch: (mixed) => Object) => {
+) => (dispatch: (mixed) => Object) => (
   axios.delete(`/bulletpoints/${bulletpoint}`)
-    .then(() => dispatch(invalidatedAll(theme)));
-};
+    .then(() => dispatch(invalidatedAll(theme)))
+);
 
 export const edit = (
   theme: number,

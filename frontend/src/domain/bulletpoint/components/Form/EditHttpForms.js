@@ -7,12 +7,10 @@ import * as themes from '../../../theme/selects';
 import * as bulletpoints from '../../selects';
 import type { FetchedBulletpointType, PostedBulletpointType } from '../../types';
 import * as bulletpoint from '../../endpoints';
-import * as theme from '../../../theme/endpoints';
 import type { FormTypes } from './types';
 import type { FetchedThemeType } from '../../../theme/types';
 
 type Props = {|
-  +fetchTheme: () => (void),
   +fetchBulletpoints: () => (void),
   +theme: FetchedThemeType,
   +formType: FormTypes,
@@ -29,7 +27,6 @@ class EditHttpForms extends React.Component<Props> {
   }
 
   reload = () => {
-    this.props.fetchTheme();
     this.props.fetchBulletpoints();
   };
 
@@ -74,10 +71,9 @@ class EditHttpForms extends React.Component<Props> {
 const mapStateToProps = (state, { themeId }) => ({
   theme: themes.getById(themeId, state),
   getBulletpoints: () => (bulletpoints.getByTheme(themeId, state)),
-  fetching: bulletpoints.isFetching(themeId, state) || themes.isFetching(themeId, state),
+  fetching: bulletpoints.isFetching(themeId, state),
 });
 const mapDispatchToProps = (dispatch, { themeId, bulletpointId }) => ({
-  fetchTheme: () => dispatch(theme.fetchSingle(themeId)),
   fetchBulletpoints: () => dispatch(bulletpoint.fetchAll(themeId)),
   editBulletpoint: (
     postedBulletpoint: PostedBulletpointType,

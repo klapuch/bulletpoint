@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { FetchedBulletpointType, PointType } from '../types';
-import Box from './Box';
+import RichBox from './RichBox';
 import * as users from '../../user/selects';
 import * as user from '../../user/endpoints';
 import * as me from '../../user';
@@ -23,13 +23,11 @@ type Props = {|
   +getThemeTags: () => (Array<FetchedTagType>),
   +changeRating: (PointType) => (void),
   +getTags: () => (Array<FetchedUserTagType>),
-  +onExpandClick?: (number) => (void),
   +deleteOne: () => (Promise<void>),
   +receivedError: (string),
 |};
 type State = {|
   more: boolean,
-  expand: boolean,
 |};
 class DetailBox extends React.Component<Props, State> {
   handleMoreClick = () => Promise.resolve()
@@ -51,12 +49,11 @@ class DetailBox extends React.Component<Props, State> {
 
   render() {
     return (
-      <Box
+      <RichBox
         bulletpoint={this.props.bulletpoint}
         highlights={this.props.highlights || []}
         onDeleteClick={me.isAdmin() ? this.handleDeleteClick : undefined}
         onEditClick={me.isAdmin() ? this.props.onEditClick : undefined}
-        onExpandClick={this.props.onExpandClick}
         onMoreClick={this.handleMoreClick}
         onRatingChange={me.isLoggedIn() ? this.handleRatingChange : undefined}
         getTags={this.props.getTags}

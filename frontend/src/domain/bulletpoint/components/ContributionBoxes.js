@@ -7,11 +7,15 @@ import Boxes from './Boxes';
 import * as contributedBulletpoints from '../../contributed_bulletpoint/selects';
 import * as contributedBulletpoint from '../../contributed_bulletpoint/endpoints';
 import ContributionBox from './ContributionBox';
+import FakeBoxes from './FakeBoxes';
+import * as themes from '../../theme/selects';
+import type { FetchedThemeType } from '../../theme/types';
 
 type Props = {|
   +fetching: boolean,
   +contributedBulletpoints: Array<FetchedBulletpointType>,
   +themeId: number,
+  +theme: FetchedThemeType,
   +fetchContributedBulletpoints: () => (void),
 |};
 class ContributionBoxes extends React.Component<Props> {
@@ -31,24 +35,30 @@ class ContributionBoxes extends React.Component<Props> {
   };
 
   render() {
-    const { fetching, contributedBulletpoints } = this.props;
-    if (fetching || isEmpty(contributedBulletpoints)) {
+    const { fetching, theme, contributedBulletpoints } = this.props;
+    if (fetching) {
+      return <FakeBoxes show={!theme.is_empty}>{1}</FakeBoxes>;
+    } else if (isEmpty(contributedBulletpoints)) {
       return null;
     }
     return (
       <>
         <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
-        <Boxes
-          box={ContributionBox}
-          bulletpoints={contributedBulletpoints}
-          onDeleteClick={this.reload}
-        />
+        <Boxes bulletpoints={contributedBulletpoints}>
+          {bulletpoint => (
+            <ContributionBox
+              onDeleteClick={this.reload}
+              bulletpoint={bulletpoint}
+            />
+          )}
+        </Boxes>
       </>
     );
   }
 }
 
 const mapStateToProps = (state, { themeId }) => ({
+  theme: themes.getById(themeId, state),
   contributedBulletpoints: contributedBulletpoints.getByTheme(themeId, state),
   fetching: contributedBulletpoints.isFetching(themeId, state),
 });

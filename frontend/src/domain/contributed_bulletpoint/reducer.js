@@ -26,10 +26,7 @@ export default (state: Object = [], action: Object): Object => {
     case INVALIDATED_THEME_CONTRIBUTED_BULLETPOINTS:
       return {
         ...state,
-        [action.theme]: {
-          payload: [],
-          fetching: true,
-        },
+        [action.theme]: {},
       };
     default:
       return state;

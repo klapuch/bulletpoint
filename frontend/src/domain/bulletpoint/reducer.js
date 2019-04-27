@@ -28,10 +28,7 @@ export default (state: Object = {}, action: Object): Object => {
     case INVALIDATED_THEME_BULLETPOINTS:
       return {
         ...state,
-        [action.theme]: {
-          payload: [],
-          fetching: true,
-        },
+        [action.theme]: {},
       };
     case RECEIVED_THEME_BULLETPOINT_UPDATE:
       return {

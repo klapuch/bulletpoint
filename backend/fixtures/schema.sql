@@ -640,7 +640,7 @@ BEGIN
 	END IF;
 
 	IF TG_OP = 'INSERT' THEN
-		IF (number_of_references((SELECT content FROM public_bulletpoints WHERE id = new.bulletpoint_id)) = 0) THEN
+		IF (number_of_references((SELECT content FROM bulletpoints WHERE id = new.bulletpoint_id)) = 0) THEN
 			RAISE EXCEPTION 'Bulletpoint does not include place for reference.';
 		END IF;
 	END IF;
