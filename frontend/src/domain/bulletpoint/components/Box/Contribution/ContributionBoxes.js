@@ -47,6 +47,7 @@ class ContributionBoxes extends React.Component<Props> {
         <Boxes bulletpoints={contributedBulletpoints}>
           {bulletpoint => (
             <ContributionBox
+              key={`contribution-${bulletpoint.id}`}
               onDeleteClick={this.reload}
               bulletpoint={bulletpoint}
             />
