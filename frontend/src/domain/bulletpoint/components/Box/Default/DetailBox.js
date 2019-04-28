@@ -67,7 +67,7 @@ const mapStateToProps = (state, { bulletpoint: { user_id, theme_id } }) => ({
   getUser: () => users.getById(user_id, state),
   getTags: () => users.getSelectedTags(
     user_id,
-    themes.getById(theme_id, state).tags.map(tag => tag.id),
+    themes.getTagIds(themes.getById(theme_id, state)),
     state,
   ),
   getThemeTags: () => themes.getById(theme_id, state).tags,

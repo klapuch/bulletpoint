@@ -25,6 +25,10 @@ export const getById = (id: number, state: Object): FetchedThemeType|Object => (
     : {}
 );
 
+export const getTagIds = (theme: FetchedThemeType): Array<number> => (
+  theme.tags.map(tag => tag.id)
+);
+
 export const isFetching = (id: number, state: Object): boolean => (
   isEmpty(state.theme.single[id]) || state.theme.single[id].fetching
 );
