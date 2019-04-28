@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import * as theme from '../../domain/theme/endpoints';
 import * as themes from '../../domain/theme/selects';
-import Loader from '../../ui/Loader';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import Previews from '../../domain/theme/components/Previews';
+import FakePreviews from '../../domain/theme/components/FakePreviews';
 import type { PaginationType } from '../../api/dataset/types';
 import ActivePager from '../../api/dataset/components/Paging/ActivePager';
 import { getSourcePagination } from '../../api/dataset/selects';
@@ -32,22 +32,23 @@ class Themes extends React.Component<Props> {
 
   render() {
     const { themes, fetching, total } = this.props;
-    if (fetching) {
-      return <Loader />;
-    }
     return (
       <>
         <Helmet>
           <title>Nedávno přidaná témata</title>
         </Helmet>
         <h1>Nedávno přidaná témata</h1>
-        <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />
-        <ActivePager
-          perPage={PER_PAGE}
-          name={PAGINATION_NAME}
-          total={total}
-          onReload={this.handleReload}
-        />
+        {fetching ? <FakePreviews>{PER_PAGE}</FakePreviews> : (
+          <>
+            <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />
+            <ActivePager
+              perPage={PER_PAGE}
+              name={PAGINATION_NAME}
+              total={total}
+              onReload={this.handleReload}
+            />
+          </>
+        )}
       </>
     );
   }
