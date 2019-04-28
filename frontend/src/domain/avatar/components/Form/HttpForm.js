@@ -9,8 +9,7 @@ import * as message from '../../../../ui/message/actions';
 import type { MeType } from '../../../user/types';
 
 type Props = {|
-  +upload: (FormData) => Promise<void>,
-  +receivedError: (string),
+ +receivedError: (string),
 |};
 type State = {|
   me: MeType|null,
@@ -25,7 +24,7 @@ class HttpForm extends React.Component<Props, State> {
     this.reload();
   }
 
-  handleSubmit = (file: FormData) => this.props.upload(file)
+  handleSubmit = (file: FormData) => avatar.upload(file)
     .then(user.refresh)
     .then(this.reload)
     // $FlowFixMe correct string from endpoint.js
@@ -51,6 +50,5 @@ class HttpForm extends React.Component<Props, State> {
 
 const mapDispatchToProps = dispatch => ({
   receivedError: error => dispatch(message.receivedError(error)),
-  upload: (file: FormData) => avatar.upload(file),
 });
 export default connect(null, mapDispatchToProps)(HttpForm);
