@@ -43,7 +43,7 @@ export const isAllFetching = (state: Object): boolean => state.theme.all.fetchin
 
 export const getAll = (state: Object): Array<Object> => state.theme.all.payload;
 
-export const getCommonTag = memoizee((themes: Array<FetchedThemeType>, tagId: number) => {
+export const getCommonTag = memoizee((themes: Array<FetchedThemeType>, tagId: number): string => {
   const tag = themes.map(theme => theme.tags)
     .reduce((prev, current) => current.concat(prev), [])
     .reduce((prev, current) => ({ [current.id]: current.name, ...prev }), {});

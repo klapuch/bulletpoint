@@ -1,4 +1,4 @@
-import { getById } from '../selects';
+import { getById, getCommonTag } from '../selects';
 
 test('getting by ID with full related themes', () => {
   expect(getById(1, {
@@ -44,4 +44,13 @@ test('getting by ID related to each other', () => {
   })).toEqual(
     { name: 'abc', related_themes: [{ name: 'def', related_themes_id: [1] }], related_themes_id: [2] },
   );
+});
+
+test('getting common tag', () => {
+  expect(getCommonTag([
+    { tags: [{ id: 1, name: 'X' }, { id: 2, name: 'Y' }, { id: 3, name: 'abc' }] },
+    { tags: [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 3, name: 'abc' }] },
+    { tags: [{ id: 1, name: 'a' }, { id: 2, name: 'b' }, { id: 3, name: 'abc' }] },
+    { tags: [{ id: 1, name: 'c' }, { id: 2, name: 'd' }, { id: 3, name: 'abc' }] },
+  ], 3)).toEqual('abc');
 });

@@ -109,6 +109,7 @@ export const relatedThemesFetching = (
   .map(relatedThemeId => themes.isFetching(relatedThemeId, state))
   .filter(Boolean)
   .length > 0;
+
 const referencedThemesFetching = (theme: number, state: Object): boolean => (
   relatedThemesFetching(
     state,
