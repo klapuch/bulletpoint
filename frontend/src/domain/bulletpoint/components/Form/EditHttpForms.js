@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { FORM_TYPE_DEFAULT } from './types';
+import { FORM_TYPE_DEFAULT, FORM_TYPE_EDIT } from './types';
 import Form from './DefaultForm';
 import * as themes from '../../../theme/selects';
 import * as bulletpoints from '../../selects';
@@ -13,7 +13,6 @@ import type { FetchedThemeType } from '../../../theme/types';
 type Props = {|
   +fetchBulletpoints: () => (void),
   +theme: FetchedThemeType,
-  +formType: FormTypes,
   +getBulletpoints: () => (Array<FetchedBulletpointType>),
   +fetching: boolean,
   +bulletpointId: number,
@@ -40,7 +39,6 @@ class EditHttpForms extends React.Component<Props> {
     const {
       theme,
       bulletpointId,
-      formType,
       fetching,
     } = this.props;
     if (fetching) {
@@ -57,7 +55,7 @@ class EditHttpForms extends React.Component<Props> {
               onCancelClick={this.props.onCancelClick}
               type={
                 bulletpoint.id === bulletpointId
-                  ? formType
+                  ? FORM_TYPE_EDIT
                   : FORM_TYPE_DEFAULT
               }
               onSubmit={this.handleSubmit}

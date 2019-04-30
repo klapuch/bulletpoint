@@ -80,13 +80,12 @@ class Theme extends React.Component<Props, State> {
               onEditClick={this.handleEditClick}
             />
             {user.isMember() && (<ContributionBoxes themeId={id} />)}
-            {user.isLoggedIn() && (
+            {user.isLoggedIn() && formType === FORM_TYPE_EDIT && (
               <EditHttpForms
                 themeId={id}
                 onCancelClick={this.handleCancelClick}
                 bulletpointId={this.state.bulletpointId}
                 onFormTypeChange={this.handleFormTypeChange}
-                formType={formType}
               />
             )}
             {user.isLoggedIn()
