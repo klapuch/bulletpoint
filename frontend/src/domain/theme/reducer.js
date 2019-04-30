@@ -118,10 +118,7 @@ export default (state: State = init, action: Object): State => {
         ...state,
         single: {
           ...state.single,
-          [action.id]: {
-            payload: {},
-            fetching: true,
-          },
+          [action.id]: {},
         },
       };
     default:
