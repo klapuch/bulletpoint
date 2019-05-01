@@ -18,7 +18,7 @@ export type FetchedBulletpointType = {|
     +user: PointType,
   |},
   +group: {|
-    +root_bulletpoint_id: number|null,
+    root_bulletpoint_id: number|null,
     +children_bulletpoints: Array<FetchedBulletpointType>,
   |},
   +created_at: string,

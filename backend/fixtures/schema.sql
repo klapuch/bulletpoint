@@ -390,7 +390,7 @@ CREATE TABLE theme_tags (
 
 CREATE FUNCTION theme_tags_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
-	IF ((SELECT count(*) >= constant.theme_tags_limit() FROM theme_tags WHERE theme_id = new.theme_id)) THEN
+	IF (SELECT count(*) >= constant.theme_tags_limit() FROM theme_tags WHERE theme_id = new.theme_id) THEN
 		RAISE EXCEPTION USING MESSAGE = format('There can be only %s tags per theme', constant.theme_tags_limit());
 	END IF;
 	RETURN new;
@@ -551,6 +551,7 @@ BEGIN
 	ELSE
 		RAISE EXCEPTION USING MESSAGE = format('Trigger for table "%s" is not defined.', TG_TABLE_NAME);
 	END IF;
+
 	IF TG_OP = 'INSERT' THEN
 		INSERT INTO bulletpoints (theme_id, source_id, user_id, content, created_at, is_contribution) VALUES (
 			new.theme_id,
@@ -561,7 +562,7 @@ BEGIN
 			new.is_contribution
 		)
 		RETURNING * INTO new;
-	ELSIF TG_OP = 'UPDATE' THEN
+	ELSIF TG_OP = 'UPDATE' AND old IS DISTINCT FROM new THEN
 		UPDATE bulletpoints
 		SET theme_id = new.theme_id, source_id = new.source_id, user_id = new.user_id, content = new.content, created_at = new.created_at, is_contribution = new.is_contribution
 		WHERE id = new.id
@@ -597,7 +598,7 @@ DECLARE
 BEGIN
 	SELECT theme_id INTO v_theme_from_bulletpoint FROM bulletpoints WHERE id = new.bulletpoint_id;
 
-	IF (new.theme_id = v_theme_from_bulletpoint) THEN
+	IF new.theme_id = v_theme_from_bulletpoint THEN
 		RAISE EXCEPTION 'Compared theme must differ from the bulletpoint assigned one.';
 	END IF;
 
@@ -635,12 +636,12 @@ CREATE TABLE bulletpoint_referenced_themes (
 
 CREATE FUNCTION bulletpoint_referenced_themes_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
-	IF ((SELECT theme_id = new.theme_id FROM bulletpoints WHERE id = new.bulletpoint_id)) THEN
+	IF (SELECT theme_id = new.theme_id FROM bulletpoints WHERE id = new.bulletpoint_id) THEN
 		RAISE EXCEPTION 'Referenced theme must differ from the assigned.';
 	END IF;
 
 	IF TG_OP = 'INSERT' THEN
-		IF (number_of_references((SELECT content FROM bulletpoints WHERE id = new.bulletpoint_id)) = 0) THEN
+		IF number_of_references((SELECT content FROM bulletpoints WHERE id = new.bulletpoint_id)) = 0 THEN
 			RAISE EXCEPTION 'Bulletpoint does not include place for reference.';
 		END IF;
 	END IF;
@@ -891,7 +892,7 @@ BEGIN
 		v_current_tags = array_agg(tag_id) FROM public.theme_tags WHERE theme_id = v_theme.id;
 		v_new_tags = array_agg(r.tag::integer) FROM jsonb_array_elements(new.tags) AS r(tag);
 
-		IF (NOT array_equals(v_current_tags, v_new_tags)) THEN
+		IF NOT array_equals(v_current_tags, v_new_tags) THEN
 			DELETE FROM public.theme_tags WHERE theme_id = v_theme.id;
 			INSERT INTO public.theme_tags (theme_id, tag_id)
 			SELECT v_theme.id, r.tag FROM unnest(v_new_tags) AS r(tag);
@@ -906,7 +907,7 @@ BEGIN
 		v_current_alternative_names = array_agg(name) FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
 		v_new_alternative_names = array_agg(r.alternative_name) FROM jsonb_array_elements_text(new.alternative_names) AS r(alternative_name);
 
-		IF (NOT array_equals(v_current_alternative_names, v_new_alternative_names)) THEN
+		IF NOT array_equals(v_current_alternative_names, v_new_alternative_names) THEN
 			DELETE FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
 			INSERT INTO public.theme_alternative_names (theme_id, name)
 			SELECT v_theme.id, r.alternative_name FROM unnest(v_new_alternative_names) AS r(alternative_name);
@@ -972,7 +973,7 @@ DECLARE
 	v_bulletpoint_id integer;
 	v_source_id integer;
 BEGIN
-	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
+	IF number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id) THEN
 		RAISE EXCEPTION USING MESSAGE = format(
 			'Number of referenced themes in text (%s) is not matching with passed ID list (%s).',
 			number_of_references(new.content),
@@ -1020,7 +1021,7 @@ CREATE FUNCTION web.bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
 DECLARE
 	v_source_id integer;
 BEGIN
-	IF (number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id)) THEN
+	IF number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id) THEN
 		RAISE EXCEPTION USING MESSAGE = format(
 			'Number of referenced themes in text (%s) is not matching with passed ID list (%s).',
 			number_of_references(new.content),
@@ -1044,7 +1045,7 @@ BEGIN
 	SET link = new.source_link, type = new.source_type
 	WHERE id = v_source_id;
 
-	IF new.root_bulletpoint_id IS NOT NULL AND old.root_bulletpoint_id != new.root_bulletpoint_id THEN
+	IF old.root_bulletpoint_id IS DISTINCT FROM new.root_bulletpoint_id THEN
 		INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (new.id, new.root_bulletpoint_id)
 		ON CONFLICT (bulletpoint_id) DO UPDATE SET root_bulletpoint_id = EXCLUDED.root_bulletpoint_id;
 	END IF;
@@ -1057,7 +1058,7 @@ BEGIN
 		v_current_referenced_themes = array_agg(bulletpoint_id) FROM bulletpoint_referenced_themes WHERE id = new.id;
 		v_new_referenced_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
 
-		IF (NOT array_equals(v_current_referenced_themes, v_new_referenced_themes)) THEN
+		IF NOT array_equals(v_current_referenced_themes, v_new_referenced_themes) THEN
 			DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
 			INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
 			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
@@ -1073,7 +1074,7 @@ BEGIN
 		v_current_compared_themes = array_agg(bulletpoint_id) FROM bulletpoint_theme_comparisons WHERE id = new.id;
 		v_new_compared_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
 
-		IF (NOT array_equals(v_current_compared_themes, v_new_compared_themes)) THEN
+		IF NOT array_equals(v_current_compared_themes, v_new_compared_themes) THEN
 			DELETE FROM public.bulletpoint_theme_comparisons WHERE bulletpoint_id = new.id;
 			INSERT INTO public.bulletpoint_theme_comparisons (theme_id, bulletpoint_id)
 			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);

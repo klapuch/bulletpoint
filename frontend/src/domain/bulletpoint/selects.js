@@ -24,7 +24,7 @@ export const orderByExpandBulletpoint = (
 
 export const withChildrenGroups = (
   bulletpoints: Array<FetchedBulletpointType>,
-  exceptBulletpointId: ?number = undefined,
+  exceptBulletpointId: ?number,
 ): Array<FetchedBulletpointType> => (
   bulletpoints.map((bulletpoint) => {
     if (exceptBulletpointId === bulletpoint.group.root_bulletpoint_id) {
@@ -89,6 +89,11 @@ export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpoi
   }
   return [];
 };
+export const hasChildrens = (themeId: number, bulletpointId: number|null, state: Object) => (
+  bulletpointId !== null && state.themeBulletpoints[themeId].payload
+    .filter(bulletpoint => bulletpoint.group.root_bulletpoint_id === bulletpointId)
+    .length > 0
+);
 export const getByThemePossibleRoots = (
   theme: number,
   state: Object,

@@ -5,7 +5,7 @@ import { FORM_TYPE_ADD, FORM_TYPE_DEFAULT } from './types';
 import Form from './DefaultForm';
 import * as themes from '../../../theme/selects';
 import * as bulletpoints from '../../selects';
-import type {FetchedBulletpointType, PostedBulletpointType} from '../../types';
+import type { PostedBulletpointType } from '../../types';
 import * as bulletpoint from '../../endpoints';
 import * as user from '../../../user';
 import * as contributedBulletpoint from '../../../contributed_bulletpoint/endpoints';

@@ -66,6 +66,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 					'user_id' => ':user_id',
 					'referenced_theme_id' => ':referenced_theme_id',
 					'compared_theme_id' => ':compared_theme_id',
+					'root_bulletpoint_id' => ':root_bulletpoint_id',
 				],
 				[
 					'content' => $bulletpoint['content'],
@@ -75,6 +76,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
 					'user_id' => $this->user->id(),
+					'root_bulletpoint_id' => $bulletpoint['group']['root_bulletpoint_id'],
 				],
 			)),
 		))->execute();

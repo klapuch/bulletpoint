@@ -56,6 +56,7 @@ final class BulletpointsTest extends TestCase\Runtime {
 			],
 			'referenced_theme_id' => [],
 			'compared_theme_id' => [],
+			'group' => ['root_bulletpoint_id' => null],
 		]);
 		(new Misc\TableCount($this->connection, 'public_bulletpoints', 1))->assert();
 		(new Misc\TableCount($this->connection, 'sources', 1))->assert();

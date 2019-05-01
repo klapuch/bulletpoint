@@ -16,7 +16,7 @@ import { FORM_TYPE_DEFAULT } from './types';
 import ReferencedThemes from './Input/ReferencedThemes';
 import ComparedThemes from './Input/ComparedThemes';
 import { fromFetchedToPosted } from '../../types';
-import PossibleGroups from "./Input/PossibleGroups";
+import PossibleRoots from './Input/PossibleRoots';
 
 type Props = {|
   +bulletpoint?: FetchedBulletpointType,
@@ -30,9 +30,11 @@ type State = {|
   comparedThemes: ComparedThemesType,
   bulletpoint: PostedBulletpointType,
   errors: ErrorBulletpointType,
+  bulletpointId: number|null,
 |};
 const emptyThemeSelection = { id: null, name: null };
 const initState = {
+  bulletpointId: null,
   referencedThemes: [emptyThemeSelection],
   comparedThemes: [emptyThemeSelection],
   bulletpoint: {
@@ -62,7 +64,11 @@ export default class extends React.Component<Props, State> {
       const toSelectionFormat = theme => theme
         .filter(Boolean)
         .map(single => ({ id: single.id, name: single.name }));
+      if (bulletpoint.group.root_bulletpoint_id === null) {
+        bulletpoint.group.root_bulletpoint_id = 0;
+      }
       this.setState({
+        bulletpointId: bulletpoint.id,
         bulletpoint: fromFetchedToPosted(bulletpoint),
         referencedThemes: [
           ...toSelectionFormat(bulletpoint.referenced_theme),
@@ -147,6 +153,7 @@ export default class extends React.Component<Props, State> {
       }));
     } else {
       if (bulletpoint.group.root_bulletpoint_id === 0) {
+        // $FlowFixMe should be ok - null is allowed
         bulletpoint.group.root_bulletpoint_id = null;
       }
       this.props.onSubmit(bulletpoint);
@@ -159,7 +166,7 @@ export default class extends React.Component<Props, State> {
   };
 
   render() {
-    const { bulletpoint, errors } = this.state;
+    const { bulletpoint, bulletpointId, errors } = this.state;
     if (this.props.type === FORM_TYPE_DEFAULT) {
       return null;
     }
@@ -191,10 +198,10 @@ export default class extends React.Component<Props, State> {
             onSelectChange={this.handleComparedTheme}
             themes={this.state.comparedThemes}
           />
-          <PossibleGroups
+          <PossibleRoots
             themeId={this.props.theme.id}
             onSelectChange={this.onChange}
-            bulletpoint={bulletpoint}
+            bulletpoint={{ id: bulletpointId, ...bulletpoint }}
           />
           <div className="form-group">
             <label htmlFor="source_type">Typ zdroje</label>

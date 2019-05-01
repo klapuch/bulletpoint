@@ -1,16 +1,20 @@
 import React from 'react';
-import type {FetchedBulletpointType, PostedBulletpointType} from "../../../types";
+import type { FetchedBulletpointType, PostedBulletpointType } from '../../../types';
 
 type Props = {|
   +onSelectChange: (Object) => (void),
   +bulletpoint: PostedBulletpointType,
-  +groups: Array<FetchedBulletpointType>,
+  +roots: Array<FetchedBulletpointType>,
+  +hasChildrens: boolean,
 |};
-export default function ({ onSelectChange, bulletpoint, groups }: Props) {
+export default function ({
+  onSelectChange, hasChildrens, bulletpoint, roots,
+}: Props) {
   return (
     <div className="form-group">
       <label htmlFor="group_root_bulletpoint_id">Skupina</label>
       <select
+        disabled={hasChildrens}
         className="form-control"
         id="group_root_bulletpoint_id"
         name="group_root_bulletpoint_id"
@@ -18,7 +22,7 @@ export default function ({ onSelectChange, bulletpoint, groups }: Props) {
         onChange={onSelectChange}
       >
         <option style={{ fontStyle: 'italic' }} value={0}>Bez skupiny</option>
-        {groups.map(group => (
+        {roots.map(group => (
           <option key={group.id} value={group.id}>
             {group.content}
           </option>
@@ -26,4 +30,4 @@ export default function ({ onSelectChange, bulletpoint, groups }: Props) {
       </select>
     </div>
   );
-};
+}
