@@ -57,6 +57,15 @@ final class Cron implements Scheduling\Job {
 				'PT10M',
 				$this->connection,
 			),
+			new Scheduling\CustomTriggeredJob(
+				new Scheduling\MarkedJob(
+					new RunFunction($this->connection, 'refresh_bulletpoint_group_successors'),
+					$this->connection,
+				),
+				static function (): bool {
+					return date('H:i') === '00:01';
+				},
+			),
 		))->fulfill();
 	}
 

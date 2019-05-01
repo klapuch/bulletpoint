@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "54b64020c34eba28c14005be007b6d8e",
+    "content-hash": "036d9494fb16e8930d21635b8c3578f9",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -691,16 +691,16 @@
         },
         {
             "name": "klapuch/scheduling",
-            "version": "0.0.1",
+            "version": "0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Scheduling.git",
-                "reference": "926ed8098b302cf53fbe801bc47c01d52c194cb5"
+                "reference": "18952b8cbd3ffba58eed237713e22def355d45ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Scheduling/zipball/926ed8098b302cf53fbe801bc47c01d52c194cb5",
-                "reference": "926ed8098b302cf53fbe801bc47c01d52c194cb5",
+                "url": "https://api.github.com/repos/klapuch/Scheduling/zipball/18952b8cbd3ffba58eed237713e22def355d45ea",
+                "reference": "18952b8cbd3ffba58eed237713e22def355d45ea",
                 "shasum": ""
             },
             "require": {
@@ -740,7 +740,7 @@
                 "scheduling",
                 "task"
             ],
-            "time": "2019-01-13T22:10:53+00:00"
+            "time": "2019-02-10T22:06:15+00:00"
         },
         {
             "name": "klapuch/sql",
@@ -1774,16 +1774,16 @@
         },
         {
             "name": "psr/http-factory",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c"
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
-                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
                 "shasum": ""
             },
             "require": {
@@ -1822,7 +1822,7 @@
                 "request",
                 "response"
             ],
-            "time": "2018-07-30T21:54:04+00:00"
+            "time": "2019-04-30T12:38:16+00:00"
         },
         {
             "name": "psr/http-message",
@@ -2289,16 +2289,16 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "c3c330192bc9cc51b7e9ce968ff721dc32ffa986"
+                "reference": "37bf68b428850ee26ed7c3be6c26236dd95a95f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/c3c330192bc9cc51b7e9ce968ff721dc32ffa986",
-                "reference": "c3c330192bc9cc51b7e9ce968ff721dc32ffa986",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/37bf68b428850ee26ed7c3be6c26236dd95a95f1",
+                "reference": "37bf68b428850ee26ed7c3be6c26236dd95a95f1",
                 "shasum": ""
             },
             "require": {
@@ -2351,7 +2351,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2019-01-05T20:13:32+00:00"
+            "time": "2019-04-29T21:11:00+00:00"
         }
     ],
     "packages-dev": [
@@ -3793,16 +3793,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.3.0",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "94fd0001232e47129dd3504189fa1c7225010d08"
+                "reference": "bdd9f737ebc2a01c06ea7ff4308ec6697db9b53c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/94fd0001232e47129dd3504189fa1c7225010d08",
-                "reference": "94fd0001232e47129dd3504189fa1c7225010d08",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/bdd9f737ebc2a01c06ea7ff4308ec6697db9b53c",
+                "reference": "bdd9f737ebc2a01c06ea7ff4308ec6697db9b53c",
                 "shasum": ""
             },
             "require": {
@@ -3840,7 +3840,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-11-30T07:14:17+00:00"
+            "time": "2019-04-30T17:48:53+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -4828,16 +4828,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.2.9",
+            "version": "3.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "473c8cb83209de1b66a1487400c0ea47a2ee65cc"
+                "reference": "b9bece4cbcb3f342c8412618f73ca02db98064e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/473c8cb83209de1b66a1487400c0ea47a2ee65cc",
-                "reference": "473c8cb83209de1b66a1487400c0ea47a2ee65cc",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/b9bece4cbcb3f342c8412618f73ca02db98064e8",
+                "reference": "b9bece4cbcb3f342c8412618f73ca02db98064e8",
                 "shasum": ""
             },
             "require": {
@@ -4863,7 +4863,7 @@
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.2",
                 "phpunit/phpunit": "^6.0 || ^7.0",
-                "psalm/plugin-phpunit": "^0.5.1",
+                "psalm/plugin-phpunit": "^0.5.5",
                 "squizlabs/php_codesniffer": "3.4.0"
             },
             "suggest": {
@@ -4904,7 +4904,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2019-04-22T17:18:19+00:00"
+            "time": "2019-04-29T16:19:51+00:00"
         },
         {
             "name": "webmozart/assert",

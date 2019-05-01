@@ -31,7 +31,7 @@
     "klapuch/iterator": "^1.1.2",
     "klapuch/routing": "^0.0.14",
     "klapuch/dataset": "~0.0.1",
-    "klapuch/scheduling": "^0.0.1",
+    "klapuch/scheduling": "^0.0.2",
     "klapuch/encryption": "^2.1",
     "klapuch/ui": "^0.0.4",
     "tracy/tracy": "^2.5",

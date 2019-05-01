@@ -707,6 +707,25 @@ CREATE TABLE bulletpoint_groups (
 	CONSTRAINT bulletpoint_groups_root_bulletpoint_id FOREIGN KEY (root_bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+CREATE FUNCTION refresh_bulletpoint_group_successors() RETURNS void AS $BODY$
+BEGIN
+	DELETE FROM bulletpoint_groups;
+
+	INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id)
+	SELECT new_groups.bulletpoint_id, new_groups.root_bulletpoint_id FROM (
+		SELECT array_agg(bulletpoint_id) bulletpoint_id, root_bulletpoint_id
+		FROM bulletpoint_groups
+		GROUP BY root_bulletpoint_id
+	) grouped
+	JOIN LATERAL(
+		SELECT id AS bulletpoint_id, first_value(id) over () AS root_bulletpoint_id
+		FROM web.bulletpoints
+		WHERE id = ANY(grouped.bulletpoint_id || grouped.root_bulletpoint_id)
+	) new_groups ON TRUE
+	WHERE new_groups.bulletpoint_id != new_groups.root_bulletpoint_id;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
 CREATE FUNCTION bulletpoint_group_successor(in_root_bulletpoint_id integer, include_self boolean DEFAULT FALSE) RETURNS SETOF integer AS $BODY$
 BEGIN
 	RETURN QUERY SELECT id FROM web.bulletpoints
@@ -720,6 +739,22 @@ BEGIN
 	LIMIT 1;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE ROWS 1;
+
+CREATE FUNCTION bulletpoint_groups_trigger_row_biu() RETURNS trigger AS $BODY$
+DECLARE
+	v_bulletpoint_theme_id integer;
+	v_root_bulletpoint_theme_id integer;
+BEGIN
+	SELECT theme_id INTO v_bulletpoint_theme_id FROM bulletpoints WHERE id = new.bulletpoint_id;
+	SELECT theme_id INTO v_root_bulletpoint_theme_id FROM bulletpoints WHERE id = new.root_bulletpoint_id;
+
+	IF v_bulletpoint_theme_id != v_root_bulletpoint_theme_id THEN
+		RAISE EXCEPTION 'Bulletpoints do not belong to the same theme.';
+	END IF;
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION bulletpoint_groups_trigger_row_ai() RETURNS trigger AS $BODY$
 DECLARE
@@ -749,6 +784,11 @@ CREATE TRIGGER bulletpoint_groups_row_ai_trigger
 	AFTER INSERT
 	ON bulletpoint_groups
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoint_groups_trigger_row_ai();
+
+CREATE TRIGGER bulletpoint_groups_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON bulletpoint_groups
+	FOR EACH ROW EXECUTE PROCEDURE bulletpoint_groups_trigger_row_biu();
 
 
 -- views
