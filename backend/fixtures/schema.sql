@@ -595,7 +595,7 @@ CREATE FUNCTION bulletpoint_theme_comparisons_trigger_row_biu() RETURNS trigger 
 DECLARE
 	v_theme_from_bulletpoint integer;
 BEGIN
-	v_theme_from_bulletpoint = theme_id FROM bulletpoints WHERE id = new.bulletpoint_id;
+	SELECT theme_id INTO v_theme_from_bulletpoint FROM bulletpoints WHERE id = new.bulletpoint_id;
 
 	IF (new.theme_id = v_theme_from_bulletpoint) THEN
 		RAISE EXCEPTION 'Compared theme must differ from the bulletpoint assigned one.';
