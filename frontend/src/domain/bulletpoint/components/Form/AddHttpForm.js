@@ -5,7 +5,7 @@ import { FORM_TYPE_ADD, FORM_TYPE_DEFAULT } from './types';
 import Form from './DefaultForm';
 import * as themes from '../../../theme/selects';
 import * as bulletpoints from '../../selects';
-import type { PostedBulletpointType } from '../../types';
+import type {FetchedBulletpointType, PostedBulletpointType} from '../../types';
 import * as bulletpoint from '../../endpoints';
 import * as user from '../../../user';
 import * as contributedBulletpoint from '../../../contributed_bulletpoint/endpoints';
@@ -56,7 +56,6 @@ class AddHttpForm extends React.Component<Props> {
 
 const mapStateToProps = (state, { themeId }) => ({
   theme: themes.getById(themeId, state),
-  getBulletpoints: () => (bulletpoints.getByTheme(themeId, state)),
   fetching: bulletpoints.isFetching(themeId, state)
     || contributedBulletpoints.isFetching(themeId, state),
 });

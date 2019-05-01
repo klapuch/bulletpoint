@@ -16,6 +16,7 @@ import { FORM_TYPE_DEFAULT } from './types';
 import ReferencedThemes from './Input/ReferencedThemes';
 import ComparedThemes from './Input/ComparedThemes';
 import { fromFetchedToPosted } from '../../types';
+import PossibleGroups from "./Input/PossibleGroups";
 
 type Props = {|
   +bulletpoint?: FetchedBulletpointType,
@@ -43,7 +44,7 @@ const initState = {
       type: 'web',
     },
     group: {
-      root_bulletpoint_id: null,
+      root_bulletpoint_id: 0,
     },
   },
   errors: validation.initErrors,
@@ -81,6 +82,8 @@ export default class extends React.Component<Props, State> {
       input = { source: { ...this.state.bulletpoint.source, link: value } };
     } else if (name === 'source_type') {
       input = { source: { type: value, link: '' } };
+    } else if (name === 'group_root_bulletpoint_id') {
+      input = { group: { root_bulletpoint_id: parseInt(value, 10) } };
     } else {
       input = { [name]: value };
     }
@@ -143,6 +146,9 @@ export default class extends React.Component<Props, State> {
         errors: validation.errors(prevState.bulletpoint),
       }));
     } else {
+      if (bulletpoint.group.root_bulletpoint_id === 0) {
+        bulletpoint.group.root_bulletpoint_id = null;
+      }
       this.props.onSubmit(bulletpoint);
     }
   };
@@ -184,6 +190,11 @@ export default class extends React.Component<Props, State> {
             theme={this.props.theme}
             onSelectChange={this.handleComparedTheme}
             themes={this.state.comparedThemes}
+          />
+          <PossibleGroups
+            themeId={this.props.theme.id}
+            onSelectChange={this.onChange}
+            bulletpoint={bulletpoint}
           />
           <div className="form-group">
             <label htmlFor="source_type">Typ zdroje</label>

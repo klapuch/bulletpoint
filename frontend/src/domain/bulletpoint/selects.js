@@ -89,6 +89,12 @@ export const getByTheme = (theme: number, state: Object): Array<FetchedBulletpoi
   }
   return [];
 };
+export const getByThemePossibleRoots = (
+  theme: number,
+  state: Object,
+): Array<FetchedBulletpointType> => (
+  getByTheme(theme, state).filter(bulletpoint => (bulletpoint.group.root_bulletpoint_id === null))
+);
 export const getByThemeGrouped = (theme: number, state: Object): Array<FetchedBulletpointType> => (
   withChildrenGroups(getByTheme(theme, state))
 );
