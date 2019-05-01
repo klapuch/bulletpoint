@@ -687,6 +687,18 @@ BEGIN
 	JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id
 	WHERE bulletpoints.id = r.bulletpoint_id;
 
+	IF TG_OP IN ('INSERT', 'UPDATE') THEN
+		INSERT INTO bulletpoint_rating_summary (bulletpoint_id, up_points, down_points)
+		SELECT
+			new.bulletpoint_id,
+			COALESCE(sum(point) FILTER (WHERE point = 1), 0),
+			abs(COALESCE(sum(point) FILTER (WHERE point = -1), 0))
+		FROM public.bulletpoint_ratings
+		WHERE bulletpoint_id = new.bulletpoint_id
+		ON CONFLICT (bulletpoint_id)
+		DO UPDATE SET up_points = EXCLUDED.up_points, down_points = EXCLUDED.down_points;
+	END IF;
+
 	RETURN r;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
@@ -695,6 +707,17 @@ CREATE TRIGGER bulletpoint_ratings_row_aiud_trigger
 	AFTER INSERT OR UPDATE OR DELETE
 	ON bulletpoint_ratings
 	FOR EACH ROW EXECUTE PROCEDURE bulletpoint_ratings_trigger_row_aiud();
+
+
+CREATE TABLE bulletpoint_rating_summary (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	bulletpoint_id integer NOT NULL UNIQUE,
+	up_points integer NOT NULL,
+	down_points integer NOT NULL,
+	CONSTRAINT bulletpoint_rating_summary_bulletpoint_id FOREIGN KEY (bulletpoint_id) REFERENCES bulletpoints(id) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT bulletpoint_rating_summary_up_points_positive CHECK (up_points >= 0),
+	CONSTRAINT bulletpoint_rating_summary_down_points_positive CHECK (down_points >= 0)
+);
 
 
 CREATE TABLE bulletpoint_groups (
@@ -915,28 +938,20 @@ CREATE VIEW web.bulletpoints AS
 	SELECT
 		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id, bulletpoints.created_at,
 		sources.link AS source_link, sources.type AS source_type,
-			bulletpoint_ratings.up AS up_rating,
-			abs(bulletpoint_ratings.down) AS down_rating,
-			(bulletpoint_ratings.up + bulletpoint_ratings.down) AS total_rating,
-		bulletpoint_ratings.user_rating,
+			bulletpoint_rating_summary.up_points AS up_rating,
+			bulletpoint_rating_summary.down_points AS down_rating,
+			(bulletpoint_rating_summary.up_points + bulletpoint_rating_summary.down_points) AS total_rating,
+		COALESCE(user_bulletpoint_ratings.user_rating, 0) AS user_rating,
 		COALESCE(bulletpoint_referenced_themes.referenced_theme_id, '[]') AS referenced_theme_id,
 		COALESCE(bulletpoint_theme_comparisons.compared_theme_id, '[]') AS compared_theme_id,
 		bulletpoint_groups.root_bulletpoint_id
 	FROM public.public_bulletpoints AS bulletpoints
-	-- TODO: will be pre-counted
-	JOIN (
-		SELECT
-			DISTINCT ON (bulletpoint_ratings.bulletpoint_id) bulletpoint_ratings.bulletpoint_id,
-			COALESCE(sum(point) FILTER (WHERE point = 1) OVER (PARTITION BY bulletpoint_ratings.bulletpoint_id), 0) AS up,
-			COALESCE(sum(point) FILTER (WHERE point = -1) OVER (PARTITION BY bulletpoint_ratings.bulletpoint_id), 0) AS down,
-			COALESCE(user_bulletpoint_ratings.user_rating, 0) AS user_rating
+	LEFT JOIN (
+		SELECT bulletpoint_id, CASE user_id WHEN globals_get_user() THEN point ELSE 0 END AS user_rating
 		FROM public.bulletpoint_ratings
-		LEFT JOIN (
-			SELECT bulletpoint_id, CASE user_id WHEN globals_get_user() THEN point ELSE 0 END AS user_rating
-			FROM public.bulletpoint_ratings
-			WHERE user_id = globals_get_user()
-		) AS user_bulletpoint_ratings ON user_bulletpoint_ratings.bulletpoint_id = bulletpoint_ratings.bulletpoint_id
-	) AS bulletpoint_ratings ON bulletpoint_ratings.bulletpoint_id = bulletpoints.id
+		WHERE user_id = globals_get_user()
+	) AS user_bulletpoint_ratings ON user_bulletpoint_ratings.bulletpoint_id = bulletpoints.id
+	LEFT JOIN bulletpoint_rating_summary ON bulletpoint_rating_summary.bulletpoint_id = bulletpoints.id
 	LEFT JOIN public.sources ON sources.id = bulletpoints.source_id
 	LEFT JOIN public.bulletpoint_reputations ON bulletpoint_reputations.bulletpoint_id = bulletpoints.id
 	LEFT JOIN (
