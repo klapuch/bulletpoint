@@ -163,13 +163,11 @@ CREATE INDEX users_avatar_filename ON users USING btree (avatar_filename);
 
 CREATE FUNCTION random_username(in_email text) RETURNS text STRICT AS $BODY$
 DECLARE
-	v_local_part text;
+	v_local_part text NOT NULL DEFAULT split_part(in_email, '@', 1);
 	v_generated_username text;
 	v_step integer;
 	v_attempts CONSTANT integer = 999;
 BEGIN
-	v_local_part = split_part(in_email, '@', 1);
-
 	IF v_local_part = in_email THEN
 		RAISE EXCEPTION USING MESSAGE = format('Passed value "%s" is not email', in_email);
 	END IF;
@@ -188,12 +186,10 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 CREATE FUNCTION create_third_party_user(in_provider text, in_id text, in_email text) RETURNS SETOF users AS $BODY$
 DECLARE
-	v_provider_column CONSTANT hstore = hstore(ARRAY['facebook', 'facebook_id', 'google', 'google_id']);
-	v_column text;
+	v_provider_column CONSTANT hstore DEFAULT hstore(ARRAY['facebook', 'facebook_id', 'google', 'google_id']);
+	v_column text NOT NULL DEFAULT v_provider_column -> in_provider;
 	v_exists boolean;
 BEGIN
-	v_column = v_provider_column -> in_provider;
-
 	IF v_column IS NULL THEN
 		RAISE EXCEPTION USING MESSAGE = format('Provider "%s" is unknown', in_provider);
 	END IF;
@@ -1182,10 +1178,8 @@ CREATE TABLE deploy.migrations (
 
 CREATE FUNCTION deploy.migrations_to_run(in_filenames text) RETURNS SETOF text AS $BODY$
 DECLARE
-	v_filenames text[];
+	v_filenames text[] NOT NULL DEFAULT string_to_array(trim(TRAILING ',' FROM in_filenames), ',');
 BEGIN
-	v_filenames = string_to_array(trim(TRAILING ',' FROM in_filenames), ',');
-
 	IF EXISTS(SELECT filename FROM unnest(v_filenames) AS filenames(filename) WHERE filename NOT ILIKE '%.sql') THEN
 		RAISE EXCEPTION USING MESSAGE = 'Filenames must be in format %.sql';
 	END IF;
