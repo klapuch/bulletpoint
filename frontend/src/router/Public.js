@@ -11,7 +11,9 @@ type Props = {
   +title?: () => ?Object,
 };
 const Public = ({
-  component: Component, title = () => null, ...rest
+  component: Component,
+  title = () => null,
+  ...rest
 }: Props): Route => (
   <Route
     {...rest}
