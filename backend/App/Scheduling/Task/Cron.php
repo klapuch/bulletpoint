@@ -59,6 +59,48 @@ final class Cron implements Scheduling\Job {
 			),
 			new Scheduling\CustomTriggeredJob(
 				new Scheduling\MarkedJob(
+					new PingSources($this->connection),
+					$this->connection,
+				),
+				static function (): bool {
+					return in_array(date('H:i'), ['02:00', '14:00'], true);
+				},
+			),
+			new Scheduling\CustomTriggeredJob(
+				new Scheduling\MarkedJob(
+					new RefreshMaterializedView(
+						$this->connection,
+						'broken_sources',
+					),
+					$this->connection,
+				),
+				static function (): bool {
+					return in_array(date('H:i'), ['04:00', '16:00'], true);
+				},
+			),
+			new Scheduling\CustomTriggeredJob(
+				new Scheduling\MarkedJob(
+					new PingReferences($this->connection),
+					$this->connection,
+				),
+				static function (): bool {
+					return in_array(date('H:i'), ['07:00', '19:00'], true);
+				},
+			),
+			new Scheduling\CustomTriggeredJob(
+				new Scheduling\MarkedJob(
+					new RefreshMaterializedView(
+						$this->connection,
+						'broken_references',
+					),
+					$this->connection,
+				),
+				static function (): bool {
+					return in_array(date('H:i'), ['09:00', '21:00'], true);
+				},
+			),
+			new Scheduling\CustomTriggeredJob(
+				new Scheduling\MarkedJob(
 					new RunFunction($this->connection, 'refresh_bulletpoint_group_successors'),
 					$this->connection,
 				),

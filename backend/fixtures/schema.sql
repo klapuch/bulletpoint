@@ -41,6 +41,7 @@ CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_r
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 CREATE DOMAIN usernames AS citext CHECK (VALUE ~ format('^[a-zA-Z0-9_]{%s,%s}$', constant.username_min_length(), constant.username_max_length()));
 CREATE DOMAIN openid_sub AS text CHECK (VALUE ~ '^.{1,255}$');
+CREATE DOMAIN http_status AS integer CHECK (int4range(100, 504) @> VALUE);
 
 -- schema audit
 CREATE TABLE audit.history (
@@ -125,6 +126,29 @@ CREATE TRIGGER references_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
 	ON "references"
 	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
+
+
+CREATE VIEW references_to_ping AS
+	SELECT array_agg(id) AS ids, url
+	FROM "references"
+	GROUP BY url;
+
+CREATE TABLE reference_pings (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	reference_id integer NOT NULL,
+	status http_status NULL,
+	ping_at timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT reference_pings_reference_id FOREIGN KEY (reference_id) REFERENCES "references"(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE MATERIALIZED VIEW broken_references AS
+	SELECT reference_id
+	FROM reference_pings
+	WHERE now() - INTERVAL '3 days' < ping_at
+	AND (status IS NULL OR int4range(400, 599) @> status::integer)
+	GROUP BY reference_id
+	HAVING count(*) = 3;
+CREATE UNIQUE INDEX broken_references_reference_id_uidx ON broken_references(reference_id);
 
 
 CREATE TABLE tags (
@@ -464,6 +488,31 @@ CREATE TRIGGER sources_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
 	ON sources
 	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
+
+
+CREATE VIEW sources_to_ping AS
+	SELECT array_agg(id) AS ids, link
+	FROM sources
+	WHERE link IS NOT NULL
+	GROUP BY link;
+
+CREATE TABLE source_pings (
+	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	source_id integer NOT NULL,
+	status http_status NULL,
+	ping_at timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT source_pings_source_id FOREIGN KEY (source_id) REFERENCES sources(id) ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
+CREATE MATERIALIZED VIEW broken_sources AS
+	SELECT source_id
+	FROM source_pings
+	WHERE now() - INTERVAL '3 days' < ping_at
+	AND (status IS NULL OR int4range(400, 599) @> status::integer)
+	GROUP BY source_id
+	HAVING count(*) = 3;
+CREATE UNIQUE INDEX broken_sources_source_id_uidx ON broken_sources(source_id);
+
 
 CREATE FUNCTION number_of_references(text) RETURNS integer AS $BODY$
 	SELECT count(*)::integer FROM regexp_matches($1, '\[\[.+?\]\]', 'g');

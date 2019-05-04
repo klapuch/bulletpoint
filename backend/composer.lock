@@ -448,16 +448,16 @@
         },
         {
             "name": "klapuch/http",
-            "version": "1.4.4",
+            "version": "1.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Http.git",
-                "reference": "8e30310aa950295fb6cfd658e5b4066d169c386f"
+                "reference": "ddfe00c5e7a492d5f75b26bdd46e0448c314b84f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Http/zipball/8e30310aa950295fb6cfd658e5b4066d169c386f",
-                "reference": "8e30310aa950295fb6cfd658e5b4066d169c386f",
+                "url": "https://api.github.com/repos/klapuch/Http/zipball/ddfe00c5e7a492d5f75b26bdd46e0448c314b84f",
+                "reference": "ddfe00c5e7a492d5f75b26bdd46e0448c314b84f",
                 "shasum": ""
             },
             "require": {
@@ -493,7 +493,7 @@
             ],
             "description": "http, request, response",
             "homepage": "https://github.com/klapuch/Http",
-            "time": "2018-05-13T21:44:26+00:00"
+            "time": "2019-05-04T14:22:44+00:00"
         },
         {
             "name": "klapuch/internal",
