@@ -39,6 +39,7 @@ final class SearchedThemes implements Themes {
 						'themes.alternative_names',
 						'themes.tags',
 						'themes.reference_url',
+						'themes.reference_is_broken',
 						'themes.user_id',
 						'themes.created_at',
 						'themes.is_starred',

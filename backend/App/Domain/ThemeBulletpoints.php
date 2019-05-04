@@ -34,6 +34,7 @@ final class ThemeBulletpoints implements Bulletpoints {
 				'compared_theme_id',
 				'source_link',
 				'source_type',
+				'source_is_broken',
 				'total_rating',
 				'up_rating',
 				'down_rating',

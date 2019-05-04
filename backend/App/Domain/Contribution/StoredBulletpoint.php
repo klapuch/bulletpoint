@@ -36,6 +36,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'compared_theme_id',
 				'source_link',
 				'source_type',
+				'source_is_broken',
 				'content',
 				'root_bulletpoint_id',
 			]))->from(['web.contributed_bulletpoints'])
@@ -56,6 +57,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 				'source' => [
 					'link' => $row['source_link'],
 					'type' => $row['source_type'],
+					'is_broken' => $row['source_is_broken'],
 				],
 			],
 		);

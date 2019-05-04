@@ -53,6 +53,7 @@ final class StoredThemes implements Themes {
 					'alternative_names',
 					'tags',
 					'reference_url',
+					'reference_is_broken',
 					'related_themes_id',
 					'user_id',
 					'created_at',

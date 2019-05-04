@@ -53,10 +53,14 @@
             "properties": {
                 "url": {
                     "type": "string"
+                },
+                "is_broken": {
+                    "type": "boolean"
                 }
             },
             "required": [
-                "url"
+                "url",
+                "is_broken"
             ]
         },
         "related_themes_id": {

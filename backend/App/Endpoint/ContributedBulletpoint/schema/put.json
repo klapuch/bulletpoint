@@ -20,11 +20,7 @@
                         "web"
                     ]
                 }
-            },
-            "required": [
-                "link",
-                "type"
-            ]
+            }
         },
         "referenced_theme_id": {
             "type": "array",

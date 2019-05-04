@@ -33,6 +33,7 @@ final class StoredTheme implements Theme {
 				'alternative_names',
 				'tags',
 				'reference_url',
+				'reference_is_broken',
 				'user_id',
 				'created_at',
 				'is_starred',
@@ -57,6 +58,7 @@ final class StoredTheme implements Theme {
 				'is_empty' => $row['is_empty'],
 				'reference' => [
 					'url' => $row['reference_url'],
+					'is_broken' => $row['reference_is_broken'],
 				],
 			],
 		);

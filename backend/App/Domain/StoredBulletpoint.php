@@ -34,6 +34,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'compared_theme_id',
 				'source_link',
 				'source_type',
+				'source_is_broken',
 				'content',
 				'total_rating',
 				'up_rating',
@@ -67,6 +68,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				'source' => [
 					'link' => $row['source_link'],
 					'type' => $row['source_type'],
+					'is_broken' => $row['source_is_broken'],
 				],
 			],
 		);

@@ -20,11 +20,15 @@
                         "head",
                         "web"
                     ]
+                },
+                "is_broken": {
+                    "type": "boolean"
                 }
             },
             "required": [
                 "link",
-                "type"
+                "type",
+                "is_broken"
             ]
         },
         "user_id": {

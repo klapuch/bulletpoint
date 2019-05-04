@@ -48,8 +48,11 @@ final class Structure {
 				],
 				'reference' => [
 					'type' => 'object',
-					'properties' => ['url' => ['type' => 'string']],
-					'required' => ['url'],
+					'properties' => [
+						'url' => ['type' => 'string'],
+						'is_broken' => ['type' => 'boolean'],
+					],
+					'required' => ['url', 'is_broken'],
 				],
 				'related_themes_id' => [
 					'type' => 'array',
@@ -76,7 +79,12 @@ final class Structure {
 				],
 				'name' => $get['properties']['name'],
 				'alternative_names' => $get['properties']['alternative_names'],
-				'reference' => $get['properties']['reference'],
+				'reference' => [
+					'type' => 'object',
+					'properties' => [
+						'url' => $get['properties']['reference']['properties']['url'],
+					],
+				],
 			],
 			'required' => ['tags', 'name', 'reference'],
 			'type' => 'object',

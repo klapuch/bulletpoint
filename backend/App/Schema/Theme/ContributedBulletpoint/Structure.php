@@ -32,8 +32,9 @@ final class Structure {
 							'type' => 'string',
 							'enum' => (new Schema\PostgresConstant('sources_type', $this->connection))->values(),
 						],
+						'is_broken' => ['type' => 'boolean'],
 					],
-					'required' => ['link', 'type'],
+					'required' => ['link', 'type', 'is_broken'],
 				],
 				'content' => [
 					'type' => 'string',
@@ -69,7 +70,13 @@ final class Structure {
 			'additionalProperties' => false,
 			'properties' => [
 				'content' => $get['properties']['content'],
-				'source' => $get['properties']['source'],
+				'source' => [
+					'type' => 'object',
+					'properties' => [
+						'link' => $get['properties']['source']['properties']['link'],
+						'type' => $get['properties']['source']['properties']['type'],
+					],
+				],
 				'referenced_theme_id' => $get['properties']['referenced_theme_id'],
 				'compared_theme_id' => $get['properties']['compared_theme_id'],
 				'group' => $get['properties']['group'],

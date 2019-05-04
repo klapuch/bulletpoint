@@ -37,6 +37,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 				'root_bulletpoint_id',
 				'source_link',
 				'source_type',
+				'source_is_broken',
 			]))->from(['web.contributed_bulletpoints'])
 				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
 				->where('user_id = :user_id', ['user_id' => $this->user->id()]),

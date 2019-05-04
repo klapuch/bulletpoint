@@ -874,6 +874,7 @@ CREATE VIEW web.themes AS
 	SELECT
 		themes.id, themes.name, json_tags.tags, themes.created_at,
 		"references".url AS reference_url,
+		broken_references.reference_id IS NOT NULL AS reference_is_broken,
 		users.id AS user_id,
 		COALESCE(json_theme_alternative_names.alternative_names, '[]') AS alternative_names,
 		user_starred_themes.id IS NOT NULL AS is_starred,
@@ -883,6 +884,7 @@ CREATE VIEW web.themes AS
 	FROM public.themes
 	JOIN users ON users.id = themes.user_id
 	LEFT JOIN "references" ON "references".id = themes.reference_id
+	LEFT JOIN broken_references ON broken_references.reference_id = themes.reference_id
 	LEFT JOIN (
 		SELECT theme_id, jsonb_agg(tags.*) AS tags
 		FROM theme_tags
@@ -983,7 +985,9 @@ CREATE VIEW web.tagged_themes AS
 CREATE VIEW web.bulletpoints AS
 	SELECT
 		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id, bulletpoints.created_at,
-		sources.link AS source_link, sources.type AS source_type,
+		sources.link AS source_link,
+		sources.type AS source_type,
+		broken_sources.source_id IS NOT NULL AS source_is_broken,
 			bulletpoint_rating_summary.up_points AS up_rating,
 			bulletpoint_rating_summary.down_points AS down_rating,
 			(bulletpoint_rating_summary.up_points + bulletpoint_rating_summary.down_points) AS total_rating,
@@ -999,6 +1003,7 @@ CREATE VIEW web.bulletpoints AS
 	) AS user_bulletpoint_ratings ON user_bulletpoint_ratings.bulletpoint_id = bulletpoints.id
 	LEFT JOIN bulletpoint_rating_summary ON bulletpoint_rating_summary.bulletpoint_id = bulletpoints.id
 	LEFT JOIN public.sources ON sources.id = bulletpoints.source_id
+	LEFT JOIN public.broken_sources ON broken_sources.source_id = sources.id
 	LEFT JOIN public.bulletpoint_reputations ON bulletpoint_reputations.bulletpoint_id = bulletpoints.id
 	LEFT JOIN (
 		SELECT bulletpoint_id, jsonb_agg(public.bulletpoint_referenced_themes.theme_id) AS referenced_theme_id
@@ -1154,12 +1159,13 @@ CREATE TRIGGER bulletpoints_trigger_row_iu
 CREATE VIEW web.contributed_bulletpoints AS
 SELECT
 	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id,
-	sources.link AS source_link, sources.type AS source_type,
+	sources.link AS source_link, sources.type AS source_type, broken_sources.source_id IS NOT NULL AS source_is_broken,
 	COALESCE(bulletpoint_referenced_themes.referenced_theme_id, '[]') AS referenced_theme_id,
 	COALESCE(bulletpoint_theme_comparisons.compared_theme_id, '[]') AS compared_theme_id,
 	bulletpoint_groups.root_bulletpoint_id
 	FROM public.contributed_bulletpoints
 	LEFT JOIN public.sources ON sources.id = contributed_bulletpoints.source_id
+	LEFT JOIN public.broken_sources ON broken_sources.source_id = sources.id
 	LEFT JOIN (
 		SELECT bulletpoint_id, jsonb_agg(public.bulletpoint_referenced_themes.theme_id) AS referenced_theme_id
 		FROM public.bulletpoint_referenced_themes

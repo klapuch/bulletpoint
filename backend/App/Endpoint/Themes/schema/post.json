@@ -29,10 +29,7 @@
                 "url": {
                     "type": "string"
                 }
-            },
-            "required": [
-                "url"
-            ]
+            }
         }
     },
     "required": [
