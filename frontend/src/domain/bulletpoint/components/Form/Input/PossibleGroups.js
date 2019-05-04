@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Roots from './Roots';
+import Groups from './Groups';
 import * as bulletpoints from '../../../selects';
 import type { FetchedBulletpointType, PostedBulletpointType } from '../../../types';
 
@@ -10,10 +10,10 @@ type Props = {|
   +bulletpoint: { id: number|null, ...PostedBulletpointType },
   +possibleRoots: Array<FetchedBulletpointType>
 |};
-class PossibleRoots extends React.PureComponent<Props> {
+class PossibleGroups extends React.PureComponent<Props> {
   render() {
     return (
-      <Roots
+      <Groups
         onSelectChange={this.props.onSelectChange}
         hasChildrens={this.props.hasChildrens}
         bulletpoint={this.props.bulletpoint}
@@ -28,4 +28,4 @@ const mapStateToProps = (state, { themeId, bulletpoint: { id: bulletpointId } })
     .filter(bulletpoint => bulletpoint.id !== bulletpointId),
   hasChildrens: bulletpoints.hasChildrens(themeId, bulletpointId, state),
 });
-export default connect(mapStateToProps, null)(PossibleRoots);
+export default connect(mapStateToProps, null)(PossibleGroups);

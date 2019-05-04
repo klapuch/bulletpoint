@@ -16,7 +16,7 @@ import { FORM_TYPE_DEFAULT } from './types';
 import ReferencedThemes from './Input/ReferencedThemes';
 import ComparedThemes from './Input/ComparedThemes';
 import { fromFetchedToPosted } from '../../types';
-import PossibleRoots from './Input/PossibleRoots';
+import PossibleGroups from './Input/PossibleGroups';
 
 type Props = {|
   +bulletpoint?: FetchedBulletpointType,
@@ -198,7 +198,7 @@ export default class extends React.Component<Props, State> {
             onSelectChange={this.handleComparedTheme}
             themes={this.state.comparedThemes}
           />
-          <PossibleRoots
+          <PossibleGroups
             themeId={this.props.theme.id}
             onSelectChange={this.onChange}
             bulletpoint={{ id: bulletpointId, ...bulletpoint }}
