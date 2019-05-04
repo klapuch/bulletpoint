@@ -1,9 +1,8 @@
 CREATE FUNCTION tests.rating_step_by_step() RETURNS void AS $BODY$
 DECLARE
 	v_bulletpoint_id bulletpoints.id%type;
-	v_user_id users.id%type;
+	v_user_id users.id%type NOT NULL DEFAULT samples.users();
 BEGIN
-	SELECT samples.users() INTO v_user_id;
 	SELECT samples.public_bulletpoints(jsonb_build_object('user_id', v_user_id)) INTO v_bulletpoint_id;
 
 	PERFORM assert.same(ARRAY[1, 0], (SELECT ARRAY[up_points, down_points] FROM bulletpoint_rating_summary WHERE bulletpoint_id = v_bulletpoint_id));

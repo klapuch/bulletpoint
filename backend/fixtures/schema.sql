@@ -333,7 +333,7 @@ CREATE TABLE access.forgotten_passwords (
 	expire_at timestamp with time zone NOT NULL,
 	CONSTRAINT forgotten_passwords_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT forgotten_passwords_reminder_exact_length CHECK (length(reminder) = 141),
-	CONSTRAINT forgotten_passwords_expire_at_future CHECK (expire_at >= NOW()),
+	CONSTRAINT forgotten_passwords_expire_at_future CHECK (expire_at >= now()),
 	CONSTRAINT forgotten_passwords_expire_at_greater_than_reminded_at CHECK (expire_at > reminded_at)
 );
 CREATE INDEX forgotten_passwords_user_id ON access.forgotten_passwords USING btree (user_id);
