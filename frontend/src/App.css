@@ -29,16 +29,6 @@ html {
 	color: #000 !important;
 }
 
-#footer {
-	height: 60px;
-	background-color: #000;
-}
-
-#footer p {
-	margin-top: 15px;
-	color: #fff;
-}
-
 .opposite-rating {
 	color: #fff !important;
 	font-weight: 700 !important;
@@ -73,16 +63,6 @@ html {
 .badge-guest {
 	float: left !important;
 	margin-right: 5px !important;
-}
-
-#heart {
-	color: #EF6666;
-}
-
-@mediamax-width320px {
-	#footer p {
-		font-size: 1.05em !important;
-	}
 }
 
 .btn-file {

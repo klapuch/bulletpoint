@@ -82,22 +82,6 @@ const Public = ({
             {<Component {...props} />}
           </div>
         </div>
-        <div className="footer navbar-fixed-bottom">
-          <div className="container">
-            <p className="muted credit text-center">
-              <a
-                href="https://github.com/klapuch/bulletpoint"
-                className="no-link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Created with
-                {' '}
-                <span id="heart">❤</span>
-              </a>
-            </p>
-          </div>
-        </div>
       </>
     )}
   />
