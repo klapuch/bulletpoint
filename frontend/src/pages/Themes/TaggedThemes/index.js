@@ -67,7 +67,7 @@ class Themes extends React.Component<Props, State> {
     return (
       <SlugRedirect {...this.props} name={this.getTag()}>
         <Helmet>
-          <title>{`Témata vybraná pro "<strong>${this.getTag()}</strong>"`}</title>
+          <title>{`Témata vybraná pro ${this.getTag()}`}</title>
         </Helmet>
         <h1>Témata vybraná pro &quot;<strong>{this.getTag()}</strong>&quot;</h1>
         <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />
