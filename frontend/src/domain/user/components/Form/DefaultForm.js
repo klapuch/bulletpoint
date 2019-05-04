@@ -71,7 +71,13 @@ class DefaultForm extends React.Component<Props, State> {
           {errors.username && <span className="help-block">{validation.toMessage(errors, 'username')}</span>}
         </div>
         <div className="form-group">
-          <button type="button" onClick={this.handleSubmit} name="enter" className="btn btn-success">
+          <button
+            type="button"
+            onClick={this.handleSubmit}
+            name="enter"
+            className="btn btn-success"
+            disabled={this.props.user.username === user.username}
+          >
             Upravit
           </button>
         </div>
