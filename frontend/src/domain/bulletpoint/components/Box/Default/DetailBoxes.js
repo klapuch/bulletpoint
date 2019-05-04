@@ -81,7 +81,7 @@ class DetailBoxes extends React.Component<Props, State> {
                 highlights={highlightedBulletpointIds}
               />
               {
-                expandBulletpointId === null
+                expandBulletpointId !== bulletpoint.id
                 && !isEmpty(bulletpoint.group.children_bulletpoints)
                 && (
                   <div className="text-center">

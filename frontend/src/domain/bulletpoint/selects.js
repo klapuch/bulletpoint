@@ -24,29 +24,16 @@ export const orderByExpandBulletpoint = (
 
 export const withChildrenGroups = (
   bulletpoints: Array<FetchedBulletpointType>,
-  exceptBulletpointId: ?number,
 ): Array<FetchedBulletpointType> => (
-  bulletpoints.map((bulletpoint) => {
-    if (exceptBulletpointId === bulletpoint.group.root_bulletpoint_id) {
-      return {
-        ...bulletpoint,
-        group: {
-          children_bulletpoints: [],
-          root_bulletpoint_id: null,
-        },
-      };
-    } else {
-      return {
-        ...bulletpoint,
-        group: {
-          ...bulletpoint.group,
-          children_bulletpoints: bulletpoints.filter(
-            b => b.group.root_bulletpoint_id === bulletpoint.id,
-          ),
-        },
-      };
-    }
-  }).filter(
+  bulletpoints.map(bulletpoint => ({
+    ...bulletpoint,
+    group: {
+      ...bulletpoint.group,
+      children_bulletpoints: bulletpoints.filter(
+        b => b.group.root_bulletpoint_id === bulletpoint.id,
+      ),
+    },
+  })).filter(
     bulletpoint => bulletpoint.group.children_bulletpoints.length > 0
       || bulletpoint.group.root_bulletpoint_id === null,
   )
@@ -106,15 +93,22 @@ export const getByThemeGrouped = (theme: number, state: Object): Array<FetchedBu
 export const withExpanded = (
   bulletpoints: Array<FetchedBulletpointType>,
   expandBulletpointId: number|null,
-): Array<FetchedBulletpointType> => (
-  orderByExpandBulletpoint(bulletpoints, expandBulletpointId)
-);
+): Array<FetchedBulletpointType> => {
+  const expansions = [];
+  bulletpoints.forEach((bulletpoint) => {
+    expansions.push(bulletpoint);
+    if (bulletpoint.id === expandBulletpointId) {
+      expansions.push(...bulletpoint.group.children_bulletpoints);
+    }
+  });
+  return expansions;
+};
 export const getByThemeExpanded = (
   theme: number,
   expandBulletpointId: number|null,
   state: Object,
 ): Array<FetchedBulletpointType> => (
-  withExpanded(getByTheme(theme, state), expandBulletpointId)
+  withExpanded(withChildrenGroups(getByTheme(theme, state)), expandBulletpointId)
 );
 export const relatedThemesFetching = (
   state: Object,
