@@ -28,18 +28,6 @@ final class ApplicationConfiguration implements Configuration\Source {
 	}
 
 	private function key(): string {
-		return (string) crc32(
-			array_reduce(
-				[
-					self::CONFIGURATION,
-					self::SECRET_CONFIGURATION,
-					self::ROUTES,
-				],
-				static function(string $key, string $location): string {
-					return $key . filemtime($location);
-				},
-				'',
-			),
-		);
+		return (string) crc32(implode(',', array_map('filemtime', [self::CONFIGURATION, self::SECRET_CONFIGURATION, self::ROUTES])));
 	}
 }
