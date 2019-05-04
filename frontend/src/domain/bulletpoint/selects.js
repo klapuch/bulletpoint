@@ -103,15 +103,18 @@ export const getByThemePossibleRoots = (
 export const getByThemeGrouped = (theme: number, state: Object): Array<FetchedBulletpointType> => (
   withChildrenGroups(getByTheme(theme, state))
 );
+export const withExpanded = (
+  bulletpoints: Array<FetchedBulletpointType>,
+  expandBulletpointId: number|null,
+): Array<FetchedBulletpointType> => (
+  orderByExpandBulletpoint(bulletpoints, expandBulletpointId)
+);
 export const getByThemeExpanded = (
   theme: number,
   expandBulletpointId: number|null,
   state: Object,
 ): Array<FetchedBulletpointType> => (
-  orderByExpandBulletpoint(
-    withChildrenGroups(getByTheme(theme, state), expandBulletpointId),
-    expandBulletpointId,
-  )
+  withExpanded(getByTheme(theme, state), expandBulletpointId)
 );
 export const relatedThemesFetching = (
   state: Object,

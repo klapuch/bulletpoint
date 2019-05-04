@@ -1,5 +1,8 @@
 import {
-  fetchedAll, relatedThemesFetching, withChildrenGroups, orderByExpandBulletpoint,
+  fetchedAll,
+  relatedThemesFetching,
+  withChildrenGroups,
+  orderByExpandBulletpoint,
 } from '../selects';
 
 test('ordering by expand - first root', () => {
@@ -63,12 +66,9 @@ test('ordering by expand - nullable expand', () => {
   );
 });
 
-test('empty as not fetchedAll', () => {
+test('fetchedAll', () => {
   expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: {} } } })).toBe(true);
   expect(fetchedAll(1, { themeBulletpoints: { 1: {} } })).toBe(false);
-});
-
-test('fetchedAll as not empty', () => {
   expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: { foo: 'bar' } } } })).toBe(true);
 });
 
