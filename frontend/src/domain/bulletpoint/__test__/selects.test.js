@@ -2,8 +2,13 @@ import {
   fetchedAll,
   relatedThemesFetching,
   withChildrenGroups,
-  orderByExpandBulletpoint,
+  orderByExpandBulletpoint, isFetching,
 } from '../selects';
+import reducer from '../reducer';
+import {
+  requestedAll,
+  invalidatedAll, receivedAll,
+} from '../actions';
 
 test('ordering by expand - first root', () => {
   expect(orderByExpandBulletpoint(
@@ -67,9 +72,15 @@ test('ordering by expand - nullable expand', () => {
 });
 
 test('fetchedAll', () => {
-  expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: {} } } })).toBe(true);
-  expect(fetchedAll(1, { themeBulletpoints: { 1: {} } })).toBe(false);
-  expect(fetchedAll(1, { themeBulletpoints: { 1: { payload: { foo: 'bar' } } } })).toBe(true);
+  expect(fetchedAll(1, { themeBulletpoints: reducer({}, requestedAll(1)) })).toBe(true);
+  expect(fetchedAll(1, { themeBulletpoints: reducer({}, receivedAll(1, [])) })).toBe(true);
+  expect(fetchedAll(1, { themeBulletpoints: reducer({}, invalidatedAll(1)) })).toBe(false);
+});
+
+test('is fetching', () => {
+  expect(isFetching(1, { themeBulletpoints: reducer({}, requestedAll(1)) })).toBe(true);
+  expect(isFetching(1, { themeBulletpoints: reducer({}, receivedAll(1, [])) })).toBe(false);
+  expect(isFetching(1, { themeBulletpoints: reducer({}, invalidatedAll(1)) })).toBe(true);
 });
 
 test('relatedThemesFetching', () => {
