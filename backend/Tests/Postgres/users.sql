@@ -18,11 +18,9 @@ END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION tests.changing_image() RETURNS void AS $BODY$
 DECLARE
-	v_user_id users.id%type;
+	v_user_id users.id%type NOT NULL DEFAULT samples.users();
 	c_destination_image constant character varying default 'images/avatars/abc1.jpg';
 BEGIN
-	SELECT samples.users() INTO v_user_id;
-
 	-- updating from default to new
 	UPDATE users SET avatar_filename = c_destination_image;
 	PERFORM assert.same(c_destination_image, (SELECT avatar_filename FROM users WHERE id = v_user_id));
@@ -36,7 +34,7 @@ END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION tests.throwing_on_existing() RETURNS void AS $BODY$
 DECLARE
-	v_user_id users.id%type;
+	v_user_id users.id%type NOT NULL DEFAULT samples.users();
 	c_destination_image constant character varying default 'images/avatars/abc1.jpg';
 	c_destination_image_trash constant character varying default 'images/avatars/abc2.jpg';
 BEGIN

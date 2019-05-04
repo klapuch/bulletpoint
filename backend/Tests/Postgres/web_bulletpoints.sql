@@ -14,9 +14,8 @@ END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION tests.updating_with_references() RETURNS void AS $BODY$
 DECLARE
-	v_bulletpoint_id bulletpoints.id%type;
+	v_bulletpoint_id bulletpoints.id%type NOT NULL DEFAULT samples.public_bulletpoints();
 BEGIN
-	SELECT samples.public_bulletpoints() INTO v_bulletpoint_id;
 	UPDATE web.bulletpoints SET
 		content = 'ABC [[foo]] bar [[baz]]',
 		referenced_theme_id = format('[%s,%s]', (SELECT samples.themes()), (SELECT samples.themes()))::jsonb
@@ -27,16 +26,11 @@ END $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION tests.adding_with_comparisons() RETURNS void AS $BODY$
 DECLARE
-	v_theme_id1 themes.id%type;
-	v_theme_id2 themes.id%type;
-	v_theme_id3 themes.id%type;
-	v_tag_id tags.id%type;
+	v_theme_id1 themes.id%type NOT NULL DEFAULT samples.themes();
+	v_theme_id2 themes.id%type NOT NULL DEFAULT samples.themes();
+	v_theme_id3 themes.id%type NOT NULL DEFAULT samples.themes();
+	v_tag_id tags.id%type NOT NULL DEFAULT samples.tags();
 BEGIN
-    v_tag_id = samples.tags();
-	v_theme_id1 = samples.themes();
-	v_theme_id2 = samples.themes();
-	v_theme_id3 = samples.themes();
-
 	PERFORM samples.theme_tags(jsonb_build_object('tag_id', v_tag_id, 'theme_id', v_theme_id1));
 	PERFORM samples.theme_tags(jsonb_build_object('tag_id', v_tag_id, 'theme_id', v_theme_id2));
 	PERFORM samples.theme_tags(jsonb_build_object('tag_id', v_tag_id, 'theme_id', v_theme_id3));
@@ -56,16 +50,11 @@ END $BODY$ LANGUAGE plpgsql VOLATILE;
 CREATE FUNCTION tests.updating_with_comparisons() RETURNS void AS $BODY$
 DECLARE
 	v_bulletpoint_id bulletpoints.id%type;
-	v_theme_id1 themes.id%type;
-	v_theme_id2 themes.id%type;
-	v_theme_id3 themes.id%type;
-	v_tag_id tags.id%type;
+	v_theme_id1 themes.id%type NOT NULL DEFAULT samples.themes();
+	v_theme_id2 themes.id%type NOT NULL DEFAULT samples.themes();
+	v_theme_id3 themes.id%type NOT NULL DEFAULT samples.themes();
+	v_tag_id tags.id%type NOT NULL DEFAULT samples.tags();
 BEGIN
-	v_tag_id = samples.tags();
-	v_theme_id1 = samples.themes();
-	v_theme_id2 = samples.themes();
-	v_theme_id3 = samples.themes();
-
 	PERFORM samples.theme_tags(jsonb_build_object('tag_id', v_tag_id, 'theme_id', v_theme_id1));
 	PERFORM samples.theme_tags(jsonb_build_object('tag_id', v_tag_id, 'theme_id', v_theme_id2));
 	PERFORM samples.theme_tags(jsonb_build_object('tag_id', v_tag_id, 'theme_id', v_theme_id3));
