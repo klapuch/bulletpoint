@@ -10,6 +10,7 @@ import { getMe } from '../../index';
 type Props = {|
   +edit: (PostedUserType) => (Promise<any>),
   +receivedError: (string),
+  +history: Object,
 |};
 type State = {|
   me: MeType|null,
@@ -27,6 +28,7 @@ class HttpForm extends React.Component<Props, State> {
   handleSubmit = (postedUser: PostedUserType) => this.props.edit(postedUser)
     .then(user.refresh)
     .then(this.reload)
+    .then(() => this.props.history.push(this.props.history.pathname))
     // $FlowFixMe correct string from endpoint.js
     .catch(this.props.receivedError);
 
