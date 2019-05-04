@@ -14,7 +14,7 @@ export default function ({
     <div className="form-group">
       <label htmlFor="group_root_bulletpoint_id">Skupina</label>
       <select
-        disabled={hasChildrens}
+        disabled={hasChildrens || roots.length === 0}
         className="form-control"
         id="group_root_bulletpoint_id"
         name="group_root_bulletpoint_id"
