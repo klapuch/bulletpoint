@@ -1,17 +1,15 @@
 // @flow
 import React from 'react';
-import Source from '../../../../theme/components/Source';
+import Source from './Source';
 import type { FetchedBulletpointType } from '../../../types';
 
 type Props = {|
   +children: FetchedBulletpointType,
 |};
-const Details = ({
-  children,
-}: Props) => (
+const Details = ({ children }: Props) => (
   <small>
     <cite>
-      <Source type={children.source.type} link={children.source.link} />
+      <Source>{children.source}</Source>
     </cite>
   </small>
 );

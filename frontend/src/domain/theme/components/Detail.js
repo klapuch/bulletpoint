@@ -14,7 +14,7 @@ type Props = {|
 |};
 const Detail = ({ theme }: Props) => (
   <>
-    <Reference url={theme.reference.url} />
+    <Reference>{theme.reference}</Reference>
     <Separator />
     <Labels tags={theme.tags} link={(id, slug) => `/themes/tag/${id}/${slug}`} />
   </>

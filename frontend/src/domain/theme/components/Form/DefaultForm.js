@@ -1,12 +1,13 @@
 // @flow
 import React from 'react';
-import { isEmpty, zipObject } from 'lodash';
+import { zipObject } from 'lodash';
 // $FlowFixMe temporary - https://github.com/facebook/flow/issues/869
 import Select from 'react-select';
 import classNames from 'classnames';
 import type { ErrorThemeType, FetchedThemeType, PostedThemeType } from '../../types';
 import type { FetchedTagType } from '../../../tags/types';
 import * as validation from '../../validation';
+import { fromFetchedToPosted } from '../../types';
 
 type TargetType = {|
   target: {|
@@ -44,21 +45,9 @@ class DefaultForm extends React.Component<Props, State> {
   state = initState;
 
   componentDidMount(): void {
-    if (!isEmpty(this.props.theme)) {
-      const {
-        // $FlowFixMe Checked via show
-        name, tags, reference, alternative_names,
-      } = this.props.theme;
-      this.setState({
-        theme: {
-          name,
-          tags: tags.map(tag => tag.id),
-          alternative_names,
-          reference: {
-            url: reference.url,
-          },
-        },
-      });
+    const { theme } = this.props;
+    if (typeof theme !== 'undefined' && theme !== null) {
+      this.setState({ theme: fromFetchedToPosted(theme) });
     }
   }
 

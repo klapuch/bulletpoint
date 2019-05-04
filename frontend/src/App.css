@@ -131,3 +131,11 @@ form .error {
 .red {
 	color: #8f0000 !important;
 }
+
+.broken_link {
+	color: #d21927;
+}
+
+.broken_link:hover {
+	color: #d21927;
+}

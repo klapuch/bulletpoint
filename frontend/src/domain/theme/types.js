@@ -1,5 +1,11 @@
 // @flow
+import { omit } from 'lodash';
 import type { FetchedTagType } from '../tags/types';
+
+export type ReferenceType = {|
+  +url: string,
+  +is_broken: boolean,
+|};
 
 export type FetchedThemeType = {|
   +id: number,
@@ -12,9 +18,7 @@ export type FetchedThemeType = {|
   +name: string,
   +created_at: string,
   +is_empty: boolean,
-  +reference: {|
-    +url: string,
-  |}
+  +reference: ReferenceType,
 |};
 export type PostedThemeType = {|
   +tags: Array<number>,
@@ -29,3 +33,8 @@ export type ErrorThemeType = {|
   +name: ?string,
   +reference_url: ?string,
 |};
+
+export const fromFetchedToPosted = (theme: FetchedThemeType) => ({
+  ...omit(theme, ['id', 'user_id', 'is_starred', 'starred_at', 'tags', 'related_themes_id', 'related_themes', 'created_at', 'is_empty', 'reference.is_broken']),
+  tags: theme.tags.map(tag => tag.id),
+});
