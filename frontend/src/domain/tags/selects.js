@@ -8,7 +8,7 @@ export const fetchedAll = (
 
 export const isFetching = (
   state: Object,
-): boolean => state.tags.all.fetching;
+): boolean => isEmpty(state.tags.all) || state.tags.all.fetching;
 
 export const getAll = (
   state: Object,
@@ -21,7 +21,7 @@ export const fetchedStarred = (
 
 export const isStarredFetching = (
   state: Object,
-): boolean => state.tags.starred.fetching;
+): boolean => isEmpty(state.tags.starred) || state.tags.starred.fetching;
 
 export const getStarred = (
   state: Object,

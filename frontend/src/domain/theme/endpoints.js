@@ -17,6 +17,7 @@ import * as response from '../../api/response';
 import type { FetchedThemeType, PostedThemeType } from './types';
 import type { PaginationType } from '../../api/dataset/types';
 import type { FetchedTagType } from '../tags/types';
+import { invalidatedStarred } from '../tags/actions';
 
 export const fetchSingle = (
   id: number,
@@ -61,6 +62,7 @@ export const starOrUnstar = (
     .then(response => response.data)
     .then(theme => theme.is_starred)
     .then(starred => dispatch(receivedStarChange(themeId, starred)))
+    .then(() => dispatch(invalidatedStarred()))
     .catch(() => dispatch(receivedStarChange(themeId, !is_starred)));
 };
 
