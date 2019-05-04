@@ -1041,10 +1041,20 @@ BEGIN
 	SET link = new.source_link, type = new.source_type
 	WHERE id = v_source_id;
 
-	IF old.root_bulletpoint_id IS DISTINCT FROM new.root_bulletpoint_id THEN
-		INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (new.id, new.root_bulletpoint_id)
-		ON CONFLICT (bulletpoint_id) DO UPDATE SET root_bulletpoint_id = EXCLUDED.root_bulletpoint_id;
-	END IF;
+	<<l_groups>>
+	BEGIN
+		IF old.root_bulletpoint_id IS DISTINCT FROM new.root_bulletpoint_id THEN
+			IF new.root_bulletpoint_id IS NULL THEN
+				DELETE FROM bulletpoint_groups
+				WHERE root_bulletpoint_id = old.root_bulletpoint_id
+				AND bulletpoint_id = new.id;
+			ELSE
+				INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (new.id, new.root_bulletpoint_id)
+				ON CONFLICT (bulletpoint_id) DO UPDATE SET root_bulletpoint_id = EXCLUDED.root_bulletpoint_id;
+			END IF;
+		END IF;
+	END l_groups;
+
 
 	<<l_referenced_themes>>
 	DECLARE
