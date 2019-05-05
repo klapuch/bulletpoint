@@ -13,8 +13,8 @@ set('allow_anonymous_stats', false);
 
 set('shared_dirs', ['backend/logs', 'backend/data']);
 
-host('178.63.68.231')
-	->user('root')
+host('95.168.218.174')
+	->user('bulletpoint')
 	->set('deploy_path', '/var/www/bulletpoint');
 
 task('composer:install', static function (): void {
@@ -23,8 +23,8 @@ task('composer:install', static function (): void {
 });
 
 task('services:reload', static function (): void {
-	run('service nginx reload');
-	run('service php7.3-fpm reload');
+	run('sudo /usr/sbin/service nginx reload');
+	run('sudo /usr/sbin/service php7.3-fpm reload');
 });
 
 task('cache:clear', static function (): void {
@@ -42,24 +42,24 @@ task('migrations:run', static function (): void {
 });
 
 task('nginx:config:move', static function (): void {
-	run('cp {{release_path}}/docker/nginx/api.prod.conf /etc/nginx/sites-available/api.conf');
-	run('cp {{release_path}}/docker/nginx/api.prod.conf /etc/nginx/sites-enabled/api.conf');
-	run('cp {{release_path}}/docker/nginx/frontend.prod.conf /etc/nginx/sites-available/frontend.conf');
-	run('cp {{release_path}}/docker/nginx/frontend.prod.conf /etc/nginx/sites-enabled/frontend.conf');
-	run('cp {{release_path}}/docker/nginx/static.prod.conf /etc/nginx/sites-available/static.conf');
-	run('cp {{release_path}}/docker/nginx/static.prod.conf /etc/nginx/sites-enabled/static.conf');
-	run('cp {{release_path}}/docker/nginx/nginx.prod.conf /etc/nginx/nginx.conf');
-	run('cp {{release_path}}/docker/nginx/php.prod.conf /etc/nginx/php.conf');
-	run('cp {{release_path}}/docker/nginx/preflight.conf /etc/nginx/preflight.conf');
-	run('cp {{release_path}}/docker/nginx/preflight_headers.conf /etc/nginx/preflight_headers.conf');
-	run('cp {{release_path}}/docker/nginx/routes.conf /etc/nginx/routes.conf');
-	run('cp {{release_path}}/docker/nginx/security_headers.conf /etc/nginx/security_headers.conf');
-	run('cp {{release_path}}/docker/nginx/letsencrypt.conf /etc/nginx/letsencrypt.conf');
+	run('sudo cp {{release_path}}/docker/nginx/api.prod.conf /etc/nginx/sites-available/api.conf');
+	run('sudo cp {{release_path}}/docker/nginx/api.prod.conf /etc/nginx/sites-enabled/api.conf');
+	run('sudo cp {{release_path}}/docker/nginx/frontend.prod.conf /etc/nginx/sites-available/frontend.conf');
+	run('sudo cp {{release_path}}/docker/nginx/frontend.prod.conf /etc/nginx/sites-enabled/frontend.conf');
+	run('sudo cp {{release_path}}/docker/nginx/static.prod.conf /etc/nginx/sites-available/static.conf');
+	run('sudo cp {{release_path}}/docker/nginx/static.prod.conf /etc/nginx/sites-enabled/static.conf');
+	run('sudo cp {{release_path}}/docker/nginx/nginx.prod.conf /etc/nginx/nginx.conf');
+	run('sudo cp {{release_path}}/docker/nginx/php.prod.conf /etc/nginx/php.conf');
+	run('sudo cp {{release_path}}/docker/nginx/preflight.conf /etc/nginx/preflight.conf');
+	run('sudo cp {{release_path}}/docker/nginx/preflight_headers.conf /etc/nginx/preflight_headers.conf');
+	run('sudo cp {{release_path}}/docker/nginx/routes.conf /etc/nginx/routes.conf');
+	run('sudo cp {{release_path}}/docker/nginx/security_headers.conf /etc/nginx/security_headers.conf');
+	run('sudo cp {{release_path}}/docker/nginx/letsencrypt.conf /etc/nginx/letsencrypt.conf');
 });
 
 task('php:config:move', static function (): void {
-	run('cp {{release_path}}/docker/php-fpm/php.prod.ini /etc/php/7.3/fpm/php.ini');
-	run('cp {{release_path}}/docker/php-fpm/php.prod.ini /etc/php/7.3/cli/php.ini');
+	run('sudo cp {{release_path}}/docker/php-fpm/php.prod.ini /etc/php/7.3/fpm/php.ini');
+	run('sudo cp {{release_path}}/docker/php-fpm/php.prod.ini /etc/php/7.3/cli/php.ini');
 });
 
 task('react:build', static function (): void {

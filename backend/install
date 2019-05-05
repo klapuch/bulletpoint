@@ -1,5 +1,9 @@
 apt-get update
-apt-get install curl apt-transport-https ca-certificates vim gnupg software-properties-common make git sudo zip unzip
+apt-get install sudo
+adduser bulletpoint
+usermod -a -G sudo bulletpoint
+
+apt-get install curl apt-transport-https ca-certificates vim gnupg software-properties-common make git sudo zip unzip htop fail2ban
 curl https://nginx.org/keys/nginx_signing.key -O nginx_signing.key
 apt-key add nginx_signing.key
 rm nginx_signing.key
@@ -10,16 +14,19 @@ deb-src http://nginx.org/packages/debian/ stretch nginx
 
 apt-get update
 apt-get install nginx
+apt-get install nginx-module-image-filter
 
 wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
-apt-get install php7.3-fpm php7.3-xsl php7.3-curl php7.3-mbstring php7.3-zip php7.3-pgsql
+apt-get update
+apt-get install php7.3-fpm php7.3-xsl php7.3-curl php7.3-mbstring php7.3-zip php7.3-pgsql php7.3-gd
 apt-get install php-apcu php-redis php-igbinary
 
 
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RELEASE=$(lsb_release -cs)
 echo "deb http://apt.postgresql.org/pub/repos/apt/ ${RELEASE}"-pgdg main | tee /etc/apt/sources.list.d/pgdg.list
+apt-get update
 apt install postgresql-11
 
 
@@ -30,6 +37,7 @@ mv /etc/redis/redis.conf /etc/redis/redis-cache.conf
 cp /etc/redis/redis-cache.conf /etc/redis/redis-session.conf
 chown redis.redis /etc/redis/redis-session.conf
 
+vim /etc/redis/redis-cache.conf
 pidfile /var/run/redis/redis-server-cache.pid
 port 6379
 dbfilename dump-cache.rdb
@@ -39,6 +47,7 @@ maxmemory 500mb
 mv /etc/init.d/redis-server /etc/init.d/redis-server-cache
 cp /etc/init.d/redis-server-cache /etc/init.d/redis-server-session
 
+vim /etc/init.d/redis-server-cache
 NAME=redis-server-cache
 DESC=redis-server-cache
 DAEMON_ARGS=/etc/redis/redis-cache.conf
@@ -48,6 +57,7 @@ PIDFILE=$RUNDIR/redis-server-cache.pid
 mv /lib/systemd/system/redis-server.service /lib/systemd/system/redis-server-cache.service
 cp /lib/systemd/system/redis-server-cache.service /lib/systemd/system/redis-server-session.service
 
+vim /lib/systemd/system/redis-server-cache.service
 ExecStart=/usr/bin/redis-server /etc/redis/redis-cache.conf
 PIDFile=/var/run/redis/redis-server-cache.pid
 Alias=redis.service-cache
@@ -76,10 +86,6 @@ sudo -u postgres createdb bulletpoint
 curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 
-adduser bulletpoint
-usermod -a -G sudo bulletpoint
-
-
 vim /etc/php/7.3/fpm/pool.d/www.conf
 user = bulletpoint
 group = bulletpoint
@@ -90,6 +96,45 @@ listen.group = bulletpoint
 ssh-keygen -t rsa -b 4096
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
+
+sudo visudo
+bulletpoint ALL=(ALL) NOPASSWD: ALL
+
+
+ssh-copy-id -i ~/.ssh/id_rsa.pub bulletpoint@95.168.218.174
+
+ssh-keygen -t rsa -b 4096 -C 'build.bulletpoint@travis-ci.org' -f ./id_rsa
+travis encrypt-file id_rsa --add
+ssh-copy-id -i id_rsa.pub bulletpoint@95.168.218.174
+
+ssh-keyscan -H 140.82.118.3 >> ~/.ssh/known_hosts
+ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+rm -f id_rsa id_rsa.pub
+
+
+sudo nano /etc/dehydrated/conf.d/config.sh
+
+CA="https://acme-staging.api.letsencrypt.org/directory" # as staging
+BASEDIR="/etc/letsencrypt"
+WELLKNOWN="/data/www/letsencrypt"
+CONTACT_EMAIL="klapuchdominik@gmail.com"
+# afters tests - remove accounts and certs !!
+
+
+sudo mkdir /etc/letsencrypt
+mkdir /data/www/letsencrypt
+
+sudo nano /etc/dehydrated/domains.txt
+api.bulletpoint.cz
+static.bulletpoint.cz
+www.bulletpoint.cz
+
+
+sudo vim /etc/ssh/sshd_config
+PermitRootLogin no
+PasswordAuthentication no
+PermitEmptyPasswords no
 
 
 mkdir /backup
