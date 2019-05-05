@@ -48,6 +48,7 @@ final class SearchTaggedThemes implements Themes {
 						'themes.created_at',
 						'themes.is_starred',
 						'themes.starred_at',
+						'themes.is_empty',
 						'themes.related_themes_id',
 					]),
 					$this->keyword,
