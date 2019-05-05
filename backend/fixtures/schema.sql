@@ -1211,12 +1211,13 @@ CREATE TABLE log.cron_jobs (
 
 CREATE FUNCTION cron_jobs_trigger_row_bi() RETURNS trigger AS $BODY$
 BEGIN
-	IF (new.status = 'processing' AND (
-		SELECT status NOT IN ('succeed', 'failed')
-		FROM log.cron_jobs
-		WHERE name = new.name
-		ORDER BY id DESC
-		LIMIT 1
+	IF (
+		new.status = 'processing' AND (
+			SELECT status NOT IN ('succeed', 'failed')
+			FROM log.cron_jobs
+			WHERE name = new.name
+			ORDER BY id DESC
+			LIMIT 1
 		)
 	) THEN
 		RAISE EXCEPTION USING MESSAGE = format('Job "%s" can not be run, because previous is not fulfilled.', new.name);
