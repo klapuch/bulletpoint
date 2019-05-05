@@ -1,13 +1,15 @@
-FROM postgres:11-alpine
+FROM klapuch/bulletpoint:postgres
 
-RUN apk add --no-cache supervisor make git findutils gcc libc-dev icu-dev
-RUN mkdir /etc/supervisor.d
+COPY .bash_aliases /root/.bash_aliases
+COPY .psqlrc /root/.psqlrc
+
 COPY cron.ini /etc/supervisor.d/cron.ini
 
 COPY postgresql.dev.conf /etc/postgresql.conf
 
-COPY .bash_aliases /root/.bash_aliases
-COPY .psqlrc /root/.psqlrc
+# CRON
+ADD crontab /crontab
+RUN /usr/bin/crontab /crontab
 
 RUN echo '. /root/.bash_aliases' >> ~/.bashrc
 
@@ -21,18 +23,16 @@ RUN chmod +x /usr/bin/import
 RUN chmod +x /usr/bin/test_import
 RUN chmod +x /usr/bin/remove_tests
 
-# CRON
-ADD crontab /crontab
-RUN /usr/bin/crontab /crontab
-
 # PLPGSQL_CHECK EXTENSION
-COPY plpgsql_check/plpgsql_check.so /usr/local/lib/postgresql/plpgsql_check.so
-COPY plpgsql_check/plpgsql_check.control /usr/local/share/postgresql/extension/plpgsql_check.control
-COPY plpgsql_check/plpgsql_check--1.6.sql /usr/local/share/postgresql/extension/plpgsql_check--1.6.sql
-RUN chmod 0644 /usr/local/lib/postgresql/plpgsql_check.so
-RUN chmod 0644 /usr/local/share/postgresql/extension/plpgsql_check.control
-RUN chmod 0644 /usr/local/share/postgresql/extension/plpgsql_check--1.6.sql
+RUN git clone https://github.com/okbob/plpgsql_check.git
+WORKDIR plpgsql_check
+RUN make clean
+RUN make all
+RUN make install
 
-RUN rm -rf /var/cache/apk/*
-
-ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+RUN /bin/mkdir -p '/usr/local/lib/postgresql'
+RUN /bin/mkdir -p '/usr/local/share/postgresql/extension'
+RUN /bin/mkdir -p '/usr/local/share/postgresql/extension'
+RUN /usr/bin/install -c -m 755  plpgsql_check.so '/usr/local/lib/postgresql/plpgsql_check.so'
+RUN /usr/bin/install -c -m 644 .//plpgsql_check.control '/usr/local/share/postgresql/extension/'
+RUN /usr/bin/install -c -m 644 .//plpgsql_check--1.7.sql  '/usr/local/share/postgresql/extension/'

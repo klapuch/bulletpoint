@@ -24,9 +24,9 @@ final class UploadedAvatars implements Avatars {
 	}
 
 	public function save(): void {
-		(new Storage\Transaction($this->connection))->start(function (): void {
-			$upload = self::check(new FileUpload($_FILES['avatar']));
-			$filename = self::filename($this->user->id(), self::extension($upload));
+		$upload = self::check(new FileUpload($_FILES['avatar']));
+		$filename = self::filename($this->user->id(), self::extension($upload));
+		(new Storage\Transaction($this->connection))->start(function () use ($filename, $upload): void {
 			(new Storage\BuiltQuery(
 				$this->connection,
 				(new Sql\AnsiUpdate('users'))
@@ -37,7 +37,7 @@ final class UploadedAvatars implements Avatars {
 		});
 	}
 
-	private function check(FileUpload $upload): FileUpload {
+	private static function check(FileUpload $upload): FileUpload {
 		if (!$upload->isOk())
 			throw new \UnexpectedValueException(t('avatars.file.not.successfully.uploaded'));
 		elseif (!$upload->isImage())
