@@ -147,7 +147,7 @@ CREATE MATERIALIZED VIEW broken_references AS
 	WHERE now() - INTERVAL '3 days' < ping_at
 	AND (status IS NULL OR int4range(400, 599) @> status::integer)
 	GROUP BY reference_id
-	HAVING count(*) = 3;
+	HAVING count(*) >= 3;
 CREATE UNIQUE INDEX broken_references_reference_id_uidx ON broken_references(reference_id);
 
 
@@ -510,7 +510,7 @@ CREATE MATERIALIZED VIEW broken_sources AS
 	WHERE now() - INTERVAL '3 days' < ping_at
 	AND (status IS NULL OR int4range(400, 599) @> status::integer)
 	GROUP BY source_id
-	HAVING count(*) = 3;
+	HAVING count(*) >= 3;
 CREATE UNIQUE INDEX broken_sources_source_id_uidx ON broken_sources(source_id);
 
 
