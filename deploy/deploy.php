@@ -11,7 +11,7 @@ set('git_tty', true);
 
 set('allow_anonymous_stats', false);
 
-set('shared_dirs', ['backend/logs']);
+set('shared_dirs', ['backend/logs', 'backend/data']);
 
 host('178.63.68.231')
 	->user('root')
@@ -42,8 +42,12 @@ task('migrations:run', static function (): void {
 });
 
 task('nginx:config:move', static function (): void {
-	run('cp {{release_path}}/docker/nginx/bulletpoint.prod.conf /etc/nginx/sites-available/bulletpoint.conf');
-	run('cp {{release_path}}/docker/nginx/bulletpoint.prod.conf /etc/nginx/sites-enabled/bulletpoint.conf');
+	run('cp {{release_path}}/docker/nginx/api.prod.conf /etc/nginx/sites-available/api.conf');
+	run('cp {{release_path}}/docker/nginx/api.prod.conf /etc/nginx/sites-enabled/api.conf');
+	run('cp {{release_path}}/docker/nginx/frontend.prod.conf /etc/nginx/sites-available/frontend.conf');
+	run('cp {{release_path}}/docker/nginx/frontend.prod.conf /etc/nginx/sites-enabled/frontend.conf');
+	run('cp {{release_path}}/docker/nginx/static.prod.conf /etc/nginx/sites-available/static.conf');
+	run('cp {{release_path}}/docker/nginx/static.prod.conf /etc/nginx/sites-enabled/static.conf');
 	run('cp {{release_path}}/docker/nginx/nginx.prod.conf /etc/nginx/nginx.conf');
 	run('cp {{release_path}}/docker/nginx/php.prod.conf /etc/nginx/php.conf');
 	run('cp {{release_path}}/docker/nginx/preflight.conf /etc/nginx/preflight.conf');
