@@ -36,7 +36,7 @@ export const isFetching = (id: number, state: Object): boolean => (
 export const isStarred = (id: number, state: Object): boolean => (
   !isEmpty(state.theme.stars[id])
     ? state.theme.stars[id].starred
-    : state.theme.single[id].is_starred
+    : state.theme.single[id].payload.is_starred
 );
 
 export const isAllFetching = (state: Object): boolean => state.theme.all.fetching;
