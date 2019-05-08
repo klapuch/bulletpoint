@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Api\Endpoint\Theme;
 
+use Bulletpoint\Api\Http;
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
@@ -35,10 +36,13 @@ final class Patch implements Application\View {
 		$payload = (new Constraint\StructuredJson(
 			new \SplFileInfo(self::SCHEMA),
 		))->apply(Json::decode($this->request->body()->serialization()));
-		$theme = new Domain\ExistingTheme(
-			new Domain\StoredTheme($parameters['id'], $this->connection, $this->user),
-			$parameters['id'],
-			$this->connection,
+		$theme = new Http\ErrorTheme(
+			HTTP_NOT_FOUND,
+			new Domain\ExistingTheme(
+				new Domain\StoredTheme($parameters['id'], $this->connection, $this->user),
+				$parameters['id'],
+				$this->connection,
+			),
 		);
 		if (isset($payload['is_starred'])) {
 			if ($payload['is_starred'] === true)
