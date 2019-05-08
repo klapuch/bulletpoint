@@ -57,47 +57,47 @@ final class GenerateJsonSchema implements Scheduling\Job {
 		$this->withoutRemains();
 
 		$demand = new Schema\Bulletpoint\Rating\Structure($this->connection);
-		$schemas->save($demand->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Bulletpoint/Ratings/schema/post.json'));
+		$schemas->save($demand->post(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Bulletpoint/Ratings/schema/post.json'));
 
 		$token = new Schema\Token\Structure();
-		$schemas->save($token->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tokens/schema/post.json'));
+		$schemas->save($token->post(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Tokens/schema/post.json'));
 
 		$user = new Schema\User\Structure($this->connection);
-		$schemas->save($user->put(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Users/schema/put.json'));
+		$schemas->save($user->put(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Users/schema/put.json'));
 
 		$oauthToken = new Schema\Token\OAuth\Structure();
-		$schemas->save($oauthToken->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tokens/OAuth/schema/post.json'));
+		$schemas->save($oauthToken->post(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Tokens/OAuth/schema/post.json'));
 
 		$refreshToken = new Schema\RefreshToken\Structure();
-		$schemas->save($refreshToken->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/RefreshTokens/schema/post.json'));
+		$schemas->save($refreshToken->post(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/RefreshTokens/schema/post.json'));
 
 		$theme = new Schema\Theme\Structure($this->connection);
-		$schemas->save($theme->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Themes/schema/post.json'));
-		$schemas->save($theme->put(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/schema/put.json'));
-		$schemas->save($theme->patch(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/schema/patch.json'));
-		$schemas->save($theme->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Themes/schema/get.json'));
-		$schemas->save($theme->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/schema/get.json'));
+		$schemas->save($theme->post(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Themes/schema/post.json'));
+		$schemas->save($theme->put(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Theme/schema/put.json'));
+		$schemas->save($theme->patch(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Theme/schema/patch.json'));
+		$schemas->save($theme->get(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Themes/schema/get.json'));
+		$schemas->save($theme->get(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Theme/schema/get.json'));
 
 		$themeBulletpoint = new Schema\Theme\Bulletpoint\Structure($this->connection);
-		$schemas->save($themeBulletpoint->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/Bulletpoints/schema/post.json'));
-		$schemas->save($themeBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Bulletpoint/schema/get.json'));
-		$schemas->save($themeBulletpoint->put(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Bulletpoint/schema/put.json'));
-		$schemas->save($themeBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/Bulletpoints/schema/get.json'));
-		$schemas->save($themeBulletpoint->patch(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Bulletpoint/schema/patch.json'));
+		$schemas->save($themeBulletpoint->post(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Theme/Bulletpoints/schema/post.json'));
+		$schemas->save($themeBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Bulletpoint/schema/get.json'));
+		$schemas->save($themeBulletpoint->put(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Bulletpoint/schema/put.json'));
+		$schemas->save($themeBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Theme/Bulletpoints/schema/get.json'));
+		$schemas->save($themeBulletpoint->patch(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Bulletpoint/schema/patch.json'));
 
 		$themeContributedBulletpoint = new Schema\Theme\ContributedBulletpoint\Structure($this->connection);
-		$schemas->save($themeContributedBulletpoint->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/ContributedBulletpoints/schema/post.json'));
-		$schemas->save($themeContributedBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/ContributedBulletpoint/schema/get.json'));
-		$schemas->save($themeContributedBulletpoint->put(), new \SplFileInfo(__DIR__ . '/../../Endpoint/ContributedBulletpoint/schema/put.json'));
-		$schemas->save($themeContributedBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Theme/ContributedBulletpoints/schema/get.json'));
+		$schemas->save($themeContributedBulletpoint->post(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Theme/ContributedBulletpoints/schema/post.json'));
+		$schemas->save($themeContributedBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/ContributedBulletpoint/schema/get.json'));
+		$schemas->save($themeContributedBulletpoint->put(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/ContributedBulletpoint/schema/put.json'));
+		$schemas->save($themeContributedBulletpoint->get(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Theme/ContributedBulletpoints/schema/get.json'));
 
 		$tags = new Schema\Tag\Structure();
-		$schemas->save($tags->post(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tags/schema/post.json'));
-		$schemas->save($tags->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/Tags/schema/get.json'));
-		$schemas->save($tags->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/StarredTags/schema/get.json'));
+		$schemas->save($tags->post(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Tags/schema/post.json'));
+		$schemas->save($tags->get(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/Tags/schema/get.json'));
+		$schemas->save($tags->get(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/StarredTags/schema/get.json'));
 
 		$userTags = new Schema\User\Tag\Structure();
-		$schemas->save($userTags->get(), new \SplFileInfo(__DIR__ . '/../../Endpoint/User/Tags/schema/get.json'));
+		$schemas->save($userTags->get(), new \SplFileInfo(__DIR__ . '/../../Api/Endpoint/User/Tags/schema/get.json'));
 	}
 
 	public function name(): string {
@@ -107,7 +107,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 	private function withoutRemains(): void {
 		foreach (new \CallbackFilterIterator(
 			new \RecursiveIteratorIterator(
-				new \RecursiveDirectoryIterator(__DIR__ . '/../../Endpoint', \RecursiveDirectoryIterator::SKIP_DOTS),
+				new \RecursiveDirectoryIterator(__DIR__ . '/../../Api/Endpoint', \RecursiveDirectoryIterator::SKIP_DOTS),
 				\RecursiveIteratorIterator::SELF_FIRST,
 				\RecursiveIteratorIterator::CATCH_GET_CHILD,
 			),

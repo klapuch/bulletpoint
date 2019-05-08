@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Routing;
 
+use Bulletpoint\Api\Endpoint;
 use Bulletpoint\Domain\Access;
-use Bulletpoint\Endpoint;
 use Bulletpoint\Http;
 use Bulletpoint\Misc;
 use Bulletpoint\View\AuthenticatedView;
