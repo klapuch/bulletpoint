@@ -121,7 +121,9 @@ final class GenerateJsonSchema implements Scheduling\Job {
 			},
 		) as $directory) {
 			/** @var \SplFileInfo $directory */
-			array_map('unlink', glob(sprintf('%s/*.json', $directory->getPathname())));
+			foreach (glob(sprintf('%s/*.json', $directory->getPathname())) ?: [] as $file) {
+				@unlink($file); // intentionally
+			}
 			if (!rmdir($directory->getPathname())) {
 				throw new \RuntimeException(sprintf('%s was not removed', $directory->getPathname()));
 			}

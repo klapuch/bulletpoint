@@ -8,6 +8,3 @@ parameters:
 	ignoreErrors:
 		# Fakes, intentional fails
 		- '~Method .+Fake.+::.+\(\) should return .+ but returns .+\|null~'
-
-		# Temporary till fix from phpstna side
-		- "~Casting to array something that's already array.~"

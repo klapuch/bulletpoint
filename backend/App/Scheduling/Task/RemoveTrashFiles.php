@@ -36,7 +36,7 @@ final class RemoveTrashFiles implements Scheduling\Job {
 	}
 
 	private function removeResizes(array $filenames): void {
-		foreach (glob(__DIR__ . '/../../../data/cache/resize_*/images/**/*.*') as $cachedFilename) {
+		foreach (glob(__DIR__ . '/../../../data/cache/resize_*/images/**/*.*') ?: [] as $cachedFilename) {
 			foreach ($filenames as $filename) {
 				if (Utils\Strings::contains($cachedFilename, $filename)) {
 					Utils\FileSystem::delete($cachedFilename);
