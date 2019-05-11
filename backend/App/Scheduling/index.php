@@ -10,7 +10,14 @@ use Klapuch\Configuration\ValidIni;
 use Klapuch\Scheduling;
 use Klapuch\Storage;
 use Predis;
+use Sentry;
 use Tracy;
+
+Sentry\init([
+	'dsn' => 'https://7fdbd2012f66406dbba931907ca95a9d@sentry.io/1447942',
+	'environment' => getenv('BULLETPOINT_ENV') ?: 'local',
+	'tags' => ['index' => 'cron'],
+]);
 
 $configuration = (new Configuration\ApplicationConfiguration())->read();
 
@@ -64,5 +71,6 @@ try {
 	))->fulfill();
 } catch(\Throwable $e) {
 	$logger->log($e);
+	\Sentry\captureException($e);
 	throw $e;
 }

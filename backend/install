@@ -148,4 +148,4 @@ sudo crontab -e
 0 1 * * * PGPASSWORD=bulletpoint /usr/bin/pg_dump --file=/backup/postgres_$(/bin/date +"\%Y\%m\%d_\%H\%M\%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint
 
 # application cron (every minute)
-* * * * * (cd /var/www/bulletpoint/current/backend && make cron)
+* * * * * (cd /var/www/bulletpoint/current/backend && BULLETPOINT_ENV=production make cron)

@@ -15,6 +15,7 @@ use Klapuch\Uri;
 Sentry\init([
 	'dsn' => 'https://7fdbd2012f66406dbba931907ca95a9d@sentry.io/1447942',
 	'environment' => $_SERVER['BULLETPOINT_ENV'],
+	'tags' => ['index' => 'www'],
 ]);
 
 $uri = new Uri\CachedUri(
