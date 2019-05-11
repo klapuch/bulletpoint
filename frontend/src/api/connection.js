@@ -9,7 +9,7 @@ export default function withSettings(inherited: Object): Object {
     {
       baseURL: process.env.REACT_APP_API,
       maxRedirects: 0,
-      timeout: 2000,
+      timeout: 4000,
       headers: {
         common: {
           'Content-Type': 'application/json',

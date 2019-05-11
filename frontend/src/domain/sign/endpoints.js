@@ -15,7 +15,7 @@ export const signIn = (
     .then(() => fetchMe(login.token))
     .then(me => session.start({ expiration: login.expiration, value: login.token }, me));
 
-  const onRefusedToken = error => Promise.reject(error.response.data.message);
+  const onRefusedToken = error => Promise.reject(error);
 
   if (provider === FACEBOOK_PROVIDER) {
     return tokens.create({ login: credentials.login }, 'facebook')
