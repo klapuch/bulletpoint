@@ -6,7 +6,6 @@ namespace Bulletpoint\Routing;
 use Bulletpoint\Api\Endpoint;
 use Bulletpoint\Domain\Access;
 use Bulletpoint\Http;
-use Bulletpoint\Misc;
 use Bulletpoint\View\AuthenticatedView;
 use Klapuch\Application;
 use Klapuch\Encryption;
@@ -36,12 +35,9 @@ final class ApplicationRoutes implements Routing\Routes {
 
 	public function matches(): array {
 		$request = new Application\CachedRequest(new Application\PlainRequest());
-		$user = (new Access\HarnessedEntrance(
-			new Access\PgEntrance(
-				new Access\ApiEntrance($this->connection),
-				$this->connection,
-			),
-			new Misc\ApiErrorCallback(HTTP_TOO_MANY_REQUESTS),
+		$user = (new Access\PgEntrance(
+			new Access\ApiEntrance($this->connection),
+			$this->connection,
 		))->enter($request->headers());
 		Sentry\configureScope(static function (Sentry\State\Scope $scope) use ($user): void {
 			$scope->setUser($user->properties());

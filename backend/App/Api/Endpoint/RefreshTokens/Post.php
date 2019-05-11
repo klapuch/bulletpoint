@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Api\Endpoint\RefreshTokens;
 
+use Bulletpoint\Api\Http;
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain\Access;
-use Bulletpoint\Misc;
 use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Output;
@@ -25,9 +25,9 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		$seeker = (new Access\HarnessedEntrance(
+		$user = (new Http\ErrorEntrance(
+			HTTP_FORBIDDEN,
 			new Access\RefreshingEntrance(),
-			new Misc\ApiErrorCallback(HTTP_FORBIDDEN),
 		))->enter(
 			(new Constraint\StructuredJson(
 				new \SplFileInfo(self::SCHEMA),
@@ -35,7 +35,7 @@ final class Post implements Application\View {
 		);
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
-				new Output\Json(['token' => $seeker->id(), 'expiration' => $seeker->properties()['expiration']]),
+				new Output\Json(['token' => $user->id(), 'expiration' => $user->properties()['expiration']]),
 				[],
 				HTTP_CREATED,
 			),

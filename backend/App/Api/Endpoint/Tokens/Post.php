@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Api\Endpoint\Tokens;
 
+use Bulletpoint\Api\Http;
 use Bulletpoint\Constraint;
 use Bulletpoint\Domain\Access;
-use Bulletpoint\Misc;
 use Bulletpoint\Response;
 use Klapuch\Application;
 use Klapuch\Encryption;
@@ -59,9 +59,9 @@ final class Post implements Application\View {
 		} else {
 			$entrance = new Access\SecureEntrance($this->connection, $this->cipher);
 		}
-		$user = (new Access\HarnessedEntrance(
+		$user = (new Http\ErrorEntrance(
+			HTTP_FORBIDDEN,
 			new Access\TokenEntrance($entrance),
-			new Misc\ApiErrorCallback(HTTP_FORBIDDEN),
 		))->enter($credentials);
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
