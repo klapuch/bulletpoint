@@ -109,3 +109,4 @@ REFRESH MATERIALIZED VIEW CONCURRENTLY starred_themes;
 INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/78-testing_migration--02-24.sql');
 INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/81-tag_support--02-24.sql');
 INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/88-any_referenced_theme--03-02.sql');
+INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/master-groups_not_remove--05-11.sql');

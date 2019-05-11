@@ -778,12 +778,14 @@ CREATE TABLE bulletpoint_groups (
 
 CREATE FUNCTION refresh_bulletpoint_group_successors() RETURNS void AS $BODY$
 BEGIN
-	DELETE FROM bulletpoint_groups;
-
+	WITH deleted_groups AS (
+		DELETE FROM bulletpoint_groups
+		RETURNING *
+	)
 	INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id)
 	SELECT new_groups.bulletpoint_id, new_groups.root_bulletpoint_id FROM (
-		SELECT array_agg(bulletpoint_id) bulletpoint_id, root_bulletpoint_id
-		FROM bulletpoint_groups
+		SELECT array_agg(bulletpoint_id) AS bulletpoint_id, root_bulletpoint_id
+		FROM deleted_groups
 		GROUP BY root_bulletpoint_id
 	) grouped
 	JOIN LATERAL (
