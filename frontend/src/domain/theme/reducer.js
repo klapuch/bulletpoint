@@ -9,9 +9,11 @@ import {
   REQUESTED_THEME_UPDATE,
   REQUESTED_THEME_STAR_CHANGE,
   RECEIVED_THEME_STAR_CHANGE,
+  ERRORED_SINGLE_THEME,
 } from './actions';
 
 type State = {|
+  +errors: Object,
   +single: Object,
   +all: {|
     payload: Array<Object>,
@@ -21,6 +23,7 @@ type State = {|
   +total: number,
 |};
 const init = {
+  errors: {},
   single: {},
   all: {
     payload: [],
@@ -31,6 +34,17 @@ const init = {
 };
 export default (state: State = init, action: Object): State => {
   switch (action.type) {
+    case ERRORED_SINGLE_THEME:
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          [action.id]: {
+            status: action.status,
+            message: action.message,
+          },
+        },
+      };
     case RECEIVED_THEME:
       return {
         ...state,

@@ -10,7 +10,7 @@ import {
   receivedUpdateSingle,
   requestedUpdateSingle,
   requestedStarChange,
-  receivedStarChange,
+  receivedStarChange, erroredSingle,
 } from './actions';
 import * as themes from './selects';
 import * as response from '../../api/response';
@@ -34,6 +34,9 @@ export const fetchSingle = (
       if (!flat) {
         forEach(themeIds, themeId => dispatch(fetchSingle(themeId, true)));
       }
+    })
+    .catch((error) => {
+      dispatch(erroredSingle(id, error.response.status, error.response.data.message));
     });
 };
 

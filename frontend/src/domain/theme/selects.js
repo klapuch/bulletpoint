@@ -2,6 +2,7 @@
 import { isEmpty } from 'lodash';
 import memoizee from 'memoizee';
 import type { FetchedThemeType } from './types';
+import type { HttpError } from '../../api/types';
 
 export const fetchedSingle = (id: number, state: Object): boolean => (
   !isEmpty(state.theme.single[id])
@@ -24,6 +25,9 @@ export const getById = (id: number, state: Object): FetchedThemeType|Object => (
     ? withRelatedThemes(state.theme.single[id].payload, state)
     : {}
 );
+
+export const getError = (id: number, state: Object): ?HttpError => state.theme.errors[id];
+export const hasError = (id: number, state: Object): boolean => !isEmpty(getError(id, state));
 
 export const getTagIds = (theme: FetchedThemeType): Array<number> => (
   theme.tags.map(tag => tag.id)

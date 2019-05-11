@@ -12,6 +12,7 @@ export const REQUESTED_THEME_UPDATE = 'REQUESTED_THEME_UPDATE';
 export const RECEIVED_THEME_UPDATE = 'RECEIVED_THEME_UPDATE';
 export const REQUESTED_THEME_STAR_CHANGE = 'REQUESTED_THEME_STAR_CHANGE';
 export const RECEIVED_THEME_STAR_CHANGE = 'RECEIVED_THEME_STAR_CHANGE';
+export const ERRORED_SINGLE_THEME = 'ERRORED_SINGLE_THEME';
 
 export const invalidatedSingle = (id: number) => ({
   type: RECEIVED_INVALIDATED_THEME,
@@ -29,6 +30,13 @@ export const receivedSingle = (id: number, theme: FetchedThemeType) => ({
   id,
   theme,
   fetching: false,
+});
+
+export const erroredSingle = (id: number, status: number, message: string) => ({
+  type: ERRORED_SINGLE_THEME,
+  id,
+  status,
+  message,
 });
 
 export const requestedAll = () => ({

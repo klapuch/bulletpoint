@@ -10,6 +10,7 @@ import Header from '../../domain/theme/components/Header';
 import EditHttpForms from '../../domain/bulletpoint/components/Form/EditHttpForms';
 import AddHttpForm from '../../domain/bulletpoint/components/Form/AddHttpForm';
 import Loader from '../../ui/Loader';
+import Error from '../../ui/Error';
 import RelatedThemes from './sections/RelatedThemes';
 import SlugRedirect from '../../router/SlugRedirect';
 import ContributionBoxes from '../../domain/bulletpoint/components/Box/Contribution/ContributionBoxes';
@@ -17,6 +18,7 @@ import type { FetchedThemeType } from '../../domain/theme/types';
 import type { FormTypes } from '../../domain/bulletpoint/components/Form/types';
 import { FORM_TYPE_ADD, FORM_TYPE_DEFAULT, FORM_TYPE_EDIT } from '../../domain/bulletpoint/components/Form/types';
 import AddButton from '../../domain/bulletpoint/components/Form/Button/AddButton';
+import type { HttpError } from '../../api/types';
 
 type State = {|
   formType: FormTypes,
@@ -28,6 +30,8 @@ type Props = {|
   +fetching: boolean,
   +match: Object,
   +theme: FetchedThemeType,
+  +hasError: boolean,
+  +error: HttpError,
 |};
 const initState = {
   formType: FORM_TYPE_DEFAULT,
@@ -63,8 +67,12 @@ class Theme extends React.Component<Props, State> {
 
   render() {
     const { formType } = this.state;
-    const { fetching, match: { params: { id } }, theme } = this.props;
-    if (fetching) {
+    const {
+      fetching, hasError, error, match: { params: { id } }, theme,
+    } = this.props;
+    if (hasError && error.status === 404) {
+      return <Error>Téma neexistuje</Error>;
+    } else if (fetching) {
       return <Loader />;
     }
     return (
@@ -114,6 +122,8 @@ class Theme extends React.Component<Props, State> {
 const mapStateToProps = (state, { match: { params: { id: themeId } } }) => ({
   theme: themes.getById(themeId, state),
   fetching: themes.isFetching(themeId, state),
+  error: themes.getError(themeId, state),
+  hasError: themes.hasError(themeId, state),
 });
 const mapDispatchToProps = (dispatch, { match: { params: { id: themeId } } }) => ({
   fetchTheme: () => dispatch(theme.fetchSingle(themeId)),
