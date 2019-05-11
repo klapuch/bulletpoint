@@ -175,11 +175,12 @@ CREATE FUNCTION samples.users(replacements jsonb = '{}') RETURNS integer AS $BOD
 DECLARE
 	v_id users.id%type;
 BEGIN
-	INSERT INTO users (email, username, password, role) VALUES (
+	INSERT INTO users (email, username, password, role, facebook_id) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'email'),
 		samples.random_if_not_exists(substring(md5(random()::text), 1, 20), replacements, 'username'),
-		samples.random_if_not_exists(md5(random()::text), replacements, 'password'),
-		samples.random_if_not_exists(test_utils.random_array_pick(constant.roles()), replacements, 'role')::roles
+		CASE WHEN (replacements -> 'password')::text = 'null' THEN NULL ELSE samples.random_if_not_exists(md5(random()::text), replacements, 'password') END,
+		samples.random_if_not_exists(test_utils.random_array_pick(constant.roles()), replacements, 'role')::roles,
+		CASE WHEN replacements ? 'facebook_id' THEN CAST(replacements -> 'facebook_id' AS bigint) ELSE test_utils.better_random('integer') END
 	)
 	RETURNING id INTO v_id;
 

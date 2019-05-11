@@ -79,21 +79,6 @@ final class PostTest extends TestCase\Runtime {
 			))->response([]);
 		}, \UnexpectedValueException::class, 'Wrong password', HTTP_FORBIDDEN);
 	}
-
-	public function test403OnNotVerifiedCode(): void {
-		(new Fixtures\SamplePostgresData($this->connection, 'users', ['email' => 'foo@bar.cz']))->try();
-		Assert::exception(function () {
-			(new Endpoint\Tokens\Post(
-				new Application\FakeRequest(
-					new Output\FakeFormat(
-						json_encode(['login' => 'foo@bar.cz', 'password' => '123'], JSON_THROW_ON_ERROR),
-					),
-				),
-				$this->connection,
-				new Encryption\FakeCipher(true),
-			))->response([]);
-		}, \UnexpectedValueException::class, 'Email has not been verified yet', HTTP_FORBIDDEN);
-	}
 }
 
 (new PostTest())->run();

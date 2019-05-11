@@ -50,7 +50,7 @@ final class SecureEntrance implements Entrance {
 	}
 
 	private static function exists(array $row): bool {
-		return (bool) $row;
+		return $row !== [] && $row['password'] !== null;
 	}
 
 	private function rehash(string $password, int $id): void {

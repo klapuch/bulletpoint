@@ -57,13 +57,7 @@ final class Post implements Application\View {
 				new Access\OAuthRequest($provider, $credentials['login']),
 			);
 		} else {
-			$entrance = new Access\VerifiedEntrance(
-				$this->connection,
-				new Access\SecureEntrance(
-					$this->connection,
-					$this->cipher,
-				),
-			);
+			$entrance = new Access\SecureEntrance($this->connection, $this->cipher);
 		}
 		$user = (new Access\HarnessedEntrance(
 			new Access\TokenEntrance($entrance),
