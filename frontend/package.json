@@ -40,7 +40,7 @@
   },
   "scripts": {
     "start": "HTTPS=true env-cmd .env.dev react-scripts start",
-    "build": "env-cmd .env.prod react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false env-cmd .env.prod react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint -c .eslintrc src/ --ignore-path .eslintignore",
