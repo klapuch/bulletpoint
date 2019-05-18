@@ -3,7 +3,12 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
-use Klapuch\Sql;
+use Characterice\Sql\Clause;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Update;
+use Characterice\Sql\Statement\Delete;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Expression;
 use Klapuch\Storage;
 
 final class StoredTags implements Tags {
@@ -17,9 +22,10 @@ final class StoredTags implements Tags {
 	public function all(): array {
 		return (new Storage\BuiltQuery(
 			$this->connection,
-			(new Sql\AnsiSelect(['id', 'name']))
-				->from(['tags'])
-				->orderBy(['id' => 'ASC']),
+			(new Select\Query())
+				->select(new Expression\Select(['id', 'name']))
+				->from(new Expression\From(['tags']))
+				->orderBy(new Expression\OrderBy(['id' => 'ASC']))
 		))->rows();
 	}
 
@@ -30,7 +36,8 @@ final class StoredTags implements Tags {
 	public function add(string $name): void {
 		(new Storage\BuiltQuery(
 			$this->connection,
-			new Sql\PgInsertInto('tags', ['name' => ':name'], ['name' => $name]),
+			(new Insert\Query())
+				->insertInto(new Clause\InsertInto('tags', ['name' => $name]))
 		))->execute();
 	}
 }

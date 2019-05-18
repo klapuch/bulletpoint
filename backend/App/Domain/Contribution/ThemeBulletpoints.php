@@ -5,7 +5,12 @@ namespace Bulletpoint\Domain\Contribution;
 
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
-use Klapuch\Sql;
+use Characterice\Sql\Clause;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Update;
+use Characterice\Sql\Statement\Delete;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Expression;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 
@@ -28,19 +33,20 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 	public function all(): \Iterator {
 		$bulletpoints = (new Storage\BuiltQuery(
 			$this->connection,
-			(new Sql\AnsiSelect([
-				'id',
-				'content',
-				'theme_id',
-				'referenced_theme_id',
-				'compared_theme_id',
-				'root_bulletpoint_id',
-				'source_link',
-				'source_type',
-				'source_is_broken',
-			]))->from(['web.contributed_bulletpoints'])
-				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
-				->where('user_id = :user_id', ['user_id' => $this->user->id()]),
+			(new Select\Query())
+				->select(new Expression\Select([
+							 'id',
+							 'content',
+							 'theme_id',
+							 'referenced_theme_id',
+							 'compared_theme_id',
+							 'root_bulletpoint_id',
+							 'source_link',
+							 'source_type',
+							 'source_is_broken',
+						 ]))->from(new Expression\From(['web.contributed_bulletpoints']))
+				->where(new Expression\Where('theme_id', $this->theme))
+				->where(new Expression\Where('user_id', $this->user->id())),
 		))->rows();
 		foreach ($bulletpoints as $bulletpoint) {
 			yield new StoredBulletpoint(
@@ -54,39 +60,28 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 	public function add(array $bulletpoint): void {
 		(new Storage\BuiltQuery(
 			$this->connection,
-			(new Sql\PgInsertInto(
-				'web.contributed_bulletpoints',
-				[
-					'content' => ':content',
-					'theme_id' => ':theme_id',
-					'referenced_theme_id' => ':referenced_theme_id',
-					'compared_theme_id' => ':compared_theme_id',
-					'source_type' => ':source_type',
-					'source_link' => ':source_link',
-					'user_id' => ':user_id',
-					'root_bulletpoint_id' => ':root_bulletpoint_id',
-				],
-				[
+			(new Insert\Query())
+				->insertInto(new Clause\InsertInto('web.contributed_bulletpoints', [
 					'content' => $bulletpoint['content'],
 					'theme_id' => $this->theme,
-					'referenced_theme_id' => Json::encode($bulletpoint['referenced_theme_id']), // TODO: use array
-					'compared_theme_id' => Json::encode($bulletpoint['compared_theme_id']), // TODO: use array
+					'referenced_theme_id' => Json::encode($bulletpoint['referenced_theme_id']),
+					'compared_theme_id' => Json::encode($bulletpoint['compared_theme_id']),
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
 					'root_bulletpoint_id' => $bulletpoint['group']['root_bulletpoint_id'],
 					'user_id' => $this->user->id(),
-				],
-			)),
+			]))
 		))->execute();
 	}
 
 	public function count(): int {
 		return (new Storage\BuiltQuery(
 			$this->connection,
-			(new Sql\AnsiSelect(['count(*)']))
-				->from(['contributed_bulletpoints'])
-				->where('theme_id = :theme_id', ['theme_id' => $this->theme])
-				->where('user_id = :user_id', ['user_id' => $this->user->id()]),
+			(new Select\Query())
+				->select(new Expression\Select(['count(*)']))
+				->from(new Expression\From(['contributed_bulletpoints']))
+				->where(new Expression\Where('theme_id', $this->theme))
+				->where(new Expression\Where('user_id', $this->user->id())),
 		))->field();
 	}
 }

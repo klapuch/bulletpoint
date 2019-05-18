@@ -3,7 +3,12 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Sql;
 
-use Klapuch\Sql;
+use Characterice\Sql\Clause;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Update;
+use Characterice\Sql\Statement\Delete;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Expression;
 
 abstract class DecoratedWhere implements Sql\Where {
 	/** @var \Klapuch\Sql\Where */

@@ -25,13 +25,11 @@
     "klapuch/application": "^0.0.4",
     "klapuch/configuration": "^0.0.2",
     "klapuch/output": "^2.12.1",
-    "klapuch/storage": "^0.0.1",
     "klapuch/sql": "~0.0.2",
     "klapuch/validation": "^2.6.3",
     "klapuch/iterator": "^1.1.2",
     "klapuch/routing": "^0.0.14",
-    "klapuch/dataset": "~0.0.1",
-    "klapuch/scheduling": "^0.0.2",
+    "klapuch/dataset": "dev-new_sql",
     "klapuch/encryption": "^2.1",
     "klapuch/ui": "^0.0.4",
     "tracy/tracy": "^2.5",
@@ -39,7 +37,9 @@
     "nette/utils": "^3.0",
     "klapuch/http": "^1.4",
     "nette/http": "^3.0",
-    "sentry/sdk": "^2.0"
+    "sentry/sdk": "^2.0",
+    "characterice/sql": "dev-master",
+    "klapuch/storage": "dev-new_sql"
   },
   "require-dev": {
     "nette/tester": "^2.0",

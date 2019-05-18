@@ -5,7 +5,12 @@ namespace Bulletpoint\Domain;
 
 use Bulletpoint\Domain;
 use Klapuch\Dataset;
-use Klapuch\Sql;
+use Characterice\Sql\Clause;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Update;
+use Characterice\Sql\Statement\Delete;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Expression;
 use Klapuch\Storage;
 
 final class SearchTaggedThemes implements Themes {
@@ -36,8 +41,9 @@ final class SearchTaggedThemes implements Themes {
 		$themes = (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Domain\Sql\SearchedThemes(
-					new Sql\AnsiSelect([
+				(new Domain\Sql\SearchedThemes($this->keyword))
+					->query()
+					->select(new Expression\Select([
 						'DISTINCT ON (themes.id) themes.id',
 						'themes.name',
 						'themes.alternative_names',
@@ -50,9 +56,7 @@ final class SearchTaggedThemes implements Themes {
 						'themes.starred_at',
 						'themes.is_empty',
 						'themes.related_themes_id',
-					]),
-					$this->keyword,
-				))->whereIn('tag_id', ['tag_id' => $this->tags]),
+					]))->where(new Expression\WhereIn('tag_id', $this->tags)),
 				$selection,
 			),
 		))->rows();
@@ -69,10 +73,10 @@ final class SearchTaggedThemes implements Themes {
 		return (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Domain\Sql\SearchedThemes(
-					new Sql\AnsiSelect(['count(DISTINCT themes.id)']),
-					$this->keyword,
-				))->whereIn('tag_id', ['tag_id' => $this->tags]),
+				(new Domain\Sql\SearchedThemes($this->keyword))
+					->query()
+					->select(new Expression\Select(['count(DISTINCT themes.id)']))
+					->where(new Expression\WhereIn('tag_id', $this->tags)),
 				$selection,
 			),
 		))->field();

@@ -6,7 +6,12 @@ namespace Bulletpoint\Domain\User;
 use Bulletpoint\Domain\Access;
 use Klapuch\Dataset;
 use Klapuch\Output;
-use Klapuch\Sql;
+use Characterice\Sql\Clause;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Update;
+use Characterice\Sql\Statement\Delete;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Expression;
 use Klapuch\Storage;
 
 final class StoredTags implements Tags {
@@ -25,9 +30,10 @@ final class StoredTags implements Tags {
 		$tags = (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Sql\AnsiSelect(['tag_id', 'name', 'reputation', 'rank']))
-					->from(['user_tag_rank_reputations'])
-					->where('user_id = :user_id', ['user_id' => $this->user->id()]),
+				(new Select\Query())
+					->select(new Expression\Select(['tag_id', 'name', 'reputation', 'rank']))
+					->from(new Expression\From(['user_tag_rank_reputations']))
+					->where(new Expression\Where('user_id ', $this->user->id())),
 				$selection,
 			),
 		))->rows();

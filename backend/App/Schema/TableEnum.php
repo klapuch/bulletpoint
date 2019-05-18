@@ -3,7 +3,12 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Schema;
 
-use Klapuch\Sql;
+use Characterice\Sql\Clause;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Update;
+use Characterice\Sql\Statement\Delete;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Expression;
 use Klapuch\Storage;
 
 final class TableEnum implements Enum {
@@ -21,9 +26,10 @@ final class TableEnum implements Enum {
 	public function values(): array {
 		$enum = (new Storage\BuiltQuery(
 			$this->connection,
-			(new Sql\AnsiSelect(['id', 'name']))
-				->from([$this->table])
-				->orderBy(['id' => 'ASC']),
+			(new Select\Query())
+				->select(new Expression\Select(['id', 'name']))
+				->from(new Expression\From([$this->table]))
+				->orderBy(new Expression\OrderBy(['id' => 'ASC'])),
 		))->rows();
 		return (array) array_combine(array_column($enum, 'id'), $enum);
 	}
@@ -31,7 +37,8 @@ final class TableEnum implements Enum {
 	public function add(string $name): void {
 		(new Storage\BuiltQuery(
 			$this->connection,
-			new Sql\PgInsertInto($this->table, ['name' => ':name'], ['name' => $name]),
+			(new Insert\Query())
+				->insertInto(new Clause\InsertInto($this->table, ['name' => $name]))
 		))->execute();
 	}
 }
