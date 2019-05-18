@@ -74,9 +74,9 @@ final class ThemeBulletpoints implements Bulletpoints {
 							'source_type' => $bulletpoint['source']['type'],
 							'user_id' => $this->user->id(),
 							'root_bulletpoint_id' => $bulletpoint['group']['root_bulletpoint_id'],
-						]
-					)
-				)
+						],
+					),
+				),
 		))->execute();
 	}
 

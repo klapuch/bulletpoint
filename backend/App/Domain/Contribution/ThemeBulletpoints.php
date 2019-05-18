@@ -6,11 +6,9 @@ namespace Bulletpoint\Domain\Contribution;
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
 use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 
@@ -35,16 +33,16 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 			$this->connection,
 			(new Select\Query())
 				->select(new Expression\Select([
-							 'id',
-							 'content',
-							 'theme_id',
-							 'referenced_theme_id',
-							 'compared_theme_id',
-							 'root_bulletpoint_id',
-							 'source_link',
-							 'source_type',
-							 'source_is_broken',
-						 ]))->from(new Expression\From(['web.contributed_bulletpoints']))
+					'id',
+					'content',
+					'theme_id',
+					'referenced_theme_id',
+					'compared_theme_id',
+					'root_bulletpoint_id',
+					'source_link',
+					'source_type',
+					'source_is_broken',
+				]))->from(new Expression\From(['web.contributed_bulletpoints']))
 				->where(new Expression\Where('theme_id', $this->theme))
 				->where(new Expression\Where('user_id', $this->user->id())),
 		))->rows();
@@ -70,7 +68,7 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 					'source_type' => $bulletpoint['source']['type'],
 					'root_bulletpoint_id' => $bulletpoint['group']['root_bulletpoint_id'],
 					'user_id' => $this->user->id(),
-			]))
+				])),
 		))->execute();
 	}
 

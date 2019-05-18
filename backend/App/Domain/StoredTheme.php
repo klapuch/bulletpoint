@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
-use Klapuch\Output;
 use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Delete;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Statement\Update;
+use Klapuch\Output;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 
@@ -46,7 +46,7 @@ final class StoredTheme implements Theme {
 					'starred_at',
 					'related_themes_id',
 					'is_empty',
-			]))->from(new Expression\From(['web.themes']))
+				]))->from(new Expression\From(['web.themes']))
 				->where(new Expression\Where('id', $this->id)),
 		))->row();
 		return new Output\FilledFormat(
@@ -79,7 +79,7 @@ final class StoredTheme implements Theme {
 				->set(new Expression\Set(['alternative_names' => Json::encode($theme['alternative_names'])]))
 				->set(new Expression\Set(['tags' => Json::encode($theme['tags'])]))
 				->set(new Expression\Set(['reference_url' => $theme['reference']['url']]))
-				->where(new Expression\Where('id', $this->id))
+				->where(new Expression\Where('id', $this->id)),
 		))->execute();
 	}
 
@@ -99,7 +99,7 @@ final class StoredTheme implements Theme {
 			(new Delete\Query())
 				->from(new Expression\From(['user_starred_themes']))
 				->where(new Expression\Where('theme_id', $this->id))
-				->where(new Expression\Where('user_id', $this->user->id()))
+				->where(new Expression\Where('user_id', $this->user->id())),
 		))->execute();
 	}
 }

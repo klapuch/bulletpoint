@@ -4,14 +4,10 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain\User;
 
 use Bulletpoint\Domain\Access;
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Dataset;
 use Klapuch\Output;
-use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
-use Characterice\Sql\Expression;
 use Klapuch\Storage;
 
 final class StoredTags implements Tags {

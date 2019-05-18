@@ -3,12 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain\Access;
 
-use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Statement\Update;
 use Klapuch\Storage;
 
 final class RegisteredUser implements User {
@@ -55,7 +52,7 @@ final class RegisteredUser implements User {
 			(new Update\Query())
 				->update('users')
 				->set(new Expression\Set($properties))
-				->where(new Expression\Where('id', $this->id()))
+				->where(new Expression\Where('id', $this->id())),
 		))->execute();
 	}
 
@@ -74,7 +71,7 @@ final class RegisteredUser implements User {
 				->select(new Expression\Select(['1']))
 				->from(new Expression\From(['users']))
 				->where(new Expression\Where($column, $value))
-				->where(new Expression\RawWhere('id != :id', ['id' => $this->id]))
+				->where(new Expression\RawWhere('id != :id', ['id' => $this->id])),
 		))->field();
 	}
 }

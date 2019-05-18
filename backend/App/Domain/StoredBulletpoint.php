@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain;
 
 use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
+use Characterice\Sql\Expression;
 use Characterice\Sql\Statement\Delete;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Statement\Update;
 use Klapuch\Output;
 use Klapuch\Storage;
 use Nette\Utils\Json;
-use Characterice\Sql\Statement\Select;
-use Characterice\Sql\Expression;
 
 final class StoredBulletpoint implements Bulletpoint {
 	/** @var int */
@@ -33,23 +33,23 @@ final class StoredBulletpoint implements Bulletpoint {
 		$row = (new Storage\BuiltQuery(
 			$this->connection,
 			(new Select\Query())
-			->select(new Expression\Select([
-				'id',
-				'theme_id',
-				'referenced_theme_id',
-				'compared_theme_id',
-				'source_link',
-				'source_type',
-				'source_is_broken',
-				'content',
-				'total_rating',
-				'up_rating',
-				'down_rating',
-				'user_rating',
-				'user_id',
-				'created_at',
-				'root_bulletpoint_id',
-			]))->from(new Expression\From(['web.bulletpoints']))
+				->select(new Expression\Select([
+					'id',
+					'theme_id',
+					'referenced_theme_id',
+					'compared_theme_id',
+					'source_link',
+					'source_type',
+					'source_is_broken',
+					'content',
+					'total_rating',
+					'up_rating',
+					'down_rating',
+					'user_rating',
+					'user_id',
+					'created_at',
+					'root_bulletpoint_id',
+				]))->from(new Expression\From(['web.bulletpoints']))
 				->where(new Expression\Where('id', $this->id)),
 		))->row();
 		return new Output\FilledFormat(
@@ -91,7 +91,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				->set(new Expression\Set(['source_type' => $bulletpoint['source']['type']]))
 				->set(new Expression\Set(['content' => $bulletpoint['content']]))
 				->set(new Expression\Set(['root_bulletpoint_id' => $bulletpoint['group']['root_bulletpoint_id']]))
-				->where(new Expression\Where('id', $this->id))
+				->where(new Expression\Where('id', $this->id)),
 		))->execute();
 	}
 
@@ -100,7 +100,7 @@ final class StoredBulletpoint implements Bulletpoint {
 			$this->connection,
 			(new Delete\Query())
 				->from(new Expression\From(['public_bulletpoints']))
-				->where(new Expression\Where('id', $this->id))
+				->where(new Expression\Where('id', $this->id)),
 		))->execute();
 	}
 
@@ -111,7 +111,7 @@ final class StoredBulletpoint implements Bulletpoint {
 				->insertInto(new Clause\InsertInto('bulletpoint_ratings', ['point' => $point, 'user_id' => $this->user->id(), 'bulletpoint_id' => $this->id]))
 				->onConflict(new Clause\OnConflict(['user_id', 'bulletpoint_id']))
 				->doUpdate()
-				->set(new Expression\RawSet('point = EXCLUDED.point'))
+				->set(new Expression\RawSet('point = EXCLUDED.point')),
 		))->execute();
 	}
 }

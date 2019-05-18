@@ -3,13 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
-use Klapuch\Dataset;
-use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
+use Klapuch\Dataset;
 use Klapuch\Storage;
 
 final class TaggedThemes implements Themes {
@@ -51,7 +47,7 @@ final class TaggedThemes implements Themes {
 						'starred_at',
 						'is_empty',
 					]))->from(new Expression\From(['web.tagged_themes']))
-						->where(new Expression\WhereIn('tag_id', $this->tags)),
+					->where(new Expression\WhereIn('tag_id', $this->tags)),
 				$selection,
 			),
 		))->rows();

@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class StarredTags implements Tags {

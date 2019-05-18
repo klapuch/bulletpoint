@@ -4,11 +4,9 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain;
 
 use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class StoredTags implements Tags {
@@ -25,7 +23,7 @@ final class StoredTags implements Tags {
 			(new Select\Query())
 				->select(new Expression\Select(['id', 'name']))
 				->from(new Expression\From(['tags']))
-				->orderBy(new Expression\OrderBy(['id' => 'ASC']))
+				->orderBy(new Expression\OrderBy(['id' => 'ASC'])),
 		))->rows();
 	}
 
@@ -37,7 +35,7 @@ final class StoredTags implements Tags {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Insert\Query())
-				->insertInto(new Clause\InsertInto('tags', ['name' => $name]))
+				->insertInto(new Clause\InsertInto('tags', ['name' => $name])),
 		))->execute();
 	}
 }

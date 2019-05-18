@@ -4,12 +4,8 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain\Image;
 
 use Bulletpoint\Domain\Access;
-use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Update;
 use Klapuch\Storage;
 use Nette\Http\FileUpload;
 

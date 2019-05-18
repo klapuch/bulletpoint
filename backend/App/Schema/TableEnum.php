@@ -4,11 +4,9 @@ declare(strict_types = 1);
 namespace Bulletpoint\Schema;
 
 use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class TableEnum implements Enum {
@@ -38,7 +36,7 @@ final class TableEnum implements Enum {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Insert\Query())
-				->insertInto(new Clause\InsertInto($this->table, ['name' => $name]))
+				->insertInto(new Clause\InsertInto($this->table, ['name' => $name])),
 		))->execute();
 	}
 }

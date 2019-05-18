@@ -3,13 +3,11 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
-use Klapuch\Dataset;
 use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Select;
+use Klapuch\Dataset;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 
@@ -37,7 +35,7 @@ final class StoredThemes implements Themes {
 						'tags' => Json::encode($theme['tags']),
 						'user_id' => $this->user->id(),
 						'reference_url' => $theme['reference']['url'],
-					]
+					],
 				))
 				->returning(new Clause\Returning(['id'])),
 		))->field();
@@ -61,7 +59,7 @@ final class StoredThemes implements Themes {
 						'is_starred',
 						'starred_at',
 						'is_empty',
-				]))->from(new Expression\From(['web.themes'])),
+					]))->from(new Expression\From(['web.themes'])),
 				$selection,
 			),
 		))->rows();

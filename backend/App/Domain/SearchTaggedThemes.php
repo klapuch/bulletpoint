@@ -4,13 +4,8 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain;
 
 use Bulletpoint\Domain;
-use Klapuch\Dataset;
-use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Update;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
 use Characterice\Sql\Expression;
+use Klapuch\Dataset;
 use Klapuch\Storage;
 
 final class SearchTaggedThemes implements Themes {
