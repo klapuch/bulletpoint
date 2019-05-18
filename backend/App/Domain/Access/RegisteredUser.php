@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain\Access;
 
-use Klapuch\Sql;
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
+use Characterice\Sql\Statement\Update;
 use Klapuch\Storage;
 
 final class RegisteredUser implements User {
@@ -47,9 +49,10 @@ final class RegisteredUser implements User {
 		}
 		(new Storage\BuiltQuery(
 			$this->connection,
-			(new Sql\PreparedUpdate(new Sql\AnsiUpdate('users')))
-				->set($properties)
-				->where('id = :id', ['id' => $this->id()]),
+			(new Update\Query())
+				->update('users')
+				->set(new Expression\Set($properties))
+				->where(new Expression\Where('id', $this->id())),
 		))->execute();
 	}
 
@@ -64,10 +67,11 @@ final class RegisteredUser implements User {
 	private function exists(string $column, string $value): bool {
 		return (bool) (new Storage\BuiltQuery(
 			$this->connection,
-			(new Sql\AnsiSelect(['1']))
-				->from(['users'])
-				->where(sprintf('%s = :value', $column), ['value' => $value])
-				->where('id != :id', ['id' => $this->id]),
+			(new Select\Query())
+				->select(new Expression\Select(['1']))
+				->from(new Expression\From(['users']))
+				->where(new Expression\Where($column, $value))
+				->where(new Expression\RawWhere('id != :id', ['id' => $this->id])),
 		))->field();
 	}
 }

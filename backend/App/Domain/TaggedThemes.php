@@ -3,8 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Dataset;
-use Klapuch\Sql;
 use Klapuch\Storage;
 
 final class TaggedThemes implements Themes {
@@ -31,21 +32,22 @@ final class TaggedThemes implements Themes {
 		$themes = (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Sql\AnsiSelect([
-					'id',
-					'name',
-					'alternative_names',
-					'tags',
-					'reference_url',
-					'reference_is_broken',
-					'related_themes_id',
-					'user_id',
-					'created_at',
-					'is_starred',
-					'starred_at',
-					'is_empty',
-				]))->from(['web.tagged_themes'])
-					->whereIn('tag_id', ['tag_id' => $this->tags]),
+				(new Select\Query())
+					->select(new Expression\Select([
+						'id',
+						'name',
+						'alternative_names',
+						'tags',
+						'reference_url',
+						'reference_is_broken',
+						'related_themes_id',
+						'user_id',
+						'created_at',
+						'is_starred',
+						'starred_at',
+						'is_empty',
+					]))->from(new Expression\From(['web.tagged_themes']))
+					->where(new Expression\WhereIn('tag_id', $this->tags)),
 				$selection,
 			),
 		))->rows();
@@ -62,9 +64,10 @@ final class TaggedThemes implements Themes {
 		return (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Sql\AnsiSelect(['count(*)']))
-					->from(['web.tagged_themes'])
-					->whereIn('tag_id', ['tag_id' => $this->tags]),
+				(new Select\Query())
+					->select(new Expression\Select(['count(*)']))
+					->from(new Expression\From(['web.tagged_themes']))
+					->where(new Expression\WhereIn('tag_id', $this->tags)),
 				$selection,
 			),
 		))->field();

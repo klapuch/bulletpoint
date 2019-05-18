@@ -4,7 +4,8 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain\Image;
 
 use Bulletpoint\Domain\Access;
-use Klapuch\Sql;
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Update;
 use Klapuch\Storage;
 use Nette\Http\FileUpload;
 
@@ -29,9 +30,10 @@ final class UploadedAvatars implements Avatars {
 		(new Storage\Transaction($this->connection))->start(function () use ($filename, $upload): void {
 			(new Storage\BuiltQuery(
 				$this->connection,
-				(new Sql\AnsiUpdate('users'))
-					->set(['avatar_filename' => '?'], [self::BASE_PATH . DIRECTORY_SEPARATOR . $filename])
-					->where('id = ?', [$this->user->id()]),
+				(new Update\Query())
+					->update('users')
+					->set(new Expression\Set(['avatar_filename' => self::BASE_PATH . DIRECTORY_SEPARATOR . $filename]))
+					->where(new Expression\Where('id', $this->user->id())),
 			))->execute();
 			$upload->move(self::PATH . DIRECTORY_SEPARATOR . $filename);
 		});

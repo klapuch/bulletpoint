@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
-use Klapuch\Sql;
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class StarredTags implements Tags {
@@ -25,10 +26,11 @@ final class StarredTags implements Tags {
 	public function all(): array {
 		return (new Storage\BuiltQuery(
 			$this->connection,
-			(new Sql\AnsiSelect(['id', 'name']))
-				->from(['web.starred_tags'])
-				->where('user_id = :user_id', ['user_id' => $this->user->id()])
-				->orderBy(['name' => 'ASC']),
+			(new Select\Query())
+				->select(new Expression\Select(['id', 'name']))
+				->from(new Expression\From(['web.starred_tags']))
+				->where(new Expression\Where('user_id', $this->user->id()))
+				->orderBy(new Expression\OrderBy(['name' => 'ASC'])),
 		))->rows();
 	}
 

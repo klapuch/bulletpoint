@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain;
 
 use Bulletpoint\Domain;
+use Characterice\Sql\Expression;
 use Klapuch\Dataset;
-use Klapuch\Sql;
 use Klapuch\Storage;
 
 final class SearchedThemes implements Themes {
@@ -32,8 +32,9 @@ final class SearchedThemes implements Themes {
 		$themes = (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				new Domain\Sql\SearchedThemes(
-					new Sql\AnsiSelect([
+				(new Domain\Sql\SearchedThemes($this->keyword))
+					->query()
+					->select(new Expression\Select([
 						'DISTINCT ON (themes.id) themes.id',
 						'themes.name',
 						'themes.alternative_names',
@@ -46,9 +47,7 @@ final class SearchedThemes implements Themes {
 						'themes.starred_at',
 						'themes.related_themes_id',
 						'themes.is_empty',
-					]),
-					$this->keyword,
-				),
+					])),
 				$selection,
 			),
 		))->rows();
@@ -65,10 +64,9 @@ final class SearchedThemes implements Themes {
 		return (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				new Domain\Sql\SearchedThemes(
-					new Sql\AnsiSelect(['count(DISTINCT themes.id)']),
-					$this->keyword,
-				),
+				(new Domain\Sql\SearchedThemes($this->keyword))
+					->query()
+					->select(new Expression\Select(['count(DISTINCT themes.id)'])),
 				$selection,
 			),
 		))->field();

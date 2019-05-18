@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
+use Characterice\Sql\Clause;
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Insert;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Dataset;
-use Klapuch\Sql;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 
@@ -23,23 +26,18 @@ final class StoredThemes implements Themes {
 	public function create(array $theme): int {
 		return (new Storage\BuiltQuery(
 			$this->connection,
-			(new Sql\PgInsertInto(
-				'web.themes',
-				[
-					'name' => ':name',
-					'alternative_names' => ':alternative_names',
-					'tags' => ':tags',
-					'reference_url' => ':reference_url',
-					'user_id' => ':user_id',
-				],
-				[
-					'name' => $theme['name'],
-					'alternative_names' => Json::encode($theme['alternative_names']),
-					'tags' => Json::encode($theme['tags']), // TODO: use array
-					'user_id' => $this->user->id(),
-					'reference_url' => $theme['reference']['url'],
-				],
-			))->returning(['id']),
+			(new Insert\Query())
+				->insertInto(new Clause\InsertInto(
+					'web.themes',
+					[
+						'name' => $theme['name'],
+						'alternative_names' => Json::encode($theme['alternative_names']),
+						'tags' => Json::encode($theme['tags']),
+						'user_id' => $this->user->id(),
+						'reference_url' => $theme['reference']['url'],
+					],
+				))
+				->returning(new Clause\Returning(['id'])),
 		))->field();
 	}
 
@@ -47,20 +45,21 @@ final class StoredThemes implements Themes {
 		$themes = (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Sql\AnsiSelect([
-					'id',
-					'name',
-					'alternative_names',
-					'tags',
-					'reference_url',
-					'reference_is_broken',
-					'related_themes_id',
-					'user_id',
-					'created_at',
-					'is_starred',
-					'starred_at',
-					'is_empty',
-				]))->from(['web.themes']),
+				(new Select\Query())
+					->select(new Expression\Select([
+						'id',
+						'name',
+						'alternative_names',
+						'tags',
+						'reference_url',
+						'reference_is_broken',
+						'related_themes_id',
+						'user_id',
+						'created_at',
+						'is_starred',
+						'starred_at',
+						'is_empty',
+					]))->from(new Expression\From(['web.themes'])),
 				$selection,
 			),
 		))->rows();
@@ -77,7 +76,9 @@ final class StoredThemes implements Themes {
 		return (new Storage\BuiltQuery(
 			$this->connection,
 			new Dataset\SelectiveStatement(
-				(new Sql\AnsiSelect(['count(*)']))->from(['web.themes']),
+				(new Select\Query())
+					->select(new Expression\Select(['count(*)']))
+					->from(new Expression\From(['web.themes'])),
 				$selection,
 			),
 		))->field();
