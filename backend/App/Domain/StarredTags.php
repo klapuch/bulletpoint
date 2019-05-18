@@ -28,6 +28,7 @@ final class StarredTags implements Tags {
 			$this->connection,
 			(new Select\Query())
 				->select(new Expression\Select(['id', 'name']))
+				->from(new Expression\From(['web.starred_tags']))
 				->where(new Expression\Where('user_id', $this->user->id()))
 				->orderBy(new Expression\OrderBy(['name' => 'ASC'])),
 		))->rows();
