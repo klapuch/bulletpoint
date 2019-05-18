@@ -3,11 +3,10 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
-use Characterice\Sql\Statement\Insert;
 use Characterice\Sql\Clause;
+use Characterice\Sql\Statement\Insert;
 use Klapuch\Http;
 use Klapuch\Scheduling;
-use Klapuch\Sql\PgMultiInsertInto;
 use Klapuch\Storage;
 use Klapuch\Uri;
 
@@ -29,8 +28,8 @@ final class PingReferences implements Scheduling\Job {
 					(new Insert\Query())
 						->insertInto(new Clause\MultiInsertInto('source_pings', [
 							'reference_id' => $ids,
-							'status' => array_fill(0, count($ids), $this->code(new Uri\ValidUrl($link))),
-						]))
+							'status' => array_fill(0, count($ids), $this->code(new Uri\ValidUrl($url))),
+						])),
 				))->execute();
 			}
 		});

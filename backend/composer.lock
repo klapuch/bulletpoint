@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c660414a62e3d28f94cfa7a3e25ea38",
+    "content-hash": "3e99c2d11ff38de03c3b21e7a5ec842f",
     "packages": [
         {
             "name": "characterice/sql",
-            "version": "dev-master",
+            "version": "0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/characterice/Sql.git",
-                "reference": "73918733647b7ef4f37cae4168c12db7940058b2"
+                "reference": "9b19860cdecdec72b8175cc731d43aea8edf050f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/characterice/Sql/zipball/73918733647b7ef4f37cae4168c12db7940058b2",
-                "reference": "73918733647b7ef4f37cae4168c12db7940058b2",
+                "url": "https://api.github.com/repos/characterice/Sql/zipball/9b19860cdecdec72b8175cc731d43aea8edf050f",
+                "reference": "9b19860cdecdec72b8175cc731d43aea8edf050f",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 "query",
                 "sql"
             ],
-            "time": "2019-05-18T19:46:23+00:00"
+            "time": "2019-05-18T20:32:25+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -396,20 +396,20 @@
         },
         {
             "name": "klapuch/dataset",
-            "version": "dev-new_sql",
+            "version": "0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Dataset.git",
-                "reference": "f4d942a4f6191ec3cd3ff13f192d04d83d4324f5"
+                "reference": "42c456c59bd3183d94c0080e01eb338780d0596d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/f4d942a4f6191ec3cd3ff13f192d04d83d4324f5",
-                "reference": "f4d942a4f6191ec3cd3ff13f192d04d83d4324f5",
+                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/42c456c59bd3183d94c0080e01eb338780d0596d",
+                "reference": "42c456c59bd3183d94c0080e01eb338780d0596d",
                 "shasum": ""
             },
             "require": {
-                "characterice/sql": "dev-master",
+                "characterice/sql": "^0.0.5",
                 "php": ">=7.3"
             },
             "require-dev": {
@@ -442,7 +442,7 @@
             ],
             "description": "Operations applicable to datasets",
             "homepage": "https://www.github.com/klapuch/Dataset",
-            "time": "2019-05-18T18:27:09+00:00"
+            "time": "2019-05-18T21:23:20+00:00"
         },
         {
             "name": "klapuch/encryption",
@@ -736,27 +736,27 @@
             "time": "2019-01-01T14:34:18+00:00"
         },
         {
-            "name": "klapuch/sql",
+            "name": "klapuch/scheduling",
             "version": "0.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/klapuch/Sql.git",
-                "reference": "d2ecd0b7a6d800a16130459a93688e18e6e1e822"
+                "url": "https://github.com/klapuch/Scheduling.git",
+                "reference": "bc7c93047e568cb938c624c8f75e8d5fe851ded2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Sql/zipball/d2ecd0b7a6d800a16130459a93688e18e6e1e822",
-                "reference": "d2ecd0b7a6d800a16130459a93688e18e6e1e822",
+                "url": "https://api.github.com/repos/klapuch/Scheduling/zipball/bc7c93047e568cb938c624c8f75e8d5fe851ded2",
+                "reference": "bc7c93047e568cb938c624c8f75e8d5fe851ded2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2"
+                "klapuch/storage": "*",
+                "php": ">=7.3"
             },
             "require-dev": {
                 "consistence/coding-standard": "^3.0",
                 "jakub-onderka/php-parallel-lint": "^1.0.0",
                 "nette/tester": "^2.0",
-                "phing/phing": "^2.16",
                 "phpstan/phpstan": "^0.10.1",
                 "phpstan/phpstan-strict-rules": "*",
                 "slevomat/coding-standard": "^4.8.3"
@@ -764,7 +764,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Klapuch\\Sql\\": [
+                    "Klapuch\\Scheduling\\": [
                         "Core/"
                     ]
                 }
@@ -778,34 +778,35 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Easy way how to work with SQL queries",
-            "homepage": "https://github.com/klapuch/Sql",
+            "description": "Scheduling for running taks",
+            "homepage": "https://github.com/klapuch/Scheduling",
             "keywords": [
-                "SQL Builder",
-                "fluent",
-                "sql"
+                "cron",
+                "job",
+                "scheduling",
+                "task"
             ],
-            "time": "2019-03-24T21:54:23+00:00"
+            "time": "2019-05-18T21:27:31+00:00"
         },
         {
             "name": "klapuch/storage",
-            "version": "dev-new_sql",
+            "version": "0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "671b36ca1795c4216ee4bef63281a4f25a5e8d8e"
+                "reference": "ac053b5712d07942bc6bb056c65803e66c0d1da9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/671b36ca1795c4216ee4bef63281a4f25a5e8d8e",
-                "reference": "671b36ca1795c4216ee4bef63281a4f25a5e8d8e",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/ac053b5712d07942bc6bb056c65803e66c0d1da9",
+                "reference": "ac053b5712d07942bc6bb056c65803e66c0d1da9",
                 "shasum": ""
             },
             "require": {
-                "characterice/sql": "dev-master",
+                "characterice/sql": "^0.0.5",
                 "ext-json": "*",
                 "ext-pdo": "*",
-                "php": ">=7.2",
+                "php": ">=7.3",
                 "predis/predis": "^1.1"
             },
             "require-dev": {
@@ -845,7 +846,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2019-05-17T19:03:24+00:00"
+            "time": "2019-05-18T21:19:34+00:00"
         },
         {
             "name": "klapuch/ui",
@@ -5054,11 +5055,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "klapuch/dataset": 20,
-        "characterice/sql": 20,
-        "klapuch/storage": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
