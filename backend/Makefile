@@ -44,6 +44,7 @@ phpcs:              ## phpcs
 
 .PHONY: phpcbf
 phpcbf:             ## phpcbf
+	@mkdir -p $(PHPCS_CACHE_DIR)
 	vendor/bin/phpcbf $(PHPCS_ARGS)
 
 .PHONY: generate-schemas

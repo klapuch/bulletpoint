@@ -97,7 +97,7 @@ final class StoredTheme implements Theme {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Delete\Query())
-				->from(new Expression\From(['user_starred_themes']))
+				->from('user_starred_themes')
 				->where(new Expression\Where('theme_id', $this->id))
 				->where(new Expression\Where('user_id', $this->user->id())),
 		))->execute();

@@ -86,7 +86,7 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Delete\Query())
-				->from(new Expression\From(['contributed_bulletpoints']))
+				->from('contributed_bulletpoints')
 				->where(new Expression\Where('id', [$this->id]))
 				->where(new Expression\Where('user_id', [$this->user->id()])),
 		))->execute();

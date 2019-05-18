@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/characterice/Sql.git",
-                "reference": "2e6d8f32053206f08bc2ea1b21725974342ee461"
+                "reference": "73918733647b7ef4f37cae4168c12db7940058b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/characterice/Sql/zipball/2e6d8f32053206f08bc2ea1b21725974342ee461",
-                "reference": "2e6d8f32053206f08bc2ea1b21725974342ee461",
+                "url": "https://api.github.com/repos/characterice/Sql/zipball/73918733647b7ef4f37cae4168c12db7940058b2",
+                "reference": "73918733647b7ef4f37cae4168c12db7940058b2",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 "query",
                 "sql"
             ],
-            "time": "2019-05-18T18:26:32+00:00"
+            "time": "2019-05-18T19:46:23+00:00"
         },
         {
             "name": "clue/stream-filter",

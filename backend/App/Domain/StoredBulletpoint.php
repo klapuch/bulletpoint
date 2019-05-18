@@ -99,7 +99,7 @@ final class StoredBulletpoint implements Bulletpoint {
 		(new Storage\BuiltQuery(
 			$this->connection,
 			(new Delete\Query())
-				->from(new Expression\From(['public_bulletpoints']))
+				->from('public_bulletpoints')
 				->where(new Expression\Where('id', $this->id)),
 		))->execute();
 	}
