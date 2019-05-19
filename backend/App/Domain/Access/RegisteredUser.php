@@ -57,10 +57,12 @@ final class RegisteredUser implements User {
 	}
 
 	private function registered(int $id): bool {
-		return (new Storage\TypedQuery(
+		return (new Storage\BuiltQuery(
 			$this->connection,
-			'SELECT EXISTS(SELECT 1 FROM users WHERE id = :id)',
-			['id' => $id],
+			(new Select\Query())
+				->from(new Expression\From(['users']))
+				->where(new Expression\Where('id', $id))
+				->exists(),
 		))->field();
 	}
 

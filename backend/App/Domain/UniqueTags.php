@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class UniqueTags implements Tags {
@@ -33,10 +35,12 @@ final class UniqueTags implements Tags {
 	}
 
 	private function exists(string $name): bool {
-		return (new Storage\TypedQuery(
+		return (new Storage\BuiltQuery(
 			$this->connection,
-			'SELECT EXISTS(SELECT 1 FROM tags WHERE name = :name)',
-			['name' => $name],
+			(new Select\Query())
+				->from(new Expression\From(['tags']))
+				->where(new Expression\Where('name', $name))
+				->exists(),
 		))->field();
 	}
 }

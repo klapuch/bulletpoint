@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Configuration;
 use Klapuch\Scheduling;
 use Klapuch\Storage;
@@ -43,10 +45,12 @@ final class PlPgSqlCheck implements Scheduling\Job {
 	}
 
 	private function installed(): bool {
-		return (new Storage\TypedQuery(
+		return (new Storage\BuiltQuery(
 			$this->connection,
-			'SELECT EXISTS(SELECT 1 FROM pg_extension WHERE extname = ?)',
-			['plpgsql_check'],
+			(new Select\Query())
+				->from(new Expression\From(['pg_extension']))
+				->where(new Expression\Where('extname', 'plpgsql_check'))
+				->exists(),
 		))->field();
 	}
 

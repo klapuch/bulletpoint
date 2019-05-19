@@ -5,6 +5,8 @@ namespace Bulletpoint\Domain\Contribution;
 
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Output;
 use Klapuch\Storage;
 
@@ -58,10 +60,13 @@ final class ExistingBulletpoint implements Domain\Bulletpoint {
 	}
 
 	private function exists(int $id): bool {
-		return (new Storage\TypedQuery(
+		return (new Storage\BuiltQuery(
 			$this->connection,
-			'SELECT EXISTS(SELECT 1 FROM contributed_bulletpoints WHERE id = :id AND user_id = :user_id)',
-			['id' => $id, 'user_id' => $this->user->id()],
+			(new Select\Query())
+				->from(new Expression\From(['contributed_bulletpoints']))
+				->where(new Expression\Where('id', $id))
+				->where(new Expression\Where('user_id', $this->user->id()))
+				->exists(),
 		))->field();
 	}
 }

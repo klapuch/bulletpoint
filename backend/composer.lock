@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "167a86d40401587b0a960a1acc85b241",
+    "content-hash": "7f504a0ed86770642df9baa5f7c3d4d4",
     "packages": [
         {
             "name": "characterice/sql",
-            "version": "0.0.5",
+            "version": "0.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/characterice/Sql.git",
-                "reference": "9b19860cdecdec72b8175cc731d43aea8edf050f"
+                "reference": "cbd152d651408330682a2ddc706b2b22520a6f2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/characterice/Sql/zipball/9b19860cdecdec72b8175cc731d43aea8edf050f",
-                "reference": "9b19860cdecdec72b8175cc731d43aea8edf050f",
+                "url": "https://api.github.com/repos/characterice/Sql/zipball/cbd152d651408330682a2ddc706b2b22520a6f2e",
+                "reference": "cbd152d651408330682a2ddc706b2b22520a6f2e",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 "query",
                 "sql"
             ],
-            "time": "2019-05-18T20:32:25+00:00"
+            "time": "2019-05-19T10:17:51+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -396,20 +396,20 @@
         },
         {
             "name": "klapuch/dataset",
-            "version": "0.0.3",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Dataset.git",
-                "reference": "42c456c59bd3183d94c0080e01eb338780d0596d"
+                "reference": "5e7d97878bee165df77789c890f0df82b302837d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/42c456c59bd3183d94c0080e01eb338780d0596d",
-                "reference": "42c456c59bd3183d94c0080e01eb338780d0596d",
+                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/5e7d97878bee165df77789c890f0df82b302837d",
+                "reference": "5e7d97878bee165df77789c890f0df82b302837d",
                 "shasum": ""
             },
             "require": {
-                "characterice/sql": "^0.0.5",
+                "characterice/sql": "*",
                 "php": ">=7.3"
             },
             "require-dev": {
@@ -442,7 +442,7 @@
             ],
             "description": "Operations applicable to datasets",
             "homepage": "https://www.github.com/klapuch/Dataset",
-            "time": "2019-05-18T21:23:20+00:00"
+            "time": "2019-05-19T10:29:44+00:00"
         },
         {
             "name": "klapuch/encryption",
@@ -790,20 +790,20 @@
         },
         {
             "name": "klapuch/storage",
-            "version": "0.0.2",
+            "version": "0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "ac053b5712d07942bc6bb056c65803e66c0d1da9"
+                "reference": "e95a6e0447b5d6dbcf4c07cbc1be55803533a2ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/ac053b5712d07942bc6bb056c65803e66c0d1da9",
-                "reference": "ac053b5712d07942bc6bb056c65803e66c0d1da9",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/e95a6e0447b5d6dbcf4c07cbc1be55803533a2ff",
+                "reference": "e95a6e0447b5d6dbcf4c07cbc1be55803533a2ff",
                 "shasum": ""
             },
             "require": {
-                "characterice/sql": "^0.0.5",
+                "characterice/sql": "*",
                 "ext-json": "*",
                 "ext-pdo": "*",
                 "php": ">=7.3",
@@ -846,7 +846,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2019-05-18T21:19:34+00:00"
+            "time": "2019-05-19T10:25:59+00:00"
         },
         {
             "name": "klapuch/ui",

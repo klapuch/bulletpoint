@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Output;
 use Klapuch\Storage;
 
@@ -56,10 +58,12 @@ final class ExistingTheme implements Theme {
 	}
 
 	private function exists(int $id): bool {
-		return (new Storage\TypedQuery(
+		return (new Storage\BuiltQuery(
 			$this->connection,
-			'SELECT EXISTS(SELECT 1 FROM themes WHERE id = :id)',
-			['id' => $id],
+			(new Select\Query())
+				->from(new Expression\From(['themes']))
+				->where(new Expression\Where('id', $id))
+				->exists(),
 		))->field();
 	}
 }

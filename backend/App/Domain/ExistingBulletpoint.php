@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
+use Characterice\Sql\Expression;
+use Characterice\Sql\Statement\Select;
 use Klapuch\Output;
 use Klapuch\Storage;
 
@@ -52,10 +54,12 @@ final class ExistingBulletpoint implements Bulletpoint {
 	}
 
 	private function exists(int $id): bool {
-		return (new Storage\TypedQuery(
+		return (new Storage\BuiltQuery(
 			$this->connection,
-			'SELECT EXISTS(SELECT 1 FROM public_bulletpoints WHERE id = :id)',
-			['id' => $id],
+			(new Select\Query())
+				->from(new Expression\From(['public_bulletpoints']))
+				->where(new Expression\Where('id', $id))
+				->exists(),
 		))->field();
 	}
 }
