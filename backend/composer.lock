@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "characterice/sql",
-            "version": "0.0.6",
+            "version": "0.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/characterice/Sql.git",
-                "reference": "cbd152d651408330682a2ddc706b2b22520a6f2e"
+                "reference": "968e8ee3b67c0274bbe6fbf78dc6c072c89b017c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/characterice/Sql/zipball/cbd152d651408330682a2ddc706b2b22520a6f2e",
-                "reference": "cbd152d651408330682a2ddc706b2b22520a6f2e",
+                "url": "https://api.github.com/repos/characterice/Sql/zipball/968e8ee3b67c0274bbe6fbf78dc6c072c89b017c",
+                "reference": "968e8ee3b67c0274bbe6fbf78dc6c072c89b017c",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 "query",
                 "sql"
             ],
-            "time": "2019-05-19T10:17:51+00:00"
+            "time": "2019-05-19T11:30:37+00:00"
         },
         {
             "name": "clue/stream-filter",
