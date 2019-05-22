@@ -29,7 +29,7 @@ final class StoredTags implements Tags {
 				(new Select\Query())
 					->select(new Expression\Select(['tag_id', 'name', 'reputation', 'rank']))
 					->from(new Expression\From(['user_tag_rank_reputations']))
-					->where(new Expression\Where('user_id ', $this->user->id())),
+					->where(new Expression\Where('user_id', $this->user->id())),
 				$selection,
 			),
 		))->rows();
