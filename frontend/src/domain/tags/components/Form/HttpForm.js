@@ -28,6 +28,6 @@ class HttpForm extends React.Component<Props> {
 
 const mapDispatchToProps = dispatch => ({
   receivedError: error => dispatch(message.receivedError(error)),
-  addTag: (postedTag: PostedTagType) => tag.add(postedTag),
+  addTag: (postedTag: PostedTagType) => dispatch(tag.add(postedTag)),
 });
 export default connect(null, mapDispatchToProps)(HttpForm);

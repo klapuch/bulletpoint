@@ -5,6 +5,7 @@ import {
   requestedAll,
   receivedStarred,
   requestedStarred,
+  invalidatedAll,
 } from './actions';
 import { fetchedAll, fetchedStarred } from './selects';
 import type { PostedTagType } from './types';
@@ -27,7 +28,6 @@ export const fetchStarred = () => (dispatch: (mixed) => Object, getState: () => 
     .then(response => dispatch(receivedStarred(response.data)));
 };
 
-export const add = (tag: PostedTagType) => (
-  axios.post('/tags', tag)
-    .catch(error => Promise.reject(error.response.data.message))
-);
+export const add = (tag: PostedTagType) => (dispatch: (mixed) => Object) => axios.post('/tags', tag)
+  .then(() => dispatch(invalidatedAll()))
+  .catch(error => Promise.reject(error.response.data.message));
