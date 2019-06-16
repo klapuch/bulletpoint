@@ -23,7 +23,7 @@ final class StoredTags implements Tags {
 			(new Select\Query())
 				->select(new Expression\Select(['id', 'name']))
 				->from(new Expression\From(['tags']))
-				->orderBy(new Expression\OrderBy(['id' => 'ASC'])),
+				->orderBy(new Expression\OrderBy(['name' => 'ASC', 'id' => 'DESC'])),
 		))->rows();
 	}
 
