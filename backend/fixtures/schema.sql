@@ -41,7 +41,7 @@ CREATE DOMAIN bulletpoint_ratings_point AS integer CHECK (constant.bulletpoint_r
 CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 CREATE DOMAIN usernames AS citext CHECK (VALUE ~ format('^[a-zA-Z0-9_]{%s,%s}$', constant.username_min_length(), constant.username_max_length()));
 CREATE DOMAIN openid_sub AS text CHECK (VALUE ~ '^.{1,255}$');
-CREATE DOMAIN http_status AS integer CHECK (int4range(100, 504) @> VALUE);
+CREATE DOMAIN http_status AS integer CHECK (VALUE BETWEEN 100 AND 504);
 
 -- schema audit
 CREATE TABLE audit.history (
@@ -145,7 +145,7 @@ CREATE MATERIALIZED VIEW broken_references AS
 	SELECT reference_id
 	FROM reference_pings
 	WHERE now() - INTERVAL '3 days' < ping_at
-	AND (status IS NULL OR int4range(400, 599) @> status::integer)
+	AND (status IS NULL OR status BETWEEN 400 AND 599)
 	GROUP BY reference_id
 	HAVING count(*) >= 3;
 CREATE UNIQUE INDEX broken_references_reference_id_uidx ON broken_references(reference_id);
@@ -508,7 +508,7 @@ CREATE MATERIALIZED VIEW broken_sources AS
 	SELECT source_id
 	FROM source_pings
 	WHERE now() - INTERVAL '3 days' < ping_at
-	AND (status IS NULL OR int4range(400, 599) @> status::integer)
+	AND (status IS NULL OR status BETWEEN 400 AND 599)
 	GROUP BY source_id
 	HAVING count(*) >= 3;
 CREATE UNIQUE INDEX broken_sources_source_id_uidx ON broken_sources(source_id);
