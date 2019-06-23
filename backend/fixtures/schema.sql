@@ -1017,7 +1017,7 @@ CREATE VIEW web.bulletpoints AS
 		GROUP BY bulletpoint_id
 	) AS bulletpoint_theme_comparisons ON bulletpoint_theme_comparisons.bulletpoint_id = bulletpoints.id
 	LEFT JOIN bulletpoint_groups ON bulletpoint_groups.bulletpoint_id = bulletpoints.id
-	ORDER BY total_rating DESC, bulletpoint_reputations.reputation DESC, length(bulletpoints.content) ASC, created_at DESC, id DESC;
+	ORDER BY total_rating DESC, bulletpoint_reputations.reputation DESC NULLS LAST, length(bulletpoints.content) ASC, created_at DESC, id DESC;
 
 CREATE FUNCTION web.bulletpoints_trigger_row_ii() RETURNS trigger AS $BODY$
 DECLARE
