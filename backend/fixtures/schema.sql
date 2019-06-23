@@ -312,14 +312,11 @@ CREATE TABLE user_tag_reputations (
 );
 
 CREATE FUNCTION update_user_tag_reputation(in_user_id integer, in_tag_id integer, in_point bulletpoint_ratings_point) RETURNS void AS $BODY$
+DECLARE
+	v_point CONSTANT integer NOT NULL DEFAULT CASE in_point WHEN 1 THEN 1 ELSE -1 END;
 BEGIN
-	IF in_point = 1 THEN
-		INSERT INTO user_tag_reputations (user_id, tag_id, reputation) VALUES (in_user_id, in_tag_id, 1)
-		ON CONFLICT (user_id, tag_id) DO UPDATE SET reputation = user_tag_reputations.reputation + 1;
-	ELSE
-		UPDATE user_tag_reputations SET reputation = greatest(reputation - 1, 0)
-		WHERE user_id = in_user_id AND tag_id = in_tag_id;
-	END IF;
+	INSERT INTO user_tag_reputations (user_id, tag_id, reputation) VALUES (in_user_id, in_tag_id, greatest(v_point, 0))
+	ON CONFLICT (user_id, tag_id) DO UPDATE SET reputation = user_tag_reputations.reputation + v_point;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
@@ -419,9 +416,11 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 
 CREATE FUNCTION theme_tags_trigger_row_ad() RETURNS trigger AS $BODY$
 BEGIN
-	PERFORM update_user_tag_reputation(bulletpoints.user_id, old.tag_id, -1::bulletpoint_ratings_point)
-	FROM bulletpoints
-	JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id;
+	IF EXISTS (SELECT 1 FROM tags WHERE id = old.tag_id) THEN
+		PERFORM update_user_tag_reputation(bulletpoints.user_id, old.tag_id, -1::bulletpoint_ratings_point)
+		FROM bulletpoints
+		JOIN theme_tags ON theme_tags.theme_id = bulletpoints.theme_id;
+	END IF;
 
 	RETURN old;
 END;
