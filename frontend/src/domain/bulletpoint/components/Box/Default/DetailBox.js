@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import type { FetchedBulletpointType, PointType } from '../../../types';
 import RichBox from './RichBox';
 import * as users from '../../../../user/selects';
-import * as user from '../../../../user/endpoints';
+import * as user from '../../../../user/actions';
 import * as me from '../../../../user';
 import * as themes from '../../../../theme/selects';
 import type { FetchedUserTagType, FetchedUserType } from '../../../../user/types';
@@ -31,7 +31,7 @@ type State = {|
 |};
 class DetailBox extends React.Component<Props, State> {
   handleMoreClick = () => Promise.resolve()
-    .then(this.props.fetchUser)
+    .then(() => this.props.fetchUser())
     .then(() => this.props.fetchTags(this.props.getThemeTags()))
     // $FlowFixMe correct string from endpoint.js
     .catch(this.props.receivedError);
