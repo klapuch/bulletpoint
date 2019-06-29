@@ -12,10 +12,8 @@ import {
   receivedTags,
 } from './actions';
 
-export const fetchMe = (token: string): Promise<MeType> => (
-  axios.get('/users/me', { headers: { Authorization: `Bearer ${token}` } })
-    .then(response => response.data)
-);
+export const fetchMe = (token: string): Promise<MeType> => axios.get('/users/me', { headers: { Authorization: `Bearer ${token}` } })
+  .then(response => response.data);
 
 export const refresh = (token: ?string) => {
   const userToken = token || session.getValue();
@@ -25,10 +23,16 @@ export const refresh = (token: ?string) => {
   return Promise.resolve();
 };
 
-export const edit = (properties: Object) => (
-  axios.put('/users/me', properties)
-    .catch(error => Promise.reject(error.response.data.message))
-);
+
+export function* edit(action: Object): Saga {
+  try {
+    yield call(axios.put, '/users/me', action.properties);
+    yield call(refresh);
+    yield call(action.next);
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+}
 
 export function* fetchSingle(action: Object): Saga {
   if (yield select(state => users.fetched(action.userId, state))) {

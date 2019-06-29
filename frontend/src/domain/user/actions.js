@@ -8,6 +8,7 @@ export const RECEIVED_USER_TAGS = 'RECEIVED_USER_TAGS';
 export const REQUESTED_USER_TAGS = 'REQUESTED_USER_TAGS';
 export const FETCH_USER_TAGS = 'FETCH_USER_TAGS';
 export const FETCH_SINGLE_USER = 'FETCH_SINGLE_USER';
+export const EDIT_USER = 'EDIT_USER';
 
 export const fetchSingle = (userId: number) => ({
   type: FETCH_SINGLE_USER,
@@ -18,6 +19,12 @@ export const fetchTags = (userId: number, tagIds: Array<number>) => ({
   type: FETCH_USER_TAGS,
   userId,
   tagIds,
+});
+
+export const edit = (properties: Object, next: () => void) => ({
+  type: EDIT_USER,
+  properties,
+  next,
 });
 
 export const requestedSingle = (userId: number) => ({
