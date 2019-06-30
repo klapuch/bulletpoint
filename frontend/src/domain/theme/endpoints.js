@@ -1,53 +1,36 @@
 // @flow
 import axios from 'axios';
-import { forEach } from 'lodash';
+import { call, put, select, all } from 'redux-saga/effects';
+import type { Saga } from 'redux-saga';
 import {
   invalidatedSingle,
   receivedAll,
   receivedSingle,
   requestedAll,
   requestedSingle,
-  receivedUpdateSingle,
-  requestedUpdateSingle,
   requestedStarChange,
-  receivedStarChange, erroredSingle,
+  receivedStarChange,
 } from './actions';
 import * as themes from './selects';
+import * as theme from './actions';
 import * as response from '../../api/response';
 import type { FetchedThemeType, PostedThemeType } from './types';
-import type { PaginationType } from '../../api/dataset/types';
 import type { FetchedTagType } from '../tags/types';
 import { invalidatedStarred } from '../tags/actions';
+import {receivedApiError} from "../../ui/message/actions";
 
-export const fetchSingle = (
-  id: number,
-  flat: boolean = false,
-) => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (themes.fetchedSingle(id, getState())) {
-    return Promise.resolve();
+export function* fetchSingle(action: Object): Saga {
+  if (yield select((state) => themes.fetchedSingle(action.id, state))) {
+    return;
   }
-  dispatch(requestedSingle(id));
-  return axios.get(`/themes/${id}`)
-    .then(response => dispatch(receivedSingle(id, response.data)))
-    .then(() => themes.getById(id, getState()).related_themes_id)
-    .then((themeIds: Array<number>) => {
-      if (!flat) {
-        forEach(themeIds, themeId => dispatch(fetchSingle(themeId, true)));
-      }
-    })
-    .catch((error) => {
-      dispatch(erroredSingle(id, error.response.status, error.response.data.message));
-    });
-};
-
-export const updateSingle = (
-  themeId: number,
-) => (dispatch: (mixed) => Object) => {
-  dispatch(requestedUpdateSingle(themeId));
-  axios.get(`/themes/${themeId}`)
-    .then(response => response.data)
-    .then(payload => dispatch(receivedUpdateSingle(payload)));
-};
+  yield put(requestedSingle(action.id));
+  const response = yield call(axios.get, `/themes/${action.id}`);
+  yield put(receivedSingle(action.id, response.data));
+  const relatedThemesId = yield select(state => themes.getById(action.id, state).related_themes_id);
+  if (!action.flat) {
+    yield all(relatedThemesId.map(themeId => put(theme.fetchSingle(themeId, true))));
+  }
+}
 
 export const create = (theme: PostedThemeType) => (
   axios.post('/themes', theme)
@@ -55,71 +38,42 @@ export const create = (theme: PostedThemeType) => (
     .then(headers => response.extractedLocationId(headers.location))
 );
 
-export const starOrUnstar = (
-  themeId: number,
-  is_starred: boolean,
-) => (dispatch: (mixed) => Object) => {
-  dispatch(requestedStarChange(themeId, is_starred));
-  return axios.patch(`/themes/${themeId}`, { is_starred })
-    .then(() => axios.get(`/themes/${themeId}`))
-    .then(response => response.data)
-    .then(theme => theme.is_starred)
-    .then(starred => dispatch(receivedStarChange(themeId, starred)))
-    .then(() => dispatch(invalidatedStarred()))
-    .catch(() => dispatch(receivedStarChange(themeId, !is_starred)));
-};
+export function* starOrUnstar(action: Object): Saga {
+  try {
+    yield put(requestedStarChange(action.themeId, action.is_starred));
+    const response = yield call(axios.patch, `/themes/${action.themeId}`, { is_starred: action.is_starred });
+    yield put(receivedStarChange(action.themeId, response.data.is_starred));
+    yield put(invalidatedStarred());
+  } catch (error) {
+    yield put(receivedStarChange(action.themeId, !action.is_starred));
+    yield put(receivedApiError(error));
+  }
+}
 
-export const change = (
-  id: number,
-  theme: PostedThemeType,
-) => (dispatch: (mixed) => Object) => (
-  axios.put(`/themes/${id}`, theme)
-    .then(() => dispatch(invalidatedSingle(id)))
-);
+export function* change (action: Object): Saga {
+  try {
+    yield call(axios.put, `/themes/${action.id}`, action.theme);
+    yield put(invalidatedSingle(action.id));
+    yield put(theme.fetchSingle(action.id));
+    yield call(action.next);
+  } catch (error) {
+    yield put(receivedApiError(error));
+  }
+}
 
-const fetchAll = (
-  params: Object,
-  pagination: PaginationType = { page: 1, perPage: 10 },
-) => (dispatch: (mixed) => Object) => {
-  dispatch(requestedAll());
-  axios.get(
-    '/themes', {
-      params: {
-        page: pagination.page,
-        per_page: pagination.perPage,
-        ...params,
-      },
-    },
-  )
-    .then(response => dispatch(receivedAll(response.data, response.headers)));
-};
-
-export const fetchByTag = (
-  tag: ?number,
-  pagination: PaginationType,
-) => (dispatch: (mixed) => Object) => (
-  dispatch(fetchAll({ tag_id: [tag] }, pagination))
-);
-
-export const fetchRecent = (
-  pagination: PaginationType,
-) => (dispatch: (mixed) => Object) => (
-  dispatch(fetchAll({ sort: '-created_at' }, pagination))
-);
-
-export const fetchStarred = (
-  pagination: PaginationType,
-  tagId: ?number,
-) => (dispatch: (mixed) => Object) => (
-  dispatch(fetchAll({ is_starred: 'true', tag_id: [tagId], sort: '-starred_at' }, pagination))
-);
-
-export const fetchSearches = (keyword: string) => (dispatch: (mixed) => Object) => (
-  dispatch(fetchAll({ q: keyword }, { page: 1, perPage: 20 }))
-);
+export function* fetchAll(action: Object): Saga {
+  yield put(requestedAll());
+  const response = yield call(
+    axios.get,
+    '/themes',
+    { params: { page: action.pagination.page, per_page: action.pagination.perPage, ...action.params, } }
+  );
+  yield put(receivedAll(response.data, response.headers));
+}
 
 const toReactSelectSearches = (themes: Array<FetchedThemeType>, except: Array<number>) => (
-  themes.filter(theme => !except.includes(theme.id))
+  themes
+    .filter(theme => !except.includes(theme.id))
     .map(theme => ({ label: theme.name, value: theme.id }))
 );
 

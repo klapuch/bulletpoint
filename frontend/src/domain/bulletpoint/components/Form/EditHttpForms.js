@@ -6,7 +6,7 @@ import Form from './DefaultForm';
 import * as themes from '../../../theme/selects';
 import * as bulletpoints from '../../selects';
 import type { FetchedBulletpointType, PostedBulletpointType } from '../../types';
-import * as bulletpoint from '../../endpoints';
+import * as bulletpoint from '../../actions';
 import type { FormTypes } from './types';
 import type { FetchedThemeType } from '../../../theme/types';
 

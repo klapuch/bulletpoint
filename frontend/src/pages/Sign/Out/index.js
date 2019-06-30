@@ -1,17 +1,20 @@
 // @flow
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
-import * as sign from '../../../domain/sign/endpoints';
+import * as sign from '../../../domain/sign/actions';
 import * as message from '../../../ui/message/actions';
 
 type Props = {|
-  +signOut: () => (Promise<void>),
+  +signOut: (() => void) => (void),
+  +receivedSuccess: (message: string) => (void),
   +history: Object,
 |};
 class Out extends React.PureComponent<Props> {
   componentWillMount() {
-    this.props.signOut()
+    const next = () => Promise.resolve()
+      .then(() => this.props.receivedSuccess('Byl jsi odhlášen.'))
       .then(() => this.props.history.push('/sign/in'));
+    this.props.signOut(next);
   }
 
   render() {
@@ -20,7 +23,7 @@ class Out extends React.PureComponent<Props> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  signOut: () => dispatch(sign.signOut())
-    .then(() => dispatch(message.receivedSuccess('Byl jsi odhlášen.'))),
+  signOut: (next) => dispatch(sign.signOut(next)),
+  receivedSuccess: (text: string) => dispatch(message.receivedSuccess(text)),
 });
 export default connect(null, mapDispatchToProps)(Out);

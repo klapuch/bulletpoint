@@ -7,7 +7,7 @@ import type { FetchedBulletpointType } from '../../../types';
 import Boxes from '../Boxes';
 import FakeBoxes from '../Fake/FakeBoxes';
 import * as bulletpoints from '../../../selects';
-import * as bulletpoint from '../../../endpoints';
+import * as bulletpoint from '../../../actions';
 import DetailBox from './DetailBox';
 import * as themes from '../../../../theme/selects';
 import type { FetchedThemeType } from '../../../../theme/types';

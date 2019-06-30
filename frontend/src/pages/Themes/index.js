@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-import * as theme from '../../domain/theme/endpoints';
+import * as theme from '../../domain/theme/actions';
 import * as themes from '../../domain/theme/selects';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import Previews from '../../domain/theme/components/Previews';

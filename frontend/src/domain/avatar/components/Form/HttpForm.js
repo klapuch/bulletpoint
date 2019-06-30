@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import * as user from '../../../user/endpoints';
-import * as avatar from '../../endpoints';
+import * as avatar from '../../actions';
 import { getMe, getAvatar } from '../../../user';
 import DefaultForm from './DefaultForm';
 import * as message from '../../../../ui/message/actions';
@@ -24,11 +23,14 @@ class HttpForm extends React.Component<Props, State> {
     this.reload();
   }
 
-  handleSubmit = (file: FormData) => avatar.upload(file)
-    .then(user.refresh)
-    .then(this.reload)
-    // $FlowFixMe correct string from endpoint.js
-    .catch(this.props.receivedError);
+  handleSubmit = (file: FormData, onAfterSubmit) => {
+    const next = () => Promise.resolve()
+      .then(this.reload)
+      .then(onAfterSubmit)
+      // $FlowFixMe correct string from endpoint.js
+      .catch(this.props.receivedError);
+    this.props.upload(file, next);
+  };
 
   reload = () => {
     this.setState({ me: getMe() });
@@ -50,5 +52,6 @@ class HttpForm extends React.Component<Props, State> {
 
 const mapDispatchToProps = dispatch => ({
   receivedError: error => dispatch(message.receivedError(error)),
+  upload: (file: FormData, next) => dispatch(avatar.upload(file, next)),
 });
 export default connect(null, mapDispatchToProps)(HttpForm);

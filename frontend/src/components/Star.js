@@ -11,7 +11,7 @@ const Resized = styled.span`
 
 type Props = {|
   +active: boolean,
-  +onClick: (boolean) => (Promise<any>),
+  +onClick: (boolean) => (void),
 |};
 export default function (props: Props) {
   const [active, setActive] = useState(props.active);

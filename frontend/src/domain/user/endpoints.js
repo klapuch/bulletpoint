@@ -11,6 +11,7 @@ import {
   requestedTags,
   receivedTags,
 } from './actions';
+import {receivedApiError} from "../../ui/message/actions";
 
 export const fetchMe = (token: string): Promise<MeType> => axios.get('/users/me', { headers: { Authorization: `Bearer ${token}` } })
   .then(response => response.data);
@@ -30,7 +31,7 @@ export function* edit(action: Object): Saga {
     yield call(refresh);
     yield call(action.next);
   } catch (error) {
-    throw new Error(error.response.data.message);
+    yield put(receivedApiError(error));
   }
 }
 
@@ -43,7 +44,7 @@ export function* fetchSingle(action: Object): Saga {
     const response = yield call(axios.get, `/users/${action.userId}`);
     yield put(receivedSingle(action.userId, response.data));
   } catch (error) {
-    throw new Error(error.response.data.message);
+    yield put(receivedApiError(error));
   }
 }
 
@@ -53,6 +54,6 @@ export function* fetchTags(action: Object): Saga {
     const response = yield call(axios.get, `/users/${action.userId}/tags`, { params: { tag_id: action.tagIds } });
     yield put(receivedTags(action.userId, response.data));
   } catch (error) {
-    throw new Error(error.response.data.message);
+    yield put(receivedApiError(error));
   }
 }

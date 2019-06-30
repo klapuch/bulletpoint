@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import type { FetchedBulletpointType } from '../../../types';
 import DefaultBox from '../Default/DefaultBox';
-import * as contributedBulletpoints from '../../../../contributed_bulletpoint/endpoints';
+import * as contributedBulletpoints from '../../../../contributed_bulletpoint/actions';
 
 type Props = {|
   +bulletpoint: FetchedBulletpointType,
@@ -34,6 +34,6 @@ class ContributionBox extends React.Component<Props, State> {
 const mapDispatchToProps = (dispatch, { bulletpoint: { id, theme_id } }) => ({
   deleteOne: (
     next: (void) => (void),
-  ) => dispatch(contributedBulletpoints.deleteOne(theme_id, id, next)),
+  ) => dispatch(contributedBulletpoints.deleteSingle(theme_id, id, next)),
 });
 export default connect(null, mapDispatchToProps)(ContributionBox);

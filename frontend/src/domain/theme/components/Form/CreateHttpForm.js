@@ -7,7 +7,7 @@ import * as theme from '../../endpoints';
 import * as tags from '../../../tags/selects';
 import DefaultForm from './DefaultForm';
 import type { FetchedTagType } from '../../../tags/types';
-import * as tag from '../../../tags/endpoints';
+import * as tag from '../../../tags/actions';
 
 type Props = {|
   +history: Object,

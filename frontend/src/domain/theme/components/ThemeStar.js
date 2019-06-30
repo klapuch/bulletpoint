@@ -2,11 +2,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Star from '../../../components/Star';
-import * as theme from '../endpoints';
+import * as theme from '../actions';
 import * as themes from '../selects';
 
 type Props = {|
-  +starOrUnstar: (boolean) => (Promise<any>),
+  +starOrUnstar: (boolean) => (void),
   +isStarred: boolean,
 |};
 class ThemeStar extends React.PureComponent<Props> {

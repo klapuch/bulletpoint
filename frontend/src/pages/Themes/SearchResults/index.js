@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import qs from 'qs';
 import { isEmpty } from 'lodash';
-import * as theme from '../../../domain/theme/endpoints';
+import * as theme from '../../../domain/theme/actions';
 import * as themes from '../../../domain/theme/selects';
 import Loader from '../../../ui/Loader';
 import type { FetchedThemeType } from '../../../domain/theme/types';

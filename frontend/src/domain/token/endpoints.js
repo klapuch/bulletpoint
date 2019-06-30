@@ -8,12 +8,11 @@ export const create = (
 ) => (
   axios.post('/tokens', credentials, { params: { provider } })
     .then(response => response.data)
-    .catch(error => Promise.reject(error.response.data.message))
 );
 
-export const invalidate = () => (
-  axios.delete('/tokens')
-);
+export const invalidate = () => {
+  axios.delete('/tokens');
+};
 
 export const refresh = (token: ?string) => (
   axios.post('/refresh_tokens', { token })

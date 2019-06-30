@@ -2,6 +2,7 @@
 
 import type { FetchedThemeType } from './types';
 import * as response from '../../api/response';
+import type {PaginationType} from "../../api/dataset/types";
 
 export const RECEIVED_THEME = 'RECEIVED_THEME';
 export const RECEIVED_THEMES = 'RECEIVED_THEMES';
@@ -13,6 +14,56 @@ export const RECEIVED_THEME_UPDATE = 'RECEIVED_THEME_UPDATE';
 export const REQUESTED_THEME_STAR_CHANGE = 'REQUESTED_THEME_STAR_CHANGE';
 export const RECEIVED_THEME_STAR_CHANGE = 'RECEIVED_THEME_STAR_CHANGE';
 export const ERRORED_SINGLE_THEME = 'ERRORED_SINGLE_THEME';
+export const FETCH_SINGLE_THEME = 'FETCH_SINGLE_THEME';
+export const STAR_OR_UNSTAR_THEME = 'STAR_OR_UNSTAR_THEME';
+export const CHANGE_THEME = 'CHANGE_THEME';
+export const FETCH_ALL_THEMES = 'FETCH_ALL_THEMES';
+
+export const fetchByTag = (
+  tag: ?number,
+  pagination: PaginationType,
+) => (fetchAll({ tag_id: [tag] }, pagination));
+
+export const fetchRecent = (
+  pagination: PaginationType,
+) => (fetchAll({ sort: '-created_at' }, pagination));
+
+export const fetchStarred = (
+  pagination: PaginationType,
+  tagId: ?number,
+) => (fetchAll({ is_starred: 'true', tag_id: [tagId], sort: '-starred_at' }, pagination));
+
+export const fetchSearches = (
+  keyword: string,
+) => (fetchAll({ q: keyword }, { page: 1, perPage: 20 }));
+
+export const fetchAll = (
+  params: Object,
+  pagination: PaginationType = { page: 1, perPage: 10 },
+) => ({
+  type: FETCH_ALL_THEMES,
+  params,
+  pagination,
+});
+
+export const change = (id: number, theme: PostedThemeType, next: () => void) => ({
+  type: CHANGE_THEME,
+  id,
+  theme,
+  next,
+});
+
+export const starOrUnstar = (themeId: number, is_starred: boolean) => ({
+  type: STAR_OR_UNSTAR_THEME,
+  themeId,
+  is_starred,
+});
+
+export const fetchSingle = (id: number, flat: boolean = false) => ({
+  type: FETCH_SINGLE_THEME,
+  id,
+  flat,
+});
 
 export const invalidatedSingle = (id: number) => ({
   type: RECEIVED_INVALIDATED_THEME,

@@ -6,9 +6,9 @@ import Form from './DefaultForm';
 import * as themes from '../../../theme/selects';
 import * as bulletpoints from '../../selects';
 import type { PostedBulletpointType } from '../../types';
-import * as bulletpoint from '../../endpoints';
+import * as bulletpoint from '../../actions';
 import * as user from '../../../user';
-import * as contributedBulletpoint from '../../../contributed_bulletpoint/endpoints';
+import * as contributedBulletpoint from '../../../contributed_bulletpoint/actions';
 import * as contributedBulletpoints from '../../../contributed_bulletpoint/selects';
 import type { FetchedThemeType } from '../../../theme/types';
 import type { FormTypes } from './types';
@@ -20,7 +20,7 @@ type Props = {|
   +fetching: boolean,
   +onCancelClick: () => (void),
   +onFormTypeChange: (FormTypes) => (void),
-  +addBulletpoint: (PostedBulletpointType) => (Promise<void>),
+  +addBulletpoint: (PostedBulletpointType, () => void) => (void),
 |};
 class AddHttpForm extends React.Component<Props> {
   componentDidMount(): void {
@@ -32,11 +32,12 @@ class AddHttpForm extends React.Component<Props> {
     this.props.fetchContributedBulletpoints();
   };
 
-  handleSubmit = (bulletpoint: PostedBulletpointType) => (
-    this.props.addBulletpoint(bulletpoint)
+  handleSubmit = (bulletpoint: PostedBulletpointType) => {
+    const next = () => Promise.resolve()
       .then(() => this.props.onFormTypeChange(FORM_TYPE_DEFAULT))
-      .then(this.reload)
-  );
+      .then(this.reload);
+    this.props.addBulletpoint(bulletpoint, next);
+  };
 
   render() {
     const { theme, fetching } = this.props;
@@ -62,10 +63,10 @@ const mapStateToProps = (state, { themeId }) => ({
 const mapDispatchToProps = (dispatch, { themeId }) => ({
   fetchBulletpoints: () => dispatch(bulletpoint.fetchAll(themeId)),
   fetchContributedBulletpoints: () => dispatch(contributedBulletpoint.fetchAll(themeId)),
-  addBulletpoint: (postedBulletpoint: PostedBulletpointType) => dispatch(
+  addBulletpoint: (postedBulletpoint: PostedBulletpointType, next) => dispatch(
     user.isAdmin()
-      ? bulletpoint.add(themeId, postedBulletpoint)
-      : contributedBulletpoint.add(themeId, postedBulletpoint),
+      ? bulletpoint.add(themeId, postedBulletpoint, next)
+      : contributedBulletpoint.add(themeId, postedBulletpoint, next),
   ),
   editBulletpoint: (
     bulletpointId: number,
