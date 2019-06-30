@@ -59,7 +59,7 @@ const MoreInfo = ({
     return null;
   }
   const user = getUser();
-  if (user === null) {
+  if (user === null || typeof user === 'undefined') {
     return null;
   }
   return (

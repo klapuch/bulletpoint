@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import type { FetchedBulletpointType, PointType } from '../../../types';
 import RichBox from './RichBox';
 import * as users from '../../../../user/selects';
-import * as user from '../../../../user/endpoints';
+import * as user from '../../../../user/actions';
 import * as me from '../../../../user';
 import * as themes from '../../../../theme/selects';
 import type { FetchedUserTagType, FetchedUserType } from '../../../../user/types';
 import type { FetchedTagType } from '../../../../tags/types';
-import * as bulletpoint from '../../../endpoints';
+import * as bulletpoint from '../../../actions';
 import * as message from '../../../../../ui/message/actions';
 
 type Props = {|
@@ -23,7 +23,7 @@ type Props = {|
   +getThemeTags: () => (Array<FetchedTagType>),
   +changeRating: (PointType) => (void),
   +getTags: () => (Array<FetchedUserTagType>),
-  +deleteOne: () => (Promise<void>),
+  +deleteSingle: (next?: () => void) => (void),
   +receivedError: (string),
 |};
 type State = {|
@@ -31,14 +31,14 @@ type State = {|
 |};
 class DetailBox extends React.Component<Props, State> {
   handleMoreClick = () => Promise.resolve()
-    .then(this.props.fetchUser)
+    .then(() => this.props.fetchUser())
     .then(() => this.props.fetchTags(this.props.getThemeTags()))
     // $FlowFixMe correct string from endpoint.js
     .catch(this.props.receivedError);
 
   handleDeleteClick = () => {
     if (window.confirm('Opravdu chceš tento bulletpoint smazat?')) {
-      this.props.deleteOne().then(this.props.onDeleteClick);
+      this.props.deleteSingle(this.props.onDeleteClick);
     }
   };
 
@@ -78,8 +78,7 @@ const mapDispatchToProps = (dispatch, { bulletpoint: { id, user_id, theme_id } }
   fetchTags: (
     tags: Array<FetchedTagType>,
   ) => dispatch(user.fetchTags(user_id, tags.map(tag => tag.id))),
-  deleteOne: () => dispatch(bulletpoint.deleteOne(theme_id, id)),
-  changeRating: (point: PointType) => bulletpoint.rate(id, point)
-    .then(() => dispatch(bulletpoint.updateSingle(theme_id, id))),
+  deleteSingle: next => dispatch(bulletpoint.deleteSingle(theme_id, id, next)),
+  changeRating: (point: PointType) => dispatch(bulletpoint.rate(id, theme_id, point)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(DetailBox);

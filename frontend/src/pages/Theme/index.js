@@ -2,7 +2,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import * as theme from '../../domain/theme/endpoints';
+import * as theme from '../../domain/theme/actions';
 import * as themes from '../../domain/theme/selects';
 import * as user from '../../domain/user';
 import DetailBoxes from '../../domain/bulletpoint/components/Box/Default/DetailBoxes';

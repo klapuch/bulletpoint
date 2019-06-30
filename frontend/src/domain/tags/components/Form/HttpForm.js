@@ -3,20 +3,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import type { PostedTagType } from '../../types';
 import DefaultForm from './DefaultForm';
-import * as tag from '../../endpoints';
-import * as message from '../../../../ui/message/actions';
+import * as tag from '../../actions';
 
 type Props = {|
   +history: Object,
-  +addTag: (PostedTagType) => (Promise<void>),
-  +receivedError: (string),
+  +addTag: (PostedTagType, () => Promise<any>) => (void),
 |};
 class HttpForm extends React.Component<Props> {
   handleSubmit = (tag: PostedTagType) => {
-    this.props.addTag(tag)
-      .then(() => this.props.history.push('/themes/create'))
-      // $FlowFixMe correct string from endpoint.js
-      .catch(this.props.receivedError);
+    const next = () => Promise.resolve()
+      .then(() => this.props.history.push('/themes/create'));
+    this.props.addTag(tag, next);
   };
 
   render() {
@@ -27,7 +24,6 @@ class HttpForm extends React.Component<Props> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  receivedError: error => dispatch(message.receivedError(error)),
-  addTag: (postedTag: PostedTagType) => dispatch(tag.add(postedTag)),
+  addTag: (postedTag: PostedTagType, next) => dispatch(tag.add(postedTag, next)),
 });
 export default connect(null, mapDispatchToProps)(HttpForm);

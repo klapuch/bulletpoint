@@ -13,7 +13,7 @@ type EventType = {|
 |};
 
 type Props = {|
-  +onSubmit: (PostedUserType) => (Promise<any>),
+  +onSubmit: (PostedUserType) => (void),
   +user: FetchedUserType,
 |};
 type State = {|

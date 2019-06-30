@@ -1,5 +1,7 @@
 // @flow
 import axios from 'axios';
+import { call, select, put } from 'redux-saga/effects';
+import type { Saga } from 'redux-saga';
 import {
   receivedAll,
   requestedAll,
@@ -8,26 +10,32 @@ import {
   invalidatedAll,
 } from './actions';
 import { fetchedAll, fetchedStarred } from './selects';
-import type { PostedTagType } from './types';
+import { receivedApiError } from '../../ui/message/actions';
 
-export const fetchAll = () => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (fetchedAll(getState())) {
-    return Promise.resolve();
+export function* fetchAll(): Saga {
+  if (yield select(fetchedAll)) {
+    return;
   }
-  dispatch(requestedAll());
-  return axios.get('tags')
-    .then(response => dispatch(receivedAll(response.data)));
-};
+  yield put(requestedAll());
+  const response = yield call(axios.get, 'tags');
+  yield put(receivedAll(response.data));
+}
 
-export const fetchStarred = () => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (fetchedStarred(getState())) {
-    return Promise.resolve();
+export function* fetchStarred(): Saga {
+  if (yield select(fetchedStarred)) {
+    return;
   }
-  dispatch(requestedStarred());
-  return axios.get('starred_tags')
-    .then(response => dispatch(receivedStarred(response.data)));
-};
+  yield put(requestedStarred());
+  const response = yield call(axios.get, 'starred_tags');
+  yield put(receivedStarred(response.data));
+}
 
-export const add = (tag: PostedTagType) => (dispatch: (mixed) => Object) => axios.post('/tags', tag)
-  .then(() => dispatch(invalidatedAll()))
-  .catch(error => Promise.reject(error.response.data.message));
+export function* add(action: Object): Saga {
+  try {
+    yield call(axios.post, '/tags', action.tag);
+    yield put(invalidatedAll());
+    yield call(action.next);
+  } catch (error) {
+    yield put(receivedApiError(error));
+  }
+}

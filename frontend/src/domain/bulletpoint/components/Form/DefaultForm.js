@@ -20,7 +20,8 @@ import PossibleGroups from './Input/PossibleGroups';
 
 type Props = {|
   +bulletpoint?: FetchedBulletpointType,
-  +onSubmit: (PostedBulletpointType) => (Promise<any>),
+  // $FlowFixMe ok
+  +onSubmit: (PostedBulletpointType) => (void),
   +onCancelClick: () => (void),
   +type: FormTypes,
   +theme: FetchedThemeType,

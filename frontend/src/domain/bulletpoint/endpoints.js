@@ -1,81 +1,61 @@
 // @flow
 import axios from 'axios';
-import { forEach } from 'lodash';
+import {
+  call, put, select, all,
+} from 'redux-saga/effects';
+import type { Saga } from 'redux-saga';
 import {
   invalidatedAll,
   receivedAll,
   receivedUpdateSingle,
   requestedAll,
-  requestedUpdateSingle,
+  updateSingle as updateSingleAction,
 } from './actions';
-import * as theme from '../theme/endpoints';
+import * as theme from '../theme/actions';
 import * as bulletpoints from './selects';
-import type { PostedBulletpointType, PointType } from './types';
 
-export const rate = (
-  bulletpoint: number,
-  point: PointType,
-) => (
-  axios.patch(`/bulletpoints/${bulletpoint}`, { rating: { user: point } })
-);
+export function* rate(action: Object): Saga {
+  yield call(axios.patch, `/bulletpoints/${action.bulletpointId}`, { rating: { user: action.point } });
+  yield put(updateSingleAction(action.themeId, action.bulletpointId));
+}
 
-export const fetchAll = (
-  themeId: number,
-) => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (bulletpoints.fetchedAll(themeId, getState())) {
-    return Promise.resolve();
+export function* fetchAll(action: Object): Saga {
+  if (yield select(state => bulletpoints.fetchedAll(action.themeId, state))) {
+    return;
   }
-  dispatch(requestedAll(themeId));
-  return axios.get(`/themes/${themeId}/bulletpoints`)
-    .then(response => dispatch(receivedAll(themeId, response.data)))
-    .then(() => bulletpoints.getByTheme(themeId, getState()))
-    .then((themeBulletpoints) => {
-      forEach(
-        themeBulletpoints,
-        themeBulletpoint => (
-          [
-            ...themeBulletpoint.referenced_theme_id,
-            ...themeBulletpoint.compared_theme_id,
-          ].forEach(referencedThemeId => (
-            dispatch(theme.fetchSingle(referencedThemeId))
-          ))
-        ),
-      );
-      return themeBulletpoints;
-    });
-};
+  yield put(requestedAll(action.themeId));
+  const response = yield call(axios.get, `/themes/${action.themeId}/bulletpoints`);
+  yield put(receivedAll(action.themeId, response.data));
+  const themeBulletpoints = yield select(state => bulletpoints.getByTheme(action.themeId, state));
+  yield all(
+    themeBulletpoints
+      .map(themeBulletpoint => ([
+        ...themeBulletpoint.referenced_theme_id,
+        ...themeBulletpoint.compared_theme_id,
+      ]))
+      .reduce((previous, current) => previous.concat(current), [])
+      .map(relatedThemeId => put(theme.fetchSingle(relatedThemeId))),
+  );
+}
 
-export const add = (
-  theme: number,
-  bulletpoint: PostedBulletpointType,
-) => (dispatch: (mixed) => Object) => (
-  axios.post(`/themes/${theme}/bulletpoints`, bulletpoint)
-    .then(() => dispatch(invalidatedAll(theme)))
-);
+export function* add(action: Object): Saga {
+  yield call(axios.post, `/themes/${action.themeId}/bulletpoints`, action.bulletpoint);
+  yield put(invalidatedAll(action.themeId));
+  yield call(action.next);
+}
 
-export const deleteOne = (
-  theme: number,
-  bulletpoint: number,
-) => (dispatch: (mixed) => Object) => (
-  axios.delete(`/bulletpoints/${bulletpoint}`)
-    .then(() => dispatch(invalidatedAll(theme)))
-);
+export function* deleteSingle(action: Object): Saga {
+  yield call(axios.delete, `/bulletpoints/${action.bulletpointId}`);
+  yield put(invalidatedAll(action.themeId));
+  yield call(action.next);
+}
 
-export const edit = (
-  theme: number,
-  id: number,
-  bulletpoint: PostedBulletpointType,
-) => (dispatch: (mixed) => Object) => (
-  axios.put(`/bulletpoints/${id}`, bulletpoint)
-    .then(() => dispatch(invalidatedAll(theme)))
-);
+export function* edit(action: Object): Saga {
+  yield call(axios.put, `/bulletpoints/${action.bulletpointId}`, action.bulletpoint);
+  yield put(invalidatedAll(action.themeId));
+}
 
-export const updateSingle = (
-  theme: number,
-  bulletpoint: number,
-) => (dispatch: (mixed) => Object) => {
-  requestedUpdateSingle(theme);
-  axios.get(`/bulletpoints/${bulletpoint}`)
-    .then(response => response.data)
-    .then(payload => dispatch(receivedUpdateSingle(payload)));
-};
+export function* updateSingle(action: Object): Saga {
+  const response = yield call(axios.get, `/bulletpoints/${action.bulletpointId}`);
+  yield put(receivedUpdateSingle(response.data));
+}

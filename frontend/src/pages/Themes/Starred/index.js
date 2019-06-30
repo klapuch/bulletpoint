@@ -2,10 +2,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import qs from 'qs';
-import * as theme from '../../../domain/theme/endpoints';
+import * as theme from '../../../domain/theme/actions';
 import * as themes from '../../../domain/theme/selects';
 import * as tags from '../../../domain/tags/selects';
-import * as tag from '../../../domain/tags/endpoints';
+import * as tag from '../../../domain/tags/actions';
 import Loader from '../../../ui/Loader';
 import type { FetchedThemeType } from '../../../domain/theme/types';
 import Previews from '../../../domain/theme/components/Previews';

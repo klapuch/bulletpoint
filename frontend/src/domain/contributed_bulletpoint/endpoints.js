@@ -1,48 +1,38 @@
 // @flow
 import axios from 'axios';
-import { forEach } from 'lodash';
+import {
+  call, put, select, all,
+} from 'redux-saga/effects';
+import type { Saga } from 'redux-saga';
 import { invalidatedAll, receivedAll, requestedAll } from './actions';
 import { fetchedAll } from './selects';
-import type { PostedBulletpointType } from '../bulletpoint/types';
 import * as bulletpoints from '../bulletpoint/selects';
-import * as theme from '../theme/endpoints';
+import * as theme from '../theme/actions';
 
-export const fetchAll = (
-  themeId: number,
-) => (dispatch: (mixed) => Object, getState: () => Object) => {
-  if (fetchedAll(themeId, getState())) {
-    return Promise.resolve();
+export function* fetchAll(action: Object): Saga {
+  if (yield select(state => fetchedAll(action.themeId, state))) {
+    return;
   }
-  dispatch(requestedAll(themeId));
-  return axios.get(`/themes/${themeId}/contributed_bulletpoints`)
-    .then(response => dispatch(receivedAll(themeId, response.data)))
-    .then(() => bulletpoints.getByTheme(themeId, getState()))
-    .then((themeBulletpoints) => {
-      forEach(
-        themeBulletpoints,
-        themeBulletpoint => (
-          themeBulletpoint.referenced_theme_id.forEach(referencedThemeId => (
-            dispatch(theme.fetchSingle(referencedThemeId))
-          ))
-        ),
-      );
-    });
-};
+  yield put(requestedAll(action.themeId));
+  const response = yield call(axios.get, `/themes/${action.themeId}/contributed_bulletpoints`);
+  yield put(receivedAll(action.themeId, response.data));
+  const themeBulletpoints = yield select(state => bulletpoints.getByTheme(action.themeId, state));
+  yield all(
+    themeBulletpoints
+      .map(themeBulletpoint => ([...themeBulletpoint.referenced_theme_id]))
+      .reduce((previous, current) => previous.concat(current), [])
+      .map(relatedThemeId => put(theme.fetchSingle(relatedThemeId))),
+  );
+}
 
-export const add = (
-  theme: number,
-  bulletpoint: PostedBulletpointType,
-) => (dispatch: (mixed) => Object) => (
-  axios.post(`/themes/${theme}/contributed_bulletpoints`, bulletpoint)
-    .then(() => dispatch(invalidatedAll(theme)))
-);
+export function* add(action: Object): Saga {
+  yield call(axios.post, `/themes/${action.themeId}/contributed_bulletpoints`, action.bulletpoint);
+  yield put(invalidatedAll(action.themeId));
+  yield call(action.next);
+}
 
-export const deleteOne = (
-  theme: number,
-  bulletpoint: number,
-  next: (void) => (void),
-) => (dispatch: (mixed) => Object) => {
-  axios.delete(`/contributed_bulletpoints/${bulletpoint}`)
-    .then(() => dispatch(invalidatedAll(theme)))
-    .then(next);
-};
+export function* deleteSingle(action: Object): Saga {
+  yield call(axios.delete, `/contributed_bulletpoints/${action.bulletpointId}`);
+  yield put(invalidatedAll(action.themeId));
+  yield call(action.next);
+}

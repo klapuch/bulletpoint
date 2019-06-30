@@ -5,17 +5,16 @@ import { Redirect } from 'react-router-dom';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import GoogleLogin from 'react-google-login';
 import Form from '../../../domain/sign/components/Form';
-import * as sign from '../../../domain/sign/endpoints';
+import * as sign from '../../../domain/sign/actions';
 import type { PostedCredentialsType, PostedProviderCredentialsType, ProviderTypes } from '../../../domain/sign/types';
 import { FACEBOOK_PROVIDER, GOOGLE_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
 import LoginButton from '../../../domain/sign/components/Social/LoginButton';
-import * as message from '../../../ui/message/actions';
 
 type Props = {|
-  +receivedError: (string),
   +signIn: (
     ProviderTypes,
     PostedCredentialsType|PostedProviderCredentialsType,
+    () => (void),
   ) => (Promise<void>),
   +location: Object,
 |};
@@ -32,27 +31,18 @@ class In extends React.Component<Props, State> {
   };
 
   handleSubmit = (credentials: PostedCredentialsType) => {
-    this.props.signIn(INTERNAL_PROVIDER, credentials)
-      .then(this.afterLogin)
-      // $FlowFixMe correct string from endpoint.js
-      .catch(this.props.receivedError);
+    this.props.signIn(INTERNAL_PROVIDER, credentials, this.afterLogin);
   };
 
   handleFacebookLogin = (credentials: Object) => {
     if (typeof credentials.accessToken !== 'undefined') {
-      this.props.signIn(FACEBOOK_PROVIDER, { login: credentials.accessToken })
-        .then(this.afterLogin)
-        // $FlowFixMe correct string from endpoint.js
-        .catch(this.props.receivedError);
+      this.props.signIn(FACEBOOK_PROVIDER, { login: credentials.accessToken }, this.afterLogin);
     }
   };
 
   handleGoogleLogin = (credentials: Object) => {
     if (typeof credentials.accessToken !== 'undefined') {
-      this.props.signIn(GOOGLE_PROVIDER, { login: credentials.accessToken })
-        .then(this.afterLogin)
-        // $FlowFixMe correct string from endpoint.js
-        .catch(this.props.receivedError);
+      this.props.signIn(GOOGLE_PROVIDER, { login: credentials.accessToken }, this.afterLogin);
     }
   };
 
@@ -99,11 +89,10 @@ class In extends React.Component<Props, State> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  receivedError: error => dispatch(message.receivedError(error)),
   signIn: (
     provider: ProviderTypes,
     credentials: PostedCredentialsType,
-  ) => dispatch(sign.signIn(provider, credentials))
-    .then(() => message.receivedSuccess('Jsi úspěšně přihlášen.')),
+    next,
+  ) => dispatch(sign.signIn(provider, credentials, next)),
 });
 export default connect(null, mapDispatchToProps)(In);

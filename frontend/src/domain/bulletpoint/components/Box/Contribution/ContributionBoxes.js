@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash';
 import type { FetchedBulletpointType } from '../../../types';
 import Boxes from '../Boxes';
 import * as contributedBulletpoints from '../../../../contributed_bulletpoint/selects';
-import * as contributedBulletpoint from '../../../../contributed_bulletpoint/endpoints';
+import * as contributedBulletpoint from '../../../../contributed_bulletpoint/actions';
 import ContributionBox from './ContributionBox';
 import FakeBoxes from '../Fake/FakeBoxes';
 import * as themes from '../../../../theme/selects';
