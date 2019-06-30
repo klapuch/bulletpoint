@@ -17,7 +17,7 @@ type TargetType = {|
 |};
 
 type Props = {|
-  +onSubmit: (PostedThemeType) => (Promise<any>),
+  +onSubmit: (PostedThemeType) => (void),
   +tags: Array<FetchedTagType>,
   +theme?: ?FetchedThemeType,
 |};

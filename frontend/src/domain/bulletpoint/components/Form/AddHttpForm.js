@@ -20,7 +20,7 @@ type Props = {|
   +fetching: boolean,
   +onCancelClick: () => (void),
   +onFormTypeChange: (FormTypes) => (void),
-  +addBulletpoint: (PostedBulletpointType, () => void) => (void),
+  +addBulletpoint: (PostedBulletpointType, () => Promise<any>) => (void),
 |};
 class AddHttpForm extends React.Component<Props> {
   componentDidMount(): void {

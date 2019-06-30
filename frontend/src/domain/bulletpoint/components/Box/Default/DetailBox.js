@@ -23,7 +23,7 @@ type Props = {|
   +getThemeTags: () => (Array<FetchedTagType>),
   +changeRating: (PointType) => (void),
   +getTags: () => (Array<FetchedUserTagType>),
-  +deleteSingle: () => (void),
+  +deleteSingle: (next?: () => void) => (void),
   +receivedError: (string),
 |};
 type State = {|

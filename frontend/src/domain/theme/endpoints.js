@@ -56,7 +56,7 @@ export function* change(action: Object): Saga {
   try {
     yield call(axios.put, `/themes/${action.id}`, action.theme);
     yield put(invalidatedSingle(action.id));
-    yield put(theme.fetchSingle(action.id));
+    yield put(fetchSingleAction(action.id));
     yield call(action.next);
   } catch (error) {
     yield put(receivedApiError(error));

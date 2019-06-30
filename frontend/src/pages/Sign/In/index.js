@@ -14,6 +14,7 @@ type Props = {|
   +signIn: (
     ProviderTypes,
     PostedCredentialsType|PostedProviderCredentialsType,
+    () => (void),
   ) => (Promise<void>),
   +location: Object,
 |};

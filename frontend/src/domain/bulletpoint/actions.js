@@ -21,7 +21,7 @@ export const rate = (bulletpointId: number, themeId: number, point: PointType) =
   point,
 });
 
-export const deleteSingle = (themeId: number, bulletpointId: number, next) => ({
+export const deleteSingle = (themeId: number, bulletpointId: number, next: () => void) => ({
   type: DELETE_SINGLE_THEME_BULLETPOINT,
   themeId,
   bulletpointId,
@@ -45,7 +45,7 @@ export const edit = (
   bulletpoint,
 });
 
-export const add = (themeId: number, bulletpoint: PostedBulletpointType, next) => ({
+export const add = (themeId: number, bulletpoint: PostedBulletpointType, next: () => void) => ({
   type: ADD_THEME_BULLETPOINT,
   themeId,
   bulletpoint,

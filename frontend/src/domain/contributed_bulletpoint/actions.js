@@ -9,7 +9,7 @@ export const FETCH_ALL_CONTRIBUTED_BULLETPOINTS = 'FETCH_ALL_CONTRIBUTED_BULLETP
 export const DELETE_SINGLE_THEME_CONTRIBUTED_BULLETPOINT = 'DELETE_SINGLE_THEME_CONTRIBUTED_BULLETPOINT';
 export const ADD_THEME_CONTRIBUTED_BULLETPOINT = 'ADD_THEME_CONTRIBUTED_BULLETPOINT';
 
-export const add = (themeId: number, bulletpoint: PostedBulletpointType, next) => ({
+export const add = (themeId: number, bulletpoint: PostedBulletpointType, next: () => void) => ({
   type: ADD_THEME_CONTRIBUTED_BULLETPOINT,
   themeId,
   bulletpoint,
@@ -21,7 +21,7 @@ export const fetchAll = (themeId: number) => ({
   themeId,
 });
 
-export const deleteSingle = (themeId: number, bulletpointId: number, next) => ({
+export const deleteSingle = (themeId: number, bulletpointId: number, next: () => void) => ({
   type: DELETE_SINGLE_THEME_CONTRIBUTED_BULLETPOINT,
   themeId,
   bulletpointId,

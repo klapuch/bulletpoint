@@ -7,7 +7,7 @@ import DefaultForm from './DefaultForm';
 import type { MeType } from '../../../user/types';
 
 type Props = {|
- +upload: (FormData, () => void) => void,
+ +upload: (FormData, () => Promise<any>) => void,
 |};
 type State = {|
   me: MeType|null,

@@ -26,7 +26,7 @@ class ChangeHttpForm extends React.Component<Props> {
   handleSubmit = (theme: PostedThemeType) => {
     const { match: { params: { id } } } = this.props;
     const next = () => this.props.history.push(`/themes/${id}/${getSlug(theme.name)}`);
-    return this.props.changeTheme(id, theme, next);
+    this.props.changeTheme(id, theme, next);
   };
 
   render() {

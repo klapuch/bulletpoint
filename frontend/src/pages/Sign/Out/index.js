@@ -5,7 +5,7 @@ import * as sign from '../../../domain/sign/actions';
 import * as message from '../../../ui/message/actions';
 
 type Props = {|
-  +signOut: (() => void) => (void),
+  +signOut: (() => Promise<any>) => (void),
   +receivedSuccess: (message: string) => (void),
   +history: Object,
 |};

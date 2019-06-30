@@ -7,7 +7,7 @@ export const SIGN_OUT = 'SIGN_OUT';
 export const signIn = (
   provider: ProviderTypes,
   credentials: PostedCredentialsType,
-  next,
+  next: () => void,
 ) => ({
   type: SIGN_IN,
   provider,
@@ -15,7 +15,7 @@ export const signIn = (
   next,
 });
 
-export const signOut = next => ({
+export const signOut = (next: () => void) => ({
   type: SIGN_OUT,
   next,
 });

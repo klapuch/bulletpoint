@@ -7,7 +7,7 @@ import * as tag from '../../actions';
 
 type Props = {|
   +history: Object,
-  +addTag: (PostedTagType) => (Promise<void>),
+  +addTag: (PostedTagType, () => Promise<any>) => (void),
 |};
 class HttpForm extends React.Component<Props> {
   handleSubmit = (tag: PostedTagType) => {

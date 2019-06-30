@@ -17,7 +17,7 @@ export const fetchStarred = () => ({
   type: FETCH_STARRED_TAGS,
 });
 
-export const add = (tag: PostedTagType, next) => ({
+export const add = (tag: PostedTagType, next: () => void) => ({
   type: ADD_TAG,
   tag,
   next,
