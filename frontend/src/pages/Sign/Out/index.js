@@ -23,7 +23,7 @@ class Out extends React.PureComponent<Props> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  signOut: (next) => dispatch(sign.signOut(next)),
+  signOut: next => dispatch(sign.signOut(next)),
   receivedSuccess: (text: string) => dispatch(message.receivedSuccess(text)),
 });
 export default connect(null, mapDispatchToProps)(Out);

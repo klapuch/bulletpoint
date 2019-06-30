@@ -42,7 +42,11 @@ class ChangeHttpForm extends React.Component<Props> {
 
 const mapDispatchToProps = dispatch => ({
   fetchTags: () => dispatch(tag.fetchAll()),
-  changeTheme: (id: number, postedTheme: PostedThemeType, next) => dispatch(theme.change(id, postedTheme, next)),
+  changeTheme: (
+    id: number,
+    postedTheme: PostedThemeType,
+    next,
+  ) => dispatch(theme.change(id, postedTheme, next)),
 });
 
 const mapStateToProps = state => ({

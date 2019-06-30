@@ -78,7 +78,7 @@ const mapDispatchToProps = (dispatch, { bulletpoint: { id, user_id, theme_id } }
   fetchTags: (
     tags: Array<FetchedTagType>,
   ) => dispatch(user.fetchTags(user_id, tags.map(tag => tag.id))),
-  deleteSingle: (next) => dispatch(bulletpoint.deleteSingle(theme_id, id, next)),
+  deleteSingle: next => dispatch(bulletpoint.deleteSingle(theme_id, id, next)),
   changeRating: (point: PointType) => dispatch(bulletpoint.rate(id, theme_id, point)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(DetailBox);

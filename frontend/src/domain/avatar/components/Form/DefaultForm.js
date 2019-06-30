@@ -4,7 +4,7 @@ import { last } from 'lodash';
 import ImageUploader from 'react-images-upload';
 
 type Props = {|
-  +onSubmit: (FormData, next) => (Promise<void>),
+  +onSubmit: (FormData, () => void) => (void),
 |};
 type State = {|
   avatar: File|null,

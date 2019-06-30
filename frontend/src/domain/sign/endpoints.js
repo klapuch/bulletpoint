@@ -1,19 +1,19 @@
 // @flow
-import * as tokens from '../token/endpoints';
-import * as session from '../access/session';
 import { call, put } from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
+import * as tokens from '../token/endpoints';
+import * as session from '../access/session';
 import { fetchMe } from '../user/endpoints';
 import { FACEBOOK_PROVIDER, GOOGLE_PROVIDER } from './types';
-import {receivedSuccess, receivedApiError} from "../../ui/message/actions";
+import { receivedSuccess, receivedApiError } from '../../ui/message/actions';
 
 export function* signIn(action: Object): Saga {
-  const onCreatedToken = function*(login): Saga {
+  function* onCreatedToken(login): Saga {
     const me = yield call(fetchMe, login.token);
     yield call(session.start, { expiration: login.expiration, value: login.token }, me);
     yield put(receivedSuccess('Jsi úspěšně přihlášen.'));
     yield put(action.next);
-  };
+  }
 
   try {
     if (action.provider === FACEBOOK_PROVIDER) {

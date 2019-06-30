@@ -1,8 +1,8 @@
 // @flow
 
-import type { FetchedThemeType } from './types';
+import type { FetchedThemeType, PostedThemeType } from './types';
 import * as response from '../../api/response';
-import type {PaginationType} from "../../api/dataset/types";
+import type { PaginationType } from '../../api/dataset/types';
 
 export const RECEIVED_THEME = 'RECEIVED_THEME';
 export const RECEIVED_THEMES = 'RECEIVED_THEMES';
@@ -18,6 +18,16 @@ export const FETCH_SINGLE_THEME = 'FETCH_SINGLE_THEME';
 export const STAR_OR_UNSTAR_THEME = 'STAR_OR_UNSTAR_THEME';
 export const CHANGE_THEME = 'CHANGE_THEME';
 export const FETCH_ALL_THEMES = 'FETCH_ALL_THEMES';
+
+export const fetchAll = (
+  params: Object,
+  pagination: PaginationType = { page: 1, perPage: 10 },
+) => ({
+  type: FETCH_ALL_THEMES,
+  params,
+  pagination,
+});
+
 
 export const fetchByTag = (
   tag: ?number,
@@ -36,15 +46,6 @@ export const fetchStarred = (
 export const fetchSearches = (
   keyword: string,
 ) => (fetchAll({ q: keyword }, { page: 1, perPage: 20 }));
-
-export const fetchAll = (
-  params: Object,
-  pagination: PaginationType = { page: 1, perPage: 10 },
-) => ({
-  type: FETCH_ALL_THEMES,
-  params,
-  pagination,
-});
 
 export const change = (id: number, theme: PostedThemeType, next: () => void) => ({
   type: CHANGE_THEME,

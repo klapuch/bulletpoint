@@ -11,7 +11,7 @@ import {
   requestedTags,
   receivedTags,
 } from './actions';
-import {receivedApiError} from "../../ui/message/actions";
+import { receivedApiError } from '../../ui/message/actions';
 
 export const fetchMe = (token: string): Promise<MeType> => axios.get('/users/me', { headers: { Authorization: `Bearer ${token}` } })
   .then(response => response.data);

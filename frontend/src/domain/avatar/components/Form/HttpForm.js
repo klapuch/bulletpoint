@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import * as avatar from '../../actions';
 import { getMe, getAvatar } from '../../../user';
 import DefaultForm from './DefaultForm';
-import * as message from '../../../../ui/message/actions';
 import type { MeType } from '../../../user/types';
 
 type Props = {|
- +receivedError: (string),
+ +upload: (FormData, () => void) => void,
 |};
 type State = {|
   me: MeType|null,
@@ -26,9 +25,7 @@ class HttpForm extends React.Component<Props, State> {
   handleSubmit = (file: FormData, onAfterSubmit) => {
     const next = () => Promise.resolve()
       .then(this.reload)
-      .then(onAfterSubmit)
-      // $FlowFixMe correct string from endpoint.js
-      .catch(this.props.receivedError);
+      .then(onAfterSubmit);
     this.props.upload(file, next);
   };
 
@@ -51,7 +48,6 @@ class HttpForm extends React.Component<Props, State> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  receivedError: error => dispatch(message.receivedError(error)),
   upload: (file: FormData, next) => dispatch(avatar.upload(file, next)),
 });
 export default connect(null, mapDispatchToProps)(HttpForm);

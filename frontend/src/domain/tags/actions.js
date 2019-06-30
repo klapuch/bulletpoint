@@ -1,6 +1,6 @@
 // @flow
 
-import type {FetchedTagType, FilterType, PostedTagType} from './types';
+import type { FetchedTagType, FilterType, PostedTagType } from './types';
 
 export const RECEIVED_TAGS = 'RECEIVED_TAGS';
 export const REQUESTED_TAGS = 'REQUESTED_TAGS';

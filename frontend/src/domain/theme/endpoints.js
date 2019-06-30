@@ -1,6 +1,8 @@
 // @flow
 import axios from 'axios';
-import { call, put, select, all } from 'redux-saga/effects';
+import {
+  call, put, select, all,
+} from 'redux-saga/effects';
 import type { Saga } from 'redux-saga';
 import {
   invalidatedSingle,
@@ -10,17 +12,17 @@ import {
   requestedSingle,
   requestedStarChange,
   receivedStarChange,
+  fetchSingle as fetchSingleAction,
 } from './actions';
 import * as themes from './selects';
-import * as theme from './actions';
 import * as response from '../../api/response';
 import type { FetchedThemeType, PostedThemeType } from './types';
 import type { FetchedTagType } from '../tags/types';
 import { invalidatedStarred } from '../tags/actions';
-import {receivedApiError} from "../../ui/message/actions";
+import { receivedApiError } from '../../ui/message/actions';
 
 export function* fetchSingle(action: Object): Saga {
-  if (yield select((state) => themes.fetchedSingle(action.id, state))) {
+  if (yield select(state => themes.fetchedSingle(action.id, state))) {
     return;
   }
   yield put(requestedSingle(action.id));
@@ -28,7 +30,7 @@ export function* fetchSingle(action: Object): Saga {
   yield put(receivedSingle(action.id, response.data));
   const relatedThemesId = yield select(state => themes.getById(action.id, state).related_themes_id);
   if (!action.flat) {
-    yield all(relatedThemesId.map(themeId => put(theme.fetchSingle(themeId, true))));
+    yield all(relatedThemesId.map(themeId => put(fetchSingleAction(themeId, true))));
   }
 }
 
@@ -50,7 +52,7 @@ export function* starOrUnstar(action: Object): Saga {
   }
 }
 
-export function* change (action: Object): Saga {
+export function* change(action: Object): Saga {
   try {
     yield call(axios.put, `/themes/${action.id}`, action.theme);
     yield put(invalidatedSingle(action.id));
@@ -66,7 +68,13 @@ export function* fetchAll(action: Object): Saga {
   const response = yield call(
     axios.get,
     '/themes',
-    { params: { page: action.pagination.page, per_page: action.pagination.perPage, ...action.params, } }
+    {
+      params: {
+        page: action.pagination.page,
+        per_page: action.pagination.perPage,
+        ...action.params,
+      },
+    },
   );
   yield put(receivedAll(response.data, response.headers));
 }

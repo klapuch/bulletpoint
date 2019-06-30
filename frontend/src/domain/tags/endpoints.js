@@ -10,7 +10,7 @@ import {
   invalidatedAll,
 } from './actions';
 import { fetchedAll, fetchedStarred } from './selects';
-import {receivedApiError} from "../../ui/message/actions";
+import { receivedApiError } from '../../ui/message/actions';
 
 export function* fetchAll(): Saga {
   if (yield select(fetchedAll)) {

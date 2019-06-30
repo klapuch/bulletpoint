@@ -9,10 +9,8 @@ import * as sign from '../../../domain/sign/actions';
 import type { PostedCredentialsType, PostedProviderCredentialsType, ProviderTypes } from '../../../domain/sign/types';
 import { FACEBOOK_PROVIDER, GOOGLE_PROVIDER, INTERNAL_PROVIDER } from '../../../domain/sign/types';
 import LoginButton from '../../../domain/sign/components/Social/LoginButton';
-import * as message from '../../../ui/message/actions';
 
 type Props = {|
-  +receivedError: (string),
   +signIn: (
     ProviderTypes,
     PostedCredentialsType|PostedProviderCredentialsType,
@@ -90,11 +88,10 @@ class In extends React.Component<Props, State> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  receivedError: error => dispatch(message.receivedError(error)),
   signIn: (
     provider: ProviderTypes,
     credentials: PostedCredentialsType,
     next,
-  ) => dispatch(sign.signIn(provider, credentials, next))
+  ) => dispatch(sign.signIn(provider, credentials, next)),
 });
 export default connect(null, mapDispatchToProps)(In);

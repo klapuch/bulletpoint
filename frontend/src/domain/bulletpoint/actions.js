@@ -1,6 +1,6 @@
 // @flow
 
-import type {FetchedBulletpointType, PostedBulletpointType} from './types';
+import type { FetchedBulletpointType, PointType, PostedBulletpointType } from './types';
 
 export const RECEIVED_THEME_BULLETPOINTS = 'RECEIVED_THEME_BULLETPOINTS';
 export const REQUESTED_THEME_BULLETPOINTS = 'REQUESTED_THEME_BULLETPOINTS';
@@ -34,7 +34,11 @@ export const updateSingle = (themeId: number, bulletpointId: number) => ({
   bulletpointId,
 });
 
-export const edit = (themeId: number, bulletpointId: number, bulletpoint: PostedBulletpointType,) => ({
+export const edit = (
+  themeId: number,
+  bulletpointId: number,
+  bulletpoint: PostedBulletpointType,
+) => ({
   type: EDIT_THEME_BULLETPOINT,
   themeId,
   bulletpointId,
