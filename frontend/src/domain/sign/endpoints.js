@@ -12,7 +12,7 @@ export function* signIn(action: Object): Saga {
     const me = yield call(fetchMe, login.token);
     yield call(session.start, { expiration: login.expiration, value: login.token }, me);
     yield put(receivedSuccess('Jsi úspěšně přihlášen.'));
-    yield put(action.next);
+    yield call(action.next);
   }
 
   try {
