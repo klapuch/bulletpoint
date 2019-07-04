@@ -105,6 +105,7 @@ final class GenerateJsonSchema implements Scheduling\Job {
 	}
 
 	private function withoutRemains(): void {
+		/** @var \SplFileInfo $directory */
 		foreach (new \CallbackFilterIterator(
 			new \RecursiveIteratorIterator(
 				new \RecursiveDirectoryIterator(__DIR__ . '/../../Api/Endpoint', \RecursiveDirectoryIterator::SKIP_DOTS),
@@ -120,7 +121,6 @@ final class GenerateJsonSchema implements Scheduling\Job {
 				);
 			},
 		) as $directory) {
-			/** @var \SplFileInfo $directory */
 			foreach (glob(sprintf('%s/*.json', $directory->getPathname())) ?: [] as $file) {
 				@unlink($file); // intentionally
 			}
