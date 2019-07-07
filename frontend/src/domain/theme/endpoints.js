@@ -43,8 +43,8 @@ export const create = (theme: PostedThemeType) => (
 export function* starOrUnstar(action: Object): Saga {
   try {
     yield put(requestedStarChange(action.themeId, action.is_starred));
-    const response = yield call(axios.patch, `/themes/${action.themeId}`, { is_starred: action.is_starred });
-    yield put(receivedStarChange(action.themeId, response.data.is_starred));
+    yield call(axios.patch, `/themes/${action.themeId}`, { is_starred: action.is_starred });
+    yield put(receivedStarChange(action.themeId, action.is_starred));
     yield put(invalidatedStarred());
   } catch (error) {
     yield put(receivedStarChange(action.themeId, !action.is_starred));
