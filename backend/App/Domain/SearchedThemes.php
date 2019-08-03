@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain;
 
 use Bulletpoint\Domain;
-use Characterice\Sql\Expression;
 use Klapuch\Dataset;
+use Klapuch\Sql\Expression;
 use Klapuch\Storage;
 
 final class SearchedThemes implements Themes {

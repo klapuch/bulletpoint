@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain;
 
-use Characterice\Sql\Clause;
-use Characterice\Sql\Expression;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Select;
-use Characterice\Sql\Statement\Update;
 use Klapuch\Output;
+use Klapuch\Sql\Clause;
+use Klapuch\Sql\Expression;
+use Klapuch\Sql\Statement\Delete;
+use Klapuch\Sql\Statement\Insert;
+use Klapuch\Sql\Statement\Select;
+use Klapuch\Sql\Statement\Update;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 

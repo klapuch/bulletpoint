@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
-use Characterice\Sql\Clause;
-use Characterice\Sql\Statement\Insert;
 use Klapuch\Http;
 use Klapuch\Scheduling;
+use Klapuch\Sql\Clause;
+use Klapuch\Sql\Statement\Insert;
 use Klapuch\Storage;
 use Klapuch\Uri;
 

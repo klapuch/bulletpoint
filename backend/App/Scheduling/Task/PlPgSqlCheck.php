@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
-use Characterice\Sql\Expression;
-use Characterice\Sql\Statement\Select;
 use Klapuch\Configuration;
 use Klapuch\Scheduling;
+use Klapuch\Sql\Expression;
+use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class PlPgSqlCheck implements Scheduling\Job {

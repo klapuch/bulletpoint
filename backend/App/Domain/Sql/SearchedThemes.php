@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain\Sql;
 
-use Characterice\Sql\Clause;
-use Characterice\Sql\Expression;
-use Characterice\Sql\Statement\Select;
+use Klapuch\Sql\Clause;
+use Klapuch\Sql\Expression;
+use Klapuch\Sql\Statement\Select;
 
 final class SearchedThemes {
 	/** @var string */

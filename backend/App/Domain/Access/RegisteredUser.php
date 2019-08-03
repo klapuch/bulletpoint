@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain\Access;
 
-use Characterice\Sql\Expression;
-use Characterice\Sql\Statement\Select;
-use Characterice\Sql\Statement\Update;
+use Klapuch\Sql\Expression;
+use Klapuch\Sql\Statement\Select;
+use Klapuch\Sql\Statement\Update;
 use Klapuch\Storage;
 
 final class RegisteredUser implements User {

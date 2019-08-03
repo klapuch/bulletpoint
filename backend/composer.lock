@@ -4,54 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f504a0ed86770642df9baa5f7c3d4d4",
+    "content-hash": "1fc939ea54fff975d2e28ca7bdf8c7ed",
     "packages": [
-        {
-            "name": "characterice/sql",
-            "version": "0.0.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/characterice/Sql.git",
-                "reference": "968e8ee3b67c0274bbe6fbf78dc6c072c89b017c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/characterice/Sql/zipball/968e8ee3b67c0274bbe6fbf78dc6c072c89b017c",
-                "reference": "968e8ee3b67c0274bbe6fbf78dc6c072c89b017c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.3"
-            },
-            "require-dev": {
-                "consistence/coding-standard": "^3.0",
-                "jakub-onderka/php-parallel-lint": "^1.0.0",
-                "nette/tester": "^2.0",
-                "phpstan/phpstan": "^0.11.0",
-                "phpstan/phpstan-strict-rules": "*",
-                "povils/phpmnd": "^2.1",
-                "sebastian/phpcpd": "^4.0.0",
-                "slevomat/coding-standard": "^5.0.0",
-                "vimeo/psalm": "^3.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Characterice\\Sql\\": [
-                        "Core/"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Library for building SQL queries",
-            "homepage": "https://github.com/characterice/sql",
-            "keywords": [
-                "SQL Builder",
-                "query",
-                "sql"
-            ],
-            "time": "2019-05-19T11:30:37+00:00"
-        },
         {
             "name": "clue/stream-filter",
             "version": "v1.4.1",
@@ -450,20 +404,20 @@
         },
         {
             "name": "klapuch/dataset",
-            "version": "0.0.4",
+            "version": "0.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Dataset.git",
-                "reference": "5e7d97878bee165df77789c890f0df82b302837d"
+                "reference": "0d395adbbeb662b6be2153427fd65e177f49b57a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/5e7d97878bee165df77789c890f0df82b302837d",
-                "reference": "5e7d97878bee165df77789c890f0df82b302837d",
+                "url": "https://api.github.com/repos/klapuch/Dataset/zipball/0d395adbbeb662b6be2153427fd65e177f49b57a",
+                "reference": "0d395adbbeb662b6be2153427fd65e177f49b57a",
                 "shasum": ""
             },
             "require": {
-                "characterice/sql": "*",
+                "klapuch/sql": "*",
                 "php": ">=7.3"
             },
             "require-dev": {
@@ -489,14 +443,14 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "Operations applicable to datasets",
             "homepage": "https://www.github.com/klapuch/Dataset",
-            "time": "2019-05-19T10:29:44+00:00"
+            "time": "2019-08-03T17:35:57+00:00"
         },
         {
             "name": "klapuch/encryption",
@@ -843,23 +797,69 @@
             "time": "2019-05-18T21:27:31+00:00"
         },
         {
-            "name": "klapuch/storage",
-            "version": "0.0.3",
+            "name": "klapuch/sql",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/klapuch/Storage.git",
-                "reference": "e95a6e0447b5d6dbcf4c07cbc1be55803533a2ff"
+                "url": "https://github.com/klapuch/Sql.git",
+                "reference": "3067a78e4107d86a422053bd43f1f379dae98c63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/e95a6e0447b5d6dbcf4c07cbc1be55803533a2ff",
-                "reference": "e95a6e0447b5d6dbcf4c07cbc1be55803533a2ff",
+                "url": "https://api.github.com/repos/klapuch/Sql/zipball/3067a78e4107d86a422053bd43f1f379dae98c63",
+                "reference": "3067a78e4107d86a422053bd43f1f379dae98c63",
                 "shasum": ""
             },
             "require": {
-                "characterice/sql": "*",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "consistence/coding-standard": "^3.0",
+                "jakub-onderka/php-parallel-lint": "^1.0.0",
+                "nette/tester": "^2.0",
+                "phpstan/phpstan": "^0.11.0",
+                "phpstan/phpstan-strict-rules": "*",
+                "povils/phpmnd": "^2.1",
+                "sebastian/phpcpd": "^4.0.0",
+                "slevomat/coding-standard": "^5.0.0",
+                "vimeo/psalm": "^3.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Klapuch\\Sql\\": [
+                        "Core/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Library for building SQL queries",
+            "homepage": "https://github.com/klapuch/sql",
+            "keywords": [
+                "SQL Builder",
+                "query",
+                "sql"
+            ],
+            "time": "2019-08-03T17:27:12+00:00"
+        },
+        {
+            "name": "klapuch/storage",
+            "version": "0.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klapuch/Storage.git",
+                "reference": "35f7b6aa7640c7e0712ea7250a18bebfc9eec67a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/35f7b6aa7640c7e0712ea7250a18bebfc9eec67a",
+                "reference": "35f7b6aa7640c7e0712ea7250a18bebfc9eec67a",
+                "shasum": ""
+            },
+            "require": {
                 "ext-json": "*",
                 "ext-pdo": "*",
+                "klapuch/sql": "*",
                 "php": ">=7.3",
                 "predis/predis": "^1.1"
             },
@@ -888,9 +888,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "Easy way how to work with database storage",
@@ -900,7 +900,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2019-05-19T10:25:59+00:00"
+            "time": "2019-08-03T17:33:43+00:00"
         },
         {
             "name": "klapuch/ui",
@@ -1057,16 +1057,16 @@
         },
         {
             "name": "nette/http",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/http.git",
-                "reference": "2fa91a76583c3cb3e7d1a51c501c5653a6a11f8a"
+                "reference": "96d8a7e05e41af89569ddf8ad662c27fcf1a9a9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/http/zipball/2fa91a76583c3cb3e7d1a51c501c5653a6a11f8a",
-                "reference": "2fa91a76583c3cb3e7d1a51c501c5653a6a11f8a",
+                "url": "https://api.github.com/repos/nette/http/zipball/96d8a7e05e41af89569ddf8ad662c27fcf1a9a9b",
+                "reference": "96d8a7e05e41af89569ddf8ad662c27fcf1a9a9b",
                 "shasum": ""
             },
             "require": {
@@ -1074,7 +1074,7 @@
                 "php": ">=7.1"
             },
             "conflict": {
-                "nette/di": "<3.0"
+                "nette/di": "<3.0.0-stable"
             },
             "require-dev": {
                 "nette/di": "^3.0",
@@ -1125,7 +1125,7 @@
                 "session",
                 "url"
             ],
-            "time": "2019-04-03T11:57:10+00:00"
+            "time": "2019-07-08T20:28:51+00:00"
         },
         {
             "name": "nette/utils",
@@ -1205,34 +1205,35 @@
         },
         {
             "name": "ocramius/package-versions",
-            "version": "1.4.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/PackageVersions.git",
-                "reference": "a4d4b60d0e60da2487bd21a2c6ac089f85570dbb"
+                "reference": "1d32342b8c1eb27353c8887c366147b4c2da673c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/a4d4b60d0e60da2487bd21a2c6ac089f85570dbb",
-                "reference": "a4d4b60d0e60da2487bd21a2c6ac089f85570dbb",
+                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/1d32342b8c1eb27353c8887c366147b4c2da673c",
+                "reference": "1d32342b8c1eb27353c8887c366147b4c2da673c",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.0.0",
-                "php": "^7.1.0"
+                "php": "^7.3.0"
             },
             "require-dev": {
-                "composer/composer": "^1.6.3",
-                "doctrine/coding-standard": "^5.0.1",
+                "composer/composer": "^1.8.6",
+                "doctrine/coding-standard": "^6.0.0",
                 "ext-zip": "*",
-                "infection/infection": "^0.7.1",
-                "phpunit/phpunit": "^7.0.0"
+                "infection/infection": "^0.13.4",
+                "phpunit/phpunit": "^8.2.5",
+                "vimeo/psalm": "^3.4.9"
             },
             "type": "composer-plugin",
             "extra": {
                 "class": "PackageVersions\\Installer",
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "1.6.x-dev"
                 }
             },
             "autoload": {
@@ -1251,7 +1252,7 @@
                 }
             ],
             "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
-            "time": "2019-02-21T12:16:21+00:00"
+            "time": "2019-07-17T15:49:50+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -2159,7 +2160,7 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v4.3.2",
+            "version": "v4.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
@@ -2271,16 +2272,16 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.6.3",
+            "version": "v2.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "7613eeff265b49a865add75360d1962449e3c12f"
+                "reference": "cad2ec2c40cee828ce5538a4bc5bbde7045a7c1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/7613eeff265b49a865add75360d1962449e3c12f",
-                "reference": "7613eeff265b49a865add75360d1962449e3c12f",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/cad2ec2c40cee828ce5538a4bc5bbde7045a7c1b",
+                "reference": "cad2ec2c40cee828ce5538a4bc5bbde7045a7c1b",
                 "shasum": ""
             },
             "require": {
@@ -2334,20 +2335,20 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2019-06-18T12:20:11+00:00"
+            "time": "2019-07-16T14:23:55+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "2.1.2",
+            "version": "2.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "37bf68b428850ee26ed7c3be6c26236dd95a95f1"
+                "reference": "279723778c40164bcf984a2df12ff2c6ec5e61c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/37bf68b428850ee26ed7c3be6c26236dd95a95f1",
-                "reference": "37bf68b428850ee26ed7c3be6c26236dd95a95f1",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/279723778c40164bcf984a2df12ff2c6ec5e61c1",
+                "reference": "279723778c40164bcf984a2df12ff2c6ec5e61c1",
                 "shasum": ""
             },
             "require": {
@@ -2400,22 +2401,22 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2019-04-29T21:11:00+00:00"
+            "time": "2019-07-10T16:13:25+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "amphp/amp",
-            "version": "v2.1.2",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "f824f0df1da2cc042934fa267d7a227fff9276c9"
+                "reference": "c6a775a6c9fdd9ca4c909647a19b02d2d11a0568"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/f824f0df1da2cc042934fa267d7a227fff9276c9",
-                "reference": "f824f0df1da2cc042934fa267d7a227fff9276c9",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/c6a775a6c9fdd9ca4c909647a19b02d2d11a0568",
+                "reference": "c6a775a6c9fdd9ca4c909647a19b02d2d11a0568",
                 "shasum": ""
             },
             "require": {
@@ -2450,20 +2451,20 @@
             ],
             "authors": [
                 {
-                    "name": "Bob Weinand",
-                    "email": "bobwei9@hotmail.com"
-                },
-                {
-                    "name": "Niklas Keller",
-                    "email": "me@kelunik.com"
-                },
-                {
                     "name": "Daniel Lowrey",
                     "email": "rdlowrey@php.net"
                 },
                 {
                     "name": "Aaron Piotrowski",
                     "email": "aaron@trowski.com"
+                },
+                {
+                    "name": "Bob Weinand",
+                    "email": "bobwei9@hotmail.com"
+                },
+                {
+                    "name": "Niklas Keller",
+                    "email": "me@kelunik.com"
                 }
             ],
             "description": "A non-blocking concurrency framework for PHP applications.",
@@ -2479,20 +2480,20 @@
                 "non-blocking",
                 "promise"
             ],
-            "time": "2019-05-31T18:42:02+00:00"
+            "time": "2019-08-02T20:37:42+00:00"
         },
         {
             "name": "amphp/byte-stream",
-            "version": "v1.6.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/byte-stream.git",
-                "reference": "c75af3778b5511deb1d760e4709cade2dabc2295"
+                "reference": "47908f8e8bb2da8af4e59028200758477bc927ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/c75af3778b5511deb1d760e4709cade2dabc2295",
-                "reference": "c75af3778b5511deb1d760e4709cade2dabc2295",
+                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/47908f8e8bb2da8af4e59028200758477bc927ea",
+                "reference": "47908f8e8bb2da8af4e59028200758477bc927ea",
                 "shasum": ""
             },
             "require": {
@@ -2520,12 +2521,12 @@
             ],
             "authors": [
                 {
-                    "name": "Niklas Keller",
-                    "email": "me@kelunik.com"
-                },
-                {
                     "name": "Aaron Piotrowski",
                     "email": "aaron@trowski.com"
+                },
+                {
+                    "name": "Niklas Keller",
+                    "email": "me@kelunik.com"
                 }
             ],
             "description": "A stream abstraction to make working with non-blocking I/O simple.",
@@ -2538,7 +2539,7 @@
                 "non-blocking",
                 "stream"
             ],
-            "time": "2019-06-03T21:45:17+00:00"
+            "time": "2019-07-26T21:22:49+00:00"
         },
         {
             "name": "composer/xdebug-handler",
@@ -2982,16 +2983,16 @@
         },
         {
             "name": "netresearch/jsonmapper",
-            "version": "v1.4.0",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cweiske/jsonmapper.git",
-                "reference": "3868fe1128ce1169228acdb623359dca74db5ef3"
+                "reference": "047dafe26facbba1e997e9fb3b3c298562d75a0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/3868fe1128ce1169228acdb623359dca74db5ef3",
-                "reference": "3868fe1128ce1169228acdb623359dca74db5ef3",
+                "url": "https://api.github.com/repos/cweiske/jsonmapper/zipball/047dafe26facbba1e997e9fb3b3c298562d75a0b",
+                "reference": "047dafe26facbba1e997e9fb3b3c298562d75a0b",
                 "shasum": ""
             },
             "require": {
@@ -3020,7 +3021,7 @@
                 }
             ],
             "description": "Map nested JSON structures onto PHP classes",
-            "time": "2017-11-28T21:30:01+00:00"
+            "time": "2019-07-08T18:46:43+00:00"
         },
         {
             "name": "nette/bootstrap",
@@ -3293,16 +3294,16 @@
         },
         {
             "name": "nette/php-generator",
-            "version": "v3.2.2",
+            "version": "v3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/php-generator.git",
-                "reference": "acff8b136fad84b860a626d133e791f95781f9f5"
+                "reference": "aea6e81437bb238e5f0e5b5ce06337433908e63b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/php-generator/zipball/acff8b136fad84b860a626d133e791f95781f9f5",
-                "reference": "acff8b136fad84b860a626d133e791f95781f9f5",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/aea6e81437bb238e5f0e5b5ce06337433908e63b",
+                "reference": "aea6e81437bb238e5f0e5b5ce06337433908e63b",
                 "shasum": ""
             },
             "require": {
@@ -3348,7 +3349,7 @@
                 "php",
                 "scaffolding"
             ],
-            "time": "2019-03-15T03:41:13+00:00"
+            "time": "2019-07-05T13:01:56+00:00"
         },
         {
             "name": "nette/robot-loader",
@@ -3886,16 +3887,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.11.9",
+            "version": "0.11.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "6771e622ad93f0aff16a100547811e1e50781acb"
+                "reference": "56b3eb2a371b60537fd20794e24af9e7e8ed4e30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6771e622ad93f0aff16a100547811e1e50781acb",
-                "reference": "6771e622ad93f0aff16a100547811e1e50781acb",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/56b3eb2a371b60537fd20794e24af9e7e8ed4e30",
+                "reference": "56b3eb2a371b60537fd20794e24af9e7e8ed4e30",
                 "shasum": ""
             },
             "require": {
@@ -3957,20 +3958,20 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2019-07-03T21:25:16+00:00"
+            "time": "2019-07-08T06:55:18+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
-            "version": "0.11.1",
+            "version": "0.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-mockery.git",
-                "reference": "935fdd0fd45d9dee23295d53b83cf33eedf6b00c"
+                "reference": "5aee3dca91c1ef2f100d06e543e8647acacd7344"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-mockery/zipball/935fdd0fd45d9dee23295d53b83cf33eedf6b00c",
-                "reference": "935fdd0fd45d9dee23295d53b83cf33eedf6b00c",
+                "url": "https://api.github.com/repos/phpstan/phpstan-mockery/zipball/5aee3dca91c1ef2f100d06e543e8647acacd7344",
+                "reference": "5aee3dca91c1ef2f100d06e543e8647acacd7344",
                 "shasum": ""
             },
             "require": {
@@ -4011,7 +4012,7 @@
                 "MIT"
             ],
             "description": "PHPStan Mockery extension",
-            "time": "2019-05-12T16:41:58+00:00"
+            "time": "2019-07-19T21:01:40+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
@@ -4600,16 +4601,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.3.2",
+            "version": "v4.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "b592b26a24265a35172d8a2094d8b10f22b7cc39"
+                "reference": "8b0ae5742ce9aaa8b0075665862c1ca397d1c1d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/b592b26a24265a35172d8a2094d8b10f22b7cc39",
-                "reference": "b592b26a24265a35172d8a2094d8b10f22b7cc39",
+                "url": "https://api.github.com/repos/symfony/console/zipball/8b0ae5742ce9aaa8b0075665862c1ca397d1c1d9",
+                "reference": "8b0ae5742ce9aaa8b0075665862c1ca397d1c1d9",
                 "shasum": ""
             },
             "require": {
@@ -4671,20 +4672,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-06-13T11:03:18+00:00"
+            "time": "2019-07-24T17:13:59+00:00"
         },
         {
             "name": "symfony/finder",
-            "version": "v4.3.2",
+            "version": "v4.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "33c21f7d5d3dc8a140c282854a7e13aeb5d0f91a"
+                "reference": "9638d41e3729459860bb96f6247ccb61faaa45f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/33c21f7d5d3dc8a140c282854a7e13aeb5d0f91a",
-                "reference": "33c21f7d5d3dc8a140c282854a7e13aeb5d0f91a",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/9638d41e3729459860bb96f6247ccb61faaa45f2",
+                "reference": "9638d41e3729459860bb96f6247ccb61faaa45f2",
                 "shasum": ""
             },
             "require": {
@@ -4720,7 +4721,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-06-13T11:03:18+00:00"
+            "time": "2019-06-28T13:16:30+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -4990,16 +4991,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.4.7",
+            "version": "3.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "caf7737bbe5a5e9cbdfcc1ada83ea576ca07c9ff"
+                "reference": "c283f0877d543e7ab738d231ba6a3cdce5e1039a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/caf7737bbe5a5e9cbdfcc1ada83ea576ca07c9ff",
-                "reference": "caf7737bbe5a5e9cbdfcc1ada83ea576ca07c9ff",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/c283f0877d543e7ab738d231ba6a3cdce5e1039a",
+                "reference": "c283f0877d543e7ab738d231ba6a3cdce5e1039a",
                 "shasum": ""
             },
             "require": {
@@ -5007,7 +5008,7 @@
                 "amphp/byte-stream": "^1.5",
                 "composer/xdebug-handler": "^1.1",
                 "felixfbecker/advanced-json-rpc": "^3.0.3",
-                "felixfbecker/language-server-protocol": "^1.3",
+                "felixfbecker/language-server-protocol": "^1.4",
                 "netresearch/jsonmapper": "^1.0",
                 "nikic/php-parser": "^4.2",
                 "ocramius/package-versions": "^1.2",
@@ -5023,6 +5024,7 @@
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.2",
+                "friendsofphp/php-cs-fixer": "^2.15",
                 "phpmyadmin/sql-parser": "^5.0",
                 "phpunit/phpunit": "^7.5 || ^8.0",
                 "psalm/plugin-phpunit": "^0.6",
@@ -5072,7 +5074,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2019-06-28T15:25:29+00:00"
+            "time": "2019-07-22T22:04:52+00:00"
         },
         {
             "name": "webmozart/assert",

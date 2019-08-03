@@ -5,10 +5,10 @@ namespace Bulletpoint\Domain\Contribution;
 
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
-use Characterice\Sql\Clause;
-use Characterice\Sql\Expression;
-use Characterice\Sql\Statement\Insert;
-use Characterice\Sql\Statement\Select;
+use Klapuch\Sql\Clause;
+use Klapuch\Sql\Expression;
+use Klapuch\Sql\Statement\Insert;
+use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 

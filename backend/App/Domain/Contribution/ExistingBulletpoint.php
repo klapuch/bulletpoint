@@ -5,9 +5,9 @@ namespace Bulletpoint\Domain\Contribution;
 
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
-use Characterice\Sql\Expression;
-use Characterice\Sql\Statement\Select;
 use Klapuch\Output;
+use Klapuch\Sql\Expression;
+use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class ExistingBulletpoint implements Domain\Bulletpoint {

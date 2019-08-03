@@ -5,11 +5,11 @@ namespace Bulletpoint\Domain\Contribution;
 
 use Bulletpoint\Domain;
 use Bulletpoint\Domain\Access;
-use Characterice\Sql\Expression;
-use Characterice\Sql\Statement\Delete;
-use Characterice\Sql\Statement\Select;
-use Characterice\Sql\Statement\Update;
 use Klapuch\Output;
+use Klapuch\Sql\Expression;
+use Klapuch\Sql\Statement\Delete;
+use Klapuch\Sql\Statement\Select;
+use Klapuch\Sql\Statement\Update;
 use Klapuch\Storage;
 use Nette\Utils\Json;
 
