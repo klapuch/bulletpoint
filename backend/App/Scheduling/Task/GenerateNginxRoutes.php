@@ -38,7 +38,8 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 						array_filter(
 							[
 								sprintf('fastcgi_param ROUTE_NAME "%s";', $name),
-								$this->routerParams($block['params'] ?? []),
+								$this->params($block['params'] ?? []),
+								$this->types($block['types'] ?? []),
 								'	include php.conf;',
 								$this->limitExcept($block['methods']),
 								$this->preflight($block['methods']),
@@ -79,7 +80,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 		CONF;
 	}
 
-	private function routerParams(array $params): string {
+	private function params(array $params): string {
 		if ($params === [])
 			return '';
 		$query = implode(
@@ -93,6 +94,24 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 		);
 		return <<<CONF
 			fastcgi_param ROUTE_PARAM_QUERY {$query};
+		CONF;
+	}
+
+	private function types(array $types): string {
+		if ($types === [])
+			return '';
+		$query = implode(
+			'&',
+			array_map(
+				static function(string $param, string $type): string {
+					return sprintf('%s=%s', $type, $param);
+				},
+				$types,
+				array_keys($types),
+			),
+		);
+		return <<<CONF
+			fastcgi_param ROUTE_TYPE_QUERY {$query};
 		CONF;
 	}
 
