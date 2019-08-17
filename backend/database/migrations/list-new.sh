@@ -7,3 +7,9 @@ if [[ "$MIGRATION_FILENAMES_TO_RUN" == "" ]]; then
 	echo "No migrations.";
 	exit 0;
 fi
+
+counter=1;
+for filename in $MIGRATION_FILENAMES_TO_RUN; do
+	echo $counter. $filename;
+	counter=$((counter + 1))
+done
