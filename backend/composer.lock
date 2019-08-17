@@ -646,16 +646,16 @@
         },
         {
             "name": "klapuch/output",
-            "version": "2.12.1",
+            "version": "2.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Output.git",
-                "reference": "b88c905644a8a6d91c6116427208605890c7ffea"
+                "reference": "429e4b0f409fd58b364d2ef05c4dc7f8af3a1fa6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Output/zipball/b88c905644a8a6d91c6116427208605890c7ffea",
-                "reference": "b88c905644a8a6d91c6116427208605890c7ffea",
+                "url": "https://api.github.com/repos/klapuch/Output/zipball/429e4b0f409fd58b364d2ef05c4dc7f8af3a1fa6",
+                "reference": "429e4b0f409fd58b364d2ef05c4dc7f8af3a1fa6",
                 "shasum": ""
             },
             "require": {
@@ -691,7 +691,7 @@
             ],
             "description": "printers, output, xml, json",
             "homepage": "https://github.com/klapuch/Output",
-            "time": "2019-01-01T12:24:55+00:00"
+            "time": "2019-08-17T12:10:52+00:00"
         },
         {
             "name": "klapuch/routing",
