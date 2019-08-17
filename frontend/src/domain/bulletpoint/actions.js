@@ -38,11 +38,13 @@ export const edit = (
   themeId: number,
   bulletpointId: number,
   bulletpoint: PostedBulletpointType,
+  next: () => void = () => {},
 ) => ({
   type: EDIT_THEME_BULLETPOINT,
   themeId,
   bulletpointId,
   bulletpoint,
+  next,
 });
 
 export const add = (themeId: number, bulletpoint: PostedBulletpointType, next: () => void) => ({

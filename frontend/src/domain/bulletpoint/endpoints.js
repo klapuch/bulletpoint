@@ -53,6 +53,7 @@ export function* deleteSingle(action: Object): Saga {
 export function* edit(action: Object): Saga {
   yield call(axios.put, `/bulletpoints/${action.bulletpointId}`, action.bulletpoint);
   yield put(invalidatedAll(action.themeId));
+  yield call(action.next);
 }
 
 export function* updateSingle(action: Object): Saga {
