@@ -23,7 +23,14 @@ export function* signIn(action: Object): Saga {
       const login = yield call(tokens.create, { login: action.credentials.login }, 'google');
       yield call(onCreatedToken, login);
     } else {
-      const login = yield call(tokens.create, { login: action.credentials.login }, null);
+      const login = yield call(
+        tokens.create,
+        {
+          login: action.credentials.login,
+          password: action.credentials.password,
+        },
+        null,
+      );
       yield call(onCreatedToken, login);
     }
   } catch (error) {
