@@ -1,4 +1,4 @@
-INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/master-groups_not_remove--05-11.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/master-groups_not_remove--05-11.sql');
 
 CREATE OR REPLACE FUNCTION refresh_bulletpoint_group_successors() RETURNS void AS $BODY$
 BEGIN

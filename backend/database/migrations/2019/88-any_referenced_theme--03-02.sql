@@ -1,4 +1,4 @@
-INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/88-any_referenced_theme--03-02.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/88-any_referenced_theme--03-02.sql');
 
 CREATE OR REPLACE FUNCTION bulletpoint_referenced_themes_trigger_row_biu() RETURNS trigger AS $$
 DECLARE

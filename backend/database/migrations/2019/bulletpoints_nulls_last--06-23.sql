@@ -1,4 +1,4 @@
-INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/bulletpoints_nulls_last--06-23.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/bulletpoints_nulls_last--06-23.sql');
 
 DROP VIEW web.bulletpoints;
 CREATE VIEW web.bulletpoints AS

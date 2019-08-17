@@ -1,4 +1,4 @@
-INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/user_tag_recount--06-23.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/user_tag_recount--06-23.sql');
 
 CREATE OR REPLACE FUNCTION theme_tags_trigger_row_ad() RETURNS trigger AS $BODY$
 BEGIN

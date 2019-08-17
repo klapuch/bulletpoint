@@ -1,4 +1,4 @@
-INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/range--06-23.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/range--06-23.sql');
 
 ALTER DOMAIN http_status DROP CONSTRAINT http_status_check;
 ALTER DOMAIN http_status ADD CONSTRAINT http_status_check CHECK (VALUE BETWEEN 100 AND 504);

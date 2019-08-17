@@ -1,4 +1,4 @@
-INSERT INTO deploy.migrations(filename) VALUES('migrations/2019/81-tag_support--02-24.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/81-tag_support--02-24.sql');
 
 ALTER TABLE public.tags ADD UNIQUE (name);
 
