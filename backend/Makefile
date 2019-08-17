@@ -105,20 +105,20 @@ composer-install:
 	composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative
 
 .PHONY: migration-create
-migration-create:
-	@sh migrations/create.sh
+migration-create:   ## create migration
+	@sh database/migrations/create.sh
 
 .PHONY: migration-run
-migration-run:
-	@sh migrations/run.sh $(name)
+migration-run:      ## run migration $NAME
+	@sh database/migrations/run.sh $(name)
 
 .PHONY: migration-run-new
-migration-run-new:
-	@sh migrations/run-new.sh
+migration-run-new:  ## run all new migrations
+	@sh database/migrations/run-new.sh
 
 .PHONY: migration-list-new
-migration-list-new:
-	@sh migrations/list-new.sh
+migration-list-new: ## list new migrations
+	@sh database/migrations/list-new.sh
 
 .PHONY: move-schemas
 move-schemas:       ## move JSON schemas
