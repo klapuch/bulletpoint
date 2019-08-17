@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1fc939ea54fff975d2e28ca7bdf8c7ed",
+    "content-hash": "491dce7b10397bcfa58c9dcc74ac6dac",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -339,9 +339,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "HTTP core application",
@@ -388,9 +388,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "Easy way how to work with various configuration sources",
@@ -491,9 +491,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "AES256",
@@ -587,9 +587,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "PHP improved internals",
@@ -635,9 +635,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "Iterators replacing array functions",
@@ -684,9 +684,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "printers, output, xml, json",
@@ -695,16 +695,16 @@
         },
         {
             "name": "klapuch/routing",
-            "version": "0.0.14",
+            "version": "0.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Routing.git",
-                "reference": "63f2560f94bbb1226c4cfcb6458b1e9ef36c9c5f"
+                "reference": "20b4735d186fa264c50b25401a1684bbd132c6d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Routing/zipball/63f2560f94bbb1226c4cfcb6458b1e9ef36c9c5f",
-                "reference": "63f2560f94bbb1226c4cfcb6458b1e9ef36c9c5f",
+                "url": "https://api.github.com/repos/klapuch/Routing/zipball/20b4735d186fa264c50b25401a1684bbd132c6d9",
+                "reference": "20b4735d186fa264c50b25401a1684bbd132c6d9",
                 "shasum": ""
             },
             "require": {
@@ -734,14 +734,14 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "HTTP routing",
             "homepage": "https://www.github.com/klapuch/Routing",
-            "time": "2019-01-01T14:34:18+00:00"
+            "time": "2019-08-17T11:29:57+00:00"
         },
         {
             "name": "klapuch/scheduling",
@@ -942,9 +942,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "UI web components",
@@ -991,9 +991,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "Normalized, united, checked and beauty uri",
@@ -1046,9 +1046,9 @@
             "authors": [
                 {
                     "name": "Dominik Klapuch",
+                    "role": "Developer",
                     "email": "klapuchdominik@gmail.com",
-                    "homepage": "https://www.github.com/klapuch",
-                    "role": "Developer"
+                    "homepage": "https://www.github.com/klapuch"
                 }
             ],
             "description": "Broad variation of validation",
@@ -4108,8 +4108,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Utility class for timing",
@@ -4355,8 +4355,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "FinderFacade is a convenience wrapper for Symfony's Finder component.",
@@ -4406,8 +4406,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Copy/Paste Detector (CPD) for PHP code.",
@@ -4449,8 +4449,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
@@ -4506,8 +4506,8 @@
             "authors": [
                 {
                     "name": "Filippo Tessarotto",
-                    "email": "zoeslam@gmail.com",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "zoeslam@gmail.com"
                 }
             ],
             "description": "Slam extension of phpstan",
@@ -4986,8 +4986,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "arne@blankerts.de"
                 }
             ],
             "description": "The classes contained within this repository extend the standard DOM to use exceptions at all occasions of errors instead of PHP warnings or notices. They also add various custom methods and shortcuts for convenience and to simplify the usage of DOM.",

@@ -29,7 +29,7 @@
     "klapuch/sql": "~0.0.4",
     "klapuch/validation": "^2.6.3",
     "klapuch/iterator": "^1.1.2",
-    "klapuch/routing": "^0.0.14",
+    "klapuch/routing": "~0.0.14",
     "klapuch/dataset": "~0.0.4",
     "klapuch/scheduling": "~0.0.2",
     "klapuch/encryption": "^2.1",
