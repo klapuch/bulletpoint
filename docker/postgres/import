@@ -2,5 +2,5 @@
 disconnect;
 psql -U bulletpoint -d postgres -h localhost -c "DROP DATABASE IF EXISTS bulletpoint";
 psql -U bulletpoint -d postgres -h localhost -c "CREATE DATABASE bulletpoint";
-psql -U bulletpoint -h localhost bulletpoint < /var/www/bulletpoint/backend/fixtures/schema.sql;
-psql -U bulletpoint -h localhost bulletpoint < /var/www/bulletpoint/backend/fixtures/dev.sql;
+psql -U bulletpoint -h localhost bulletpoint < /var/www/bulletpoint/backend/database/schema.sql;
+psql -U bulletpoint -h localhost bulletpoint < /var/www/bulletpoint/backend/database/fixtures/dev.sql;
