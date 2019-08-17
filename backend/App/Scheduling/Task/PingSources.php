@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Scheduling\Task;
 
+use Bulletpoint\Scheduling\Http\UserAgents;
 use Klapuch\Http;
 use Klapuch\Scheduling;
 use Klapuch\Sql\Clause;
@@ -45,6 +46,7 @@ final class PingSources implements Scheduling\Job {
 					CURLOPT_CONNECTTIMEOUT => 2,
 					CURLOPT_FOLLOWLOCATION => true,
 					CURLOPT_MAXREDIRS => 10,
+					CURLOPT_HTTPHEADER => [sprintf('User-Agent: %s', (new UserAgents())->random())],
 				],
 			))->send()->code();
 		} catch (\Throwable $e) {
