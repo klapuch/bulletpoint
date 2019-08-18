@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Constraint;
+namespace Bulletpoint\Constraint\Bulletpoint;
 
 use Klapuch\Storage;
 use Klapuch\Validation;
@@ -9,7 +9,7 @@ use Klapuch\Validation;
 /**
  * Rule for bulletpoint
  */
-final class BulletpointRule implements Validation\Rule {
+final class Rule implements Validation\Rule {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
@@ -33,16 +33,9 @@ final class BulletpointRule implements Validation\Rule {
 	public function apply($subject): array {
 		return (array) array_replace_recursive(
 			[
-				'source' => [
-					'link' => $subject['source']['type'] === 'web'
-						? (new Validation\FriendlyRule(
-							new UrlRule(),
-							t('bulletpoint.source.link.not.valid'),
-						))->apply($subject['source']['link'])
-						: $subject['source']['link'],
-				],
+				'source' => (new SourceRule())->apply($subject),
 				'content' => (new Validation\FriendlyRule(
-					new TextReferenceRule($this->connection, count($subject['referenced_theme_id'])),
+					new ReferenceRule($this->connection, count($subject['referenced_theme_id'])),
 					'Number of references in text do not match with count of referenced_theme_id',
 				))->apply($subject['content']),
 			],

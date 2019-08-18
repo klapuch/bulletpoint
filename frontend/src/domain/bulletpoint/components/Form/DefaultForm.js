@@ -88,7 +88,7 @@ export default class extends React.Component<Props, State> {
     if (name === 'source_link') {
       input = { source: { ...this.state.bulletpoint.source, link: value } };
     } else if (name === 'source_type') {
-      input = { source: { type: value, link: '' } };
+      input = { source: { type: value, link: value === 'web' ? '' : null } };
     } else if (name === 'group_root_bulletpoint_id') {
       input = { group: { root_bulletpoint_id: parseInt(value, 10) } };
     } else {

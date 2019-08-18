@@ -5,6 +5,14 @@ BEGIN
 	INSERT INTO sources (link, type) VALUES ('https://www.google.com', 'web');
 END $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE FUNCTION tests.test_empty_to_null() RETURNS void AS $BODY$
+DECLARE
+	v_link sources.link%type;
+BEGIN
+	INSERT INTO sources (link, type) VALUES ('', 'head') RETURNING link INTO v_link;
+	PERFORM assert.null(v_link);
+END $BODY$ LANGUAGE plpgsql VOLATILE;
+
 CREATE FUNCTION tests.empty_sources() RETURNS void AS $BODY$
 BEGIN
 	PERFORM assert.throws(
