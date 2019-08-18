@@ -2,7 +2,7 @@ INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/mobile-
 
 
 UPDATE "references" SET url = replace(url, 'https://cs.m.wikipedia', 'https://cs.wikipedia');
-UPDATE sources SET url = replace(url, 'https://cs.m.wikipedia', 'https://cs.wikipedia');
+UPDATE sources SET link = replace(link, 'https://cs.m.wikipedia', 'https://cs.wikipedia');
 
 
 CREATE OR REPLACE FUNCTION sources_trigger_row_biu() RETURNS trigger AS $BODY$

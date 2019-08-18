@@ -10,5 +10,10 @@ fi
 
 for filename in $MIGRATION_FILENAMES_TO_RUN; do
 	echo "Migrating $filename...";
-	sh ./database/migrations/run.sh $filename && echo "Migration of $filename was successful.";
+	sh ./database/migrations/run.sh $filename;
+	if [[ $? != 0 ]]; then
+		echo "FAIL! Migration \"$filename\" was not successful.";
+		exit 0;
+	fi
+	 echo "Migration of \"$filename\" was successful.";
 done
