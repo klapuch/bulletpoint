@@ -468,9 +468,11 @@ CREATE TABLE sources (
 
 CREATE FUNCTION sources_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
-	IF new.type = 'web' AND is_empty(new.link) THEN
+	new.link = nullif(new.link, '');
+
+	IF new.type = 'web' AND new.link IS NUll THEN
 		RAISE EXCEPTION 'Link from web can not be empty.';
-	ELSIF new.type = 'head' AND NOT is_empty(new.link) THEN
+	ELSIF new.type = 'head' AND new.link IS NOT NULL THEN
 		RAISE EXCEPTION 'Link from head must be empty.';
 	END IF;
 

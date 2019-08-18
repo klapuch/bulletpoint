@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Constraint;
+namespace Bulletpoint\Constraint\Bulletpoint;
 
 use Klapuch\Storage;
 use Klapuch\Validation;
@@ -9,7 +9,7 @@ use Klapuch\Validation;
 /**
  * Number of references in text matching with passed ID
  */
-final class TextReferenceRule implements Validation\Rule {
+final class ReferenceRule implements Validation\Rule {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
