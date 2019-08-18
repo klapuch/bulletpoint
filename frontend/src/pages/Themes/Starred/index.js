@@ -40,13 +40,13 @@ class StarredThemes extends React.Component<Props, State> {
   };
 
   componentDidMount(): void {
-    this.handleReload(this.props.pagination);
+    this.reload(this.props.pagination);
   }
 
   componentDidUpdate(prevProps: Props) {
     const { location: { search } } = this.props;
     if (prevProps.location.search !== search) {
-      this.handleReload({ page: 1, perPage: PER_PAGE })
+      this.reload({ page: 1, perPage: PER_PAGE })
         .then(() => this.setState({ reset: true }));
     }
   }
@@ -60,7 +60,7 @@ class StarredThemes extends React.Component<Props, State> {
     return parseInt(tagId, 10);
   };
 
-  handleReload = (pagination: PaginationType): Promise<any> => Promise.resolve()
+  reload = (pagination: PaginationType): Promise<any> => Promise.resolve()
     .then(() => this.props.fetchStarred(pagination, this.getTagId()))
     .then(this.props.fetchTags);
 
@@ -87,7 +87,7 @@ class StarredThemes extends React.Component<Props, State> {
               name={PAGINATION_NAME}
               perPage={PER_PAGE}
               reset={this.state.reset}
-              onReload={this.handleReload}
+              onReload={this.reload}
               total={total}
             />
           </>
