@@ -136,6 +136,17 @@ PermitRootLogin no
 PasswordAuthentication no
 PermitEmptyPasswords no
 
+vim ~/.pgpass
+localhost:5432:bulletpoint:bulletpoint:PASSWORD
+
+sudo chmod 600 ~/.pgpass
+
+sudo vim ~/.profile
+export PGPASSFILE=~/.pgpass
+
+source ~/.profile
+
+
 
 mkdir /backup
 sudo crontab -e
@@ -144,8 +155,11 @@ sudo crontab -e
 0 22 * * 0 /usr/bin/dehydrated -c && /usr/sbin/service nginx reload
 
 
+sudo crontab -e -u bulletpoint
+
+
 # postgres backup (every day at 01:00)
-0 1 * * * PGPASSWORD=bulletpoint /usr/bin/pg_dump --file=/backup/postgres_$(/bin/date +"\%Y\%m\%d_\%H\%M\%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint
+0 1 * * * /usr/bin/pg_dump --file=/backup/postgres_$(/bin/date +"\%Y\%m\%d_\%H\%M\%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint -w
 
 # application cron (every minute)
 * * * * * (cd /var/www/bulletpoint/current/backend && BULLETPOINT_ENV=production make cron)

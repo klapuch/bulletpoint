@@ -38,7 +38,7 @@ task('passwords:put', static function (): void {
 
 task('migrations:run', static function (): void {
 	cd('{{release_path}}/backend');
-	run(sprintf('PGPASSWORD=%s make migration-run-new', getenv('ENV_PGPASSWORD')));
+	run('make migration-run-new');
 });
 
 task('nginx:config:move', static function (): void {
