@@ -5,13 +5,18 @@ namespace Bulletpoint\Scheduling\Task;
 
 use Klapuch\Scheduling;
 use Klapuch\Storage;
+use Tracy;
 
 final class Cron implements Scheduling\Job {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	public function __construct(Storage\Connection $connection) {
+	/** @var \Tracy\ILogger */
+	private $logger;
+
+	public function __construct(Storage\Connection $connection, Tracy\ILogger $logger) {
 		$this->connection = $connection;
+		$this->logger = $logger;
 	}
 
 	public function fulfill(): void {
@@ -59,7 +64,7 @@ final class Cron implements Scheduling\Job {
 			),
 			new Scheduling\CustomTriggeredJob(
 				new Scheduling\MarkedJob(
-					new PingSources($this->connection),
+					new PingSources($this->connection, $this->logger),
 					$this->connection,
 				),
 				static function (): bool {
@@ -80,7 +85,7 @@ final class Cron implements Scheduling\Job {
 			),
 			new Scheduling\CustomTriggeredJob(
 				new Scheduling\MarkedJob(
-					new PingReferences($this->connection),
+					new PingReferences($this->connection, $this->logger),
 					$this->connection,
 				),
 				static function (): bool {

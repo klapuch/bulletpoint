@@ -37,7 +37,7 @@ $logger = new Tracy\Logger(__DIR__ . '/../../logs');
 try {
 	(new Scheduling\SelectedJob(
 		$argv[1],
-		new Scheduling\MarkedJob(new Task\Cron($connection), $connection),
+		new Scheduling\MarkedJob(new Task\Cron($connection, $logger), $connection),
 		new Task\CheckChangedConfiguration(
 			new \SplFileInfo(__DIR__ . '/../../../docker/nginx'),
 			new Scheduling\SerialJobs(

@@ -10,13 +10,18 @@ use Klapuch\Sql\Clause;
 use Klapuch\Sql\Statement\Insert;
 use Klapuch\Storage;
 use Klapuch\Uri;
+use Tracy;
 
 final class PingReferences implements Scheduling\Job {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
-	public function __construct(Storage\Connection $connection) {
+	/** @var \Tracy\ILogger */
+	private $logger;
+
+	public function __construct(Storage\Connection $connection, Tracy\ILogger $logger) {
 		$this->connection = $connection;
+		$this->logger = $logger;
 	}
 
 	public function fulfill(): void {
@@ -50,6 +55,8 @@ final class PingReferences implements Scheduling\Job {
 				],
 			))->send()->code();
 		} catch (\Throwable $e) {
+			$this->logger->log($e);
+			\Sentry\captureException($e);
 			return null;
 		}
 	}
