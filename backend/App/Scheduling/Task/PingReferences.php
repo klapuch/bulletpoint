@@ -34,7 +34,7 @@ final class PingReferences implements Scheduling\Job {
 					(new Insert\Query())
 						->insertInto(new Clause\MultiInsertInto('reference_pings', [
 							'reference_id' => $ids,
-							'status' => array_fill(0, count($ids), $this->code(new Uri\ValidUrl($url))),
+							'status' => array_fill(0, count($ids), $this->code(new Uri\FakeUri($url))),
 						])),
 				))->execute();
 			}
