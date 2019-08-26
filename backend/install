@@ -159,7 +159,10 @@ sudo crontab -e -u bulletpoint
 
 
 # postgres backup (every day at 01:00)
-0 1 * * * /usr/bin/pg_dump --file=/backup/postgres_$(/bin/date +"\%Y\%m\%d_\%H\%M\%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint -w
+0 1 * * * /usr/bin/pg_dump --file=/backup/bulletpoint_$(/bin/date +"\%Y\%m\%d_\%H\%M\%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint -w
+
+# remove everything except last 10 backups (every day at 02:00)
+0 2 * * * ls /backup/* -A1t | tail -n +10 | xargs --no-run-if-empty rm
 
 # application cron (every minute)
 * * * * * (cd /var/www/bulletpoint/current/backend && BULLETPOINT_ENV=production make cron)
