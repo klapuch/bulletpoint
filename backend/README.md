@@ -3,12 +3,13 @@
 [![codecov](https://codecov.io/gh/klapuch/bulletpoint/branch/master/graph/badge.svg)](https://codecov.io/gh/klapuch/bulletpoint)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
-## Installation
-Import certificate (`docker/nginx/ssl/rootCA-Development.pem`) to your browser to support HTTPS.
+## Local Installation
 
 Run docker environment, then exec into php image and run:
-`make init`
+- `make init`
+
 then exec into database image and run:
-`test_import`
+- `test_import`
+
 go gack to php image and run tests via:
-`make tests`
+- `make tests`
