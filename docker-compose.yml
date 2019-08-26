@@ -23,14 +23,14 @@ services:
 
     redis:
       image: redis:5.0
-      container_name: bulletpoint-redis
+      container_name: bulletpoint-redis-cache
       working_dir: /var/www/bulletpoint/backend
       networks:
         - bulletpoint
 
     redis-identity:
       image: redis:5.0
-      container_name: bulletpoint-redis-identity
+      container_name: bulletpoint-redis-session
       working_dir: /var/www/bulletpoint/backend
       networks:
         - bulletpoint
