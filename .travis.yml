@@ -3,10 +3,6 @@ sudo: required
 services:
   - docker
 
-language: php
-php:
-  - 7.3
-
 env:
   - DOCKER_COMPOSE_VERSION=1.17.1
 
@@ -47,7 +43,7 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: (cd deploy && php deployer.phar deploy)
+  script: sh deploy/deploy.sh
   on:
     branch: master
 
