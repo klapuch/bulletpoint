@@ -31,7 +31,7 @@ final class StoredThemes implements Themes {
 					'web.themes',
 					[
 						'name' => $theme['name'],
-						'alternative_names' => Json::encode($theme['alternative_names']),
+						'alternative_names' => new Expression\PgArray($theme['alternative_names'], 'text'),
 						'tags' => Json::encode($theme['tags']),
 						'user_id' => $this->user->id(),
 						'reference_url' => $theme['reference']['url'],

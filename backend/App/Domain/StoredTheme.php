@@ -76,7 +76,7 @@ final class StoredTheme implements Theme {
 			(new Update\Query())
 				->update('web.themes')
 				->set(new Expression\Set(['name' => $theme['name']]))
-				->set(new Expression\Set(['alternative_names' => Json::encode($theme['alternative_names'])]))
+				->set(new Expression\Set(['alternative_names' => new Expression\PgArray($theme['alternative_names'], 'text')]))
 				->set(new Expression\Set(['tags' => Json::encode($theme['tags'])]))
 				->set(new Expression\Set(['reference_url' => $theme['reference']['url']]))
 				->where(new Expression\Where('id', $this->id)),

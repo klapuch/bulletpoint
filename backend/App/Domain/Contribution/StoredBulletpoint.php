@@ -11,7 +11,6 @@ use Klapuch\Sql\Statement\Delete;
 use Klapuch\Sql\Statement\Select;
 use Klapuch\Sql\Statement\Update;
 use Klapuch\Storage;
-use Nette\Utils\Json;
 
 final class StoredBulletpoint implements Domain\Bulletpoint {
 	/** @var int */
@@ -72,8 +71,8 @@ final class StoredBulletpoint implements Domain\Bulletpoint {
 			$this->connection,
 			(new Update\Query())
 				->update('web.contributed_bulletpoints')
-				->set(new Expression\Set(['referenced_theme_id' => Json::encode($bulletpoint['referenced_theme_id'])]))
-				->set(new Expression\Set(['compared_theme_id' => Json::encode($bulletpoint['compared_theme_id'])]))
+				->set(new Expression\Set(['referenced_theme_id' => new Expression\PgArray($bulletpoint['referenced_theme_id'], 'int')]))
+				->set(new Expression\Set(['compared_theme_id' => new Expression\PgArray($bulletpoint['compared_theme_id'], 'int')]))
 				->set(new Expression\Set(['source_link' => $bulletpoint['source']['link']]))
 				->set(new Expression\Set(['source_type' => $bulletpoint['source']['type']]))
 				->set(new Expression\Set(['root_bulletpoint_id' => $bulletpoint['group']['root_bulletpoint_id']]))

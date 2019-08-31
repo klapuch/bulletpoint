@@ -6,7 +6,7 @@ BEGIN
 		(SELECT samples.users()),
 		NULL,
 		'head'::sources_type,
-		format('[%s,%s]', (SELECT samples.themes()), (SELECT samples.themes()))::jsonb
+		ARRAY[(SELECT samples.themes()), (SELECT samples.themes())]
 	);
 
 	PERFORM assert.same(2, (SELECT count(*)::integer FROM bulletpoint_referenced_themes));
@@ -18,7 +18,7 @@ DECLARE
 BEGIN
 	UPDATE web.bulletpoints SET
 		content = 'ABC [[foo]] bar [[baz]]',
-		referenced_theme_id = format('[%s,%s]', (SELECT samples.themes()), (SELECT samples.themes()))::jsonb
+		referenced_theme_id = ARRAY[(SELECT samples.themes()), (SELECT samples.themes())]
 	WHERE id = v_bulletpoint_id;
 
 	PERFORM assert.same(2, (SELECT count(*)::integer FROM bulletpoint_referenced_themes));
@@ -41,7 +41,7 @@ BEGIN
 		(SELECT samples.users()),
 		NULL,
 		'head'::sources_type,
-		format('[%s,%s]', v_theme_id2, v_theme_id3)::jsonb
+		ARRAY[v_theme_id2, v_theme_id3]
 	);
 
 	PERFORM assert.same(2, (SELECT count(*)::integer FROM bulletpoint_theme_comparisons));
@@ -62,7 +62,7 @@ BEGIN
 	SELECT samples.public_bulletpoints(jsonb_build_object('theme_id', v_theme_id1)) INTO v_bulletpoint_id;
 	UPDATE web.bulletpoints SET
 		content = 'ABC',
-		compared_theme_id = format('[%s,%s]', v_theme_id2, v_theme_id3)::jsonb
+		compared_theme_id = ARRAY[v_theme_id2, v_theme_id3]
 	WHERE id = v_bulletpoint_id;
 
 	PERFORM assert.same(2, (SELECT count(*)::integer FROM bulletpoint_theme_comparisons));
