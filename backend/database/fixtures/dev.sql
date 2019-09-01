@@ -110,3 +110,9 @@ INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/78-test
 INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/81-tag_support--02-24.sql');
 INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/88-any_referenced_theme--03-02.sql');
 INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/master-groups_not_remove--05-11.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/db-move--08-17.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/json_to_array--09-01.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/mobile-references--08-18.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/range--06-23.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/user_tag_recount--06-23.sql');
+INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/bulletpoints_nulls_last--06-23.sql');

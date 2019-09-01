@@ -1,6 +1,9 @@
 INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/json_to_array--09-01.sql');
 
-CREATE OR REPLACE VIEW web.themes AS
+DROP VIEW web.tagged_themes;
+
+DROP VIEW web.themes;
+CREATE VIEW web.themes AS
 	SELECT
 		themes.id, themes.name, json_tags.tags, themes.created_at,
 		"references".url AS reference_url,
@@ -95,8 +98,25 @@ BEGIN
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
+CREATE TRIGGER themes_trigger_row_ii
+	INSTEAD OF INSERT
+	ON web.themes
+	FOR EACH ROW EXECUTE PROCEDURE web.themes_trigger_row_ii();
 
-CREATE OR REPLACE VIEW web.bulletpoints AS
+CREATE TRIGGER themes_trigger_row_iu
+	INSTEAD OF UPDATE
+	ON web.themes
+	FOR EACH ROW EXECUTE PROCEDURE web.themes_trigger_row_iu();
+
+
+CREATE VIEW web.tagged_themes AS
+	SELECT tag_id, themes.*
+	FROM web.themes
+	LEFT JOIN theme_tags ON theme_tags.theme_id = themes.id;
+
+
+DROP VIEW web.bulletpoints;
+CREATE VIEW web.bulletpoints AS
 	SELECT
 		bulletpoints.id, bulletpoints.content, bulletpoints.theme_id, bulletpoints.user_id, bulletpoints.created_at,
 		sources.link AS source_link,
@@ -257,7 +277,19 @@ BEGIN
 END
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-CREATE OR REPLACE VIEW web.contributed_bulletpoints AS
+CREATE TRIGGER bulletpoints_trigger_row_ii
+	INSTEAD OF INSERT
+	ON web.bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_ii();
+
+CREATE TRIGGER bulletpoints_trigger_row_iu
+	INSTEAD OF UPDATE
+	ON web.bulletpoints
+	FOR EACH ROW EXECUTE PROCEDURE web.bulletpoints_trigger_row_iu();
+
+
+DROP VIEW web.contributed_bulletpoints;
+CREATE VIEW web.contributed_bulletpoints AS
 SELECT
 	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id,
 	sources.link AS source_link, sources.type AS source_type, broken_sources.source_id IS NOT NULL AS source_is_broken,
