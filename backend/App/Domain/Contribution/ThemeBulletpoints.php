@@ -10,7 +10,6 @@ use Klapuch\Sql\Expression;
 use Klapuch\Sql\Statement\Insert;
 use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
-use Nette\Utils\Json;
 
 final class ThemeBulletpoints implements Domain\Bulletpoints {
 	/** @var \Klapuch\Storage\Connection */
@@ -62,8 +61,8 @@ final class ThemeBulletpoints implements Domain\Bulletpoints {
 				->insertInto(new Clause\InsertInto('web.contributed_bulletpoints', [
 					'content' => $bulletpoint['content'],
 					'theme_id' => $this->theme,
-					'referenced_theme_id' => Json::encode($bulletpoint['referenced_theme_id']),
-					'compared_theme_id' => Json::encode($bulletpoint['compared_theme_id']),
+					'referenced_theme_id' => new Expression\PgArray($bulletpoint['referenced_theme_id'], 'int'),
+					'compared_theme_id' => new Expression\PgArray($bulletpoint['compared_theme_id'], 'int'),
 					'source_link' => $bulletpoint['source']['link'],
 					'source_type' => $bulletpoint['source']['type'],
 					'root_bulletpoint_id' => $bulletpoint['group']['root_bulletpoint_id'],

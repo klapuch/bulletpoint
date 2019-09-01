@@ -879,10 +879,10 @@ CREATE VIEW web.themes AS
 		"references".url AS reference_url,
 		broken_references.reference_id IS NOT NULL AS reference_is_broken,
 		users.id AS user_id,
-		COALESCE(json_theme_alternative_names.alternative_names, '[]') AS alternative_names,
+		COALESCE(array_theme_alternative_names.alternative_names, ARRAY[]::text[]) AS alternative_names,
 		user_starred_themes.id IS NOT NULL AS is_starred,
 		user_starred_themes.starred_at,
-		array_to_json(ARRAY(SELECT related_themes(themes.id)))::jsonb AS related_themes_id,
+		ARRAY(SELECT related_themes(themes.id)) AS related_themes_id,
 		unique_theme_bulletpoints.theme_id IS NULL AS is_empty
 	FROM public.themes
 	JOIN users ON users.id = themes.user_id
@@ -895,10 +895,10 @@ CREATE VIEW web.themes AS
 		GROUP BY theme_id
 	) AS json_tags ON json_tags.theme_id = themes.id
 	LEFT JOIN (
-		SELECT theme_id, jsonb_agg(name) AS alternative_names
+		SELECT theme_id, array_agg(name) AS alternative_names
 		FROM theme_alternative_names
 		GROUP BY theme_id
-	) AS json_theme_alternative_names ON json_theme_alternative_names.theme_id = themes.id
+	) AS array_theme_alternative_names ON array_theme_alternative_names.theme_id = themes.id
 	LEFT JOIN user_starred_themes ON user_starred_themes.theme_id = themes.id AND user_starred_themes.user_id = globals_get_user()
 	LEFT JOIN (
 		SELECT DISTINCT theme_id
@@ -920,7 +920,7 @@ BEGIN
 	SELECT v_theme_id, r.tag::integer FROM jsonb_array_elements(new.tags) AS r(tag);
 
 	INSERT INTO public.theme_alternative_names (theme_id, name)
-	SELECT v_theme_id, r.alternative_name FROM jsonb_array_elements_text(new.alternative_names) AS r(alternative_name);
+	SELECT v_theme_id, r.alternative_name FROM unnest(new.alternative_names) AS r(alternative_name);
 
 	new.id = v_theme_id;
 	RETURN new;
@@ -951,16 +951,14 @@ BEGIN
 
 	<<l_alternative_names>>
 	DECLARE
-		v_current_alternative_names text[];
-		v_new_alternative_names text[];
+		v_current_alternative_names character varying[];
 	BEGIN
 		v_current_alternative_names = array_agg(name) FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
-		v_new_alternative_names = array_agg(r.alternative_name) FROM jsonb_array_elements_text(new.alternative_names) AS r(alternative_name);
 
-		IF NOT array_equals(v_current_alternative_names, v_new_alternative_names) THEN
+		IF NOT array_equals(v_current_alternative_names, new.alternative_names) THEN
 			DELETE FROM public.theme_alternative_names WHERE theme_id = v_theme.id;
 			INSERT INTO public.theme_alternative_names (theme_id, name)
-			SELECT v_theme.id, r.alternative_name FROM unnest(v_new_alternative_names) AS r(alternative_name);
+			SELECT v_theme.id, r.alternative_name FROM unnest(new.alternative_names) AS r(alternative_name);
 		END IF;
 	END l_alternative_names;
 
@@ -995,8 +993,8 @@ CREATE VIEW web.bulletpoints AS
 			bulletpoint_rating_summary.down_points AS down_rating,
 			(bulletpoint_rating_summary.up_points + bulletpoint_rating_summary.down_points) AS total_rating,
 		COALESCE(user_bulletpoint_ratings.user_rating, 0) AS user_rating,
-		COALESCE(bulletpoint_referenced_themes.referenced_theme_id, '[]') AS referenced_theme_id,
-		COALESCE(bulletpoint_theme_comparisons.compared_theme_id, '[]') AS compared_theme_id,
+		COALESCE(bulletpoint_referenced_themes.referenced_theme_id, ARRAY[]::integer[]) AS referenced_theme_id,
+		COALESCE(bulletpoint_theme_comparisons.compared_theme_id, ARRAY[]::integer[]) AS compared_theme_id,
 		bulletpoint_groups.root_bulletpoint_id
 	FROM public.public_bulletpoints AS bulletpoints
 	LEFT JOIN (
@@ -1009,12 +1007,12 @@ CREATE VIEW web.bulletpoints AS
 	LEFT JOIN public.broken_sources ON broken_sources.source_id = sources.id
 	LEFT JOIN public.bulletpoint_reputations ON bulletpoint_reputations.bulletpoint_id = bulletpoints.id
 	LEFT JOIN (
-		SELECT bulletpoint_id, jsonb_agg(public.bulletpoint_referenced_themes.theme_id) AS referenced_theme_id
+		SELECT bulletpoint_id, array_agg(public.bulletpoint_referenced_themes.theme_id) AS referenced_theme_id
 		FROM public.bulletpoint_referenced_themes
 		GROUP BY bulletpoint_id
 	) AS bulletpoint_referenced_themes ON bulletpoint_referenced_themes.bulletpoint_id = bulletpoints.id
 	LEFT JOIN (
-		SELECT bulletpoint_id, jsonb_agg(public.bulletpoint_theme_comparisons.theme_id) AS compared_theme_id
+		SELECT bulletpoint_id, array_agg(public.bulletpoint_theme_comparisons.theme_id) AS compared_theme_id
 		FROM public.bulletpoint_theme_comparisons
 		GROUP BY bulletpoint_id
 	) AS bulletpoint_theme_comparisons ON bulletpoint_theme_comparisons.bulletpoint_id = bulletpoints.id
@@ -1026,11 +1024,11 @@ DECLARE
 	v_bulletpoint_id integer;
 	v_source_id integer;
 BEGIN
-	IF number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id) THEN
+	IF number_of_references(new.content) != array_length(new.referenced_theme_id, 1) THEN
 		RAISE EXCEPTION USING MESSAGE = format(
 			'Number of referenced themes in text (%s) is not matching with passed ID list (%s).',
 			number_of_references(new.content),
-			jsonb_array_length(new.referenced_theme_id)
+			array_length(new.referenced_theme_id, 1)
 		 );
 	END IF;
 
@@ -1061,10 +1059,10 @@ BEGIN
 	END IF;
 
 	INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
-	SELECT r.theme_id::integer, v_bulletpoint_id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
+	SELECT r.theme_id::integer, v_bulletpoint_id FROM unnest(new.referenced_theme_id) AS r(theme_id);
 
 	INSERT INTO public.bulletpoint_theme_comparisons (theme_id, bulletpoint_id)
-	SELECT r.theme_id::integer, v_bulletpoint_id FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
+	SELECT r.theme_id::integer, v_bulletpoint_id FROM unnest(new.compared_theme_id) AS r(theme_id);
 
 	RETURN new;
 END
@@ -1074,11 +1072,11 @@ CREATE FUNCTION web.bulletpoints_trigger_row_iu() RETURNS trigger AS $BODY$
 DECLARE
 	v_source_id integer;
 BEGIN
-	IF number_of_references(new.content) != jsonb_array_length(new.referenced_theme_id) THEN
+	IF number_of_references(new.content) != array_length(new.referenced_theme_id, 1) THEN
 		RAISE EXCEPTION USING MESSAGE = format(
 			'Number of referenced themes in text (%s) is not matching with passed ID list (%s).',
 			number_of_references(new.content),
-			jsonb_array_length(new.referenced_theme_id)
+			array_length(new.referenced_theme_id, 1)
 		);
 	END IF;
 
@@ -1116,15 +1114,13 @@ BEGIN
 	<<l_referenced_themes>>
 	DECLARE
 		v_current_referenced_themes int[];
-		v_new_referenced_themes int[];
 	BEGIN
 		v_current_referenced_themes = array_agg(bulletpoint_id) FROM bulletpoint_referenced_themes WHERE id = new.id;
-		v_new_referenced_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
 
-		IF NOT array_equals(v_current_referenced_themes, v_new_referenced_themes) THEN
+		IF NOT array_equals(v_current_referenced_themes, new.referenced_theme_id) THEN
 			DELETE FROM public.bulletpoint_referenced_themes WHERE bulletpoint_id = new.id;
 			INSERT INTO public.bulletpoint_referenced_themes (theme_id, bulletpoint_id)
-			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.referenced_theme_id) AS r(theme_id);
+			SELECT r.theme_id::integer, new.id FROM unnest(new.referenced_theme_id) AS r(theme_id);
 		END IF;
 	END l_referenced_themes;
 
@@ -1132,15 +1128,13 @@ BEGIN
 	<<l_compared_themes>>
 	DECLARE
 		v_current_compared_themes int[];
-		v_new_compared_themes int[];
 	BEGIN
 		v_current_compared_themes = array_agg(bulletpoint_id) FROM bulletpoint_theme_comparisons WHERE id = new.id;
-		v_new_compared_themes = array_agg(r.theme_id::integer) FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
 
-		IF NOT array_equals(v_current_compared_themes, v_new_compared_themes) THEN
+		IF NOT array_equals(v_current_compared_themes, new.compared_theme_id) THEN
 			DELETE FROM public.bulletpoint_theme_comparisons WHERE bulletpoint_id = new.id;
 			INSERT INTO public.bulletpoint_theme_comparisons (theme_id, bulletpoint_id)
-			SELECT r.theme_id::integer, new.id FROM jsonb_array_elements(new.compared_theme_id) AS r(theme_id);
+			SELECT r.theme_id::integer, new.id FROM unnest(new.compared_theme_id) AS r(theme_id);
 		END IF;
 	END l_compared_themes;
 
@@ -1163,19 +1157,19 @@ CREATE VIEW web.contributed_bulletpoints AS
 SELECT
 	contributed_bulletpoints.id, contributed_bulletpoints.content, contributed_bulletpoints.theme_id, contributed_bulletpoints.user_id,
 	sources.link AS source_link, sources.type AS source_type, broken_sources.source_id IS NOT NULL AS source_is_broken,
-	COALESCE(bulletpoint_referenced_themes.referenced_theme_id, '[]') AS referenced_theme_id,
-	COALESCE(bulletpoint_theme_comparisons.compared_theme_id, '[]') AS compared_theme_id,
+	COALESCE(bulletpoint_referenced_themes.referenced_theme_id, ARRAY[]::integer[]) AS referenced_theme_id,
+	COALESCE(bulletpoint_theme_comparisons.compared_theme_id, ARRAY[]::integer[]) AS compared_theme_id,
 	bulletpoint_groups.root_bulletpoint_id
 	FROM public.contributed_bulletpoints
 	LEFT JOIN public.sources ON sources.id = contributed_bulletpoints.source_id
 	LEFT JOIN public.broken_sources ON broken_sources.source_id = sources.id
 	LEFT JOIN (
-		SELECT bulletpoint_id, jsonb_agg(public.bulletpoint_referenced_themes.theme_id) AS referenced_theme_id
+		SELECT bulletpoint_id, array_agg(public.bulletpoint_referenced_themes.theme_id) AS referenced_theme_id
 		FROM public.bulletpoint_referenced_themes
 		GROUP BY bulletpoint_id
 	) AS bulletpoint_referenced_themes ON bulletpoint_referenced_themes.bulletpoint_id = contributed_bulletpoints.id
 	LEFT JOIN (
-		SELECT bulletpoint_id, jsonb_agg(public.bulletpoint_theme_comparisons.theme_id) AS compared_theme_id
+		SELECT bulletpoint_id, array_agg(public.bulletpoint_theme_comparisons.theme_id) AS compared_theme_id
 		FROM public.bulletpoint_theme_comparisons
 		GROUP BY bulletpoint_id
 	) AS bulletpoint_theme_comparisons ON bulletpoint_theme_comparisons.bulletpoint_id = contributed_bulletpoints.id
