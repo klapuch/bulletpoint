@@ -25,7 +25,7 @@
     "klapuch/application": "^0.0.4",
     "klapuch/configuration": "^0.0.2",
     "klapuch/output": "^2.12.1",
-    "klapuch/storage": "dev-master",
+    "klapuch/storage": "~0.0.7",
     "klapuch/sql": "dev-array-support",
     "klapuch/validation": "^2.6.3",
     "klapuch/iterator": "^1.1.2",
