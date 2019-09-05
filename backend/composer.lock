@@ -4459,16 +4459,16 @@
         },
         {
             "name": "slam/phpstan-extensions",
-            "version": "v3.5.2",
+            "version": "v3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Slamdunk/phpstan-extensions.git",
-                "reference": "15589b538a2635bf37ba7c0c647172e205a56787"
+                "reference": "ad8554764ad54fccf4cf9435334c52297babdf73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/15589b538a2635bf37ba7c0c647172e205a56787",
-                "reference": "15589b538a2635bf37ba7c0c647172e205a56787",
+                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/ad8554764ad54fccf4cf9435334c52297babdf73",
+                "reference": "ad8554764ad54fccf4cf9435334c52297babdf73",
                 "shasum": ""
             },
             "require": {
@@ -4506,12 +4506,12 @@
             "authors": [
                 {
                     "name": "Filippo Tessarotto",
-                    "role": "Developer",
-                    "email": "zoeslam@gmail.com"
+                    "email": "zoeslam@gmail.com",
+                    "role": "Developer"
                 }
             ],
             "description": "Slam extension of phpstan",
-            "time": "2019-08-22T12:08:19+00:00"
+            "time": "2019-09-02T09:40:41+00:00"
         },
         {
             "name": "slevomat/coding-standard",
