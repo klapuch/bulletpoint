@@ -4,9 +4,10 @@ declare(strict_types = 1);
 namespace Bulletpoint\Api\Endpoint\Avatars;
 
 use Bulletpoint\Domain\Access;
-use Bulletpoint\Domain\Image;
+use Bulletpoint\Domain\Upload;
 use Klapuch\Application;
 use Klapuch\Storage;
+use Nette\Http\FileUpload;
 
 final class Post implements Application\View {
 	/** @var \Klapuch\Storage\Connection */
@@ -24,7 +25,7 @@ final class Post implements Application\View {
 	 * @throws \UnexpectedValueException
 	 */
 	public function response(array $parameters): Application\Response {
-		(new Image\UploadedAvatars($this->user, $this->connection))->save();
+		(new Upload\Avatars(new FileUpload($_FILES['avatar']), $this->user, $this->connection))->save();
 		return new Application\EmptyResponse();
 	}
 }

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Integration\Domain\Access;
 
 use Bulletpoint\Domain\Access;
+use Bulletpoint\Fixtures;
 use Bulletpoint\TestCase;
 use Klapuch\Http;
 use Nette\Utils\Json;
@@ -19,6 +20,7 @@ final class OAuthEntranceTest extends TestCase\Runtime {
 	use TestCase\TemplateDatabase;
 
 	public function testCreatingNewUser(): void {
+		(new Fixtures\SamplePostgresData($this->connection, 'sample_image'))->try();
 		Assert::equal(
 			new Access\ConstantUser(
 				'1',
@@ -30,7 +32,7 @@ final class OAuthEntranceTest extends TestCase\Runtime {
 					'password' => null,
 					'facebook_id' => 123,
 					'google_id' => null,
-					'avatar_filename' => Expect::type('string'),
+					'avatar_filename_id' => Expect::type('integer'),
 				],
 			),
 			(new Access\OAuthEntrance(

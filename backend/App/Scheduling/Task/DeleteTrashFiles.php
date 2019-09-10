@@ -7,7 +7,7 @@ use Klapuch\Scheduling;
 use Klapuch\Storage;
 use Nette\Utils;
 
-final class RemoveTrashFiles implements Scheduling\Job {
+final class DeleteTrashFiles implements Scheduling\Job {
 	/** @var \Klapuch\Storage\Connection */
 	private $connection;
 
@@ -24,18 +24,18 @@ final class RemoveTrashFiles implements Scheduling\Job {
 				))->rows(),
 				'filename',
 			);
-			self::removeOriginals($filenames);
-			self::removeResizes($filenames);
+			self::deleteOriginals($filenames);
+			self::deleteResizes($filenames);
 		});
 	}
 
-	private static function removeOriginals(array $filenames): void {
+	private static function deleteOriginals(array $filenames): void {
 		foreach ($filenames as $filename) {
 			Utils\FileSystem::delete(__DIR__ . '/../../../data/' . $filename);
 		}
 	}
 
-	private function removeResizes(array $filenames): void {
+	private function deleteResizes(array $filenames): void {
 		foreach (glob(__DIR__ . '/../../../data/cache/resize_*/images/**/*.*') ?: [] as $cachedFilename) {
 			foreach ($filenames as $filename) {
 				if (Utils\Strings::contains($cachedFilename, $filename)) {
@@ -46,6 +46,6 @@ final class RemoveTrashFiles implements Scheduling\Job {
 	}
 
 	public function name(): string {
-		return 'RemoveTrashFiles';
+		return 'DeleteTrashFiles';
 	}
 }
