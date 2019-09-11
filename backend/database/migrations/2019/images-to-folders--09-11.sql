@@ -41,8 +41,6 @@ CREATE TABLE filesystem.files$images (
 	CONSTRAINT height_positive CHECK (height > 0)
 ) INHERITS (filesystem.files);
 
-
-
 CREATE FUNCTION filesystem.files$images_trigger_row_aud() RETURNS trigger AS $BODY$
 BEGIN
 	IF old.filename IS DISTINCT FROM new.filename THEN
@@ -53,8 +51,6 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
-
-
 CREATE TRIGGER files$images_row_aud_trigger
 	AFTER UPDATE OR DELETE
 	ON filesystem.files$images
@@ -62,6 +58,9 @@ CREATE TRIGGER files$images_row_aud_trigger
 
 
 ALTER TABLE users ADD COLUMN avatar_filename_id integer NOT NULL DEFAULT constant.default_avatar_filename_id();
+
+
+INSERT INTO filesystem.files$images (filename, size_bytes, mime_type, created_at, width, height) VALUES ('images/avatars/0.png', 4220, 'image/png', now(), 225, 225);
 
 
 ALTER TABLE users ADD CONSTRAINT users_avatar_filename_id FOREIGN KEY (avatar_filename_id) REFERENCES filesystem.files$images(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -91,7 +90,6 @@ END;
 $BODY$ LANGUAGE plpgsql STABLE;
 
 
-
 CREATE OR REPLACE FUNCTION create_third_party_user(in_provider text, in_id text, in_email text) RETURNS SETOF users AS $BODY$
 DECLARE
 	v_provider_column CONSTANT hstore DEFAULT hstore(ARRAY['facebook', 'facebook_id', 'google', 'google_id']);
@@ -114,7 +112,6 @@ BEGIN
 	END IF;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE ROWS 1;
-
 
 
 CREATE OR REPLACE FUNCTION users_trigger_row_aiud() RETURNS trigger AS $BODY$
@@ -147,7 +144,6 @@ END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 
-
 CREATE OR REPLACE FUNCTION users_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
 	<<l_registration>>
@@ -162,6 +158,5 @@ END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
 
-
 ALTER TABLE users DROP COLUMN avatar_filename;
-DROP FUNCTION constant.default_avatar_filename_id();
+DROP FUNCTION constant.default_avatar_filename();
