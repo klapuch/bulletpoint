@@ -43,6 +43,7 @@ CREATE DOMAIN roles AS text CHECK (VALUE = ANY(constant.roles()));
 CREATE DOMAIN usernames AS citext CHECK (VALUE ~ format('^[a-zA-Z0-9_]{%s,%s}$', constant.username_min_length(), constant.username_max_length()));
 CREATE DOMAIN openid_sub AS text CHECK (VALUE ~ '^.{1,255}$');
 CREATE DOMAIN http_status AS integer CHECK (VALUE BETWEEN 100 AND 504);
+CREATE DOMAIN absolute_path AS character varying (255) CHECK (VALUE NOT LIKE '%..%');
 
 -- schema constructs
 CREATE FUNCTION constructs.trigger_readonly() RETURNS trigger AS $BODY$
@@ -119,18 +120,18 @@ $BODY$ LANGUAGE sql IMMUTABLE;
 -- schema filesystem
 CREATE TABLE filesystem.trash (
 	id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	filename character varying (255) NOT NULL UNIQUE,
+	filename absolute_path NOT NULL UNIQUE,
 	deleted_at timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE TRIGGER trash_row_bu_readonly_trigger
-	BEFORE UPDATE OF deleted_at
+	BEFORE UPDATE OF deleted_at, filename
 	ON filesystem.trash
-	FOR EACH ROW EXECUTE PROCEDURE constructs.trigger_readonly('{deleted_at}');
+	FOR EACH ROW EXECUTE PROCEDURE constructs.trigger_readonly('{deleted_at,filename}');
 
 CREATE TABLE filesystem.files (
 	id integer,
-	filename character varying (255) NOT NULL,
+	filename absolute_path NOT NULL,
 	size_bytes bigint NOT NULL,
 	mime_type citext NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now()

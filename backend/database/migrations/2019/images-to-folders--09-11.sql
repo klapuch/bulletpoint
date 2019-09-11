@@ -1,5 +1,7 @@
 INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/images-to-folders--09-11.sql');
 
+CREATE DOMAIN absolute_path AS character varying (255) CHECK (VALUE NOT LIKE '%..%');
+
 CREATE SCHEMA constructs;
 
 
@@ -15,15 +17,17 @@ $BODY$ LANGUAGE plpgsql VOLATILE;
 
 ALTER TABLE filesystem.trash ADD COLUMN deleted_at timestamptz NOT NULL DEFAULT now();
 
+ALTER TABLE filesystem.trash ALTER COLUMN filename TYPE absolute_path;
+
 
 CREATE TRIGGER trash_row_bu_readonly_trigger
-	BEFORE UPDATE OF deleted_at
+	BEFORE UPDATE OF deleted_at, filename
 	ON filesystem.trash
-	FOR EACH ROW EXECUTE PROCEDURE constructs.trigger_readonly('{deleted_at}');
+	FOR EACH ROW EXECUTE PROCEDURE constructs.trigger_readonly('{deleted_at,filename}');
 
 CREATE TABLE filesystem.files (
 	id integer,
-	filename character varying (255) NOT NULL,
+	filename absolute_path NOT NULL,
 	size_bytes bigint NOT NULL,
 	mime_type citext NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT now()
