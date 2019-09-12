@@ -122,7 +122,7 @@ migration-list-new: ## list new migrations
 
 .PHONY: migration-diff
 migration-diff:     ## diff structure
-	@sh database/migrations/diff.sh
+	sh database/migrations/diff.sh
 
 .PHONY: move-schemas
 move-schemas:       ## move JSON schemas
