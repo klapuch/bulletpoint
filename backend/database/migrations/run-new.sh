@@ -15,5 +15,5 @@ for filename in $MIGRATION_FILENAMES_TO_RUN; do
 		echo "FAIL! Migration \"$filename\" was not successful.";
 		exit $?;
 	fi
-	 echo "Migration of \"$filename\" was successful.";
+	echo "Migration of \"$filename\" was successful.";
 done
