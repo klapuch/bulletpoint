@@ -56,7 +56,7 @@ final class Cron implements Scheduling\Job {
 			),
 			new Scheduling\RepeatedJob(
 				new Scheduling\MarkedJob(
-					new RemoveTrashFiles($this->connection),
+					new DeleteTrashFiles($this->connection),
 					$this->connection,
 				),
 				'PT10M',

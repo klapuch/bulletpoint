@@ -27,6 +27,6 @@ CREATE FUNCTION tests.invalid_email() RETURNS void AS $BODY$
 BEGIN
 	PERFORM assert.throws(
 		$$SELECT random_username('thisIsNotEmail');$$,
-		ROW('Passed value "thisIsNotEmail" is not email', 'P0001')::error
+		ROW('Passed value "thisIsNotEmail" is not an email', 'P0001')::error
 	);
 END $BODY$ LANGUAGE plpgsql VOLATILE;

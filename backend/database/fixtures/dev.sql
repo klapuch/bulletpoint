@@ -1,3 +1,5 @@
+INSERT INTO filesystem.files$images (filename, size_bytes, mime_type, width, height) VALUES ('images/avatars/0.png', 100, 'image/png', 180, 180);
+
 INSERT INTO public.users (username, email, password, role) VALUES ('klapuch', 'klapuchdominik@gmail.com', '$argon2i$v=19$m=131072,t=4,p=4$ZEhjRjVaYzYuYkg2VUQwcQ$EuRHYiI+7NJoVtkcdbPTh4QUHxWw7FOncPphl18ZGq4', 'admin');
 INSERT INTO public.users (username, email, password, role) VALUES ('test', 'test@gmail.com', '$argon2i$v=19$m=131072,t=4,p=4$ZEhjRjVaYzYuYkg2VUQwcQ$EuRHYiI+7NJoVtkcdbPTh4QUHxWw7FOncPphl18ZGq4', 'member');
 

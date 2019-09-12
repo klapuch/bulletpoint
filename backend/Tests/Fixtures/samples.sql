@@ -171,16 +171,43 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
+CREATE FUNCTION samples.sample_image(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id filesystem.files$images.id%type;
+BEGIN
+	INSERT INTO filesystem.files$images (id, filename, size_bytes, mime_type, created_at, width, height)
+	VALUES (constant.default_avatar_filename_id(), 'images/avatars/0.png', 100, 'image/png', now(), 180, 180)
+	ON CONFLICT (filename) DO NOTHING
+	RETURNING id INTO v_id;
+	PERFORM nextval('filesystem.files$images_id_seq');
+
+	RETURN COALESCE(v_id, (SELECT id FROM filesystem.files$images WHERE filename = 'images/avatars/0.png'));
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE FUNCTION samples.filesystem_image(replacements jsonb = '{}') RETURNS integer AS $BODY$
+DECLARE
+	v_id filesystem.files$images.id%type;
+BEGIN
+	INSERT INTO filesystem.files$images (filename, size_bytes, mime_type, created_at, width, height)
+	VALUES (format('%s.png', md5(random()::text)), 100, 'image/png', now(), 180, 180)
+	RETURNING id INTO v_id;
+
+	RETURN v_id;
+END;
+$BODY$ LANGUAGE plpgsql;
+
 CREATE FUNCTION samples.users(replacements jsonb = '{}') RETURNS integer AS $BODY$
 DECLARE
 	v_id users.id%type;
 BEGIN
-	INSERT INTO users (email, username, password, role, facebook_id) VALUES (
+	INSERT INTO users (email, username, password, role, facebook_id, avatar_filename_id) VALUES (
 		samples.random_if_not_exists(md5(random()::text), replacements, 'email'),
 		samples.random_if_not_exists(substring(md5(random()::text), 1, 20), replacements, 'username'),
 		CASE WHEN (replacements -> 'password')::text = 'null' THEN NULL ELSE samples.random_if_not_exists(md5(random()::text), replacements, 'password') END,
 		samples.random_if_not_exists(test_utils.random_array_pick(constant.roles()), replacements, 'role')::roles,
-		CASE WHEN replacements ? 'facebook_id' THEN CAST(replacements -> 'facebook_id' AS bigint) ELSE test_utils.better_random('integer') END
+		CASE WHEN replacements ? 'facebook_id' THEN CAST(replacements -> 'facebook_id' AS bigint) ELSE test_utils.better_random('integer') END,
+		(SELECT samples.sample_image())
 	)
 	RETURNING id INTO v_id;
 

@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Domain\Access;
 
+use Klapuch\Sql\Clause;
+use Klapuch\Sql\Expression;
+use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 /**
@@ -25,10 +28,13 @@ final class PublicUser implements User {
 	}
 
 	public function properties(): array {
-		return (new Storage\TypedQuery(
+		return (new Storage\BuiltQuery(
 			$this->connection,
-			'SELECT username, avatar_filename FROM users WHERE id = ?',
-			[$this->id],
+			(new Select\Query())
+				->select(new Expression\Select(['username', 'avatar_filename' => 'filesystem.files$images.filename']))
+				->from(new Expression\From(['users']))
+				->join(new Clause\Join('filesystem.files$images', 'users.avatar_filename_id = filesystem.files$images.id'))
+				->where(new Expression\RawWhere('users.id = :user', ['user' => $this->id()])),
 		))->row();
 	}
 
