@@ -120,6 +120,10 @@ migration-run-new:  ## run all new migrations
 migration-list-new: ## list new migrations
 	@sh database/migrations/list-new.sh
 
+.PHONY: migration-diff
+migration-diff:     ## diff structure
+	@sh database/migrations/diff.sh
+
 .PHONY: move-schemas
 move-schemas:       ## move JSON schemas
 	mkdir -p www/schema/bulletpoint
