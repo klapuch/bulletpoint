@@ -36,6 +36,8 @@ services:
         - bulletpoint
 
     php-fpm:
+      environment:
+        - BULLETPOINT_ENV=local
       build: docker/php-fpm
       working_dir: /var/www/bulletpoint/backend
       volumes:
