@@ -34,7 +34,10 @@ echo 'REACT:BUILD'
 ssh $USER@$HOST "cd $RELEASE_DIR/frontend && yarn install && yarn run build"
 
 echo 'SECRETS:PUT'
-ssh $USER@$HOST "cp -v $SHARED_DIR/secrets.ini $RELEASE_DIR/backend/App/Configuration/secrets.ini"
+ssh $USER@$HOST "
+  cp -v $SHARED_DIR/secrets.ini $RELEASE_DIR/backend/App/Configuration/secrets.ini \
+    && cp -v $RELEASE_DIR/backend/App/Configuration/config.production.ini $RELEASE_DIR/backend/App/Configuration/config.local.ini
+"
 
 echo 'NGINX:CONFIG:MOVE'
 ssh $USER@$HOST "
