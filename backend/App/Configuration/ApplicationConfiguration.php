@@ -9,21 +9,14 @@ use Klapuch\Configuration;
  * Configuration for whole application
  */
 final class ApplicationConfiguration implements Configuration\Source {
-	private const LOCAL_CONFIGURATION = __DIR__ . '/config.local.ini';
-	private const PRODUCTION_CONFIGURATION = __DIR__ . '/config.production.ini';
+	private const ENV_CONFIGURATION = __DIR__ . '/config.env.ini';
 	private const SECRET_CONFIGURATION = __DIR__ . '/secrets.ini';
 	private const ROUTES = __DIR__ . '/routes.ini';
 
 	public function read(): array {
 		return (new Configuration\CachedSource(
 			new Configuration\CombinedSource(
-				new Configuration\ValidIni(
-					new \SplFileInfo(
-						self::env() === 'local'
-							? self::LOCAL_CONFIGURATION
-							: self::PRODUCTION_CONFIGURATION,
-					),
-				),
+				new Configuration\ValidIni(new \SplFileInfo(self::ENV_CONFIGURATION)),
 				new Configuration\ValidIni(new \SplFileInfo(self::SECRET_CONFIGURATION)),
 				new Configuration\NamedSource(
 					'ROUTES',
@@ -34,10 +27,6 @@ final class ApplicationConfiguration implements Configuration\Source {
 		))->read();
 	}
 
-	private static function env(): string {
-		return $_SERVER['BULLETPOINT_ENV'] ?? 'production';
-	}
-
 	private static function key(): string {
 		return (string) crc32(
 			implode(
@@ -45,8 +34,7 @@ final class ApplicationConfiguration implements Configuration\Source {
 				array_map(
 					'filemtime',
 					[
-						self::LOCAL_CONFIGURATION,
-						self::PRODUCTION_CONFIGURATION,
+						self::ENV_CONFIGURATION,
 						self::SECRET_CONFIGURATION,
 						self::ROUTES,
 					],
