@@ -16,29 +16,9 @@ ssh $USER@$HOST "mkdir -pv $RELEASE_DIR && mkdir -pv $SHARED_DIR/logs && mkdir -
 echo 'SOURCE:CLONE'
 ssh $USER@$HOST "git clone --branch=master $REPOSITORY $RELEASE_DIR && cd $RELEASE_DIR && git checkout -qf $TRAVIS_COMMIT"
 
-echo 'DEV:TRASH:CLEAN'
-ssh $USER@$HOST "
-  rm -rfv $RELEASE_DIR/.git \
-    && rm -rfv $RELEASE_DIR/backend/.gitignore \
-    && rm -rfv $RELEASE_DIR/backend/database/fixtures \
-    && rm -rfv $RELEASE_DIR/backend/database/schema.sql \
-    && rm -rfv $RELEASE_DIR/backend/logs \
-    && rm -rfv $RELEASE_DIR/backend/phpstan.* \
-    && rm -rfv $RELEASE_DIR/backend/psalm.xml \
-    && rm -rfv $RELEASE_DIR/backend/README.md \
-    && rm -rfv $RELEASE_DIR/backend/ruleset.xml \
-    && rm -rfv $RELEASE_DIR/backend/Tests \
-    && rm -rfv $RELEASE_DIR/frontend/.env.dev \
-    && rm -rfv $RELEASE_DIR/frontend/.eslintignore \
-    && rm -rfv $RELEASE_DIR/frontend/.eslintrc \
-    && rm -rfv $RELEASE_DIR/frontend/.flowconfig \
-    && rm -rfv $RELEASE_DIR/frontend/.gitignore \
-    && rm -rfv $RELEASE_DIR/frontend/README.md
-"
-
 echo 'DIRS:SHARE'
 ssh $USER@$HOST "
-  ln -sfnv $SHARED_DIR/logs $RELEASE_DIR/backend/logs \
+  rm -rfv $RELEASE_DIR/backend/logs && ln -sfnv $SHARED_DIR/logs $RELEASE_DIR/backend/logs \
     && cp -v $RELEASE_DIR/backend/data/images/avatars/* $SHARED_DIR/data/images/avatars \
     && rm -rfv $RELEASE_DIR/backend/data \
     && ln -sfnv $SHARED_DIR/data $RELEASE_DIR/backend/data
@@ -82,12 +62,16 @@ ssh $USER@$HOST "
 echo 'TRASH:CLEAN'
 ssh $USER@$HOST "
   ls -d $RELEASE_DIR/* | grep -v $RELEASE_DIR/backend | grep -v $RELEASE_DIR/frontend | xargs --verbose --no-run-if-empty rm -rf \
-    && ls -d $RELEASE_DIR/frontend | grep -v $RELEASE_DIR/frontend/build | xargs --verbose --no-run-if-empty rm -rf \
-    && rm -rfv $RELEASE_DIR/backend/composer.* \
-    && rm -rfv $RELEASE_DIR/backend/database \
-    && rm -rfv $RELEASE_DIR/backend/Makefile \
+    && ls -d $RELEASE_DIR/frontend/* | grep -v $RELEASE_DIR/frontend/build | xargs --verbose --no-run-if-empty rm -rf \
+    && ls -d $RELEASE_DIR/backend/* | grep -v $RELEASE_DIR/backend/App | grep -v $RELEASE_DIR/www | grep -v $RELEASE_DIR/vendor | xargs --verbose --no-run-if-empty rm -rf \
+    && rm -rfv $RELEASE_DIR/backend/.gitignore \
     && rm -rfv $RELEASE_DIR/frontend/.babelrc \
-    && rm -rfv $RELEASE_DIR/frontend/.env.prod
+    && rm -rfv $RELEASE_DIR/frontend/.env.dev \
+    && rm -rfv $RELEASE_DIR/frontend/.env.prod \
+    && rm -rfv $RELEASE_DIR/frontend/.eslintignore \
+    && rm -rfv $RELEASE_DIR/frontend/.eslintrc \
+    && rm -rfv $RELEASE_DIR/frontend/.flowconfig \
+    && rm -rfv $RELEASE_DIR/frontend/.gitignore \
 "
 
 echo 'RELEASE'
