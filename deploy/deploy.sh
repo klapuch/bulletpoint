@@ -16,6 +16,26 @@ ssh $USER@$HOST "mkdir -pv $RELEASE_DIR && mkdir -pv $SHARED_DIR/logs && mkdir -
 echo 'SOURCE:CLONE'
 ssh $USER@$HOST "git clone --branch=master $REPOSITORY $RELEASE_DIR && cd $RELEASE_DIR && git checkout -qf $TRAVIS_COMMIT"
 
+echo 'DEV:TRASH:CLEAN'
+ssh $USER@$HOST "
+  ls -d $RELEASE_DIR/* | grep -v $RELEASE_DIR/backend | grep -v $RELEASE_DIR/frontend | xargs --verbose --no-run-if-empty rm -rf \
+    && rm -rfv $RELEASE_DIR/.git \
+    && rm -rfv $RELEASE_DIR/backend/database/fixtures \
+    && rm -rfv $RELEASE_DIR/backend/database/schema.sql \
+    && rm -rfv $RELEASE_DIR/backend/logs \
+    && rm -rfv $RELEASE_DIR/backend/phpstan.* \
+    && rm -rfv $RELEASE_DIR/backend/psalm.xml \
+    && rm -rfv $RELEASE_DIR/backend/README.md \
+    && rm -rfv $RELEASE_DIR/backend/ruleset.xml \
+    && rm -rfv $RELEASE_DIR/backend/Tests \
+    && rm -rfv $RELEASE_DIR/frontend/.env.dev \
+    && rm -rfv $RELEASE_DIR/frontend/.eslintignore \
+    && rm -rfv $RELEASE_DIR/frontend/.eslintrc \
+    && rm -rfv $RELEASE_DIR/frontend/.flowconfig \
+    && rm -rfv $RELEASE_DIR/frontend/.gitignore \
+    && rm -rfv $RELEASE_DIR/frontend/README.md
+"
+
 echo 'DIRS:SHARE'
 ssh $USER@$HOST "
   ln -sfnv $SHARED_DIR/logs $RELEASE_DIR/backend/logs \
@@ -58,9 +78,6 @@ ssh $USER@$HOST "
   cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.3/fpm/php.ini \
     && cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.3/cli/php.ini
 "
-
-echo 'TRASH:CLEAN'
-ssh $USER@$HOST "rm -rf $RELEASE_DIR/.git && ls -d $RELEASE_DIR/* | grep -v $RELEASE_DIR/backend | grep -v $RELEASE_DIR/frontend | xargs --verbose --no-run-if-empty rm -rf"
 
 echo 'RELEASE'
 ssh $USER@$HOST "ln -sfnv $RELEASE_DIR $CURRENT_DIR"
