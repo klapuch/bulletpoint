@@ -18,8 +18,7 @@ ssh $USER@$HOST "git clone --branch=master $REPOSITORY $RELEASE_DIR && cd $RELEA
 
 echo 'DEV:TRASH:CLEAN'
 ssh $USER@$HOST "
-  ls -d $RELEASE_DIR/* | grep -v $RELEASE_DIR/backend | grep -v $RELEASE_DIR/frontend | xargs --verbose --no-run-if-empty rm -rf \
-    && rm -rfv $RELEASE_DIR/.git \
+  rm -rfv $RELEASE_DIR/.git \
     && rm -rfv $RELEASE_DIR/backend/.gitignore \
     && rm -rfv $RELEASE_DIR/backend/database/fixtures \
     && rm -rfv $RELEASE_DIR/backend/database/schema.sql \
@@ -78,6 +77,14 @@ echo 'PHP:CONFIG:MOVE'
 ssh $USER@$HOST "
   cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.3/fpm/php.ini \
     && cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.3/cli/php.ini
+"
+
+echo 'TRASH:CLEAN'
+ssh $USER@$HOST "
+  ls -d $RELEASE_DIR/* | grep -v $RELEASE_DIR/backend | grep -v $RELEASE_DIR/frontend | xargs --verbose --no-run-if-empty rm -rf \
+    && rm -rfv $RELEASE_DIR/backend/database \
+    && rm -rfv $RELEASE_DIR/backend/composer.* \
+    && rm -rfv $RELEASE_DIR/backend/package.*
 "
 
 echo 'RELEASE'
