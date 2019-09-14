@@ -20,6 +20,7 @@ echo 'DEV:TRASH:CLEAN'
 ssh $USER@$HOST "
   ls -d $RELEASE_DIR/* | grep -v $RELEASE_DIR/backend | grep -v $RELEASE_DIR/frontend | xargs --verbose --no-run-if-empty rm -rf \
     && rm -rfv $RELEASE_DIR/.git \
+    && rm -rfv $RELEASE_DIR/backend/.gitignore \
     && rm -rfv $RELEASE_DIR/backend/database/fixtures \
     && rm -rfv $RELEASE_DIR/backend/database/schema.sql \
     && rm -rfv $RELEASE_DIR/backend/logs \
