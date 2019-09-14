@@ -21,7 +21,7 @@ ssh $USER@$HOST "
   rm -rfv $RELEASE_DIR/backend/logs && ln -sfnv $SHARED_DIR/logs $RELEASE_DIR/backend/logs \
     && cp -v $RELEASE_DIR/backend/data/images/avatars/* $SHARED_DIR/data/images/avatars \
     && rm -rfv $RELEASE_DIR/backend/data \
-    && ln -sfnv $SHARED_DIR/data $RELEASE_DIR/backend/data
+    && ln -sfnv $SHARED_DIR/data $RELEASE_DIR/backend/data \
 "
 
 echo 'COMPOSER:INSTALL'
@@ -36,7 +36,7 @@ ssh $USER@$HOST "cd $RELEASE_DIR/frontend && yarn install && yarn run build"
 echo 'SECRETS:PUT'
 ssh $USER@$HOST "
   rm -rfv $RELEASE_DIR/backend/App/Configuration/secrets.ini && ln -sfnv $SHARED_DIR/secrets.ini $RELEASE_DIR/backend/App/Configuration/secrets.ini \
-    && mv -v $RELEASE_DIR/backend/App/Configuration/config.production.ini $RELEASE_DIR/backend/App/Configuration/config.env.ini
+    && mv -v $RELEASE_DIR/backend/App/Configuration/config.production.ini $RELEASE_DIR/backend/App/Configuration/config.env.ini \
 "
 
 echo 'NGINX:CONFIG:MOVE'
@@ -50,13 +50,13 @@ ssh $USER@$HOST "
     && cp -v $RELEASE_DIR/docker/nginx/preflight_headers.conf /etc/nginx/preflight_headers.conf \
     && cp -v $RELEASE_DIR/docker/nginx/routes.conf /etc/nginx/routes.conf \
     && cp -v $RELEASE_DIR/docker/nginx/security_headers.conf /etc/nginx/security_headers.conf \
-    && cp -v $RELEASE_DIR/docker/nginx/letsencrypt.conf /etc/nginx/letsencrypt.conf
+    && cp -v $RELEASE_DIR/docker/nginx/letsencrypt.conf /etc/nginx/letsencrypt.conf \
 "
 
 echo 'PHP:CONFIG:MOVE'
 ssh $USER@$HOST "
   cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.3/fpm/php.ini \
-    && cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.3/cli/php.ini
+    && cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.3/cli/php.ini \
 "
 
 echo 'TRASH:CLEAN'
