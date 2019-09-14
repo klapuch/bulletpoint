@@ -34,7 +34,7 @@ final class PubliclyPrivateUser implements User {
 				->select(new Expression\Select(['role', 'email', 'username', 'avatar_filename' => 'filesystem.files$images.filename']))
 				->from(new Expression\From(['users']))
 				->join(new Clause\Join('filesystem.files$images', 'users.avatar_filename_id = filesystem.files$images.id'))
-				->where(new Expression\RawWhere('users.id = :user', ['user' => $this->origin->id()])),
+				->where(new Expression\Where('users.id', $this->origin->id())),
 		))->row();
 	}
 

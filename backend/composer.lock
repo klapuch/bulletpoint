@@ -798,16 +798,16 @@
         },
         {
             "name": "klapuch/sql",
-            "version": "0.0.6",
+            "version": "0.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Sql.git",
-                "reference": "72f3559cb40aa0f9c1578afd92345b2fab26f388"
+                "reference": "a93a85cf333efe3423ce42c4d5f08a209f2a9aab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Sql/zipball/72f3559cb40aa0f9c1578afd92345b2fab26f388",
-                "reference": "72f3559cb40aa0f9c1578afd92345b2fab26f388",
+                "url": "https://api.github.com/repos/klapuch/Sql/zipball/a93a85cf333efe3423ce42c4d5f08a209f2a9aab",
+                "reference": "a93a85cf333efe3423ce42c4d5f08a209f2a9aab",
                 "shasum": ""
             },
             "require": {
@@ -840,7 +840,7 @@
                 "query",
                 "sql"
             ],
-            "time": "2019-09-08T19:08:17+00:00"
+            "time": "2019-09-14T20:30:09+00:00"
         },
         {
             "name": "klapuch/storage",
@@ -2648,16 +2648,16 @@
         },
         {
             "name": "felixfbecker/advanced-json-rpc",
-            "version": "v3.0.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/felixfbecker/php-advanced-json-rpc.git",
-                "reference": "241c470695366e7b83672be04ea0e64d8085a551"
+                "reference": "23366dd0cab0a0f3fd3016bf3c0b36dec74348e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/felixfbecker/php-advanced-json-rpc/zipball/241c470695366e7b83672be04ea0e64d8085a551",
-                "reference": "241c470695366e7b83672be04ea0e64d8085a551",
+                "url": "https://api.github.com/repos/felixfbecker/php-advanced-json-rpc/zipball/23366dd0cab0a0f3fd3016bf3c0b36dec74348e7",
+                "reference": "23366dd0cab0a0f3fd3016bf3c0b36dec74348e7",
                 "shasum": ""
             },
             "require": {
@@ -2685,7 +2685,7 @@
                 }
             ],
             "description": "A more advanced JSONRPC implementation",
-            "time": "2018-09-10T08:58:41+00:00"
+            "time": "2019-09-12T22:41:08+00:00"
         },
         {
             "name": "felixfbecker/language-server-protocol",
@@ -3175,16 +3175,16 @@
         },
         {
             "name": "nette/finder",
-            "version": "v2.5.0",
+            "version": "v2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/finder.git",
-                "reference": "6be1b83ea68ac558aff189d640abe242e0306fe2"
+                "reference": "14164e1ddd69e9c5f627ff82a10874b3f5bba5fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/finder/zipball/6be1b83ea68ac558aff189d640abe242e0306fe2",
-                "reference": "6be1b83ea68ac558aff189d640abe242e0306fe2",
+                "url": "https://api.github.com/repos/nette/finder/zipball/14164e1ddd69e9c5f627ff82a10874b3f5bba5fe",
+                "reference": "14164e1ddd69e9c5f627ff82a10874b3f5bba5fe",
                 "shasum": ""
             },
             "require": {
@@ -3225,7 +3225,7 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "? Nette Finder: find files and directories with an intuitive API.",
+            "description": "🔍 Nette Finder: find files and directories with an intuitive API.",
             "homepage": "https://nette.org",
             "keywords": [
                 "filesystem",
@@ -3233,7 +3233,7 @@
                 "iterator",
                 "nette"
             ],
-            "time": "2019-02-28T18:13:25+00:00"
+            "time": "2019-07-11T18:02:17+00:00"
         },
         {
             "name": "nette/neon",
@@ -4457,16 +4457,16 @@
         },
         {
             "name": "slam/phpstan-extensions",
-            "version": "v3.6.0",
+            "version": "v3.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Slamdunk/phpstan-extensions.git",
-                "reference": "ad8554764ad54fccf4cf9435334c52297babdf73"
+                "reference": "2a65e832ee229f708ccdd4221e1dae239c9bb58a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/ad8554764ad54fccf4cf9435334c52297babdf73",
-                "reference": "ad8554764ad54fccf4cf9435334c52297babdf73",
+                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/2a65e832ee229f708ccdd4221e1dae239c9bb58a",
+                "reference": "2a65e832ee229f708ccdd4221e1dae239c9bb58a",
                 "shasum": ""
             },
             "require": {
@@ -4509,7 +4509,7 @@
                 }
             ],
             "description": "Slam extension of phpstan",
-            "time": "2019-09-02T09:40:41+00:00"
+            "time": "2019-09-13T13:29:43+00:00"
         },
         {
             "name": "slevomat/coding-standard",
