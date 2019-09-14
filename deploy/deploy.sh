@@ -73,6 +73,7 @@ ssh $USER@$HOST "
     && rm -rfv $RELEASE_DIR/.git \
     && rm -rfv $RELEASE_DIR/.travis.yml \
     && rm -rfv $RELEASE_DIR/backend/.gitignore \
+    && rm -rfv $RELEASE_DIR/backend/Configuration/secrets.sample.ini \
     && rm -rfv $RELEASE_DIR/frontend/.babelrc \
     && rm -rfv $RELEASE_DIR/frontend/.env.dev \
     && rm -rfv $RELEASE_DIR/frontend/.env.prod \
