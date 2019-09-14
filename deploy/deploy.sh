@@ -82,9 +82,12 @@ ssh $USER@$HOST "
 echo 'TRASH:CLEAN'
 ssh $USER@$HOST "
   ls -d $RELEASE_DIR/* | grep -v $RELEASE_DIR/backend | grep -v $RELEASE_DIR/frontend | xargs --verbose --no-run-if-empty rm -rf \
-    && rm -rfv $RELEASE_DIR/backend/database \
+    && ls -d $RELEASE_DIR/frontend | grep -v $RELEASE_DIR/frontend/build | xargs --verbose --no-run-if-empty rm -rf \
     && rm -rfv $RELEASE_DIR/backend/composer.* \
-    && rm -rfv $RELEASE_DIR/backend/package.*
+    && rm -rfv $RELEASE_DIR/backend/database \
+    && rm -rfv $RELEASE_DIR/backend/Makefile \
+    && rm -rfv $RELEASE_DIR/frontend/.babelrc \
+    && rm -rfv $RELEASE_DIR/frontend/.env.prod
 "
 
 echo 'RELEASE'
