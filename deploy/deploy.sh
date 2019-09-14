@@ -63,7 +63,15 @@ echo 'TRASH:CLEAN'
 ssh $USER@$HOST "
   ls -d $RELEASE_DIR/* | grep -v $RELEASE_DIR/backend | grep -v $RELEASE_DIR/frontend | xargs --verbose --no-run-if-empty rm -rf \
     && ls -d $RELEASE_DIR/frontend/* | grep -v $RELEASE_DIR/frontend/build | xargs --verbose --no-run-if-empty rm -rf \
-    && ls -d $RELEASE_DIR/backend/* | grep -v $RELEASE_DIR/backend/App | grep -v $RELEASE_DIR/www | grep -v $RELEASE_DIR/vendor | xargs --verbose --no-run-if-empty rm -rf \
+    && ls -d $RELEASE_DIR/backend/* \
+      | grep -v $RELEASE_DIR/backend/App \
+      | grep -v $RELEASE_DIR/backend/data \
+      | grep -v $RELEASE_DIR/backend/logs \
+      | grep -v $RELEASE_DIR/backend/vendor \
+      | grep -v $RELEASE_DIR/backend/www \
+    | xargs --verbose --no-run-if-empty rm -rf \
+    && rm -rfv $RELEASE_DIR/.git \
+    && rm -rfv $RELEASE_DIR/.travis.yml \
     && rm -rfv $RELEASE_DIR/backend/.gitignore \
     && rm -rfv $RELEASE_DIR/frontend/.babelrc \
     && rm -rfv $RELEASE_DIR/frontend/.env.dev \
