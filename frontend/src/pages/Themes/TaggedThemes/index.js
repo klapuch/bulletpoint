@@ -69,15 +69,15 @@ class Themes extends React.Component<Props, State> {
       return <Loader />;
     }
     const tag = this.getTag();
-    if (typeof tag === 'undefined') {
+    if (tag === undefined) {
       return <Error>Tag neexistuje.</Error>;
     }
     return (
-      <SlugRedirect {...this.props} name={this.getTag()}>
+      <SlugRedirect {...this.props} name={tag}>
         <Helmet>
-          <title>{`Témata vybraná pro ${this.getTag()}`}</title>
+          <title>{`Témata vybraná pro ${tag}`}</title>
         </Helmet>
-        <h1>Témata vybraná pro &quot;<strong>{this.getTag()}</strong>&quot;</h1>
+        <h1>Témata vybraná pro &quot;<strong>{tag}</strong>&quot;</h1>
         <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />
         <ActivePager
           perPage={PER_PAGE}
