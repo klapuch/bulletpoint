@@ -6,9 +6,9 @@ import qs from 'qs';
 import { isEmpty } from 'lodash';
 import * as theme from '../../../domain/theme/actions';
 import * as themes from '../../../domain/theme/selects';
-import Loader from '../../../ui/Loader';
 import type { FetchedThemeType } from '../../../domain/theme/types';
 import Previews from '../../../domain/theme/components/Previews';
+import SkeletonPreviews from '../../../domain/theme/components/SkeletonPreviews';
 
 type Props = {|
   +params: {|
@@ -30,7 +30,12 @@ class Themes extends React.Component<Props> {
   render() {
     const { themes, fetching } = this.props;
     if (fetching) {
-      return <Loader />;
+      return (
+        <>
+          <h1>{this.getHeader()}</h1>
+          <SkeletonPreviews>{1}</SkeletonPreviews>
+        </>
+      );
     }
     return (
       <>
