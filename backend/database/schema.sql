@@ -346,7 +346,7 @@ DECLARE
 	v_point CONSTANT integer NOT NULL DEFAULT CASE in_point WHEN 1 THEN 1 ELSE -1 END;
 BEGIN
 	INSERT INTO user_tag_reputations (user_id, tag_id, reputation) VALUES (in_user_id, in_tag_id, greatest(v_point, 0))
-	ON CONFLICT (user_id, tag_id) DO UPDATE SET reputation = user_tag_reputations.reputation + v_point;
+	ON CONFLICT (user_id, tag_id) DO UPDATE SET reputation = greatest(user_tag_reputations.reputation + v_point, 0);
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
 
