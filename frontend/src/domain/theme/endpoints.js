@@ -77,6 +77,7 @@ export function* fetchAll(action: Object): Saga {
     },
   );
   yield put(receivedAll(response.data, response.headers));
+  yield call(action.next);
 }
 
 const toReactSelectSearches = (themes: Array<FetchedThemeType>, except: Array<number>) => (

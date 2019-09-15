@@ -22,17 +22,20 @@ export const FETCH_ALL_THEMES = 'FETCH_ALL_THEMES';
 export const fetchAll = (
   params: Object,
   pagination: PaginationType = { page: 1, perPage: 10 },
+  next: () => void = () => {},
 ) => ({
   type: FETCH_ALL_THEMES,
   params,
   pagination,
+  next,
 });
 
 
 export const fetchByTag = (
   tag: ?number,
   pagination: PaginationType,
-) => (fetchAll({ tag_id: [tag] }, pagination));
+  next: () => void = () => {},
+) => (fetchAll({ tag_id: [tag] }, pagination, next));
 
 export const fetchRecent = (
   pagination: PaginationType,
