@@ -22,7 +22,7 @@ type Props = {|
   +total: number,
   +pagination: PaginationType,
   +fetching: boolean,
-  +fetchTaggedThemes: (PaginationType) => (Promise<void>),
+  +fetchTaggedThemes: (PaginationType, next: () => void) => (void),
   +initPaging: (PaginationType) => (void),
   +resetPaging: (PaginationType) => (void),
   +turnPage: (number, PaginationType) => (void),
@@ -47,8 +47,7 @@ class Themes extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props) {
     const { match: { params: { tag } } } = this.props;
     if (prevProps.match.params.tag !== tag) {
-      this.handleReload({ page: 1, perPage: PER_PAGE })
-        .then(() => this.setState({ reset: true }));
+      this.handleReload({ page: 1, perPage: PER_PAGE }, () => this.setState({ reset: true }));
     }
   }
 
@@ -57,7 +56,11 @@ class Themes extends React.Component<Props, State> {
     return themes.getCommonTag(this.props.themes, parseInt(tag, 10));
   };
 
-  handleReload = (pagination: PaginationType) => this.props.fetchTaggedThemes(pagination);
+  handleReload = (pagination: PaginationType, next: () => void = () => {}) => (
+    this.props.fetchTaggedThemes(
+      pagination,
+      next,
+    ));
 
   render() {
     const { themes, fetching, total } = this.props;
@@ -92,6 +95,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, { match: { params: { tag } } }) => ({
   fetchTaggedThemes: (
     pagination: PaginationType,
-  ) => dispatch(theme.fetchByTag(parseInt(tag, 10), pagination)),
+    next: () => void,
+  ) => dispatch(theme.fetchByTag(parseInt(tag, 10), pagination), next),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Themes);
