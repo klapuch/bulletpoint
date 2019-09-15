@@ -66,7 +66,12 @@ class Themes extends React.Component<Props, State> {
   render() {
     const { themes, fetching, total } = this.props;
     if (fetching) {
-      return <SkeletonPreviews>{PER_PAGE}</SkeletonPreviews>;
+      return (
+        <>
+          <h1>Témata vybraná pro &quot;<strong>...</strong>&quot;</h1>
+          <SkeletonPreviews>{PER_PAGE}</SkeletonPreviews>
+        </>
+      );
     }
     const tag = this.getTag();
     if (tag === undefined) {
