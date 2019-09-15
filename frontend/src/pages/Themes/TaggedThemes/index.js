@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import * as theme from '../../../domain/theme/actions';
 import * as themes from '../../../domain/theme/selects';
-import Loader from '../../../ui/Loader';
 import SlugRedirect from '../../../router/SlugRedirect';
 import type { FetchedThemeType } from '../../../domain/theme/types';
 import Error from '../../../ui/Error';
@@ -12,6 +11,7 @@ import Previews from '../../../domain/theme/components/Previews';
 import type { PaginationType } from '../../../api/dataset/types';
 import ActivePager from '../../../api/dataset/components/Paging/ActivePager';
 import { getSourcePagination } from '../../../api/dataset/selects';
+import SkeletonPreviews from '../../../domain/theme/components/SkeletonPreviews';
 
 type Props = {|
   +match: {|
@@ -66,7 +66,7 @@ class Themes extends React.Component<Props, State> {
   render() {
     const { themes, fetching, total } = this.props;
     if (fetching) {
-      return <Loader />;
+      return <SkeletonPreviews>{PER_PAGE}</SkeletonPreviews>;
     }
     const tag = this.getTag();
     if (tag === undefined) {
