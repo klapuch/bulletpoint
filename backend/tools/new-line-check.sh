@@ -1,8 +1,11 @@
 #!/bin/sh
 
-EXIT_CODE=0
+BASE_DIR=/var/www/bulletpoint
 
-for filename in $(git ls-files); do
+EXIT_CODE=0
+FILES=$(git --no-pager diff --diff-filter=d --name-only | xargs printf "$BASE_DIR/%s\n")
+
+for filename in $FILES; do
 	END=$(tail -c -1 $filename | cat -e)
 	MIME_TYPE=$(file --mime-type $filename | grep 'text/*')
 	if [ "$MIME_TYPE" != '' ] && [ "$END" != '$' ]; then
