@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 BASE_DIR=/var/www/bulletpoint
 
