@@ -4,7 +4,7 @@ set -e
 BASE_DIR=/var/www/bulletpoint
 
 EXIT_CODE=0
-FILES=$(git --no-pager diff --diff-filter=d --name-only | xargs printf "$BASE_DIR/%s\n")
+FILES=$(git --no-pager diff --diff-filter=d --name-only | xargs --no-run-if-empty printf "$BASE_DIR/%s\n")
 
 for filename in $FILES; do
 	END=$(tail -c -1 $filename | cat -e)
