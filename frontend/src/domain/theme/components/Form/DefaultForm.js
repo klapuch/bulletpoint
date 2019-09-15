@@ -46,7 +46,7 @@ class DefaultForm extends React.Component<Props, State> {
 
   componentDidMount(): void {
     const { theme } = this.props;
-    if (typeof theme !== 'undefined' && theme !== null) {
+    if (theme !== undefined && theme !== null) {
       this.setState({ theme: fromFetchedToPosted(theme) });
     }
   }

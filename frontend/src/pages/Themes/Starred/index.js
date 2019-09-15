@@ -83,7 +83,7 @@ class StarredThemes extends React.Component<Props, State> {
           <h2><small>Žádná oblíbená témata</small></h2>
         ) : (
           <>
-            {typeof this.getTagId() === 'undefined' && <Labels tags={tags} link={id => `?tag_id=${id}`} />}
+            {this.getTagId() === undefined && <Labels tags={tags} link={id => `?tag_id=${id}`} />}
             <Previews themes={themes} tagLink={id => `?tag_id=${id}`} />
             <ActivePager
               name={PAGINATION_NAME}

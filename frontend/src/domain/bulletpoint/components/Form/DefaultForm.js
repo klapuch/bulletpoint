@@ -61,7 +61,7 @@ export default class extends React.Component<Props, State> {
 
   reload = () => {
     const { bulletpoint } = this.props;
-    if (typeof bulletpoint !== 'undefined') {
+    if (bulletpoint !== undefined) {
       const toSelectionFormat = theme => theme
         .filter(Boolean)
         .map(single => ({ id: single.id, name: single.name }));

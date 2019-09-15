@@ -18,7 +18,7 @@ export const fetchMe = (token: string): Promise<MeType> => axios.get('/users/me'
 
 export const refresh = (token: ?string) => {
   const userToken = token || session.getValue();
-  if (userToken !== null && typeof userToken !== 'undefined') {
+  if (userToken !== null && userToken !== undefined) {
     return fetchMe(userToken).then(me => session.updateCredentials(me));
   }
   return Promise.resolve();
