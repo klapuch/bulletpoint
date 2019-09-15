@@ -13,6 +13,7 @@ import {
   requestedStarChange,
   receivedStarChange,
   fetchSingle as fetchSingleAction,
+  erroredSingle,
 } from './actions';
 import * as themes from './selects';
 import * as response from '../../api/response';
@@ -26,11 +27,17 @@ export function* fetchSingle(action: Object): Saga {
     return;
   }
   yield put(requestedSingle(action.id));
-  const response = yield call(axios.get, `/themes/${action.id}`);
-  yield put(receivedSingle(action.id, response.data));
-  const relatedThemesId = yield select(state => themes.getById(action.id, state).related_themes_id);
-  if (!action.flat) {
-    yield all(relatedThemesId.map(themeId => put(fetchSingleAction(themeId, true))));
+  try {
+    const response = yield call(axios.get, `/themes/${action.id}`);
+    yield put(receivedSingle(action.id, response.data));
+    const relatedThemesId = yield select(
+      state => themes.getById(action.id, state).related_themes_id,
+    );
+    if (!action.flat) {
+      yield all(relatedThemesId.map(themeId => put(fetchSingleAction(themeId, true))));
+    }
+  } catch (error) {
+    yield put(erroredSingle(action.id, error));
   }
 }
 

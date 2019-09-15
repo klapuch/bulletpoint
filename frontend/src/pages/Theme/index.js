@@ -71,7 +71,7 @@ class Theme extends React.Component<Props, State> {
       fetching, hasError, error, match: { params: { id } }, theme,
     } = this.props;
     if (hasError && error.status === 404) {
-      return <Error>Téma neexistuje</Error>;
+      return <Error>Téma neexistuje.</Error>;
     } else if (fetching) {
       return <Loader />;
     }

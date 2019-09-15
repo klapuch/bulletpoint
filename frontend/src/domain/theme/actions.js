@@ -87,11 +87,11 @@ export const receivedSingle = (id: number, theme: FetchedThemeType) => ({
   fetching: false,
 });
 
-export const erroredSingle = (id: number, status: number, message: string) => ({
+export const erroredSingle = (id: number, error: Object) => ({
   type: ERRORED_SINGLE_THEME,
   id,
-  status,
-  message,
+  status: error.response.status,
+  message: error.response.data.message,
 });
 
 export const requestedAll = () => ({

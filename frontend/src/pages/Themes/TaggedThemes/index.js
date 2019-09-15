@@ -7,6 +7,7 @@ import * as themes from '../../../domain/theme/selects';
 import Loader from '../../../ui/Loader';
 import SlugRedirect from '../../../router/SlugRedirect';
 import type { FetchedThemeType } from '../../../domain/theme/types';
+import Error from '../../../ui/Error';
 import Previews from '../../../domain/theme/components/Previews';
 import type { PaginationType } from '../../../api/dataset/types';
 import ActivePager from '../../../api/dataset/components/Paging/ActivePager';
@@ -66,6 +67,10 @@ class Themes extends React.Component<Props, State> {
     const { themes, fetching, total } = this.props;
     if (fetching) {
       return <Loader />;
+    }
+    const tag = this.getTag();
+    if (typeof tag === 'undefined') {
+      return <Error>Tag neexistuje.</Error>;
     }
     return (
       <SlugRedirect {...this.props} name={this.getTag()}>
