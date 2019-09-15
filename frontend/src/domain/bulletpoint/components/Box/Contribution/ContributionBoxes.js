@@ -7,7 +7,7 @@ import Boxes from '../Boxes';
 import * as contributedBulletpoints from '../../../../contributed_bulletpoint/selects';
 import * as contributedBulletpoint from '../../../../contributed_bulletpoint/actions';
 import ContributionBox from './ContributionBox';
-import FakeBoxes from '../Fake/FakeBoxes';
+import SkeletonBoxes from '../Skeleton/SkeletonBoxes';
 import * as themes from '../../../../theme/selects';
 import type { FetchedThemeType } from '../../../../theme/types';
 
@@ -37,7 +37,7 @@ class ContributionBoxes extends React.Component<Props> {
   render() {
     const { fetching, theme, contributedBulletpoints } = this.props;
     if (fetching) {
-      return <FakeBoxes show={!theme.is_empty}>{1}</FakeBoxes>;
+      return <SkeletonBoxes show={!theme.is_empty}>{1}</SkeletonBoxes>;
     } else if (isEmpty(contributedBulletpoints)) {
       return null;
     }

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
-import FakeLabel from '../../tags/components/FakeLabel';
+import SkeletonLabel from '../../tags/components/SkeletonLabel';
 
 export default function () {
   return (
@@ -16,7 +16,7 @@ export default function () {
           {'.'.repeat(10)}
         </small>
       </div>
-      <FakeLabel>{'.'.repeat(10)}</FakeLabel>
+      <SkeletonLabel>{'.'.repeat(10)}</SkeletonLabel>
     </>
   );
 }

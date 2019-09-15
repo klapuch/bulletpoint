@@ -6,7 +6,7 @@ import * as theme from '../../domain/theme/actions';
 import * as themes from '../../domain/theme/selects';
 import type { FetchedThemeType } from '../../domain/theme/types';
 import Previews from '../../domain/theme/components/Previews';
-import FakePreviews from '../../domain/theme/components/FakePreviews';
+import SkeletonPreviews from '../../domain/theme/components/SkeletonPreviews';
 import type { PaginationType } from '../../api/dataset/types';
 import ActivePager from '../../api/dataset/components/Paging/ActivePager';
 import { getSourcePagination } from '../../api/dataset/selects';
@@ -38,7 +38,7 @@ class Themes extends React.Component<Props> {
           <title>Nedávno přidaná témata</title>
         </Helmet>
         <h1>Nedávno přidaná témata</h1>
-        {fetching ? <FakePreviews>{PER_PAGE}</FakePreviews> : (
+        {fetching ? <SkeletonPreviews>{PER_PAGE}</SkeletonPreviews> : (
           <>
             <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />
             <ActivePager

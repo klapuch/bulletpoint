@@ -10,7 +10,7 @@ const SpacyLabel = styled.span`
 type Props = {|
   +children: string,
 |};
-const FakeLabel = ({ children }: Props) => (
+const SkeletonLabel = ({ children }: Props) => (
   <Link className="no-link" to="/">
     <SpacyLabel style={{ color: '#424242' }} className="label label-default">
       {children}
@@ -18,4 +18,4 @@ const FakeLabel = ({ children }: Props) => (
   </Link>
 );
 
-export default FakeLabel;
+export default SkeletonLabel;

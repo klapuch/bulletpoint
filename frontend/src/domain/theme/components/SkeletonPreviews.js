@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { range } from 'lodash';
-import FakePreview from './FakePreview';
+import SkeletonPreview from './SkeletonPreview';
 
 type Props = {|
   +children: number,
@@ -15,7 +15,7 @@ export default function ({ children, show = true }: Props) {
     <>
       {range(children).map(number => (
         <React.Fragment key={number}>
-          <FakePreview />
+          <SkeletonPreview />
           <hr />
         </React.Fragment>
       ))}

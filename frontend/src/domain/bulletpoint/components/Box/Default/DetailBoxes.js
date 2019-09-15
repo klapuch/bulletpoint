@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import type { FetchedBulletpointType } from '../../../types';
 import Boxes from '../Boxes';
-import FakeBoxes from '../Fake/FakeBoxes';
+import SkeletonBoxes from '../Skeleton/SkeletonBoxes';
 import * as bulletpoints from '../../../selects';
 import * as bulletpoint from '../../../actions';
 import DetailBox from './DetailBox';
@@ -67,7 +67,7 @@ class DetailBoxes extends React.Component<Props, State> {
     const { fetching, theme } = this.props;
     const { highlightedBulletpointIds, expandBulletpointId } = this.state;
     if (fetching) {
-      return <FakeBoxes show={!theme.is_empty}>{1}</FakeBoxes>;
+      return <SkeletonBoxes show={!theme.is_empty}>{1}</SkeletonBoxes>;
     }
     return (
       <>
