@@ -6,7 +6,7 @@ TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.lo
 CHECK_TEST_EXTENSIONS := find Tests/Integration/ Tests/Unit Tests/Functional -name '*.php' | grep -v '\Test.php$$'
 
 .PHONY: check
-check: validate-composer.lock check-changed-conf plpgsql_check check-test-extensions lint phpmnd phpstan psalm phpcs tests count-postgres-tests
+check: validate-composer.lock new-line-check check-changed-conf plpgsql_check check-test-extensions lint phpmnd phpstan psalm phpcs tests count-postgres-tests
 
 .PHONY: ci
 ci: check tester-coverage
@@ -123,6 +123,10 @@ migration-list-new: ## list new migrations
 .PHONY: migration-diff
 migration-diff:     ## diff structure
 	sh database/migrations/diff.sh
+
+.PHONY: new-line-check
+new-line-check:     ## checks new line on end of the files
+	sh tools/new-line-check.sh
 
 .PHONY: move-schemas
 move-schemas:       ## move JSON schemas
