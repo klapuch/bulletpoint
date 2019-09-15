@@ -6,7 +6,6 @@ import * as theme from '../../../domain/theme/actions';
 import * as themes from '../../../domain/theme/selects';
 import * as tags from '../../../domain/tags/selects';
 import * as tag from '../../../domain/tags/actions';
-import Loader from '../../../ui/Loader';
 import type { FetchedThemeType } from '../../../domain/theme/types';
 import Previews from '../../../domain/theme/components/Previews';
 import type { PaginationType } from '../../../api/dataset/types';
@@ -14,6 +13,7 @@ import Labels from '../../../domain/tags/components/Labels';
 import type { FetchedTagType } from '../../../domain/tags/types';
 import ActivePager from '../../../api/dataset/components/Paging/ActivePager';
 import { getSourcePagination } from '../../../api/dataset/selects';
+import SkeletonPreviews from '../../../domain/theme/components/SkeletonPreviews';
 
 type Props = {|
   +location: {|
@@ -54,10 +54,7 @@ class StarredThemes extends React.Component<Props, State> {
   getTagId = (): ?number => {
     const { location: { search } } = this.props;
     const { tag_id: tagId } = qs.parse(search, { ignoreQueryPrefix: true });
-    if (typeof tagId === 'undefined') {
-      return undefined;
-    }
-    return parseInt(tagId, 10);
+    return tagId === undefined ? undefined : parseInt(tagId, 10);
   };
 
   reload = (pagination: PaginationType): Promise<any> => Promise.resolve()
@@ -72,7 +69,12 @@ class StarredThemes extends React.Component<Props, State> {
       tags,
     } = this.props;
     if (fetching) {
-      return <Loader />;
+      return (
+        <>
+          <h1>Oblíbená témata</h1>
+          <SkeletonPreviews>{PER_PAGE}</SkeletonPreviews>
+        </>
+      );
     }
     return (
       <>
