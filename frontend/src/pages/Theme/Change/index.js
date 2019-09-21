@@ -33,7 +33,11 @@ class Create extends React.Component<Props> {
           <title>{this.getTitle(theme.name)}</title>
         </Helmet>
         <h1>{this.getTitle(theme.name)}</h1>
-        <Form {...this.props} />
+        <Form
+          history={this.props.history}
+          match={this.props.match}
+          theme={this.props.theme}
+        />
       </>
     );
   }

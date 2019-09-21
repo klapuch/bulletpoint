@@ -1,5 +1,6 @@
 import React from 'react';
 import type { FetchedBulletpointType, PostedBulletpointType } from '../../../types';
+import { withoutMatches } from '../../../formats';
 
 type Props = {|
   +onSelectChange: (Object) => (void),
@@ -24,7 +25,7 @@ export default function ({
         <option style={{ fontStyle: 'italic' }} value={0}>Bez skupiny</option>
         {roots.map(group => (
           <option key={group.id} value={group.id}>
-            {group.content}
+            {withoutMatches(group.content)}
           </option>
         ))}
       </select>

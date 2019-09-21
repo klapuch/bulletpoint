@@ -11,11 +11,11 @@ type Props = {|
 |};
 class ThemeStar extends React.PureComponent<Props> {
   render() {
-    const { isStarred } = this.props;
+    const { isStarred, starOrUnstar } = this.props;
     return (
       <Star
         active={isStarred}
-        onClick={this.props.starOrUnstar}
+        onClick={starOrUnstar}
       />
     );
   }

@@ -36,23 +36,23 @@ class ContributionBoxes extends React.Component<Props> {
 
   render() {
     const { fetching, theme, contributedBulletpoints } = this.props;
-    if (fetching) {
-      return <SkeletonBoxes show={!theme.is_empty}>{1}</SkeletonBoxes>;
-    } else if (isEmpty(contributedBulletpoints)) {
+    if (!fetching && isEmpty(contributedBulletpoints)) {
       return null;
     }
     return (
       <>
         <h2 id="contributed_bulletpoints">Navrhnuté bulletpointy</h2>
-        <Boxes bulletpoints={contributedBulletpoints}>
-          {bulletpoint => (
-            <ContributionBox
-              key={`contribution-${bulletpoint.id}`}
-              onDeleteClick={this.reload}
-              bulletpoint={bulletpoint}
-            />
-          )}
-        </Boxes>
+        {fetching ? (<SkeletonBoxes show={!theme.is_empty}>{1}</SkeletonBoxes>) : (
+          <Boxes bulletpoints={contributedBulletpoints}>
+            {bulletpoint => (
+              <ContributionBox
+                key={`contribution-${bulletpoint.id}`}
+                onDeleteClick={this.reload}
+                bulletpoint={bulletpoint}
+              />
+            )}
+          </Boxes>
+        )}
       </>
     );
   }

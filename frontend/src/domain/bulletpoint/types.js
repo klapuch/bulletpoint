@@ -2,6 +2,10 @@
 import { omit } from 'lodash';
 import type { FetchedThemeType } from '../theme/types';
 
+export const UpPoint = 1;
+export const DownPoint = -1;
+export const ResetPoint = 0;
+
 export type PointType = 1 | 0 | -1;
 export type SourceTypeType = 'head' | 'web';
 

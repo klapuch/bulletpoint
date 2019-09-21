@@ -22,6 +22,8 @@ export const replaceMatches = (bulletpoint: FetchedBulletpointType) => {
   });
 };
 
+export const withoutMatches = (text: ?string) => (text === null ? null : text.replace(/(\[\[)(.+?)(\]\])/g, '$2'));
+
 export const withComparisons = (content: string, bulletpoint: FetchedBulletpointType) => {
   const { compared_theme: comparedTheme } = bulletpoint;
   if (comparedTheme.length === 0) {

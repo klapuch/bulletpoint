@@ -11,9 +11,7 @@ type Props = {|
 |};
 class HttpForm extends React.Component<Props> {
   handleSubmit = (tag: PostedTagType) => {
-    const next = () => Promise.resolve()
-      .then(() => this.props.history.push('/themes/create'));
-    this.props.addTag(tag, next);
+    this.props.addTag(tag, () => this.props.history.push('/themes/create'));
   };
 
   render() {

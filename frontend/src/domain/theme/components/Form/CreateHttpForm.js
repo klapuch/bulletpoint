@@ -20,9 +20,10 @@ class ChangeHttpForm extends React.Component<Props> {
     this.props.fetchTags();
   }
 
-  handleSubmit = (postedTheme: PostedThemeType) => theme.create(postedTheme)
-    .then(id => this.props.history.push(`/themes/${id}/${getSlug(postedTheme.name)}`))
-  ;
+  handleSubmit = (postedTheme: PostedThemeType) => theme.create(
+    postedTheme,
+    id => this.props.history.push(`/themes/${id}/${getSlug(postedTheme.name)}`),
+  );
 
   render() {
     const { fetching, tags } = this.props;

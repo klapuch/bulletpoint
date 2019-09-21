@@ -66,36 +66,35 @@ class DetailBoxes extends React.Component<Props, State> {
   render() {
     const { fetching, theme } = this.props;
     const { highlightedBulletpointIds, expandBulletpointId } = this.state;
-    if (fetching) {
-      return <SkeletonBoxes show={!theme.is_empty}>{1}</SkeletonBoxes>;
-    }
     return (
       <>
-        <Boxes bulletpoints={this.props.getBulletpoints(expandBulletpointId)}>
-          {bulletpoint => (
-            <React.Fragment key={`bulletpoint-${bulletpoint.id}`}>
-              <DetailBox
-                onDeleteClick={this.reload}
-                onEditClick={this.props.onEditClick}
-                bulletpoint={bulletpoint}
-                highlights={highlightedBulletpointIds}
-              />
-              {
-                expandBulletpointId !== bulletpoint.id
-                && !isEmpty(bulletpoint.group.children_bulletpoints)
-                && (
-                  <div className="text-center">
-                    <GroupExpand
-                      onClick={() => this.handleExpand(bulletpoint.id)}
-                      className="glyphicon glyphicon glyphicon-option-horizontal"
-                      aria-hidden="true"
-                    />
-                  </div>
-                )
-              }
-            </React.Fragment>
-          )}
-        </Boxes>
+        {fetching ? <SkeletonBoxes show={!theme.is_empty}>{1}</SkeletonBoxes> : (
+          <Boxes bulletpoints={this.props.getBulletpoints(expandBulletpointId)}>
+            {bulletpoint => (
+              <React.Fragment key={`bulletpoint-${bulletpoint.id}`}>
+                <DetailBox
+                  onDeleteClick={this.reload}
+                  onEditClick={this.props.onEditClick}
+                  bulletpoint={bulletpoint}
+                  highlights={highlightedBulletpointIds}
+                />
+                {
+                      expandBulletpointId !== bulletpoint.id
+                      && !isEmpty(bulletpoint.group.children_bulletpoints)
+                      && (
+                      <div className="text-center">
+                        <GroupExpand
+                          onClick={() => this.handleExpand(bulletpoint.id)}
+                          className="glyphicon glyphicon glyphicon-option-horizontal"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      )
+                    }
+              </React.Fragment>
+            )}
+          </Boxes>
+        )}
       </>
     );
   }

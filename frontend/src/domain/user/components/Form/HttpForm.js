@@ -27,10 +27,10 @@ class HttpForm extends React.Component<Props, State> {
 
   handleSubmit = (postedUser: PostedUserType) => this.props.edit(
     postedUser,
-    () => Promise.resolve()
-      .then(this.props.receivedSuccess('Uživatelské jméno bylo změneno'))
-      .then(this.reload)
-      .then(() => this.props.history.push(this.props.history.pathname)),
+    () => Promise.all([
+      this.props.receivedSuccess('Uživatelské jméno bylo změneno'),
+      this.reload(),
+    ]).then(() => this.props.history.push(this.props.history.pathname)),
   );
 
   reload = () => {

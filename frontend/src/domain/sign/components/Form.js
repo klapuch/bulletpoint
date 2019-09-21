@@ -50,7 +50,6 @@ class Form extends React.Component<Props, State> {
       }));
     } else {
       this.props.onSubmit(this.state.credentials);
-      this.setState(prevState => ({ ...prevState, errors: initStateErrors }));
     }
   };
 

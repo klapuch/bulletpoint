@@ -29,21 +29,13 @@ class Themes extends React.Component<Props> {
 
   render() {
     const { themes, fetching } = this.props;
-    if (fetching) {
-      return (
-        <>
-          <h1>{this.getHeader()}</h1>
-          <SkeletonPreviews>{1}</SkeletonPreviews>
-        </>
-      );
-    }
     return (
       <>
         <Helmet>
           <title>{this.getTitle()}</title>
         </Helmet>
         <h1>{this.getHeader()}</h1>
-        {themes.length !== 0 && (
+        {!fetching && themes.length !== 0 && (
           <h3>
             <small>
               {`Počet výsledků: ${themes.length}`}
@@ -51,9 +43,13 @@ class Themes extends React.Component<Props> {
           </h3>
         )}
         <br />
-        {isEmpty(themes)
+        {!fetching && isEmpty(themes)
           ? <h2>Žádné shody</h2>
-          : <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />}
+          : (
+            fetching
+              ? <SkeletonPreviews>{1}</SkeletonPreviews>
+              : <Previews tagLink={(id, slug) => `/themes/tag/${id}/${slug}`} themes={themes} />
+          )}
       </>
     );
   }

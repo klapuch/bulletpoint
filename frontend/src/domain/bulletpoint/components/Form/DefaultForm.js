@@ -90,15 +90,21 @@ export default class extends React.Component<Props, State> {
   };
 
   onChange = ({ target: { name, value } }: TargetType) => {
+    const { theme } = this.props;
     let input = null;
-    if (name === 'source_link') {
-      input = { source: { ...this.state.bulletpoint.source, link: value } };
-    } else if (name === 'source_type') {
-      input = { source: { type: value, link: value === 'web' ? '' : null } };
-    } else if (name === 'group_root_bulletpoint_id') {
-      input = { group: { root_bulletpoint_id: parseInt(value, 10) } };
-    } else {
-      input = { [name]: value };
+    switch (name) {
+      case 'source_link':
+        input = { source: { ...this.state.bulletpoint.source, link: value } };
+        break;
+      case 'source_type':
+        input = { source: { type: value, link: value === 'web' ? theme.reference.url : null } };
+        break;
+      case 'group_root_bulletpoint_id':
+        input = { group: { root_bulletpoint_id: parseInt(value, 10) } };
+        break;
+      default:
+        input = { [name]: value };
+        break;
     }
     this.setState(prevState => ({
       // $FlowFixMe goes from select
@@ -159,10 +165,8 @@ export default class extends React.Component<Props, State> {
         errors: validation.errors(prevState.bulletpoint),
       }));
     } else {
-      if (bulletpoint.group.root_bulletpoint_id === 0) {
-        // $FlowFixMe should be ok - null is allowed
-        bulletpoint.group.root_bulletpoint_id = null;
-      }
+      // $FlowFixMe should be ok - null is allowed
+      bulletpoint.group.root_bulletpoint_id = bulletpoint.group.root_bulletpoint_id || null;
       this.props.onSubmit(bulletpoint);
     }
   };
@@ -217,7 +221,7 @@ export default class extends React.Component<Props, State> {
               <option value="head">Z vlastní hlavy</option>
             </select>
           </div>
-          {bulletpoint.source.type === 'head' ? null : (
+          {bulletpoint.source.type !== 'head' && (
             <div className={classNames('form-group', errors.source_link && 'has-error')}>
               <label htmlFor="source_link">Odkaz na zdroj</label>
               <input

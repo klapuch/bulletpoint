@@ -41,10 +41,11 @@ export function* fetchSingle(action: Object): Saga {
   }
 }
 
-export const create = (theme: PostedThemeType) => (
+export const create = (theme: PostedThemeType, next: (number) => void) => (
   axios.post('/themes', theme)
     .then(response => response.headers)
     .then(headers => response.extractedLocationId(headers.location))
+    .then(next)
 );
 
 export function* starOrUnstar(action: Object): Saga {

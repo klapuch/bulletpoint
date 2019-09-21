@@ -68,9 +68,5 @@ const mapDispatchToProps = (dispatch, { themeId }) => ({
       ? bulletpoint.add(themeId, postedBulletpoint, next)
       : contributedBulletpoint.add(themeId, postedBulletpoint, next),
   ),
-  editBulletpoint: (
-    bulletpointId: number,
-    postedBulletpoint: PostedBulletpointType,
-  ) => dispatch(bulletpoint.edit(themeId, bulletpointId, postedBulletpoint)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(AddHttpForm);

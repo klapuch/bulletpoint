@@ -87,7 +87,7 @@ type Props = {|
   +onDeleteClick?: () => (void),
   +getUser: () => (FetchedUserType),
   +getTags: () => (Array<FetchedUserTagType>),
-  +onMoreClick: () => (Promise<any>),
+  +onMoreClick: (() => void) => (void),
 |};
 export default function ({
   bulletpoint,
@@ -111,7 +111,7 @@ export default function ({
 
   const showMore = (more: boolean) => {
     if (typeof onMoreClick !== 'undefined') {
-      onMoreClick().then(() => setMore(more));
+      onMoreClick(() => setMore(more));
     }
   };
 

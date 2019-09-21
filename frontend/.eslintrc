@@ -17,6 +17,7 @@
     "react/jsx-filename-extension": 0, // No, JSX belongs to .js files
     "react/require-default-props": 0, // Does not work with API - first call is undefined
     "react/no-array-index-key": 0, // TODO: not always unique
+    "no-nested-ternary": 0, // Useful in templates
     "jsx-a11y/anchor-is-valid": [
       "error",
       {

@@ -54,10 +54,7 @@ class DefaultForm extends React.Component<Props, State> {
         errors: validation.errors(prevState.user),
       }));
     } else {
-      this.setState(
-        prevState => ({ ...prevState, errors: initStateErrors }),
-        () => this.props.onSubmit(user),
-      );
+      this.props.onSubmit(user);
     }
   };
 

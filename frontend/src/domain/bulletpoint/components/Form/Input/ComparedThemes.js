@@ -4,6 +4,7 @@ import React from 'react';
 import { fetchReactSelectTagSearches } from '../../../../theme/endpoints';
 import type { ComparedThemesType } from '../types';
 import type { FetchedThemeType } from '../../../../theme/types';
+import { withoutMatches } from '../../../formats';
 
 type Props = {|
   +theme: FetchedThemeType,
@@ -18,7 +19,7 @@ const ComparedThemes = ({ theme: sourceTheme, onSelectChange, themes }: Props) =
         <label>Téma k porovnání</label>
         <AsyncSelect
           isClearable
-          value={{ value: theme.id, label: theme.name }}
+          value={{ value: theme.id, label: withoutMatches(theme.name) }}
           onChange={(select, options) => onSelectChange(select, options, i)}
           loadOptions={keyword => fetchReactSelectTagSearches(
             keyword,

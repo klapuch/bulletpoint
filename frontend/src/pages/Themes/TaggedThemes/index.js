@@ -21,12 +21,8 @@ type Props = {|
   |},
   +themes: Array<FetchedThemeType>,
   +total: number,
-  +pagination: PaginationType,
   +fetching: boolean,
   +fetchTaggedThemes: (PaginationType, next: () => void) => (void),
-  +initPaging: (PaginationType) => (void),
-  +resetPaging: (PaginationType) => (void),
-  +turnPage: (number, PaginationType) => (void),
   +pagination: PaginationType,
 |};
 type State = {|

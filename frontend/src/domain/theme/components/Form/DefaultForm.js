@@ -53,12 +53,16 @@ class DefaultForm extends React.Component<Props, State> {
 
   handleChange = ({ target: { name, value } }: TargetType) => {
     let input = null;
-    if (name === 'reference_url') {
-      input = { reference: { url: value } };
-    } else if (name === 'alternative_names') {
-      input = { alternative_names: value.split(',') };
-    } else {
-      input = { [name]: value };
+    switch (name) {
+      case 'reference_url':
+        input = { reference: { url: value } };
+        break;
+      case 'alternative_names':
+        input = { alternative_names: value.split(',') };
+        break;
+      default:
+        input = { [name]: value };
+        break;
     }
     this.setState(prevState => ({
       theme: {
@@ -82,10 +86,7 @@ class DefaultForm extends React.Component<Props, State> {
         errors: validation.errors(prevState.theme),
       }));
     } else {
-      this.setState(
-        prevState => ({ ...prevState, errors: initStateErrors }),
-        () => this.props.onSubmit(theme),
-      );
+      this.props.onSubmit(theme);
     }
   };
 

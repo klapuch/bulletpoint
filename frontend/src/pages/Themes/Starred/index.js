@@ -46,8 +46,8 @@ class StarredThemes extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props) {
     const { location: { search } } = this.props;
     if (prevProps.location.search !== search) {
-      this.reload({ page: 1, perPage: PER_PAGE })
-        .then(() => this.setState({ reset: true }));
+      // eslint-disable-next-line
+      this.setState({ reset: true }, () => this.reload({ page: 1, perPage: PER_PAGE }));
     }
   }
 
@@ -57,9 +57,10 @@ class StarredThemes extends React.Component<Props, State> {
     return tagId === undefined ? undefined : parseInt(tagId, 10);
   };
 
-  reload = (pagination: PaginationType): Promise<any> => Promise.resolve()
-    .then(() => this.props.fetchStarred(pagination, this.getTagId()))
-    .then(this.props.fetchTags);
+  reload = (pagination: PaginationType): Promise<any> => Promise.all([
+    this.props.fetchStarred(pagination, this.getTagId()),
+    this.props.fetchTags(),
+  ]);
 
   render() {
     const {
@@ -68,23 +69,19 @@ class StarredThemes extends React.Component<Props, State> {
       total,
       tags,
     } = this.props;
-    if (fetching) {
-      return (
-        <>
-          <h1>Oblíbená témata</h1>
-          <SkeletonPreviews>{PER_PAGE}</SkeletonPreviews>
-        </>
-      );
-    }
     return (
       <>
         <h1>Oblíbená témata</h1>
-        {total === 0 ? (
+        {!fetching && total === 0 ? (
           <h2><small>Žádná oblíbená témata</small></h2>
         ) : (
           <>
             {this.getTagId() === undefined && <Labels tags={tags} link={id => `?tag_id=${id}`} />}
-            <Previews themes={themes} tagLink={id => `?tag_id=${id}`} />
+            {
+              fetching
+                ? <SkeletonPreviews>{PER_PAGE}</SkeletonPreviews>
+                : <Previews themes={themes} tagLink={id => `?tag_id=${id}`} />
+            }
             <ActivePager
               name={PAGINATION_NAME}
               perPage={PER_PAGE}
