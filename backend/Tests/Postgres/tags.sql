@@ -13,3 +13,23 @@ BEGIN
 		ROW('duplicate key value violates unique constraint "tags_name_key"', '23505')::error
 	);
 END $BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE FUNCTION tests.unify_name() RETURNS void AS $BODY$
+DECLARE
+	v_id tags.id%type;
+BEGIN
+	INSERT INTO tags (name) VALUES ('abc') RETURNING id INTO v_id;
+	PERFORM assert.same('abc', (SELECT name FROM tags WHERE id = v_id));
+
+	UPDATE tags SET name = 'ABC' WHERE id = v_id;
+	PERFORM assert.same('ABC', (SELECT name FROM tags WHERE id = v_id));
+
+	UPDATE tags SET name = 'Some Name' WHERE id = v_id;
+	PERFORM assert.same('Some Name', (SELECT name FROM tags WHERE id = v_id));
+
+	UPDATE tags SET name = 'Abc' WHERE id = v_id;
+	PERFORM assert.same('abc', (SELECT name FROM tags WHERE id = v_id));
+
+	UPDATE tags SET name = 'ABc' WHERE id = v_id;
+	PERFORM assert.same('ABc', (SELECT name FROM tags WHERE id = v_id));
+END $BODY$ LANGUAGE plpgsql VOLATILE;
