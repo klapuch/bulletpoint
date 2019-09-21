@@ -206,6 +206,25 @@ CREATE TABLE tags (
 	CONSTRAINT tags_name_not_empty CHECK (NOT is_empty(name))
 );
 
+CREATE FUNCTION tags_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+	IF (
+		old.name IS DISTINCT FROM new.name
+		AND array_length(string_to_array(new.name, ' '), 1) = 1
+		AND initcap(lower(new.name)) = new.name
+	) THEN
+		new.name = lower(new.name);
+	END IF;
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER tags_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON tags
+	FOR EACH ROW EXECUTE PROCEDURE tags_trigger_row_biu();
+
 CREATE TRIGGER tags_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
 	ON tags
