@@ -32,4 +32,10 @@ BEGIN
 
 	UPDATE tags SET name = 'ABc' WHERE id = v_id;
 	PERFORM assert.same('ABc', (SELECT name FROM tags WHERE id = v_id));
+
+	UPDATE tags SET name = 'Lék' WHERE id = v_id;
+	PERFORM assert.same('lék', (SELECT name FROM tags WHERE id = v_id));
+
+	UPDATE tags SET name = 'Databáze' WHERE id = v_id;
+	PERFORM assert.same('databáze', (SELECT name FROM tags WHERE id = v_id));
 END $BODY$ LANGUAGE plpgsql VOLATILE;
