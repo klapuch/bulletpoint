@@ -35,7 +35,7 @@ export type FetchedBulletpointType = {|
 |};
 export type PostedBulletpointType = {|
   +source: {|
-    +link: string,
+    link: string,
     +type: SourceTypeType,
   |},
   +group: {|
