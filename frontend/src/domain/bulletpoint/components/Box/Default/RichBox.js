@@ -111,7 +111,11 @@ export default function ({
 
   const showMore = (more: boolean) => {
     if (typeof onMoreClick !== 'undefined') {
-      onMoreClick(() => setMore(more));
+      if (more) {
+        onMoreClick(() => setMore(more));
+      } else {
+        setMore(more);
+      }
     }
   };
 
