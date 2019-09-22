@@ -1,5 +1,5 @@
 // $FlowFixMe ok
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/async';
 import React from 'react';
 import { fetchReactSelectTagSearches } from '../../../../theme/endpoints';
 import type { ComparedThemesType } from '../types';

@@ -76,8 +76,7 @@ ssh $USER@$HOST "
     && rm -rfv $RELEASE_DIR/backend/.gitignore \
     && rm -rfv $RELEASE_DIR/backend/Configuration/secrets.sample.ini \
     && rm -rfv $RELEASE_DIR/frontend/.babelrc \
-    && rm -rfv $RELEASE_DIR/frontend/.env.dev \
-    && rm -rfv $RELEASE_DIR/frontend/.env.prod \
+    && rm -rfv $RELEASE_DIR/frontend/.env-cmdrc \
     && rm -rfv $RELEASE_DIR/frontend/.eslintignore \
     && rm -rfv $RELEASE_DIR/frontend/.eslintrc \
     && rm -rfv $RELEASE_DIR/frontend/.flowconfig \

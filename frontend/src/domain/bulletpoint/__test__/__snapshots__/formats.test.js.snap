@@ -8,7 +8,6 @@ exports[`adding than part 1`] = `
   <React.Fragment>
     
     <Link
-      replace={false}
       to="/themes/1/everything"
     >
       everything
@@ -25,7 +24,6 @@ exports[`adding than part 2`] = `
   <React.Fragment>
     
     <Link
-      replace={false}
       to="/themes/1/everything"
     >
       everything
@@ -34,7 +32,6 @@ exports[`adding than part 2`] = `
   <React.Fragment>
     , 
     <Link
-      replace={false}
       to="/themes/2/else"
     >
       else
@@ -47,14 +44,12 @@ exports[`replacing by positions 1`] = `
 Array [
   "",
   <Link
-    replace={false}
     to="/themes/1/php"
   >
     PHP
   </Link>,
   " is ",
   <Link
-    replace={false}
     to="/themes/2/acronym"
   >
     acronym
