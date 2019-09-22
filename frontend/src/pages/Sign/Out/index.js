@@ -10,11 +10,12 @@ type Props = {|
   +history: Object,
 |};
 class Out extends React.PureComponent<Props> {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     const next = () => Promise.resolve()
-      .then(() => this.props.receivedSuccess('Byl jsi odhlášen.'))
-      .then(() => this.props.history.push('/sign/in'));
-    this.props.signOut(next);
+      .then(() => props.receivedSuccess('Byl jsi odhlášen.'))
+      .then(() => props.history.push('/sign/in'));
+    props.signOut(next);
   }
 
   render() {

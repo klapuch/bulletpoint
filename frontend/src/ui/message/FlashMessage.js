@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
 import {
   discardedMessage,
@@ -27,10 +26,6 @@ const Message = ({ children, type, onClose }: MessageProps) => (
   </div>
 );
 
-const EmptyMessage = styled.div`
-  height: 72px;
-`;
-
 type State = {|
   discarded: boolean,
 |};
@@ -41,17 +36,10 @@ type Props = {|
   +discardMessage: () => (void),
 |};
 class FlashMessage extends React.Component<Props, State> {
-  state = {
-    discarded: false,
-  };
-
-  componentWillReceiveProps(nextProps: Props): void {
-    this.setState({
-      discarded: nextProps.pathname === this.props.pathname && this.props.content !== null,
-    });
-    if (nextProps.type === RECEIVED_SUCCESS) {
+  componentDidUpdate(prevProps: Props): void {
+    if (this.props.type === RECEIVED_SUCCESS) {
       setTimeout(this.props.discardMessage, 2000);
-    } else if (nextProps.pathname !== this.props.pathname) {
+    } else if (prevProps.pathname !== this.props.pathname) {
       this.props.discardMessage();
     }
   }
@@ -59,7 +47,7 @@ class FlashMessage extends React.Component<Props, State> {
   render() {
     const { content, type } = this.props;
     if (content === null) {
-      return this.state.discarded ? <EmptyMessage /> : null;
+      return null;
     }
 
     switch (type) {
