@@ -30,10 +30,9 @@ type State = {|
   more: boolean,
 |};
 class DetailBox extends React.Component<Props, State> {
-  handleMoreClick = (next: () => void) => Promise.all([
-    this.props.fetchUser(),
-    this.props.fetchTags(this.props.getThemeTags()),
-  ])
+  handleMoreClick = (next: () => void) => Promise.resolve()
+    .then(this.props.fetchUser)
+    .then(() => this.props.fetchTags(this.props.getThemeTags()))
     .then(next)
     // $FlowFixMe correct string from endpoint.js
     .catch(this.props.receivedError);

@@ -107,6 +107,7 @@ INSERT INTO bulletpoint_groups (bulletpoint_id, root_bulletpoint_id) VALUES (18,
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY bulletpoint_reputations;
 REFRESH MATERIALIZED VIEW CONCURRENTLY starred_themes;
+REFRESH MATERIALIZED VIEW CONCURRENTLY user_tag_rank_reputations;
 
 INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/78-testing_migration--02-24.sql');
 INSERT INTO deploy.migrations(filename) VALUES('database/migrations/2019/81-tag_support--02-24.sql');

@@ -57,10 +57,9 @@ class StarredThemes extends React.Component<Props, State> {
     return tagId === undefined ? undefined : parseInt(tagId, 10);
   };
 
-  reload = (pagination: PaginationType): Promise<any> => Promise.all([
-    this.props.fetchStarred(pagination, this.getTagId()),
-    this.props.fetchTags(),
-  ]);
+  reload = (pagination: PaginationType): Promise<any> => Promise.resolve()
+    .then(() => this.props.fetchStarred(pagination, this.getTagId()))
+    .then(this.props.fetchTags);
 
   render() {
     const {
