@@ -77,6 +77,27 @@ apt-get update
 apt install postgresql-11
 ```
 
+
+##### Locales
+`sudo dpkg-reconfigure locales`
+
+```
+sudo -u postgres pg_dropcluster 11 main --stop
+sudo -u postgres pg_createcluster -d /var/lib/postgresql/11/main -p 5432 11 main --locale=C.UTF-8 --start --start-conf=auto -- --data-checksums
+```
+
+```
+CREATE COLLATION "cs_CZ" (LOCALE = 'cs_CZ.utf8');
+ALTER COLLATION "cs_CZ" OWNER TO postgres;
+ALTER COLLATION "cs_CZ" SET SCHEMA pg_catalog;
+
+CREATE COLLATION "cs_CZ.utf8" (LOCALE = 'cs_CZ.utf8');
+ALTER COLLATION "cs_CZ.utf8" OWNER TO postgres;
+ALTER COLLATION "cs_CZ.utf8" SET SCHEMA pg_catalog;
+```
+
+`sudo /etc/init.d postgresql restart`
+
 #### Create PostgreSQL user
 ```
 sudo -u postgres createuser bulletpoint --superuser --pwprompt
