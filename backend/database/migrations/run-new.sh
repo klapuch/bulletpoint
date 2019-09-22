@@ -13,7 +13,7 @@ for filename in $MIGRATION_FILENAMES_TO_RUN; do
 	sh ${0%/*}/run.sh $filename;
 	if [ $? != 0 ]; then
 		echo "FAIL! Migration \"$filename\" was not successful.";
-		exit $?;
+		exit 1;
 	fi
 	echo "Migration of \"$filename\" was successful.";
 done

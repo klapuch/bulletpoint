@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set -eu
 
 KEEP_RELEASES=10
 REPOSITORY='git@github.com:klapuch/bulletpoint.git'
