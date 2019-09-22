@@ -27,11 +27,11 @@ final class SourceRule implements Validation\Rule {
 	 */
 	public function apply($subject): array {
 		if ($subject['source']['type'] === 'web') {
-			return ['link' => self::web($subject)];
+			return ['link' => (new Constraint\NonMobileUrlRule())->apply(self::web($subject))];
 		} elseif ($subject['source']['type'] === 'head' && $subject['source']['link'] !== null) {
 			throw new \UnexpectedValueException('Link to head source must be empty');
 		}
-		return ['link' => $subject];
+		return $subject['source'];
 	}
 
 	private static function web(array $subject): string

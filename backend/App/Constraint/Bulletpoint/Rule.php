@@ -32,6 +32,7 @@ final class Rule implements Validation\Rule {
 	 */
 	public function apply($subject): array {
 		return (array) array_replace_recursive(
+			$subject,
 			[
 				'source' => (new SourceRule())->apply($subject),
 				'content' => (new Validation\FriendlyRule(
@@ -39,7 +40,6 @@ final class Rule implements Validation\Rule {
 					'Number of references in text do not match with count of referenced_theme_id',
 				))->apply($subject['content']),
 			],
-			$subject,
 		);
 	}
 }

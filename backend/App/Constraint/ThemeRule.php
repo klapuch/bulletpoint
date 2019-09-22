@@ -24,15 +24,16 @@ final class ThemeRule implements Validation\Rule {
 	 */
 	public function apply($subject): array {
 		return (array) array_replace_recursive(
+			$subject,
 			[
 				'reference' => [
-					'url' => (new Validation\FriendlyRule(
-						new UrlRule(),
-						t('theme.reference.url.not.valid'),
-					))->apply($subject['reference']['url']),
+					'url' => (new NonMobileUrlRule())
+						->apply((new Validation\FriendlyRule(
+							new UrlRule(),
+							t('theme.reference.url.not.valid'),
+						))->apply($subject['reference']['url'])),
 				],
 			],
-			$subject,
 		);
 	}
 }

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Constraint\Bulletpoint;
 
+use Bulletpoint\Constraint;
 use Klapuch\Storage;
 use Klapuch\Validation;
 
@@ -40,7 +41,7 @@ final class ReferenceRule implements Validation\Rule {
 	 */
 	public function apply($subject): string {
 		if ($this->satisfied($subject)) {
-			return $subject;
+			return (new Constraint\NonMobileUrlRule())->apply($subject);
 		}
 		throw new \UnexpectedValueException('Number of references is not matching');
 	}
