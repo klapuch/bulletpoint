@@ -1,4 +1,4 @@
-CREATE FUNCTION tests.counting() RETURNS void AS $BODY$
+CREATE FUNCTION tests.number_of_references() RETURNS void AS $BODY$
 BEGIN
 	PERFORM assert.same(0, (SELECT number_of_references('abc')));
 	PERFORM assert.same(0, (SELECT number_of_references(NULL)));

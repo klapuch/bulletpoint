@@ -1,4 +1,4 @@
-CREATE FUNCTION tests.null() RETURNS void AS $BODY$
+CREATE FUNCTION tests.array_equals() RETURNS void AS $BODY$
 BEGIN
 	PERFORM assert.false(array_equals(NULL, ARRAY[1]));
 	PERFORM assert.false(array_equals(ARRAY[1], NULL));

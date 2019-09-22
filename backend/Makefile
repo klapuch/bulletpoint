@@ -63,9 +63,9 @@ tests:              ## tests
 .PHONY: count-postgres-tests
 count-postgres-tests:
 	@printf "Number of PostgreSQL tests: "
-	@cat Tests/Postgres/*.sql | grep -c "CREATE FUNCTION tests."
+	@cat Tests/Postgres/*/*/*.sql | grep -c "CREATE FUNCTION tests."
 	@printf "Number of PostgreSQL assertions: "
-	@cat Tests/Postgres/*.sql | grep -c "PERFORM assert."
+	@cat Tests/Postgres/*/*/*.sql | grep -c "PERFORM assert."
 
 .PHONY: tester-coverage
 tester-coverage:
