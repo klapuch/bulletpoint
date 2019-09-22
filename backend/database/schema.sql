@@ -439,10 +439,25 @@ CREATE TABLE theme_alternative_names (
 	CONSTRAINT theme_alternative_names_theme_id FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+CREATE FUNCTION theme_alternative_names_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+	IF old.name IS DISTINCT FROM new.name THEN
+		new.name = trim(new.name);
+	END IF;
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
 CREATE TRIGGER theme_alternative_names_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
 	ON theme_alternative_names
 	FOR EACH ROW EXECUTE PROCEDURE audit.trigger_table_audit();
+
+CREATE TRIGGER theme_alternative_names_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON theme_alternative_names
+	FOR EACH ROW EXECUTE PROCEDURE theme_alternative_names_trigger_row_biu();
 
 
 CREATE TABLE theme_tags (
