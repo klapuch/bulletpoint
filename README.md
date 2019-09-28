@@ -294,7 +294,7 @@ sudo chown bulletpoint:bulletpoint /etc/php/7.3/cli/php.ini
 
 #### Directories
 
-- `mkdir /backup`
+- `mkdir -p /backup/database`
 
 ```
 sudo crontab -e
@@ -309,11 +309,34 @@ sudo crontab -e -u bulletpoint
 
 
 # postgres backup (every day at 01:00)
-0 1 * * * /usr/bin/pg_dump --file=/backup/bulletpoint_$(/bin/date +"\%Y\%m\%d_\%H\%M\%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint -w
+0 1 * * * /usr/bin/pg_dump --file=/backup/database/bulletpoint_$(/bin/date +"\%Y\%m\%d_\%H\%M\%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint -w
 
-# remove everything except last 10 backups (every day at 02:00)
-0 2 * * * ls /backup/* -A1t | tail -n +10 | xargs --no-run-if-empty rm
+# remove everything except last 10 database backups (every day at 02:00)
+0 2 * * * ls /backup/database/* -A1t | tail -n +10 | xargs --no-run-if-empty rm
+
+# remove and gzip logs older than 4 days (at 03:00 on Sunday)
+0 3 * * 0 find /var/www/bulletpoint/logs -name '*.html' -type f -mtime +4 -print0 | xargs --null --no-run-if-empty tar --remove-files -cvzf /var/www/bulletpoint/logs/logs.$(/bin/date +"\%Y\%m\%d_\%H\%M\%S").tar.gz
+
+# remove everything except last 5 log archives (at 04:00 on Sunday)
+0 4 * * 0 ls /var/www/bulletpoint/logs/logs.*.tar.gz -A1t | tail -n +5 | xargs --no-run-if-empty rm
 
 # application cron (every minute)
 * * * * * (cd /var/www/bulletpoint/current/backend && BULLETPOINT_ENV=production make cron)
+```
+
+### Logrotate
+
+#### PHP logs
+
+`sudo vim /etc/logrotate.d/bulletpoint`
+
+```
+/var/www/bulletpoint/logs/info.log /var/www/bulletpoint/logs/exception.log {
+  rotate 5
+  weekly
+  missingok
+  notifempty
+  compress
+  delaycompress
+}
 ```
