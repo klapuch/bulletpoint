@@ -117,6 +117,36 @@ export PGPASSFILE=~/.pgpass
 source ~/.profile
 ```
 
+### PgBouncer
+
+`sudo apt-get install pgbouncer`
+
+
+`sudo vim /etc/pgbouncer/pgbouncer.ini`
+
+```
+[databases]
+* = host=127.0.0.1
+
+[pgbouncer]
+listen_addr = 127.0.0.1
+listen_port = 6543
+server_reset_query = DISCARD ALL
+max_client_conn = 10
+default_pool_size = 10
+```
+
+Copy `passwd` from command `psql -c "SELECT * FROM pg_shadow"`
+
+`sudo vim /etc/pgbouncer/userlist.txt`
+
+```
+"bulletpoint" "MD5_PASSWORD"
+```
+
+`sudo service pgbouncer restart`
+
+
 ### NodeJS
 ```
 curl -sL https://deb.nodesource.com/setup_10.x | bash -
