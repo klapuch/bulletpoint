@@ -337,7 +337,7 @@ sudo crontab -e
 ```
 sudo crontab -e -u bulletpoint
 
-
+# for restore use "pg_restore --format=cutom --create --clean --exit-on-error -h localhost -p 5432 -U bulletpoint -d postgres -v -O postgres_DATE_TIME"
 # postgres backup (every day at 01:00)
 0 1 * * * /usr/bin/pg_dump --file=/backup/database/bulletpoint_$(/bin/date +"\%Y\%m\%d_\%H\%M\%S") --format=custom --dbname=bulletpoint --host=localhost --port=5432 --username=bulletpoint -w
 
@@ -361,7 +361,7 @@ sudo crontab -e -u bulletpoint
 `sudo vim /etc/logrotate.d/bulletpoint`
 
 ```
-/var/www/bulletpoint/logs/info.log /var/www/bulletpoint/logs/exception.log {
+/var/www/bulletpoint/logs/info.log /var/www/bulletpoint/logs/exception.log /var/www/bulletpoint/logs/error.log {
   rotate 5
   weekly
   missingok
