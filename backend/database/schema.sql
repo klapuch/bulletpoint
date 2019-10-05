@@ -654,13 +654,7 @@ CREATE VIEW public_bulletpoints AS
 
 CREATE FUNCTION bulletpoints_trigger_row_iiu() RETURNS trigger AS $BODY$
 BEGIN
-	IF TG_TABLE_NAME = 'contributed_bulletpoints' THEN
-		new.is_contribution = TRUE;
-	ELSIF TG_TABLE_NAME = 'public_bulletpoints' THEN
-		new.is_contribution = FALSE;
-	ELSE
-		RAISE EXCEPTION USING MESSAGE = format('Trigger for table "%s" is not defined.', TG_TABLE_NAME);
-	END IF;
+	new.is_contribution = TG_TABLE_NAME = 'contributed_bulletpoints';
 
 	IF TG_OP = 'INSERT' THEN
 		INSERT INTO bulletpoints (theme_id, source_id, user_id, content, created_at, is_contribution) VALUES (
@@ -713,7 +707,7 @@ BEGIN
 	END IF;
 
 	IF (
-		NOT EXISTS(
+		NOT EXISTS (
 			SELECT tag_id
 			FROM theme_tags
 			WHERE theme_id = new.theme_id
@@ -746,7 +740,7 @@ CREATE TABLE bulletpoint_referenced_themes (
 
 CREATE FUNCTION bulletpoint_referenced_themes_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
-	IF (SELECT theme_id = new.theme_id FROM bulletpoints WHERE id = new.bulletpoint_id) THEN
+	IF EXISTS (SELECT 1 FROM bulletpoints WHERE id = new.bulletpoint_id AND theme_id = new.theme_id) THEN
 		RAISE EXCEPTION 'Referenced theme must differ from the assigned.';
 	END IF;
 
@@ -1307,7 +1301,7 @@ CREATE FUNCTION deploy.migrations_to_run(in_filenames text) RETURNS SETOF text A
 DECLARE
 	v_filenames text[] NOT NULL DEFAULT string_to_array(trim(TRAILING ',' FROM in_filenames), ',');
 BEGIN
-	IF EXISTS(SELECT filename FROM unnest(v_filenames) AS filenames(filename) WHERE filename NOT ILIKE '%.sql') THEN
+	IF EXISTS (SELECT filename FROM unnest(v_filenames) AS filenames(filename) WHERE filename NOT ILIKE '%.sql') THEN
 		RAISE EXCEPTION USING MESSAGE = 'Filenames must be in format %.sql';
 	END IF;
 
