@@ -1,4 +1,4 @@
-FROM postgres:11-alpine
+FROM postgres:12-alpine
 
 RUN apk add --no-cache supervisor make git findutils gcc libc-dev icu-dev
 RUN mkdir /etc/supervisor.d
