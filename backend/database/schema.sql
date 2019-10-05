@@ -208,12 +208,11 @@ CREATE TABLE tags (
 
 CREATE FUNCTION tags_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
-	IF (
-		old.name IS DISTINCT FROM new.name
-		AND array_length(string_to_array(new.name, ' '), 1) = 1
-		AND initcap(lower(new.name)) = new.name
-	) THEN
-		new.name = lower(new.name);
+	IF old.name IS DISTINCT FROM new.name THEN
+		new.name = trim(new.name);
+		IF array_length(string_to_array(new.name, ' '), 1) = 1 AND initcap(lower(new.name)) = new.name THEN
+			new.name = lower(new.name);
+		END IF;
 	END IF;
 
 	RETURN new;
@@ -407,6 +406,21 @@ CREATE TABLE themes (
 	CONSTRAINT themes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
 
+CREATE FUNCTION themes_trigger_row_biu() RETURNS trigger AS $BODY$
+BEGIN
+	IF old.name IS DISTINCT FROM new.name THEN
+		new.name = trim(new.name);
+	END IF;
+
+	RETURN new;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+
+CREATE TRIGGER themes_row_biu_trigger
+	BEFORE INSERT OR UPDATE
+	ON themes
+	FOR EACH ROW EXECUTE PROCEDURE themes_trigger_row_biu();
+
 CREATE TRIGGER themes_audit_trigger
 	AFTER UPDATE OR DELETE OR INSERT
 	ON themes
@@ -533,6 +547,10 @@ CREATE TABLE sources (
 CREATE FUNCTION sources_trigger_row_biu() RETURNS trigger AS $BODY$
 BEGIN
 	new.link = nullif(new.link, '');
+
+	IF old.link IS DISTINCT FROM new.link THEN
+		new.link = trim(new.link);
+	END IF;
 
 	IF new.type = 'web' AND new.link IS NUll THEN
 		RAISE EXCEPTION 'Link from web can not be empty.';
