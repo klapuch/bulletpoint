@@ -24,7 +24,7 @@
     "ext-xsl": "*",
     "justinrainbow/json-schema": "^5.2",
     "klapuch/application": "^0.0.4",
-    "klapuch/configuration": "^0.0.2",
+    "klapuch/configuration": "~0.0.2",
     "klapuch/dataset": "~0.0.4",
     "klapuch/encryption": "^2.1",
     "klapuch/http": "^1.4",

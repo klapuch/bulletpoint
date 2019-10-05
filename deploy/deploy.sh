@@ -67,6 +67,7 @@ ssh $USER@$HOST "
       | grep -v $RELEASE_DIR/backend/App \
       | grep -v $RELEASE_DIR/backend/data$ \
       | grep -v $RELEASE_DIR/backend/logs \
+      | grep -v $RELEASE_DIR/backend/temp \
       | grep -v $RELEASE_DIR/backend/Makefile \
       | grep -v $RELEASE_DIR/backend/vendor \
       | grep -v $RELEASE_DIR/backend/www \

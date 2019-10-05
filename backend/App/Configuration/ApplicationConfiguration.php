@@ -23,23 +23,7 @@ final class ApplicationConfiguration implements Configuration\Source {
 					new Configuration\ValidIni(new \SplFileInfo(self::ROUTES)),
 				),
 			),
-			self::key(),
+			new \SplFileInfo(__DIR__ . '/../../temp'),
 		))->read();
-	}
-
-	private static function key(): string {
-		return (string) crc32(
-			implode(
-				',',
-				array_map(
-					'filemtime',
-					[
-						self::ENV_CONFIGURATION,
-						self::SECRET_CONFIGURATION,
-						self::ROUTES,
-					],
-				),
-			),
-		);
 	}
 }

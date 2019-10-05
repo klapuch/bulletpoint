@@ -8,8 +8,8 @@ FILES=$(git --no-pager diff --diff-filter=d --name-only | xargs --no-run-if-empt
 
 for filename in $FILES; do
 	END=$(tail -c -1 $filename | cat -e)
-	MIME_TYPE=$(file --mime-type $filename | grep 'text/*')
-	if [ "$MIME_TYPE" != '' ] && [ "$END" != '$' ]; then
+	MIME_TYPE=$(file --mime-type $filename | grep 'text/*' || true)
+	if [ -n "$MIME_TYPE" ] && [ "$END" != '$' ]; then
 		EXIT_CODE=1
 		echo "File \"$filename\" needs to end with new line!"
 	fi
