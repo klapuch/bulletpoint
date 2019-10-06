@@ -43,11 +43,9 @@ try {
 			new Scheduling\SerialJobs(
 				new Task\GenerateNginxRoutes(
 					new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/routes.ini')),
-					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf'),
+					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/snippets/routes.conf'),
 				),
-				new Task\GenerateNginxConfiguration(
-					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf'),
-				),
+				new Task\GenerateNginxConfiguration(new \SplFileInfo(__DIR__ . '/../../../docker/nginx/snippets/preflight.conf')),
 			),
 		),
 		new Scheduling\MarkedJob(
