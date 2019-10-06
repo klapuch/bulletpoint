@@ -40,7 +40,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 								sprintf('fastcgi_param ROUTE_NAME "%s";', $name),
 								$this->params($block['params'] ?? []),
 								$this->types($block['types'] ?? []),
-								'	include php.conf;',
+								'	include snippets/php.conf;',
 								$this->limitExcept($block['methods']),
 								$this->preflight($block['methods']),
 								$this->lines($block['line'] ?? []),
@@ -68,7 +68,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 	private function preflight(array $methods): string {
 		if (in_array('OPTIONS', $methods, true))
 			return '';
-		return '	include preflight.conf;';
+		return '	include snippets/preflight.conf;';
 	}
 
 	private function limitExcept(array $methods): string {
