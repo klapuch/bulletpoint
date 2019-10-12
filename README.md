@@ -1,4 +1,4 @@
-# Bulletpoint
+# Bulletpoint (https://www.bulletpoint.cz)
 
 [![Hits-of-Code](https://hitsofcode.com/github/klapuch/bulletpoint)](https://hitsofcode.com/view/github/klapuch/bulletpoint)
 
