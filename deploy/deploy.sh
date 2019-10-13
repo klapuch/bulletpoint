@@ -100,4 +100,4 @@ ssh $USER@$HOST "redis-cli -p 6379 flushall"
 echo 'RELEASES:CLEAN'
 ssh $USER@$HOST "ls $RELEASES_DIR/* -A1td | tail -n +$KEEP_RELEASES | xargs --verbose --no-run-if-empty rm -rf"
 
-echo '[OK] Deploy is successful.'
+echo '[OK] Deploy was successful.'

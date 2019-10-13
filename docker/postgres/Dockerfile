@@ -1,6 +1,5 @@
 FROM klapuch/bulletpoint:postgres
 
-COPY .bash_aliases /root/.bash_aliases
 COPY .psqlrc /root/.psqlrc
 
 COPY cron.ini /etc/supervisor.d/cron.ini
@@ -10,8 +9,6 @@ COPY postgresql.dev.conf /etc/postgresql.conf
 # CRON
 ADD crontab /crontab
 RUN /usr/bin/crontab /crontab
-
-RUN echo '. /root/.bash_aliases' >> ~/.bashrc
 
 COPY disconnect /usr/bin/disconnect
 COPY import /usr/bin/import

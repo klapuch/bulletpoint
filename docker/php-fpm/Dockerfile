@@ -2,7 +2,4 @@ FROM klapuch/bulletpoint:php-fpm
 
 COPY sendmail /usr/sbin/fake-sendmail
 COPY php.dev.ini /usr/local/etc/php/php.ini
-COPY .bash_aliases /root/.bash_aliases
 COPY .bash_history /root/.bash_history
-
-RUN echo '. /root/.bash_aliases' >> ~/.bashrc
