@@ -1,8 +1,14 @@
 #!/bin/sh
 set -eu
 
+if [ -f "${0%/*}/.env.local" ]; then
+  . ${0%/*}/.env.local
+else
+  . ${0%/*}/.env
+fi
+
 MIGRATION_FILENAMES=$(find database/migrations/*/*.sql | tr '\n' ',')
-MIGRATION_FILENAMES_TO_RUN=$(psql -h localhost -U bulletpoint -d bulletpoint -tA -X -c "SELECT deploy.migrations_to_run('$MIGRATION_FILENAMES')")
+MIGRATION_FILENAMES_TO_RUN=$(psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -tA -X -c "SELECT deploy.migrations_to_run('$MIGRATION_FILENAMES')")
 
 if [ -z "$MIGRATION_FILENAMES_TO_RUN" ]; then
 	echo '[OK] Nothing to migrate.';
