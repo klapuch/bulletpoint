@@ -7,7 +7,7 @@ final class PlestException extends \PDOException
 {
 	public function __construct(\PDOException $e, \SplFileInfo $file, ?\Throwable $previous = null)
 	{
-		parent::__construct($this->format($e->getMessage(), $file), 0, $previous ?: $e);
+		parent::__construct($this->format($e->getMessage(), $file), 0, $previous ?? $e);
 	}
 
 	private function format(string $message, \SplFileInfo $file): string

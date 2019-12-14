@@ -7,7 +7,7 @@ use Tester;
 
 abstract class Runtime extends Tester\TestCase {
 	public function run(): void {
-		if (getenv('PHPSTAN') === '1') {
+		if (defined('__PHPSTAN_RUNNING__')) {
 			Tester\Environment::$checkAssertions = false;
 		} else {
 			parent::run();

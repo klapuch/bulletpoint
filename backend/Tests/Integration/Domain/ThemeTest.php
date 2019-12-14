@@ -77,28 +77,28 @@ final class ThemeTest extends TestCase\Runtime {
 	}
 
 	public function testThrowingOnUnknown(): void {
-		Assert::exception(function () {
+		Assert::exception(function (): void {
 			(new Domain\ExistingTheme(
 				new Domain\StoredTheme(1, $this->connection, new Access\FakeUser()),
 				1,
 				$this->connection,
 			))->print(new Output\Json());
 		}, \UnexpectedValueException::class, 'Theme 1 does not exist');
-		Assert::exception(function () {
+		Assert::exception(function (): void {
 			(new Domain\ExistingTheme(
 				new Domain\StoredTheme(1, $this->connection, new Access\FakeUser()),
 				1,
 				$this->connection,
 			))->change([]);
 		}, \UnexpectedValueException::class, 'Theme 1 does not exist');
-		Assert::exception(function () {
+		Assert::exception(function (): void {
 			(new Domain\ExistingTheme(
 				new Domain\StoredTheme(1, $this->connection, new Access\FakeUser()),
 				1,
 				$this->connection,
 			))->star();
 		}, \UnexpectedValueException::class, 'Theme 1 does not exist');
-		Assert::exception(function () {
+		Assert::exception(function (): void {
 			(new Domain\ExistingTheme(
 				new Domain\StoredTheme(1, $this->connection, new Access\FakeUser()),
 				1,

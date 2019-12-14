@@ -1,32 +1,30 @@
 includes:
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
 	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
-	# - vendor/pepakriz/phpstan-exception-rules/extension.neon TODO: enable
 parameters:
+	checkMissingIterableValueType: false
 	ignoreErrors:
 		# Fakes, intentional fails
 		- '~Method .+Fake.+::.+\(\) should return .+ but returns .+\|null~'
 
 		- '~Parameter \#2 \$callback of function array_filter expects callable\(mixed, mixed\): bool, .strlen. given~'
 
-services:
-	-
-		class: SlamPhpStan\DateTimeImmutableAlteredAndUnusedRule
-		tags:
-			- phpstan.rules.rule
-	-
-		class: SlamPhpStan\GotoRule
-		tags:
-			- phpstan.rules.rule
-	-
-		class: SlamPhpStan\PhpUnitFqcnAnnotationRule
-		tags:
-			- phpstan.rules.rule
-	-
-		class: SlamPhpStan\StringToClassRule
-		tags:
-			- phpstan.rules.rule
-	-
-		class: SlamPhpStan\UnusedVariableRule
-		tags:
-			- phpstan.rules.rule
+		-
+			path: 'App/Scheduling/index.php'
+			message: '~^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$~'
+
+		-
+			path: 'App/Scheduling/Task/PlPgSqlCheck.php'
+			message: '~^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$~'
+
+		-
+			path: 'App/Scheduling/Task/GenerateJsonSchema.php'
+			message: '~^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$~'
+
+		-
+			path: 'App/Scheduling/Task/DeleteTrashFiles.php'
+			message: '~^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$~'
+
+		-
+			path: 'App/Response/JsonError.php'
+			message: '~^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$~'

@@ -38,7 +38,7 @@ final class SecureEntranceTest extends TestCase\Runtime {
 
 	public function testSuccessfulAuthenticatingWithCaseInsensitiveEmail(): void {
 		(new Fixtures\SamplePostgresData($this->connection, 'users', ['email' => 'foo@bar.cz', 'role' => 'member']))->try();
-		Assert::noError(function() {
+		Assert::noError(function (): void {
 			(new Access\SecureEntrance(
 				$this->connection,
 				new Encryption\FakeCipher(true),
@@ -48,7 +48,7 @@ final class SecureEntranceTest extends TestCase\Runtime {
 
 	public function testPassingWithStringObject(): void {
 		(new Fixtures\SamplePostgresData($this->connection, 'users', ['email' => 'foo@bar.cz', 'role' => 'member']))->try();
-		Assert::noError(function() {
+		Assert::noError(function (): void {
 			(new Access\SecureEntrance(
 				$this->connection,
 				new Encryption\FakeCipher(true),

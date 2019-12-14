@@ -52,13 +52,13 @@ final class RegisteredUserTest extends TestCase\Runtime {
 
 	public function testThrowingOnNotRegisteredUser(): void {
 		$user = new Access\RegisteredUser(1, $this->connection);
-		Assert::exception(static function() use ($user) {
+		Assert::exception(static function() use ($user): void {
 			$user->id();
 		}, \UnexpectedValueException::class, 'The user has not been registered yet');
-		Assert::exception(static function() use ($user) {
+		Assert::exception(static function() use ($user): void {
 			$user->properties();
 		}, \UnexpectedValueException::class, 'The user has not been registered yet');
-		Assert::exception(static function() use ($user) {
+		Assert::exception(static function() use ($user): void {
 			$user->edit(['username' => '']);
 		}, \UnexpectedValueException::class, 'The user has not been registered yet');
 	}

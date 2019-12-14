@@ -1,6 +1,10 @@
 includes:
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
-	- vendor/phpstan/phpstan-mockery/extension.neon
+	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
 parameters:
+	checkMissingIterableValueType: false
 	ignoreErrors:
 		- '~^Property .+::\$connection \(Klapuch\\Storage\\Connection\) does not accept null\.$~' # because GC
+		-
+			path: 'Tests/Unit/Response/PaginatedResponseTest.php'
+			message: '~^.+ should return .+ but return .+$~'

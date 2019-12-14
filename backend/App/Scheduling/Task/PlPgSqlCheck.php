@@ -177,6 +177,7 @@ final class PlPgSqlCheck implements Scheduling\Job {
 	 * @return mixed[]
 	 */
 	private function parsedTriggerErrors(array $errors): array {
+		/** @var mixed[] $parsed */
 		$parsed = array_map(static function (array $error): array {
 			$descriptions = [];
 			$descriptions[] = array_map('strval', [

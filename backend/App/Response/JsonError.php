@@ -49,7 +49,6 @@ final class JsonError implements Application\Response {
 	}
 
 	private function text(\Throwable $error): string {
-		return htmlspecialchars($error->getMessage(), ENT_XHTML)
-			?: t('error.unknown');
+		return htmlspecialchars($error->getMessage(), ENT_XHTML) ?: t('error.unknown');
 	}
 }

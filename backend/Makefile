@@ -31,7 +31,7 @@ phpstan:            ## phpstan
 
 .PHONY: phpstan-test
 phpstan-test:
-	PHPSTAN=1 vendor/bin/phpstan analyse -l max -c phpstan.test.neon Tests
+	vendor/bin/phpstan analyse -l max -c phpstan.test.neon Tests
 
 .PHONY: psalm
 psalm:              ## psalm

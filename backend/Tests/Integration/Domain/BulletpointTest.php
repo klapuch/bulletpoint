@@ -75,28 +75,28 @@ final class BulletpointTest extends TestCase\Runtime {
 	}
 
 	public function testThrowingOnUnknown(): void {
-		Assert::exception(function() {
+		Assert::exception(function (): void {
 			(new Domain\ExistingBulletpoint(
 				new Domain\StoredBulletpoint(1, $this->connection, new Access\FakeUser()),
 				1,
 				$this->connection,
 			))->print(new Output\Json());
 		}, \UnexpectedValueException::class, 'Bulletpoint 1 does not exist');
-		Assert::exception(function() {
+		Assert::exception(function (): void {
 			(new Domain\ExistingBulletpoint(
 				new Domain\StoredBulletpoint(1, $this->connection, new Access\FakeUser()),
 				1,
 				$this->connection,
 			))->edit([]);
 		}, \UnexpectedValueException::class, 'Bulletpoint 1 does not exist');
-		Assert::exception(function() {
+		Assert::exception(function (): void {
 			(new Domain\ExistingBulletpoint(
 				new Domain\StoredBulletpoint(1, $this->connection, new Access\FakeUser()),
 				1,
 				$this->connection,
 			))->delete();
 		}, \UnexpectedValueException::class, 'Bulletpoint 1 does not exist');
-		Assert::exception(function() {
+		Assert::exception(function (): void {
 			(new Domain\ExistingBulletpoint(
 				new Domain\StoredBulletpoint(1, $this->connection, new Access\FakeUser()),
 				1,

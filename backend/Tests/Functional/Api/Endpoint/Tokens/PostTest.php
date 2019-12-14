@@ -39,7 +39,7 @@ final class PostTest extends TestCase\Runtime {
 	}
 
 	public function test400OnBadInput(): void {
-		Assert::exception(function () {
+		Assert::exception(function (): void {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(json_encode(['foo' => 'bar'], JSON_THROW_ON_ERROR)),
@@ -51,7 +51,7 @@ final class PostTest extends TestCase\Runtime {
 	}
 
 	public function test403OnUnknownLogin(): void {
-		Assert::exception(function () {
+		Assert::exception(function (): void {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
@@ -67,7 +67,7 @@ final class PostTest extends TestCase\Runtime {
 	public function test403OnWrongPassword(): void {
 		(new Fixtures\SamplePostgresData($this->connection, 'users', ['email' => 'foo@bar.cz']))->try();
 		(new Storage\NativeQuery($this->connection, 'UPDATE access.verification_codes SET used_at = NOW()'))->execute();
-		Assert::exception(function () {
+		Assert::exception(function (): void {
 			(new Endpoint\Tokens\Post(
 				new Application\FakeRequest(
 					new Output\FakeFormat(
