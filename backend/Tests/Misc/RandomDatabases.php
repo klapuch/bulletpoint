@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Misc;
 
 use Klapuch\Storage;
-use Predis;
+use Tester\FileMock;
 
 final class RandomDatabases implements Databases {
 	/** @var mixed[] */
@@ -43,54 +43,7 @@ final class RandomDatabases implements Databases {
 					$this->credentials['password'],
 				),
 			),
-			new class implements Predis\ClientInterface {
-				/** @var mixed|null */
-				private $cache;
-
-				public function getProfile(): Predis\Profile\ProfileInterface {
-				}
-
-				public function getOptions(): Predis\Configuration\OptionsInterface {
-				}
-
-				public function connect(): void {
-				}
-
-				public function disconnect(): void {
-				}
-
-				public function getConnection(): Predis\Connection\ConnectionInterface {
-				}
-
-				/**
-				 * @param string $method
-				 * @param mixed[] $arguments
-				 */
-				public function createCommand($method, $arguments = []): Predis\Command\CommandInterface {
-				}
-
-				public function executeCommand(Predis\Command\CommandInterface $command): void {
-				}
-
-				/**
-				 * @param string $method
-				 * @param array $arguments
-				 * @return bool|mixed|null
-				 */
-				public function __call($method, $arguments) {
-					if (in_array($method, ['exists', 'hexists'], true))
-						return false;
-					elseif ($method === 'hset')
-						$this->cache['hget'][$arguments[0]][$arguments[1]] = $arguments[2];
-					elseif ($method === 'hget')
-						return $this->cache[$method][$arguments[0]][$arguments[1]];
-					elseif ($method === 'set')
-						$this->cache['get'][$arguments[0]] = $arguments[1];
-					elseif ($method === 'get')
-						return $this->cache[$method][$arguments[0]];
-					return null;
-				}
-			},
+			new \SplFileInfo(FileMock::create()),
 		);
 	}
 }

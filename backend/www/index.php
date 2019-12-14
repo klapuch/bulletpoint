@@ -29,8 +29,6 @@ $uri = new Uri\CachedUri(
 
 $configuration = (new ApplicationConfiguration())->read();
 
-$redis = new Predis\Client($configuration['REDIS']['uri']);
-
 echo (new class(
 	$configuration,
 	new Routing\MatchingRoutes(
@@ -44,7 +42,7 @@ echo (new class(
 							$configuration['DATABASE']['password'],
 						),
 					),
-					$redis,
+					new SplFileInfo(__DIR__ . '/../temp'),
 				),
 				$uri,
 				new Encryption\PasswordHash(),
