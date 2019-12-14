@@ -9,7 +9,6 @@ use Bulletpoint\Configuration;
 use Klapuch\Configuration\ValidIni;
 use Klapuch\Scheduling;
 use Klapuch\Storage;
-use Predis;
 use Sentry;
 use Tracy;
 
@@ -29,7 +28,7 @@ $connection = new Storage\CachedConnection(
 			$configuration['DATABASE']['password'],
 		),
 	),
-	new Predis\Client($configuration['REDIS']['uri']),
+	new \SplFileInfo(__DIR__ . '/../../temp'),
 );
 
 $logger = new Tracy\Logger(__DIR__ . '/../../logs');

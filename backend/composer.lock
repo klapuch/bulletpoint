@@ -696,6 +696,50 @@
             "time": "2017-11-11T20:45:53+00:00"
         },
         {
+            "name": "klapuch/lock",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/klapuch/Lock.git",
+                "reference": "b6f0e940c708e272ec80b530f605168700cbf350"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/klapuch/Lock/zipball/b6f0e940c708e272ec80b530f605168700cbf350",
+                "reference": "b6f0e940c708e272ec80b530f605168700cbf350",
+                "shasum": ""
+            },
+            "require": {
+                "ext-sysvsem": "*",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^1.0",
+                "phpstan/phpstan": "^0.12.0",
+                "phpstan/phpstan-strict-rules": "^0.12.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Klapuch\\Lock\\": "Core"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dominik Klapuch",
+                    "email": "dominik.klapuch@csfd.cz",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Locking mechanisms",
+            "homepage": "https://github.com/klapuch/Lock",
+            "time": "2019-12-12T13:23:25+00:00"
+        },
+        {
             "name": "klapuch/output",
             "version": "2.13.0",
             "source": {
@@ -895,24 +939,24 @@
         },
         {
             "name": "klapuch/storage",
-            "version": "0.0.7",
+            "version": "0.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/klapuch/Storage.git",
-                "reference": "86b34827e792edd28616e280852e9b3ce46a5791"
+                "reference": "1713d7438e1a655e7c72d00912abfb19dd6ce5d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/klapuch/Storage/zipball/86b34827e792edd28616e280852e9b3ce46a5791",
-                "reference": "86b34827e792edd28616e280852e9b3ce46a5791",
+                "url": "https://api.github.com/repos/klapuch/Storage/zipball/1713d7438e1a655e7c72d00912abfb19dd6ce5d6",
+                "reference": "1713d7438e1a655e7c72d00912abfb19dd6ce5d6",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-pdo": "*",
+                "klapuch/lock": "^0.0.1",
                 "klapuch/sql": "*",
-                "php": ">=7.3",
-                "predis/predis": "^1.1"
+                "php": ">=7.3"
             },
             "require-dev": {
                 "consistence/coding-standard": "^3.5.0",
@@ -923,9 +967,6 @@
                 "phpstan/phpstan": "^0.10.3",
                 "sebastian/phpcpd": "^3.0",
                 "slevomat/coding-standard": "^4.8.2"
-            },
-            "suggest": {
-                "ext-igbinary": "For better serialization"
             },
             "type": "library",
             "autoload": {
@@ -951,7 +992,7 @@
                 "pdo",
                 "storage"
             ],
-            "time": "2019-08-31T22:31:01+00:00"
+            "time": "2019-12-14T13:11:41+00:00"
         },
         {
             "name": "klapuch/ui",
@@ -1773,56 +1814,6 @@
                 "promise"
             ],
             "time": "2016-01-26T13:27:02+00:00"
-        },
-        {
-            "name": "predis/predis",
-            "version": "v1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nrk/predis.git",
-                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
-                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.8"
-            },
-            "suggest": {
-                "ext-curl": "Allows access to Webdis when paired with phpiredis",
-                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Predis\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniele Alessandri",
-                    "email": "suppakilla@gmail.com",
-                    "homepage": "http://clorophilla.net"
-                }
-            ],
-            "description": "Flexible and feature-complete Redis client for PHP and HHVM",
-            "homepage": "http://github.com/nrk/predis",
-            "keywords": [
-                "nosql",
-                "predis",
-                "redis"
-            ],
-            "time": "2016-06-16T16:22:20+00:00"
         },
         {
             "name": "psr/http-client",
@@ -4226,6 +4217,56 @@
             ],
             "description": "A tool to detect Magic numbers in codebase",
             "time": "2019-01-27T17:18:25+00:00"
+        },
+        {
+            "name": "predis/predis",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nrk/predis.git",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "ext-curl": "Allows access to Webdis when paired with phpiredis",
+                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Predis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Alessandri",
+                    "email": "suppakilla@gmail.com",
+                    "homepage": "http://clorophilla.net"
+                }
+            ],
+            "description": "Flexible and feature-complete Redis client for PHP and HHVM",
+            "homepage": "http://github.com/nrk/predis",
+            "keywords": [
+                "nosql",
+                "predis",
+                "redis"
+            ],
+            "time": "2016-06-16T16:22:20+00:00"
         },
         {
             "name": "psr/container",
