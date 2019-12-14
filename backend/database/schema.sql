@@ -7,18 +7,18 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+-- schemas (globals)
+CREATE SCHEMA audit;
+CREATE SCHEMA access;
+CREATE SCHEMA filesystem;
+CREATE SCHEMA constructs;
 
 -- extensions
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
-
--- schemas (globals)
-CREATE SCHEMA audit;
-CREATE SCHEMA access;
-CREATE SCHEMA filesystem;
-CREATE SCHEMA constructs;
+CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA audit;
 
 -- constants
 CREATE SCHEMA constant;
@@ -57,10 +57,10 @@ CREATE TABLE audit.history (
 	id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	"table" text NOT NULL,
 	operation operations NOT NULL,
-	changed_at timestamp with time zone NOT NULL DEFAULT now(),
+	changed_at timestamptz NOT NULL DEFAULT now(),
 	user_id integer,
-	old jsonb,
-	new jsonb
+	old hstore,
+	new hstore
 );
 
 CREATE FUNCTION audit.trigger_table_audit() RETURNS trigger AS $BODY$
@@ -70,8 +70,8 @@ BEGIN
 		TG_TABLE_NAME,
 		TG_OP,
 		globals_get_user(),
-		CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(old) ELSE NULL END,
-		CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN row_to_json(new) ELSE NULL END
+		CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN hstore(old) END,
+		CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN hstore(new) END
 	);
 
 	RETURN CASE TG_OP WHEN 'DELETE' THEN old ELSE new END;
@@ -529,7 +529,7 @@ CREATE MATERIALIZED VIEW user_tag_rank_reputations AS
 	SELECT tags.id AS tag_id, tags.name, user_id, reputation, dense_rank() OVER (PARTITION BY tag_id ORDER BY reputation DESC) AS rank
 	FROM user_tag_reputations
 	JOIN tags ON user_tag_reputations.tag_id = tags.id
-	ORDER BY rank ASC, reputation DESC;
+	ORDER BY rank, reputation DESC;
 CREATE UNIQUE INDEX user_tag_rank_reputations_tag_id_user_id_uidx ON user_tag_rank_reputations(tag_id, user_id);
 
 CREATE MATERIALIZED VIEW starred_themes AS
