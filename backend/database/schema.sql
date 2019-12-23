@@ -867,12 +867,11 @@ BEGIN
 		SELECT array_agg(bulletpoint_id) AS bulletpoint_id, root_bulletpoint_id
 		FROM deleted_groups
 		GROUP BY root_bulletpoint_id
-	) grouped
-	JOIN LATERAL (
+	) grouped, LATERAL (
 		SELECT id AS bulletpoint_id, first_value(id) OVER () AS root_bulletpoint_id
 		FROM web.bulletpoints
 		WHERE id = ANY(grouped.bulletpoint_id || grouped.root_bulletpoint_id)
-	) new_groups ON TRUE
+	) new_groups
 	WHERE new_groups.bulletpoint_id != new_groups.root_bulletpoint_id;
 END;
 $BODY$ LANGUAGE plpgsql VOLATILE;
