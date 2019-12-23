@@ -33,9 +33,10 @@ final class SchemaAssertion implements Assertion {
 				$this->values,
 				['$ref' => 'file://' . $this->schema->getRealPath()],
 			);
+			$error = $validator->getErrors();
 			Assert::true(
 				$validator->isValid(),
-				sprintf('%s: %s', current($validator->getErrors())['message'], current($validator->getErrors())['property']),
+				isset($error['message'], $error['property']) === false ? null : sprintf('%s: %s', $error['message'], $error['property']),
 			);
 		}
 	}
