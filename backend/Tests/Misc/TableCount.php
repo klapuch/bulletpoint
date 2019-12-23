@@ -7,14 +7,11 @@ use Klapuch\Storage;
 use Tester\Assert;
 
 final class TableCount implements Assertion {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
-	/** @var string */
-	private $table;
+	private string $table;
 
-	/** @var int */
-	private $count;
+	private int $count;
 
 	public function __construct(Storage\Connection $connection, string $table, int $count) {
 		$this->connection = $connection;

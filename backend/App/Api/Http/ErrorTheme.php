@@ -7,11 +7,9 @@ use Bulletpoint\Domain;
 use Klapuch\Output;
 
 final class ErrorTheme implements Domain\Theme {
-	/** @var int */
-	private $status;
+	private int $status;
 
-	/** @var \Bulletpoint\Domain\Theme */
-	private $origin;
+	private \Bulletpoint\Domain\Theme $origin;
 
 	public function __construct(int $status, Domain\Theme $origin) {
 		$this->status = $status;

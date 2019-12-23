@@ -22,15 +22,9 @@ final class Post implements Application\View {
 		self::FACEBOOK_PROVIDER => self::OAUTH_SCHEMA,
 		self::GOOGLE_PROVIDER => self::OAUTH_SCHEMA,
 	];
-
-	/** @var \Klapuch\Application\Request */
-	private $request;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Klapuch\Encryption\Cipher */
-	private $cipher;
+	private Application\Request $request;
+	private Storage\Connection $connection;
+	private Encryption\Cipher $cipher;
 
 	public function __construct(
 		Application\Request $request,

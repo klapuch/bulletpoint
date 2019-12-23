@@ -17,18 +17,10 @@ use Nette\Utils\Json;
 
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Klapuch\Application\Request */
-	private $request;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
-
-	/** @var \Klapuch\Uri\Uri */
-	private $url;
+	private Storage\Connection $connection;
+	private Application\Request $request;
+	private Access\User $user;
+	private Uri $url;
 
 	public function __construct(Application\Request $request, Storage\Connection $connection, Access\User $user, Uri $url) {
 		$this->connection = $connection;

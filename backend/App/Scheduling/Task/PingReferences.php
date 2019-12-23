@@ -13,11 +13,8 @@ use Klapuch\Uri;
 use Tracy;
 
 final class PingReferences implements Scheduling\Job {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Tracy\ILogger */
-	private $logger;
+	private Storage\Connection $connection;
+	private Tracy\ILogger $logger;
 
 	public function __construct(Storage\Connection $connection, Tracy\ILogger $logger) {
 		$this->connection = $connection;

@@ -12,7 +12,7 @@ trait Page {
 	}
 
 	/** @var mixed[] */
-	private $configuration;
+	private array $configuration;
 
 	protected function setUp(): void {
 		parent::setUp();

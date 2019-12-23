@@ -25,9 +25,7 @@ final class BulletpointsTest extends TestCase\Runtime {
 		['id' => $id1] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints', ['theme_id' => $theme]))->try();
 		['id' => $id2] = (new Fixtures\SamplePostgresData($this->connection, 'public_bulletpoints', ['theme_id' => $theme]))->try();
 		$bulletpoints = array_map(
-			static function (Domain\Bulletpoint $bulletpoint): array {
-				return (new Misc\TestingFormat($bulletpoint->print(new Output\Json())))->raw();
-			},
+			static fn (Domain\Bulletpoint $bulletpoint): array => (new Misc\TestingFormat($bulletpoint->print(new Output\Json())))->raw(),
 			iterator_to_array(
 				(new Domain\PublicBulletpoints(
 					new Domain\ThemeBulletpoints(

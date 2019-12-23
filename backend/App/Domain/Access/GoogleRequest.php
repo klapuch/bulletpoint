@@ -12,8 +12,7 @@ use Nette\Utils\Json;
  * Google request with retrieved credentials
  */
 final class GoogleRequest implements Http\Request {
-	/** @var string */
-	private $accessToken;
+	private string $accessToken;
 
 	public function __construct(string $accessToken) {
 		$this->accessToken = $accessToken;

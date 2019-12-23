@@ -8,7 +8,6 @@ use Klapuch\Storage;
 interface Databases {
 	/**
 	 * Create a new database
-	 * @return \Klapuch\Storage\Connection
 	 */
 	public function create(): Storage\Connection;
 

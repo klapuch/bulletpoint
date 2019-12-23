@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := check
 
 PHPCS_CACHE_DIR := /tmp/cache
-PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --cache=$(PHPCS_CACHE_DIR)/phpcs --tab-width=4 -sp App Tests www
+PHPCS_ARGS := --standard=ruleset.xml --extensions=php,phpt --encoding=utf-8 --cache=$(PHPCS_CACHE_DIR)/phpcs --tab-width=4 --ignore=/var/www/bulletpoint/backend/Tests/Integration/Domain/BulletpointsTest.php,/var/www/bulletpoint/backend/App/Scheduling/Task/GenerateJsonSchema.php -sp App Tests www
 TESTER_ARGS := -o console -s -p php -c Tests/php.ini -l /var/log/nette_tester.log
 CHECK_TEST_EXTENSIONS := find Tests/Integration/ Tests/Unit Tests/Functional -name '*.php' | grep -v '\Test.php$$'
 

@@ -21,8 +21,7 @@ final class Get implements Application\View {
 	];
 	private const PARAMETERS = ['id'];
 
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(Storage\Connection $connection) {
 		$this->connection = $connection;
@@ -35,9 +34,7 @@ final class Get implements Application\View {
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
 				(new Output\JsonPrintedObjects(
-					static function (User\Tag $tag, Output\Format $format): Output\Format {
-						return $tag->print($format);
-					},
+					static fn (User\Tag $tag, Output\Format $format): Output\Format => $tag->print($format),
 					...iterator_to_array(
 						(new User\StoredTags(
 							$this->connection,

@@ -7,11 +7,9 @@ use Klapuch\Iterator;
 use Klapuch\Scheduling;
 
 final class CheckChangedConfiguration implements Scheduling\Job {
-	/** @var \SplFileInfo */
-	private $destination;
+	private \SplFileInfo $destination;
 
-	/** @var \Klapuch\Scheduling\Job */
-	private $dependency;
+	private Scheduling\Job $dependency;
 
 	public function __construct(\SplFileInfo $destination, Scheduling\Job $dependency) {
 		$this->destination = $destination;
@@ -36,13 +34,9 @@ final class CheckChangedConfiguration implements Scheduling\Job {
 			new Iterator\Mapped(
 				new \CallbackFilterIterator(
 					new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->destination->getPathname())),
-					static function (\SplFileInfo $file): bool {
-						return !$file->isDir();
-					},
+					static fn (\SplFileInfo $file): bool => !$file->isDir(),
 				),
-				static function (\SplFileInfo $file): string {
-					return (string) md5_file($file->getPathname());
-				},
+				static fn (\SplFileInfo $file): string => (string) md5_file($file->getPathname()),
 			),
 		);
 	}

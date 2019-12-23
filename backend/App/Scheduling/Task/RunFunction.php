@@ -7,11 +7,9 @@ use Klapuch\Scheduling;
 use Klapuch\Storage;
 
 final class RunFunction implements Scheduling\Job {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
-	/** @var string */
-	private $function;
+	private string $function;
 
 	public function __construct(Storage\Connection $connection, string $function) {
 		$this->connection = $connection;

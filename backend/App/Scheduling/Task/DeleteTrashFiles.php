@@ -8,8 +8,7 @@ use Klapuch\Storage;
 use Nette\Utils;
 
 final class DeleteTrashFiles implements Scheduling\Job {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(Storage\Connection $connection) {
 		$this->connection = $connection;

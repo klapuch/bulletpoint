@@ -12,14 +12,11 @@ use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class ThemeBulletpoints implements Domain\Bulletpoints {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
-	/** @var int */
-	private $theme;
+	private int $theme;
 
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Access\User $user;
 
 	public function __construct(int $theme, Storage\Connection $connection, Access\User $user) {
 		$this->theme = $theme;

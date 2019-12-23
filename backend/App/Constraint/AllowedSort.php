@@ -9,11 +9,10 @@ use Klapuch\Dataset;
  * Only allowed sorts
  */
 final class AllowedSort extends Dataset\Sort {
-	/** @var \Klapuch\Dataset\Sort */
-	private $origin;
+	private \Klapuch\Dataset\Sort $origin;
 
 	/** @var mixed[] */
-	private $allowedSorts;
+	private array $allowedSorts;
 
 	public function __construct(Dataset\Sort $origin, array $allowedSorts) {
 		$this->origin = $origin;

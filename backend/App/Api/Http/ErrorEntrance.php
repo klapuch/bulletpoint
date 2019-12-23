@@ -7,11 +7,9 @@ use Bulletpoint\Domain\Access;
 use Bulletpoint\Domain\Access\User;
 
 final class ErrorEntrance implements Access\Entrance {
-	/** @var int */
-	private $status;
+	private int $status;
 
-	/** @var \Bulletpoint\Domain\Access\Entrance */
-	private $origin;
+	private \Bulletpoint\Domain\Access\Entrance $origin;
 
 	public function __construct(int $status, Access\Entrance $origin) {
 		$this->status = $status;

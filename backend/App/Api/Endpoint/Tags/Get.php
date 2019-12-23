@@ -10,8 +10,7 @@ use Klapuch\Output;
 use Klapuch\Storage;
 
 final class Get implements Application\View {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(Storage\Connection $connection) {
 		$this->connection = $connection;

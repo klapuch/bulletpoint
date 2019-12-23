@@ -8,9 +8,8 @@ namespace Bulletpoint\Domain\Access;
  */
 final class RefreshingEntrance implements Entrance {
 	/**
-	 * @param array $credentials
+	 * @param mixed[] $credentials
 	 * @throws \UnexpectedValueException
-	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function enter(array $credentials): User {
 		session_write_close();

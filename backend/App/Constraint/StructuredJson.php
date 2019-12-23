@@ -12,8 +12,7 @@ use Nette\Utils\Json;
  * NOTE: Ruined by JsonSchema library :(
  */
 final class StructuredJson implements Validation\Rule {
-	/** @var \SplFileInfo */
-	private $schema;
+	private \SplFileInfo $schema;
 
 	public function __construct(\SplFileInfo $schema) {
 		$this->schema = $schema;

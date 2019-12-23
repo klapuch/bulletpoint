@@ -7,17 +7,15 @@ namespace Bulletpoint\Domain\Access;
  * Entrance creating tokens
  */
 final class TokenEntrance implements Entrance {
-	/** @var \Bulletpoint\Domain\Access\Entrance */
-	private $origin;
+	private Entrance $origin;
 
 	public function __construct(Entrance $origin) {
 		$this->origin = $origin;
 	}
 
 	/**
-	 * @param array $credentials
+	 * @param mixed[] $credentials
 	 * @throws \UnexpectedValueException
-	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function enter(array $credentials): User {
 		$user = $this->origin->enter($credentials);
@@ -30,7 +28,6 @@ final class TokenEntrance implements Entrance {
 
 	/**
 	 * @throws \UnexpectedValueException
-	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function exit(): User {
 		if (session_status() === PHP_SESSION_ACTIVE)

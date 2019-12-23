@@ -6,8 +6,7 @@ namespace Bulletpoint\Domain;
 use Klapuch\Output;
 
 final class PublicBulletpoint implements Bulletpoint {
-	/** @var \Bulletpoint\Domain\Bulletpoint */
-	private $origin;
+	private Bulletpoint $origin;
 
 	public function __construct(Bulletpoint $origin) {
 		$this->origin = $origin;
@@ -20,9 +19,7 @@ final class PublicBulletpoint implements Bulletpoint {
 	 */
 	public function print(Output\Format $format): Output\Format {
 		return $this->origin->print($format)
-			->adjusted('created_at', static function(string $datetime): string {
-				return (new \DateTime($datetime))->format(\DateTime::ATOM);
-			});
+			->adjusted('created_at', static fn(string $datetime): string => (new \DateTime($datetime))->format(\DateTime::ATOM));
 	}
 
 	public function edit(array $bulletpoint): void {

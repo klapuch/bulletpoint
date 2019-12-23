@@ -10,11 +10,9 @@ use Klapuch\Http\Response;
  * OAuth request with retrieved credentials
  */
 final class OAuthRequest implements Http\Request {
-	/** @var string */
-	private $provider;
+	private string $provider;
 
-	/** @var string */
-	private $accessToken;
+	private string $accessToken;
 
 	public function __construct(string $provider, string $accessToken) {
 		$this->provider = $provider;

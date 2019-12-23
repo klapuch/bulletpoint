@@ -7,30 +7,23 @@ use Bulletpoint\Http;
 use Klapuch\Application;
 use Klapuch\Output;
 use Klapuch\UI;
-use Klapuch\Uri;
+use Klapuch\Uri\Uri;
 
 /**
  * Partial response suited for pagination
  * Returning 206 status code for not last page
  */
 final class PaginatedResponse implements Application\Response {
-	/** @var \Klapuch\Application\Response */
-	private $origin;
-
-	/** @var int */
-	private $page;
-
-	/** @var \Klapuch\UI\Pagination */
-	private $pagination;
-
-	/** @var \Klapuch\Uri\Uri */
-	private $uri;
+	private Application\Response $origin;
+	private int $page;
+	private UI\Pagination $pagination;
+	private Uri $uri;
 
 	public function __construct(
 		Application\Response $origin,
 		int $page,
 		UI\Pagination $pagination,
-		Uri\Uri $uri
+		Uri $uri
 	) {
 		$this->origin = $origin;
 		$this->page = $page;

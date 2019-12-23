@@ -4,7 +4,8 @@ includes:
 parameters:
 	checkMissingIterableValueType: false
 	ignoreErrors:
-		- '~^Property .+::\$connection \(Klapuch\\Storage\\Connection\) does not accept null\.$~' # because GC
+		- '~.+expects Klapuch\\Storage\\Connection, Klapuch\\Storage\\Connection\|null given\.$~' # because GC
+		- '~^Cannot call method prepare\(\) on Klapuch\\Storage\\Connection\|null\.$~' # because GC
 		-
 			path: 'Tests/Unit/Response/PaginatedResponseTest.php'
 			message: '~^.+ should return .+ but return .+$~'

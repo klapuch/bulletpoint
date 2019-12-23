@@ -20,11 +20,9 @@ final class Test extends TestCase\Runtime {
 		(new class(new \SplFileInfo(__DIR__), $this->connection) implements Misc\Assertion {
 			private const PATTERN = '~\.sql$~i';
 
-			/** @var \SplFileInfo */
-			private $source;
+			private \SplFileInfo $source;
 
-			/** @var \Klapuch\Storage\Connection */
-			private $connection;
+			private Storage\Connection $connection;
 
 			public function __construct(\SplFileInfo $source, Storage\Connection $connection) {
 				$this->source = $source;

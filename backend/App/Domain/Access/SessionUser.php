@@ -7,8 +7,7 @@ namespace Bulletpoint\Domain\Access;
  * User from session storage
  */
 final class SessionUser implements User {
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $origin;
+	private User $origin;
 
 	public function __construct(User $origin) {
 		$this->origin = $origin;

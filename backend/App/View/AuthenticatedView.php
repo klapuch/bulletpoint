@@ -11,11 +11,8 @@ use Klapuch\Output;
  * View showing response by used role
  */
 final class AuthenticatedView implements Application\View {
-	/** @var \Klapuch\Application\View */
-	private $origin;
-
-	/** @var \Bulletpoint\Http\Role */
-	private $role;
+	private Application\View $origin;
+	private Http\Role $role;
 
 	public function __construct(Application\View $origin, Http\Role $role) {
 		$this->origin = $origin;

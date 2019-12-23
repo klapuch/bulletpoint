@@ -11,15 +11,9 @@ use Nette\Http\FileUpload;
 
 final class Avatars {
 	private const NAMESPACE = 'images/avatars';
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Nette\Http\FileUpload */
-	private $upload;
+	private Access\User $user;
+	private Storage\Connection $connection;
+	private FileUpload $upload;
 
 	public function __construct(FileUpload $upload, Access\User $user, Storage\Connection $connection) {
 		$this->user = $user;

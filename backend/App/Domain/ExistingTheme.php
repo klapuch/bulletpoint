@@ -9,14 +9,9 @@ use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class ExistingTheme implements Theme {
-	/** @var int */
-	private $id;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Theme */
-	private $origin;
+	private int $id;
+	private Storage\Connection $connection;
+	private Theme $origin;
 
 	public function __construct(Theme $origin, int $id, Storage\Connection $connection) {
 		$this->id = $id;

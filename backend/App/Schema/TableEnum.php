@@ -10,11 +10,9 @@ use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class TableEnum implements Enum {
-	/** @var string */
-	private $table;
+	private string $table;
 
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(string $table, Storage\Connection $connection) {
 		$this->table = $table;

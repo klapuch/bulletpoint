@@ -10,11 +10,8 @@ use Klapuch\Output;
 use Klapuch\Storage;
 
 final class Get implements Application\View {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Storage\Connection $connection;
+	private Domain\Access\User $user;
 
 	public function __construct(Storage\Connection $connection, Domain\Access\User $user) {
 		$this->connection = $connection;

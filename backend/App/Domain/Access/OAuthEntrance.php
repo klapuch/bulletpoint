@@ -11,14 +11,9 @@ use Nette\Utils\Json;
  * Secure entrance for entering users to the system via oauth providers
  */
 final class OAuthEntrance implements Entrance {
-	/** @var string */
-	private $provider;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Klapuch\Http\Request */
-	private $request;
+	private string $provider;
+	private Storage\Connection $connection;
+	private Http\Request $request;
 
 	public function __construct(string $provider, Storage\Connection $connection, Http\Request $request) {
 		$this->provider = $provider;
@@ -27,9 +22,8 @@ final class OAuthEntrance implements Entrance {
 	}
 
 	/**
-	 * @param array $credentials
+	 * @param mixed[] $credentials
 	 * @throws \UnexpectedValueException
-	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function enter(array $credentials): User {
 		['id' => $id, 'email' => $email] = Json::decode($this->request->send()->body(), Json::FORCE_ARRAY);

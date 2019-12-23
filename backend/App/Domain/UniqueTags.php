@@ -8,11 +8,8 @@ use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class UniqueTags implements Tags {
-	/** @var \Bulletpoint\Domain\Tags */
-	private $origin;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Tags $origin;
+	private Storage\Connection $connection;
 
 	public function __construct(Tags $origin, Storage\Connection $connection) {
 		$this->origin = $origin;

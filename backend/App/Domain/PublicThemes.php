@@ -7,8 +7,7 @@ use Klapuch\Dataset;
 use Klapuch\Iterator;
 
 final class PublicThemes implements Themes {
-	/** @var \Bulletpoint\Domain\Themes */
-	private $origin;
+	private Themes $origin;
 
 	public function __construct(Themes $origin) {
 		$this->origin = $origin;
@@ -21,9 +20,7 @@ final class PublicThemes implements Themes {
 	public function all(Dataset\Selection $selection): \Iterator {
 		return new Iterator\Mapped(
 			$this->origin->all($selection),
-			static function(Theme $theme): Theme {
-				return new PublicTheme($theme);
-			},
+			static fn(Theme $theme): Theme => new PublicTheme($theme),
 		);
 	}
 

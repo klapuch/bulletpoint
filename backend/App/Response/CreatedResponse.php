@@ -5,16 +5,13 @@ namespace Bulletpoint\Response;
 
 use Klapuch\Application;
 use Klapuch\Output;
-use Klapuch\Uri;
+use Klapuch\Uri\Uri;
 
 final class CreatedResponse implements Application\Response {
-	/** @var \Klapuch\Application\Response */
-	private $origin;
+	private Application\Response $origin;
+	private Uri $uri;
 
-	/** @var \Klapuch\Uri\Uri */
-	private $uri;
-
-	public function __construct(Application\Response $origin, Uri\Uri $uri) {
+	public function __construct(Application\Response $origin, Uri $uri) {
 		$this->origin = $origin;
 		$this->uri = $uri;
 	}

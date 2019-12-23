@@ -4,20 +4,19 @@ declare(strict_types = 1);
 namespace Bulletpoint\Http;
 
 use Klapuch\Output;
-use Klapuch\Uri;
+use Klapuch\Uri\Uri;
 
 /**
  * Format generating links for headers in format
  * <https://example.com>; rel="homepage", ...
  */
 final class HeaderLink implements Output\Format {
-	/** @var \Klapuch\Uri\Uri */
-	private $uri;
+	private Uri $uri;
 
 	/** @var mixed[] */
-	private $moves;
+	private array $moves;
 
-	public function __construct(Uri\Uri $uri, array $moves = []) {
+	public function __construct(Uri $uri, array $moves = []) {
 		$this->uri = $uri;
 		$this->moves = $moves;
 	}
@@ -35,20 +34,18 @@ final class HeaderLink implements Output\Format {
 		return implode(
 			', ',
 			array_map(
-				function(string $direction, int $page): string {
-					return sprintf(
-						'<%s/%s?%s>; rel="%s"',
-						rtrim($this->uri->reference(), '/'),
-						ltrim($this->uri->path(), '/'),
-						http_build_query(
-							['page' => $page] + $this->uri->query(),
-							'',
-							'&',
-							PHP_QUERY_RFC3986,
-						),
-						$direction,
-					);
-				},
+				fn(string $direction, int $page): string => sprintf(
+					'<%s/%s?%s>; rel="%s"',
+					rtrim($this->uri->reference(), '/'),
+					ltrim($this->uri->path(), '/'),
+					http_build_query(
+						['page' => $page] + $this->uri->query(),
+						'',
+						'&',
+						PHP_QUERY_RFC3986,
+					),
+					$direction,
+				),
 				array_keys($this->moves),
 				$this->moves,
 			),
@@ -63,7 +60,7 @@ final class HeaderLink implements Output\Format {
 	public function adjusted($tag, callable $adjustment): Output\Format {
 		return new self(
 			$this->uri,
-			[$tag => call_user_func($adjustment, $this->moves[$tag])] + $this->moves
+			[$tag => call_user_func($adjustment, $this->moves[$tag])] + $this->moves,
 		);
 	}
 }

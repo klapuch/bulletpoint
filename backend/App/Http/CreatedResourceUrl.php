@@ -3,21 +3,20 @@ declare(strict_types = 1);
 
 namespace Bulletpoint\Http;
 
-use Klapuch\Uri;
+use Klapuch\Uri\Uri;
 
 /**
  * Resource used for identification in Location header after successful POST request with 201 code
  */
-final class CreatedResourceUrl implements Uri\Uri {
+final class CreatedResourceUrl implements Uri {
 	private const DELIMITER = '/';
 
-	/** @var \Klapuch\Uri\Uri */
-	private $origin;
+	private Uri $origin;
 
 	/** @var mixed[] */
-	private $parameters;
+	private array $parameters;
 
-	public function __construct(Uri\Uri $origin, array $parameters) {
+	public function __construct(Uri $origin, array $parameters) {
 		$this->origin = $origin;
 		$this->parameters = $parameters;
 	}
@@ -56,9 +55,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 	 */
 	private function placeholders(array $parts): array {
 		return array_map(
-			static function(string $placeholder): string {
-				return str_replace(['{', '}'], '', $placeholder);
-			},
+			static fn(string $placeholder): string => str_replace(['{', '}'], '', $placeholder),
 			preg_grep('~^{.+}$~', $parts),
 		);
 	}
@@ -75,9 +72,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 		if ($lost !== [])
 			throw new \UnexpectedValueException($this->format($lost));
 		return array_map(
-			static function(string $placeholder) use ($parameters): string {
-				return (string) $parameters[$placeholder];
-			},
+			static fn(string $placeholder): string => (string) $parameters[$placeholder],
 			$placeholders,
 		);
 	}
@@ -91,9 +86,7 @@ final class CreatedResourceUrl implements Uri\Uri {
 	private function lost(array $placeholders, array $parameters): array {
 		return array_filter(
 			$placeholders,
-			static function(string $placeholder) use ($parameters): bool {
-				return !isset($parameters[$placeholder]);
-			},
+			static fn(string $placeholder): bool => !isset($parameters[$placeholder]),
 		);
 	}
 

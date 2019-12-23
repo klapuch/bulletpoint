@@ -6,8 +6,7 @@ namespace Bulletpoint\Domain;
 use Klapuch\Iterator;
 
 final class PublicBulletpoints implements Bulletpoints {
-	/** @var \Bulletpoint\Domain\Bulletpoints */
-	private $origin;
+	private Bulletpoints $origin;
 
 	public function __construct(Bulletpoints $origin) {
 		$this->origin = $origin;
@@ -20,9 +19,7 @@ final class PublicBulletpoints implements Bulletpoints {
 	public function all(): \Iterator {
 		return new Iterator\Mapped(
 			$this->origin->all(),
-			static function(Bulletpoint $bulletpoint): Bulletpoint {
-				return new PublicBulletpoint($bulletpoint);
-			},
+			static fn(Bulletpoint $bulletpoint): Bulletpoint => new PublicBulletpoint($bulletpoint),
 		);
 	}
 

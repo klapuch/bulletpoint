@@ -13,14 +13,9 @@ use Klapuch\Sql\Statement\Update;
 use Klapuch\Storage;
 
 final class StoredBulletpoint implements Domain\Bulletpoint {
-	/** @var int */
-	private $id;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private int $id;
+	private Access\User $user;
+	private Storage\Connection $connection;
 
 	public function __construct(int $id, Access\User $user, Storage\Connection $connection) {
 		$this->id = $id;

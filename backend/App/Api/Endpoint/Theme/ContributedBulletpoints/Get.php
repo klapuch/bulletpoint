@@ -13,12 +13,8 @@ use Klapuch\Storage;
 
 final class Get implements Application\View {
 	public const SCHEMA = __DIR__ . '/schema/get.json';
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Storage\Connection $connection;
+	private Access\User $user;
 
 	public function __construct(Storage\Connection $connection, Access\User $user) {
 		$this->connection = $connection;
@@ -37,9 +33,7 @@ final class Get implements Application\View {
 		return new Response\JsonResponse(
 			new Application\PlainResponse(
 				(new Output\JsonPrintedObjects(
-					static function (Domain\Bulletpoint $bulletpoint, Output\Format $format): Output\Format {
-						return $bulletpoint->print($format);
-					},
+					static fn (Domain\Bulletpoint $bulletpoint, Output\Format $format): Output\Format => $bulletpoint->print($format),
 					...iterator_to_array($bulletpoints->all()),
 				)),
 				['X-Total-Count' => $bulletpoints->count()],

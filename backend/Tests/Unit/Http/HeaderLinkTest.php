@@ -95,9 +95,7 @@ final class HeaderLinkTest extends TestCase\Runtime {
 				['first' => 1],
 			))->adjusted(
 				'first',
-				static function(int $page): int {
-					return $page + 1;
-				},
+				static fn(int $page): int => $page + 1,
 			)->serialization(),
 		);
 	}

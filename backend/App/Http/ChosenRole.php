@@ -9,11 +9,10 @@ use Bulletpoint\Domain\Access;
  * Chosen role from the listed ones
  */
 final class ChosenRole implements Role {
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Access\User $user;
 
 	/** @var mixed[] */
-	private $roles;
+	private array $roles;
 
 	public function __construct(Access\User $user, array $roles) {
 		$this->user = $user;

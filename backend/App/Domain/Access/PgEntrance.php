@@ -9,11 +9,8 @@ use Klapuch\Storage;
  * Entrance to PG database
  */
 final class PgEntrance implements Entrance {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\Entrance */
-	private $origin;
+	private Storage\Connection $connection;
+	private Entrance $origin;
 
 	public function __construct(Entrance $origin, Storage\Connection $connection) {
 		$this->origin = $origin;
@@ -21,9 +18,8 @@ final class PgEntrance implements Entrance {
 	}
 
 	/**
-	 * @param array $credentials
+	 * @param mixed[] $credentials
 	 * @throws \UnexpectedValueException
-	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function enter(array $credentials): User {
 		$user = $this->origin->enter($credentials);
@@ -33,7 +29,6 @@ final class PgEntrance implements Entrance {
 
 	/**
 	 * @throws \UnexpectedValueException
-	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function exit(): User {
 		(new Storage\NativeQuery($this->connection, 'SELECT globals_set_user(NULL)'))->execute();

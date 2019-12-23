@@ -9,11 +9,9 @@ use Klapuch\Sql\Statement\Update;
 use Klapuch\Storage;
 
 final class RegisteredUser implements User {
-	/** @var int */
-	private $id;
+	private int $id;
 
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(int $id, Storage\Connection $connection) {
 		$this->id = $id;

@@ -6,14 +6,12 @@ namespace Bulletpoint\Fixtures;
 use Klapuch\Storage;
 
 final class SamplePostgresData implements Sample {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
-	/** @var string */
-	private $sample;
+	private string $sample;
 
 	/** @var mixed[] */
-	private $data;
+	private array $data;
 
 	public function __construct(Storage\Connection $connection, string $sample, array $data = []) {
 		$this->connection = $connection;

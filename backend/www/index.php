@@ -54,13 +54,11 @@ echo (new class(
 	new Tracy\Logger(__DIR__ . '/../logs')
 ) implements Output\Template {
 	/** @var mixed[] */
-	private $configuration;
+	private array $configuration;
 
-	/** @var \Klapuch\Routing\Routes */
-	private $routes;
+	private \Klapuch\Routing\Routes $routes;
 
-	/** @var \Tracy\ILogger */
-	private $logger;
+	private \Tracy\ILogger $logger;
 
 	public function __construct(array $configuration, Routing\Routes $routes, Tracy\ILogger $logger) {
 		$this->configuration = $configuration;
@@ -71,8 +69,8 @@ echo (new class(
 	public function render(array $variables = []): string {
 		try {
 			$match = $this->routes->matches();
-			/** @var \Closure $destination */
 			$destination = current($match);
+			assert($destination instanceof Closure);
 			return (new Application\RawTemplate(
 				$destination()->response(
 					(new Routing\TypedMask(

@@ -25,12 +25,8 @@ final class Get implements Application\View {
 		'q',
 		'tag_id',
 	];
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Klapuch\Uri\Uri */
-	private $uri;
+	private Storage\Connection $connection;
+	private Uri $uri;
 
 	public function __construct(Storage\Connection $connection, Uri $uri) {
 		$this->connection = $connection;
@@ -74,9 +70,7 @@ final class Get implements Application\View {
 			new Response\JsonResponse(
 				new Application\PlainResponse(
 					(new Output\JsonPrintedObjects(
-						static function (Domain\Theme $theme, Output\Format $format): Output\Format {
-							return $theme->print($format);
-						},
+						static fn (Domain\Theme $theme, Output\Format $format): Output\Format => $theme->print($format),
 						...iterator_to_array(
 							$themes->all(
 								new Dataset\CombinedSelection(

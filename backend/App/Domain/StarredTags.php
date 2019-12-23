@@ -8,14 +8,9 @@ use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class StarredTags implements Tags {
-	/** @var \Bulletpoint\Domain\Tags */
-	private $origin;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Tags $origin;
+	private Storage\Connection $connection;
+	private Access\User $user;
 
 	public function __construct(Tags $origin, Storage\Connection $connection, Access\User $user) {
 		$this->origin = $origin;

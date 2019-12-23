@@ -9,8 +9,7 @@ use Klapuch\Application;
 use Klapuch\Storage;
 
 final class Delete implements Application\View {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(Storage\Connection $connection) {
 		$this->connection = $connection;

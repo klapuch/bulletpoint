@@ -5,13 +5,12 @@ namespace Bulletpoint\TestCase;
 
 use Bulletpoint\Misc;
 use Klapuch\Configuration;
+use Klapuch\Storage;
 
 trait TemplateDatabase {
-	/** @var \Klapuch\Storage\Connection */
-	protected $connection;
+	protected ?Storage\Connection $connection;
 
-	/** @var \Bulletpoint\Misc\Databases */
-	private $databases;
+	private Misc\Databases $databases;
 
 	protected function setUp(): void {
 		parent::setUp();

@@ -12,15 +12,9 @@ use Nette\Utils\Json;
 
 final class Patch implements Application\View {
 	public const SCHEMA = __DIR__ . '/schema/patch.json';
-
-	/** @var \Klapuch\Application\Request */
-	private $request;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Application\Request $request;
+	private Storage\Connection $connection;
+	private Access\User $user;
 
 	public function __construct(Application\Request $request, Storage\Connection $connection, Access\User $user) {
 		$this->connection = $connection;

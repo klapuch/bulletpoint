@@ -12,8 +12,7 @@ use Klapuch\Output;
 final class JsonResponse implements Application\Response {
 	private const HEADERS = ['Content-Type' => 'application/json; charset=utf8'];
 
-	/** @var \Klapuch\Application\Response */
-	private $origin;
+	private \Klapuch\Application\Response $origin;
 
 	public function __construct(Application\Response $origin) {
 		$this->origin = $origin;

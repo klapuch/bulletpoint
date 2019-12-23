@@ -8,8 +8,7 @@ use Klapuch\Sql\Expression;
 use Klapuch\Sql\Statement\Select;
 
 final class SearchedThemes {
-	/** @var string */
-	private $keyword;
+	private string $keyword;
 
 	public function __construct(string $keyword) {
 		$this->keyword = $keyword;

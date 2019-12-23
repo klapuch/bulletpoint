@@ -11,11 +11,9 @@ use Klapuch\Validation;
  * Number of references in text matching with passed ID
  */
 final class ReferenceRule implements Validation\Rule {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
-	/** @var int */
-	private $count;
+	private int $count;
 
 	public function __construct(Storage\Connection $connection, int $count) {
 		$this->connection = $connection;

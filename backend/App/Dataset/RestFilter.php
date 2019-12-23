@@ -10,13 +10,13 @@ use Klapuch\Dataset;
  */
 final class RestFilter extends Dataset\Filter {
 	/** @var mixed[] */
-	private $criteria;
+	private array $criteria;
 
 	/** @var string[] */
-	private $allows;
+	private array $allows;
 
 	/** @var string[] */
-	private $ignores;
+	private array $ignores;
 
 	/**
 	 * @param mixed[] $criteria

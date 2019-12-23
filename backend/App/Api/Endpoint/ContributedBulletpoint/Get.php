@@ -12,12 +12,8 @@ use Klapuch\Storage;
 
 final class Get implements Application\View {
 	public const SCHEMA = __DIR__ . '/schema/get.json';
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Storage\Connection $connection;
+	private Access\User $user;
 
 	public function __construct(Storage\Connection $connection, Access\User $user) {
 		$this->connection = $connection;

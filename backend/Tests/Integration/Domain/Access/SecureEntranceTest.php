@@ -56,13 +56,13 @@ final class SecureEntranceTest extends TestCase\Runtime {
 				[
 					'login' =>
 					new class {
-						public function __toString() {
+						public function __toString(): string {
 							return 'foo@bar.cz';
 						}
 					},
 					'password' =>
 					new class {
-						public function __toString() {
+						public function __toString(): string {
 							return 'heslo';
 						}
 					},

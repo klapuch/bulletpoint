@@ -7,11 +7,9 @@ use Klapuch\Scheduling;
 use Klapuch\Storage;
 
 final class RefreshMaterializedView implements Scheduling\Job {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
-	/** @var string */
-	private $view;
+	private string $view;
 
 	public function __construct(Storage\Connection $connection, string $view) {
 		$this->connection = $connection;

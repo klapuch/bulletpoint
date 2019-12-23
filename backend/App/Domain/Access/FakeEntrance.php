@@ -4,8 +4,7 @@ declare(strict_types = 1);
 namespace Bulletpoint\Domain\Access;
 
 final class FakeEntrance implements Entrance {
-	/** @var \Bulletpoint\Domain\Access\User|null */
-	private $user;
+	private ?User $user = null;
 
 	public function __construct(?User $user = null) {
 		$this->user = $user;

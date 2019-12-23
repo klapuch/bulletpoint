@@ -14,14 +14,12 @@ final class JsonError implements Application\Response {
 	private const CODES = [400, 599],
 		DELEGATE = 0;
 
-	/** @var \Throwable */
-	private $error;
+	private \Throwable $error;
 
 	/** @var mixed[] */
-	private $headers;
+	private array $headers;
 
-	/** @var int */
-	private $status;
+	private int $status;
 
 	public function __construct(
 		\Throwable $error,

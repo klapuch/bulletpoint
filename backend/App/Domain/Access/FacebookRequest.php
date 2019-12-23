@@ -11,8 +11,7 @@ use Klapuch\Uri;
  * Facebook request with retrieved credentials
  */
 final class FacebookRequest implements Http\Request {
-	/** @var string */
-	private $accessToken;
+	private string $accessToken;
 
 	public function __construct(string $accessToken) {
 		$this->accessToken = $accessToken;

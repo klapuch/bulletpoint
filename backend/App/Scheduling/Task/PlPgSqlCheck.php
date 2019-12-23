@@ -11,12 +11,8 @@ use Klapuch\Storage;
 
 final class PlPgSqlCheck implements Scheduling\Job {
 	private const INDENT = "\t";
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Klapuch\Configuration\Source */
-	private $ignores;
+	private Storage\Connection $connection;
+	private Configuration\Source $ignores;
 
 	public function __construct(Storage\Connection $connection, Configuration\Source $ignores) {
 		$this->connection = $connection;
@@ -58,12 +54,12 @@ final class PlPgSqlCheck implements Scheduling\Job {
 	 * @return mixed[]
 	 */
 	private function triggerErrors(): array {
-		$sql = <<<SQL
-			SELECT
-			ss.proname AS function, (pcf).lineno, (pcf).statement,
-			(pcf).sqlstate, (pcf).message, (pcf).detail, (pcf).hint, (pcf).level,
-			(pcf)."position", (pcf).query, (pcf).context
-			 FROM (
+		$sql = <<<'SQL'
+		SELECT
+		ss.proname AS function, (pcf).lineno, (pcf).statement,
+		(pcf).sqlstate, (pcf).message, (pcf).detail, (pcf).hint, (pcf).level,
+		(pcf)."position", (pcf).query, (pcf).context
+		 FROM (
 				SELECT pg_proc.proname, plpgsql_check_function_tb(pg_proc.oid, COALESCE(pg_trigger.tgrelid, 0)) AS pcf
 				FROM pg_proc
 				LEFT JOIN pg_trigger ON (pg_trigger.tgfoid = pg_proc.oid)
@@ -75,11 +71,11 @@ final class PlPgSqlCheck implements Scheduling\Job {
 				)
 				AND pg_proc.proname NOT IN(%s)
 				OFFSET 0
-			) ss
-		  	GROUP BY
-			ss.proname, (pcf).lineno, (pcf).statement,
-			(pcf).sqlstate, (pcf).message, (pcf).detail, (pcf).hint, (pcf).level,
-			(pcf)."position", (pcf).query, (pcf).context
+		) ss
+		GROUP BY
+		ss.proname, (pcf).lineno, (pcf).statement,
+		(pcf).sqlstate, (pcf).message, (pcf).detail, (pcf).hint, (pcf).level,
+		(pcf)."position", (pcf).query, (pcf).context
 		SQL;
 		return (new Storage\TypedQuery(
 			$this->connection,
@@ -91,13 +87,13 @@ final class PlPgSqlCheck implements Scheduling\Job {
 	 * @return mixed[]
 	 */
 	private function functionErrors(): array {
-		$sql = <<<SQL
-			SELECT p.oid, p.proname AS function, plpgsql_check_function(p.oid, format := 'xml', performance_warnings := TRUE)
-			FROM pg_catalog.pg_namespace n
-			JOIN pg_catalog.pg_proc p ON pronamespace = n.oid
-			JOIN pg_catalog.pg_language l ON p.prolang = l.oid
-			WHERE l.lanname = 'plpgsql' AND p.prorettype <> 2279
-			AND p.proname NOT IN(%s)
+		$sql = <<<'SQL'
+		SELECT p.oid, p.proname AS function, plpgsql_check_function(p.oid, format := 'xml', performance_warnings := TRUE)
+		FROM pg_catalog.pg_namespace n
+		JOIN pg_catalog.pg_proc p ON pronamespace = n.oid
+		JOIN pg_catalog.pg_language l ON p.prolang = l.oid
+		WHERE l.lanname = 'plpgsql' AND p.prorettype <> 2279
+		AND p.proname NOT IN(%s)
 		SQL;
 		return (new Storage\TypedQuery(
 			$this->connection,
@@ -167,9 +163,7 @@ final class PlPgSqlCheck implements Scheduling\Job {
 			$error['descriptions'] = $descriptions;
 			return $error;
 		}, $errors);
-		return array_filter($parsed, static function (array $error): bool {
-			return $error['descriptions'] !== [];
-		});
+		return array_filter($parsed, static fn (array $error): bool => $error['descriptions'] !== []);
 	}
 
 	/**
@@ -193,9 +187,7 @@ final class PlPgSqlCheck implements Scheduling\Job {
 			$error['descriptions'] = $descriptions;
 			return $error;
 		}, $errors);
-		return array_filter($parsed, static function (array $error): bool {
-			return $error['descriptions'] !== [];
-		});
+		return array_filter($parsed, static fn (array $error): bool => $error['descriptions'] !== []);
 	}
 
 	/**

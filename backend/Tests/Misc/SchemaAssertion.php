@@ -10,8 +10,7 @@ final class SchemaAssertion implements Assertion {
 	/** @var mixed[]|\stdClass */
 	private $values;
 
-	/** @var \SplFileInfo */
-	private $schema;
+	private \SplFileInfo $schema;
 
 	/**
 	 * @param \stdClass|array $values Copying typehint from JsonSchema\Validator::validate method

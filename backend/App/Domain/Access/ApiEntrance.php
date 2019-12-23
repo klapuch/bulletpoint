@@ -9,8 +9,7 @@ use Klapuch\Storage;
  * Entrance to API with valid token
  */
 final class ApiEntrance implements Entrance {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(Storage\Connection $connection) {
 		$this->connection = $connection;

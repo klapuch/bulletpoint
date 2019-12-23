@@ -6,11 +6,8 @@ namespace Bulletpoint\Api\Endpoint;
 use Klapuch\Application;
 
 final class Preflight implements Application\View {
-	/** @var \Klapuch\Application\View */
-	private $origin;
-
-	/** @var \Klapuch\Application\Request */
-	private $request;
+	private Application\View $origin;
+	private Application\Request $request;
 
 	public function __construct(Application\View $origin, Application\Request $request) {
 		$this->origin = $origin;

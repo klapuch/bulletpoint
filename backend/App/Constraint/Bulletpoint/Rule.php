@@ -10,8 +10,7 @@ use Klapuch\Validation;
  * Rule for bulletpoint
  */
 final class Rule implements Validation\Rule {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(Storage\Connection $connection) {
 		$this->connection = $connection;

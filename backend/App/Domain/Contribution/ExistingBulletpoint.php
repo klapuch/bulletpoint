@@ -11,17 +11,10 @@ use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class ExistingBulletpoint implements Domain\Bulletpoint {
-	/** @var int */
-	private $id;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Bulletpoint */
-	private $origin;
+	private int $id;
+	private Access\User $user;
+	private Storage\Connection $connection;
+	private Domain\Bulletpoint $origin;
 
 	public function __construct(Domain\Bulletpoint $origin, Access\User $user, int $id, Storage\Connection $connection) {
 		$this->id = $id;

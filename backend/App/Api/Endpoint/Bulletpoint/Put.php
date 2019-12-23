@@ -13,12 +13,8 @@ use Nette\Utils\Json;
 
 final class Put implements Application\View {
 	public const SCHEMA = __DIR__ . '/schema/put.json';
-
-	/** @var \Klapuch\Application\Request */
-	private $request;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Application\Request $request;
+	private Storage\Connection $connection;
 
 	public function __construct(Application\Request $request, Storage\Connection $connection) {
 		$this->connection = $connection;

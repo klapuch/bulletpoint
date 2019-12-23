@@ -8,10 +8,9 @@ use Tester\FileMock;
 
 final class RandomDatabases implements Databases {
 	/** @var mixed[] */
-	private $credentials;
+	private array $credentials;
 
-	/** @var string */
-	private $name;
+	private string $name;
 
 	public function __construct(array $credentials) {
 		$this->credentials = $credentials;

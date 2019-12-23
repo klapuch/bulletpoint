@@ -14,8 +14,7 @@ use Nette\Utils\Json;
 final class Post implements Application\View {
 	private const SCHEMA = __DIR__ . '/schema/post.json';
 
-	/** @var \Klapuch\Application\Request */
-	private $request;
+	private Application\Request $request;
 
 	public function __construct(Application\Request $request) {
 		$this->request = $request;

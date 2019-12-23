@@ -11,14 +11,11 @@ use Nette\Http\FileUpload;
 abstract class Files {
 	protected const PATH = __DIR__ . '/../../../data';
 
-	/** @var string */
-	protected $namespace;
+	protected string $namespace;
 
-	/** @var \Nette\Http\FileUpload */
-	protected $upload;
+	protected FileUpload $upload;
 
-	/** @var \Klapuch\Storage\Connection */
-	protected $connection;
+	protected Storage\Connection $connection;
 
 	public function __construct(string $namespace, FileUpload $upload, Storage\Connection $connection) {
 		$this->namespace = $namespace;

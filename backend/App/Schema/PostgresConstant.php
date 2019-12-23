@@ -6,11 +6,9 @@ namespace Bulletpoint\Schema;
 use Klapuch\Storage;
 
 final class PostgresConstant implements Enum {
-	/** @var string */
-	private $name;
+	private string $name;
 
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(string $name, Storage\Connection $connection) {
 		$this->name = $name;

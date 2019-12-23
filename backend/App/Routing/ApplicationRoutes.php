@@ -18,14 +18,9 @@ use Sentry;
  * Routes for whole application
  */
 final class ApplicationRoutes implements Routing\Routes {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Klapuch\Uri\Uri */
-	private $url;
-
-	/** @var \Klapuch\Encryption\Cipher */
-	private $cipher;
+	private Storage\Connection $connection;
+	private Uri $url;
+	private Encryption\Cipher $cipher;
 
 	public function __construct(Storage\Connection $connection, Uri $url, Encryption\Cipher $cipher) {
 		$this->connection = $connection;
@@ -43,136 +38,82 @@ final class ApplicationRoutes implements Routing\Routes {
 			$scope->setUser($user->properties());
 		});
 		return [
-			'avatars [POST]' => function() use ($user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Avatars\Post($this->connection, $user),
-					new Http\ChosenRole($user, ['admin', 'member']),
-				);
-			},
-			'themes/{id} [GET]' => function(): Application\View {
-				return new Endpoint\Theme\Get($this->connection);
-			},
-			'themes/{id} [PUT]' => function() use ($user, $request): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Theme\Put($request, $this->connection),
-					new Http\ChosenRole($user, ['admin']),
-				);
-			},
-			'themes/{id} [PATCH]' => function() use ($user, $request): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Theme\Patch($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['admin', 'member']),
-				);
-			},
-			'themes [POST]' => function() use ($user, $request): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Themes\Post($request, $this->connection, $user, $this->url),
-					new Http\ChosenRole($user, ['admin']),
-				);
-			},
-			'themes [GET]' => function(): Application\View {
-				return new Endpoint\Themes\Get($this->connection, $this->url);
-			},
-			'tags [GET]' => function(): Application\View {
-				return new Endpoint\Tags\Get($this->connection);
-			},
-			'starred_tags [GET]' => function() use ($user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\StarredTags\Get($this->connection, $user),
-					new Http\ChosenRole($user, ['member', 'admin']),
-				);
-			},
-			'tags [POST]' => function() use ($request): Application\View {
-				return new Endpoint\Tags\Post($this->connection, $request);
-			},
-			'themes/{theme_id}/bulletpoints [GET]' => function(): Application\View {
-				return new Endpoint\Theme\Bulletpoints\Get($this->connection);
-			},
-			'themes/{theme_id}/contributed_bulletpoints [GET]' => function() use ($user): Application\View {
-				return new Endpoint\Theme\ContributedBulletpoints\Get($this->connection, $user);
-			},
-			'themes/{theme_id}/bulletpoints [POST]' => function() use ($user, $request): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Theme\Bulletpoints\Post($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['admin']),
-				);
-			},
-			'themes/{theme_id}/contributed_bulletpoints [POST]' => function() use ($user, $request): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Theme\ContributedBulletpoints\Post($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['member', 'admin']),
-				);
-			},
-			'bulletpoints/{id} [GET]' => function(): Application\View {
-				return new Endpoint\Bulletpoint\Get($this->connection);
-			},
-			'bulletpoints/{id} [DELETE]' => function() use ($user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Bulletpoint\Delete($this->connection),
-					new Http\ChosenRole($user, ['admin']),
-				);
-			},
-			'bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Bulletpoint\Put($request, $this->connection),
-					new Http\ChosenRole($user, ['admin']),
-				);
-			},
-			'bulletpoints/{id} [PATCH]' => function() use ($request, $user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Bulletpoint\Patch($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['admin', 'member']),
-				);
-			},
-			'contributed_bulletpoints/{id} [GET]' => function() use ($user): Application\View {
-				return new Endpoint\ContributedBulletpoint\Get($this->connection, $user);
-			},
-			'contributed_bulletpoints/{id} [DELETE]' => function() use ($user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\ContributedBulletpoint\Delete($this->connection, $user),
-					new Http\ChosenRole($user, ['admin', 'member']),
-				);
-			},
-			'contributed_bulletpoints/{id} [PUT]' => function() use ($request, $user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\ContributedBulletpoint\Put($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['member']),
-				);
-			},
-			'tokens [POST]' => function() use ($request): Application\View {
-				return new Endpoint\Tokens\Post(
-					$request,
-					$this->connection,
-					$this->cipher,
-				);
-			},
-			'tokens [DELETE]' => static function() use ($user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Tokens\Delete(),
-					new Http\ChosenRole($user, ['member', 'admin']),
-				);
-			},
-			'refresh_tokens [POST]' => static function() use ($request): Application\View {
-				return new Endpoint\RefreshTokens\Post($request);
-			},
-			'users/me [GET]' => function() use ($user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Users\Me\Get($this->connection, $user),
-					new Http\ChosenRole($user, ['member', 'admin']),
-				);
-			},
-			'users/me [PUT]' => function() use ($request, $user): Application\View {
-				return new AuthenticatedView(
-					new Endpoint\Users\Me\Put($request, $this->connection, $user),
-					new Http\ChosenRole($user, ['member', 'admin']),
-				);
-			},
-			'users/{id} [GET]' => function(): Application\View {
-				return new Endpoint\User\Get($this->connection);
-			},
-			'users/{id}/tags [GET]' => function(): Application\View {
-				return new Endpoint\User\Tags\Get($this->connection);
-			},
+			'avatars [POST]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Avatars\Post($this->connection, $user),
+				new Http\ChosenRole($user, ['admin', 'member']),
+			),
+			'themes/{id} [GET]' => fn(): Application\View => new Endpoint\Theme\Get($this->connection),
+			'themes/{id} [PUT]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Theme\Put($request, $this->connection),
+				new Http\ChosenRole($user, ['admin']),
+			),
+			'themes/{id} [PATCH]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Theme\Patch($request, $this->connection, $user),
+				new Http\ChosenRole($user, ['admin', 'member']),
+			),
+			'themes [POST]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Themes\Post($request, $this->connection, $user, $this->url),
+				new Http\ChosenRole($user, ['admin']),
+			),
+			'themes [GET]' => fn(): Application\View => new Endpoint\Themes\Get($this->connection, $this->url),
+			'tags [GET]' => fn(): Application\View => new Endpoint\Tags\Get($this->connection),
+			'starred_tags [GET]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\StarredTags\Get($this->connection, $user),
+				new Http\ChosenRole($user, ['member', 'admin']),
+			),
+			'tags [POST]' => fn(): Application\View => new Endpoint\Tags\Post($this->connection, $request),
+			'themes/{theme_id}/bulletpoints [GET]' => fn(): Application\View => new Endpoint\Theme\Bulletpoints\Get($this->connection),
+			'themes/{theme_id}/contributed_bulletpoints [GET]' => fn(): Application\View => new Endpoint\Theme\ContributedBulletpoints\Get($this->connection, $user),
+			'themes/{theme_id}/bulletpoints [POST]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Theme\Bulletpoints\Post($request, $this->connection, $user),
+				new Http\ChosenRole($user, ['admin']),
+			),
+			'themes/{theme_id}/contributed_bulletpoints [POST]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Theme\ContributedBulletpoints\Post($request, $this->connection, $user),
+				new Http\ChosenRole($user, ['member', 'admin']),
+			),
+			'bulletpoints/{id} [GET]' => fn(): Application\View => new Endpoint\Bulletpoint\Get($this->connection),
+			'bulletpoints/{id} [DELETE]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Bulletpoint\Delete($this->connection),
+				new Http\ChosenRole($user, ['admin']),
+			),
+			'bulletpoints/{id} [PUT]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Bulletpoint\Put($request, $this->connection),
+				new Http\ChosenRole($user, ['admin']),
+			),
+			'bulletpoints/{id} [PATCH]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Bulletpoint\Patch($request, $this->connection, $user),
+				new Http\ChosenRole($user, ['admin', 'member']),
+			),
+			'contributed_bulletpoints/{id} [GET]' => fn(): Application\View => new Endpoint\ContributedBulletpoint\Get($this->connection, $user),
+			'contributed_bulletpoints/{id} [DELETE]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\ContributedBulletpoint\Delete($this->connection, $user),
+				new Http\ChosenRole($user, ['admin', 'member']),
+			),
+			'contributed_bulletpoints/{id} [PUT]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\ContributedBulletpoint\Put($request, $this->connection, $user),
+				new Http\ChosenRole($user, ['member']),
+			),
+			'tokens [POST]' => fn(): Application\View => new Endpoint\Tokens\Post(
+				$request,
+				$this->connection,
+				$this->cipher,
+			),
+			'tokens [DELETE]' => static fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Tokens\Delete(),
+				new Http\ChosenRole($user, ['member', 'admin']),
+			),
+			'refresh_tokens [POST]' => static fn(): Application\View => new Endpoint\RefreshTokens\Post($request),
+			'users/me [GET]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Users\Me\Get($this->connection, $user),
+				new Http\ChosenRole($user, ['member', 'admin']),
+			),
+			'users/me [PUT]' => fn(): Application\View => new AuthenticatedView(
+				new Endpoint\Users\Me\Put($request, $this->connection, $user),
+				new Http\ChosenRole($user, ['member', 'admin']),
+			),
+			'users/{id} [GET]' => fn(): Application\View => new Endpoint\User\Get($this->connection),
+			'users/{id}/tags [GET]' => fn(): Application\View => new Endpoint\User\Tags\Get($this->connection),
 		];
 	}
 }

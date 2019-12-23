@@ -10,11 +10,8 @@ use Klapuch\Storage;
 use Nette\Http\FileUpload;
 
 final class Post implements Application\View {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Storage\Connection $connection;
+	private Access\User $user;
 
 	public function __construct(Storage\Connection $connection, Access\User $user) {
 		$this->connection = $connection;

@@ -6,8 +6,7 @@ namespace Bulletpoint\Scheduling\Task;
 use Klapuch\Scheduling;
 
 final class GenerateNginxConfiguration implements Scheduling\Job {
-	/** @var \SplFileInfo */
-	private $destination;
+	private \SplFileInfo $destination;
 
 	public function __construct(\SplFileInfo $destination) {
 		$this->destination = $destination;

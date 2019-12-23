@@ -14,14 +14,9 @@ use Klapuch\Storage;
 use Nette\Utils\Json;
 
 final class StoredTheme implements Theme {
-	/** @var int */
-	private $id;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private int $id;
+	private Storage\Connection $connection;
+	private Access\User $user;
 
 	public function __construct(int $id, Storage\Connection $connection, Access\User $user) {
 		$this->id = $id;

@@ -12,11 +12,8 @@ use Klapuch\Storage;
 use Nette\Utils\Json;
 
 final class StoredThemes implements Themes {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Storage\Connection $connection;
+	private Access\User $user;
 
 	public function __construct(Access\User $user, Storage\Connection $connection) {
 		$this->connection = $connection;

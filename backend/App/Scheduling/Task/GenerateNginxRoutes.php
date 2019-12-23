@@ -7,11 +7,9 @@ use Klapuch\Configuration;
 use Klapuch\Scheduling;
 
 final class GenerateNginxRoutes implements Scheduling\Job {
-	/** @var \Klapuch\Configuration\Source */
-	private $source;
+	private Configuration\Source $source;
 
-	/** @var \SplFileInfo */
-	private $destination;
+	private \SplFileInfo $destination;
 
 	public function __construct(Configuration\Source $source, \SplFileInfo $destination) {
 		$this->source = $source;
@@ -86,9 +84,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 		$query = implode(
 			'&',
 			array_map(
-				static function(string $param): string {
-					return sprintf('%1$s=$%1$s', $param);
-				},
+				static fn(string $param): string => sprintf('%1$s=$%1$s', $param),
 				array_keys($params),
 			),
 		);
@@ -103,9 +99,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 		$query = implode(
 			'&',
 			array_map(
-				static function(string $param, string $type): string {
-					return sprintf('%s=%s', $type, $param);
-				},
+				static fn(string $param, string $type): string => sprintf('%s=%s', $type, $param),
 				$types,
 				array_keys($types),
 			),
@@ -120,15 +114,11 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 			'location %s',
 			str_replace(
 				array_map(
-					static function(string $name): string {
-						return sprintf('{%s}', $name);
-					},
+					static fn(string $name): string => sprintf('{%s}', $name),
 					array_keys($params),
 				),
 				array_map(
-					static function(string $name, string $regex): string {
-						return sprintf('(?<%s>%s)', $name, $regex);
-					},
+					static fn(string $name, string $regex): string => sprintf('(?<%s>%s)', $name, $regex),
 					array_keys($params),
 					$params,
 				),

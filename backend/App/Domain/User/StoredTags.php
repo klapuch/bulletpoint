@@ -11,11 +11,8 @@ use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class StoredTags implements Tags {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Access\User */
-	private $user;
+	private Storage\Connection $connection;
+	private Access\User $user;
 
 	public function __construct(Storage\Connection $connection, Access\User $user) {
 		$this->connection = $connection;
@@ -36,7 +33,7 @@ final class StoredTags implements Tags {
 		foreach ($tags as $tag) {
 			yield new class ($tag) implements Tag {
 				/** @var mixed[] */
-				private $tag;
+				private array $tag;
 
 				public function __construct(array $tag) {
 					$this->tag = $tag;

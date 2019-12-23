@@ -10,8 +10,7 @@ use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class StoredTags implements Tags {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(Storage\Connection $connection) {
 		$this->connection = $connection;

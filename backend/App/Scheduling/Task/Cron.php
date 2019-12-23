@@ -8,11 +8,8 @@ use Klapuch\Storage;
 use Tracy;
 
 final class Cron implements Scheduling\Job {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Tracy\ILogger */
-	private $logger;
+	private Storage\Connection $connection;
+	private Tracy\ILogger $logger;
 
 	public function __construct(Storage\Connection $connection, Tracy\ILogger $logger) {
 		$this->connection = $connection;
@@ -67,9 +64,7 @@ final class Cron implements Scheduling\Job {
 					new PingSources($this->connection, $this->logger),
 					$this->connection,
 				),
-				static function (): bool {
-					return in_array(date('H:i'), ['02:00', '14:00'], true);
-				},
+				static fn (): bool => in_array(date('H:i'), ['02:00', '14:00'], true),
 			),
 			new Scheduling\CustomTriggeredJob(
 				new Scheduling\MarkedJob(
@@ -79,18 +74,14 @@ final class Cron implements Scheduling\Job {
 					),
 					$this->connection,
 				),
-				static function (): bool {
-					return in_array(date('H:i'), ['04:00', '16:00'], true);
-				},
+				static fn (): bool => in_array(date('H:i'), ['04:00', '16:00'], true),
 			),
 			new Scheduling\CustomTriggeredJob(
 				new Scheduling\MarkedJob(
 					new PingReferences($this->connection, $this->logger),
 					$this->connection,
 				),
-				static function (): bool {
-					return in_array(date('H:i'), ['07:00', '19:00'], true);
-				},
+				static fn (): bool => in_array(date('H:i'), ['07:00', '19:00'], true),
 			),
 			new Scheduling\CustomTriggeredJob(
 				new Scheduling\MarkedJob(
@@ -100,18 +91,14 @@ final class Cron implements Scheduling\Job {
 					),
 					$this->connection,
 				),
-				static function (): bool {
-					return in_array(date('H:i'), ['09:00', '21:00'], true);
-				},
+				static fn (): bool => in_array(date('H:i'), ['09:00', '21:00'], true),
 			),
 			new Scheduling\CustomTriggeredJob(
 				new Scheduling\MarkedJob(
 					new RunFunction($this->connection, 'refresh_bulletpoint_group_successors'),
 					$this->connection,
 				),
-				static function (): bool {
-					return date('H:i') === '00:01';
-				},
+				static fn (): bool => date('H:i') === '00:01',
 			),
 		))->fulfill();
 	}

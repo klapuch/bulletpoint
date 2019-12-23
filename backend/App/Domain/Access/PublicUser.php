@@ -12,11 +12,9 @@ use Klapuch\Storage;
  * User which can be publicly shown
  */
 final class PublicUser implements User {
-	/** @var int */
-	private $id;
+	private int $id;
 
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
+	private Storage\Connection $connection;
 
 	public function __construct(int $id, Storage\Connection $connection) {
 		$this->id = $id;

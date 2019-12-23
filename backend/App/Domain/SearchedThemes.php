@@ -9,14 +9,9 @@ use Klapuch\Sql\Expression;
 use Klapuch\Storage;
 
 final class SearchedThemes implements Themes {
-	/** @var \Bulletpoint\Domain\Themes */
-	private $origin;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var string */
-	private $keyword;
+	private Themes $origin;
+	private Storage\Connection $connection;
+	private string $keyword;
 
 	public function __construct(Themes $origin, string $keyword, Storage\Connection $connection) {
 		$this->origin = $origin;

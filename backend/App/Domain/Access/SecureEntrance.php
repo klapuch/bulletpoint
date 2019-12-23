@@ -10,11 +10,8 @@ use Klapuch\Storage;
  * Secure entrance for entering users to the system
  */
 final class SecureEntrance implements Entrance {
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Klapuch\Encryption\Cipher */
-	private $cipher;
+	private Storage\Connection $connection;
+	private Encryption\Cipher $cipher;
 
 	public function __construct(Storage\Connection $connection, Encryption\Cipher $cipher) {
 		$this->connection = $connection;
@@ -22,9 +19,8 @@ final class SecureEntrance implements Entrance {
 	}
 
 	/**
-	 * @param array $credentials
+	 * @param mixed[] $credentials
 	 * @throws \UnexpectedValueException
-	 * @return \Bulletpoint\Domain\Access\User
 	 */
 	public function enter(array $credentials): User {
 		['login' => $login, 'password' => $plainPassword] = array_map('strval', $credentials);

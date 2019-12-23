@@ -8,8 +8,7 @@ use Predis;
 use Tester;
 
 trait Redis {
-	/** @var \Predis\Client */
-	protected $redis;
+	protected \Predis\Client $redis;
 
 	protected function setUp(): void {
 		parent::setUp();

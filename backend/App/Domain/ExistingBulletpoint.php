@@ -9,14 +9,9 @@ use Klapuch\Sql\Statement\Select;
 use Klapuch\Storage;
 
 final class ExistingBulletpoint implements Bulletpoint {
-	/** @var int */
-	private $id;
-
-	/** @var \Klapuch\Storage\Connection */
-	private $connection;
-
-	/** @var \Bulletpoint\Domain\Bulletpoint */
-	private $origin;
+	private int $id;
+	private Storage\Connection $connection;
+	private Bulletpoint $origin;
 
 	public function __construct(Bulletpoint $origin, int $id, Storage\Connection $connection) {
 		$this->id = $id;
