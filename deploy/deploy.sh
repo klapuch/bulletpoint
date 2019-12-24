@@ -61,8 +61,8 @@ ssh $USER@$HOST "
 
 echo 'PHP:CONFIG:MOVE'
 ssh $USER@$HOST "
-  cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.3/fpm/php.ini \
-    && cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.3/cli/php.ini \
+  cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.4/fpm/php.ini \
+    && cp -v $RELEASE_DIR/docker/php-fpm/php.prod.ini /etc/php/7.4/cli/php.ini \
 "
 
 echo 'TRASH:CLEAN'
@@ -95,7 +95,7 @@ echo 'RELEASE'
 ssh $USER@$HOST "ln -sfnv $RELEASE_DIR $CURRENT_DIR"
 
 echo 'SERVICES:RELOAD'
-ssh $USER@$HOST "sudo /usr/sbin/service nginx reload && sudo /usr/sbin/service php7.3-fpm reload"
+ssh $USER@$HOST "sudo /usr/sbin/service nginx reload && sudo /usr/sbin/service php7.4-fpm reload"
 
 echo 'CACHE:CLEAR'
 ssh $USER@$HOST "redis-cli -p 6379 flushall"
