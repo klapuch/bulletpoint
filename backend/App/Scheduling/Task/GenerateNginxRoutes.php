@@ -70,7 +70,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 	}
 
 	private function limitExcept(array $methods): string {
-		$except = implode(' ', array_unique(array_merge($methods, ['OPTIONS'])));
+		$except = implode(' ', array_unique([...$methods, ...['OPTIONS']]));
 		return <<<CONF
 			limit_except {$except} {
 				deny all;

@@ -32,7 +32,7 @@ final class RestFilter extends Dataset\Filter {
 	protected function filter(): array {
 		return (new Dataset\RestFilter(
 			array_intersect_key($this->criteria, array_flip($this->allows)),
-			array_merge(['page', 'per_page', 'sort', 'fields'], $this->ignores),
+			[...['page', 'per_page', 'sort', 'fields'], ...$this->ignores],
 		))->filter();
 	}
 }
