@@ -71,7 +71,6 @@ ssh $USER@$HOST "
     && ls -d $RELEASE_DIR/frontend/* | grep -v $RELEASE_DIR/frontend/build | xargs --verbose --no-run-if-empty rm -rf \
     && ls -d $RELEASE_DIR/backend/* \
       | grep -v $RELEASE_DIR/backend/App \
-      | grep -v $RELEASE_DIR/backend/App \
       | grep -v $RELEASE_DIR/backend/data$ \
       | grep -v $RELEASE_DIR/backend/logs \
       | grep -v $RELEASE_DIR/backend/temp \
