@@ -26,6 +26,9 @@ ssh $USER@$HOST "
     && ln -sfnv $SHARED_DIR/data $RELEASE_DIR/backend/data \
 "
 
+# Make directories immutable
+# sudo chattr +i $SHARED_DIR/data $SHARED_DIR/data/images $SHARED_DIR/data/images/avatars
+
 echo 'COMPOSER:INSTALL'
 ssh $USER@$HOST "cd $RELEASE_DIR/backend && composer install --no-dev --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --classmap-authoritative"
 
