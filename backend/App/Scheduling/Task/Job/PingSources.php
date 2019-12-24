@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Scheduling\Task;
+namespace Bulletpoint\Scheduling\Task\Job;
 
 use Bulletpoint\Scheduling\Http\UserAgents;
 use Klapuch\Http;
@@ -12,7 +12,7 @@ use Klapuch\Storage;
 use Klapuch\Uri;
 use Tracy;
 
-final class PingReferences implements Scheduling\Job {
+final class PingSources implements Scheduling\Job {
 	private Storage\Connection $connection;
 	private Tracy\ILogger $logger;
 
@@ -22,16 +22,16 @@ final class PingReferences implements Scheduling\Job {
 	}
 
 	public function fulfill(): void {
-		$references = (new Storage\TypedQuery($this->connection, 'SELECT ids, url FROM references_to_ping'))->rows();
-		(new Storage\Transaction($this->connection))->start(function () use ($references): void {
-			foreach ($references as $reference) {
-				['ids' => $ids, 'url' => $url] = $reference;
+		$sources = (new Storage\TypedQuery($this->connection, 'SELECT ids, link FROM sources_to_ping'))->rows();
+		(new Storage\Transaction($this->connection))->start(function () use ($sources): void {
+			foreach ($sources as $source) {
+				['ids' => $ids, 'link' => $link] = $source;
 				(new Storage\BuiltQuery(
 					$this->connection,
 					(new Insert\Query())
-						->insertInto(new Clause\MultiInsertInto('reference_pings', [
-							'reference_id' => $ids,
-							'status' => array_fill(0, count($ids), $this->code(new Uri\FakeUri($url))),
+						->insertInto(new Clause\MultiInsertInto('source_pings', [
+							'source_id' => $ids,
+							'status' => array_fill(0, count($ids), $this->code(new Uri\FakeUri($link))),
 						])),
 				))->execute();
 			}
@@ -59,6 +59,6 @@ final class PingReferences implements Scheduling\Job {
 	}
 
 	public function name(): string {
-		return 'PingReferences';
+		return 'PingSources';
 	}
 }

@@ -36,35 +36,24 @@ $logger = new Tracy\Logger(__DIR__ . '/../../logs');
 try {
 	(new Scheduling\SelectedJob(
 		$argv[1],
-		new Scheduling\MarkedJob(new Task\Cron($connection, $logger), $connection),
-		new Task\CheckChangedConfiguration(
+		new Scheduling\MarkedJob(new Task\Job\Cron($connection, $logger), $connection),
+		new Task\Command\CheckChangedConfiguration(
 			new \SplFileInfo(__DIR__ . '/../../../docker/nginx'),
 			new Scheduling\SerialJobs(
-				new Task\GenerateNginxRoutes(
+				new Task\Command\GenerateNginxRoutes(
 					new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/routes.ini')),
 					new \SplFileInfo(__DIR__ . '/../../../docker/nginx/snippets/routes.conf'),
 				),
-				new Task\GenerateNginxConfiguration(new \SplFileInfo(__DIR__ . '/../../../docker/nginx/snippets/preflight.conf')),
+				new Task\Command\GenerateNginxConfiguration(new \SplFileInfo(__DIR__ . '/../../../docker/nginx/snippets/preflight.conf')),
 			),
 		),
-		new Scheduling\MarkedJob(
-			new Task\GenerateNginxRoutes(
-				new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/routes.ini')),
-				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf'),
-			),
-			$connection,
+		new Task\Command\GenerateNginxRoutes(
+			new ValidIni(new \SplFileInfo(__DIR__ . '/../Configuration/routes.ini')),
+			new \SplFileInfo(__DIR__ . '/../../../docker/nginx/routes.conf'),
 		),
-		new Scheduling\MarkedJob(new Task\GenerateJsonSchema($connection), $connection),
-		new Scheduling\MarkedJob(
-			new Task\GenerateNginxConfiguration(
-				new \SplFileInfo(__DIR__ . '/../../../docker/nginx/preflight.conf'),
-			),
-			$connection,
-		),
-		new Task\PlPgSqlCheck(
-			$connection,
-			new ValidIni(new \SplFileInfo(__DIR__ . '/Task/plpgsql_check.ini')),
-		),
+		new Task\Command\GenerateJsonSchema($connection),
+		new Task\Command\GenerateNginxConfiguration(new \SplFileInfo(__DIR__ . '/../../../docker/nginx/snippets/preflight.conf')),
+		new Task\Command\PlPgSqlCheck($connection, new ValidIni(new \SplFileInfo(__DIR__ . '/Task/Command/plpgsql_check.ini'))),
 	))->fulfill();
 } catch(\Throwable $e) {
 	$logger->log($e);

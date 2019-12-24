@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Scheduling\Task;
+namespace Bulletpoint\Scheduling\Task\Command;
 
 use Bulletpoint\Schema;
 use Klapuch\Http;

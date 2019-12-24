@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Scheduling\Task;
+namespace Bulletpoint\Scheduling\Task\Command;
 
 use Klapuch\Scheduling;
 
@@ -13,8 +13,8 @@ final class GenerateNginxConfiguration implements Scheduling\Job {
 	}
 
 	public function fulfill(): void {
-		$preflightHeaders = file_get_contents(__DIR__ . '/../../../../docker/nginx/snippets/preflight_headers.conf');
-		$securityHeaders = file_get_contents(__DIR__ . '/../../../../docker/nginx/snippets/security_headers.conf');
+		$preflightHeaders = file_get_contents(__DIR__ . '/../../../../../docker/nginx/snippets/preflight_headers.conf');
+		$securityHeaders = file_get_contents(__DIR__ . '/../../../../../docker/nginx/snippets/security_headers.conf');
 		file_put_contents(
 			$this->destination->getPathname(),
 			<<<CONF

@@ -14,15 +14,15 @@ parameters:
 			message: '~^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$~'
 
 		-
-			path: 'App/Scheduling/Task/PlPgSqlCheck.php'
+			path: 'App/Scheduling/Task/Command/PlPgSqlCheck.php'
 			message: '~^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$~'
 
 		-
-			path: 'App/Scheduling/Task/GenerateJsonSchema.php'
+			path: 'App/Scheduling/Task/Command/GenerateJsonSchema.php'
 			message: '~^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$~'
 
 		-
-			path: 'App/Scheduling/Task/DeleteTrashFiles.php'
+			path: 'App/Scheduling/Task/Job/DeleteTrashFiles.php'
 			message: '~^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$~'
 
 		-

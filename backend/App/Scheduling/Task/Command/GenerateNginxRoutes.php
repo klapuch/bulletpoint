@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Bulletpoint\Scheduling\Task;
+namespace Bulletpoint\Scheduling\Task\Command;
 
 use Klapuch\Configuration;
 use Klapuch\Scheduling;
@@ -70,7 +70,7 @@ final class GenerateNginxRoutes implements Scheduling\Job {
 	}
 
 	private function limitExcept(array $methods): string {
-		$except = implode(' ', array_unique([...$methods, ...['OPTIONS']]));
+		$except = implode(' ', array_unique([...$methods, 'OPTIONS']));
 		return <<<CONF
 			limit_except {$except} {
 				deny all;
