@@ -59,7 +59,7 @@ sudo chown bulletpoint:bulletpoint /etc/nginx/sites-enabled
 sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 sudo sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
 sudo apt-get update
-sudo apt-get install php7.3-fpm php7.3-curl php7.3-xsl php7.3-mbstring php7.3-zip php7.3-pgsql php7.3-gd
+sudo apt-get install php7.4-fpm php7.4-curl php7.4-xsl php7.4-mbstring php7.4-zip php7.4-pgsql php7.4-gd
 sudo apt-get install php-apcu php-redis php-igbinary
 ```
 
@@ -69,7 +69,7 @@ curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/l
 ```
 
 #### Permissions
-`sudo vim /etc/php/7.3/fpm/pool.d/www.conf`
+`sudo vim /etc/php/7.4/fpm/pool.d/www.conf`
 
 ```
 user = bulletpoint
@@ -79,7 +79,7 @@ listen.group = bulletpoint
 listen = 127.0.0.1:9000
 ```
 
-`sudo service php7.3-fpm restart`
+`sudo service php7.4-fpm restart`
 
 
 ### PostgreSQL 12
@@ -342,14 +342,14 @@ rm -f id_rsa id_rsa.pub
 #### Sudo
 ```
 sudo visudo
-bulletpoint ALL=(ALL) NOPASSWD: /usr/sbin/service nginx reload,/usr/sbin/service php7.3-fpm reload
+bulletpoint ALL=(ALL) NOPASSWD: /usr/sbin/service nginx reload,/usr/sbin/service php7.4-fpm reload
 ```
 
 ```
 sudo chown bulletpoint:bulletpoint /etc/nginx/snippets/letsencrypt.conf /etc/nginx/snippets/php.conf /etc/nginx/nginx.conf /etc/nginx/snippets/preflight.conf /etc/nginx/snippets/preflight_headers.conf /etc/nginx/snippets/routes.conf /etc/nginx/snippets/security_headers.conf
 sudo chown bulletpoint:bulletpoint /etc/nginx/sites-enabled/*
-sudo chown bulletpoint:bulletpoint /etc/php/7.3/fpm/php.ini
-sudo chown bulletpoint:bulletpoint /etc/php/7.3/cli/php.ini
+sudo chown bulletpoint:bulletpoint /etc/php/7.4/fpm/php.ini
+sudo chown bulletpoint:bulletpoint /etc/php/7.4/cli/php.ini
 ```
 
 
