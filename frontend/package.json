@@ -18,7 +18,7 @@
     "memoizee": "^0.4.14",
     "moment": "^2.24.0",
     "path-to-regexp": "^3.0.0",
-    "qs": "^6.6.0",
+    "qs": "^6.9.7",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-facebook-login": "^4.1.1",
